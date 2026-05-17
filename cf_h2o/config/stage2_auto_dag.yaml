@@ -1,0 +1,23 @@
+stage: 2
+
+auto_dag:
+  enabled: true
+  llm_backend: none
+  bootstrap_runs: 20
+  max_parents: 8
+  ridge_l2: 0.001
+  score_threshold: 0.08
+  score_temperature: 0.04
+  mechanism_parent_threshold: 0.3
+  min_edge_prob_for_hard: 0.8
+  use_soft_masks: true
+  seed: 0
+
+outputs:
+  graph_posterior: graph_posterior.json
+  edge_report: edge_report.md
+  discovered_mechanisms: discovered_mechanisms.yaml
+
+llm_prior:
+  backend: none
+  note: LLM priors are optional weak priors and cannot override temporal leakage masks.
