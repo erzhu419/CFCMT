@@ -1,0 +1,127 @@
+\section{Implementation Details}
+\label{app:impl}
+
+\subsection{Network architectures}
+
+\paragraph{Policy}
+The policy network (\texttt{BusEmbeddingPolicy}) consists of a shared embedding layer $\phi$ over five categorical descriptors (\texttt{line\_id}, \texttt{bus\_id}, \texttt{station\_id}, \texttt{time\_period}, \texttt{direction}) each projected to a $48$-dim embedding, concatenated with $12$ continuous features, and passed through a two-layer MLP with $256$ hidden units and ReLU activation.
+The output maps to a two-dimensional Gaussian action with mean $\mu \in [-1, 1]^2$ (tanh-squashed) and state-independent log-std.
+An \texttt{action\_range} scalar of $1.0$ rescales outputs to the operational range; layer normalisation and dropout $0.05$ are applied inside the embedding.
+
+\paragraph{Q ensemble}
+Five critic heads share the embedding architecture with independent MLPs of the same width.
+Heads are trained with independent minibatches and independent target networks, updated by Polyak averaging with $\tau = 0.005$.
+
+\paragraph{Contrastive discriminator}
+The score $f_\psi(s, s')$ is a two-layer MLP over the concatenated $(s, s')$ vector with hidden width $128$, ReLU activation, and a scalar output.
+InfoNCE temperature is fixed to $0.1$; $K = \text{batch\_size} - 1$ negatives are drawn in-batch from the opposite-domain samples.
+
+\subsection{Hyperparameters}
+
+\begin{table*}[t]
+\centering
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{ll}
+\toprule
+Parameter & Value \\
+\midrule
+Batch size                           & 2048 \\
+Offline/online mix ratio             & 1.5 (offline) : 1.0 (online) \\
+Ensemble size $\Ecnt$                & 5 \\
+LCB coefficient $\beta_{\text{LCB}}$ & 1.0 \\
+Offline-Q floor (scalar per minibatch)  & $\E_{\mathcal{B}_{\mathrm{off}}}[\mu_Q(s, a)]$ \\
+RE-SAC indep/min blend ratio $\kappa$ & 0.8 \\
+Q-std clip coefficient $c$           & 0.5 \\
+LCB normalisation                    & by $\max(|\mu_Q|, 1)$ \\
+EMA policy decay $\tau$              & $5 \times 10^{-3}$ \\
+Policy anchor weight $\lambda_{\text{anc}}$ & 0.1 \\
+IS weight clip $[\underline w, \overline w]$ & $[0.1, 10]$ \\
+IS hybrid weight $\lambda$           & 1.0 \\
+KL anchor coefficient                & 0.5 (when enabled) \\
+Offline-only warmup epochs $N_{\text{warm}}$ & 20 (when enabled; distinct from discriminator warmup of 5\,000 grad steps) \\
+Updates per epoch                    & 100 (SAC) + 100 (rollout events) \\
+Number of epochs                     & 200 \\
+Discount $\gamma$                    & 0.99 \\
+Policy learning rate                 & $3\mathrm{e}{-4}$ \\
+Q learning rate                      & $3\mathrm{e}{-4}$ \\
+Discriminator learning rate          & $3\mathrm{e}{-4}$ \\
+Polyak $\tau$                        & 0.005 \\
+Seeds                                & $\{42, 123, 456, 789, 2024\}$ \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Hyperparameters used across all configurations unless explicitly ablated.}
+\label{tab:hparams}
+\end{table*}
+
+\subsection{Transit-specific data pipeline fixes}
+\label{app:impl:pipeline}
+
+Three implementation issues---individually minor but jointly determining whether sim and SUMO data are comparable at all---must be handled before any H2O method can be meaningfully trained on transit data.
+We document them here for reproducibility and as a checklist for future applications of H2O methods to new transit benchmarks.
+
+\paragraph{(i) Trajectory-dict isolation}
+In the original data collection pipeline, RL-controlled hold time was appended to the same per-tick trajectory buffer used for headway measurement, leaking hold duration into the next bus's \texttt{headway\_prev} feature.
+The fix is to keep hold-time annotations in a separate buffer consumed only by the logger, not by the observation constructor.
+Without this fix, the effective state distribution shifts between episodes with and without RL intervention, invalidating the Bellman equation.
+
+\paragraph{(ii) Segment-speed rescaling}
+The sim-core travel-time model internally reports speeds at the base simulation step (0.5\,s), while SUMO is configured with a doubled step length (1.0\,s).
+Multiplying sim-core segment speeds by $2.0$ aligns the two under a shared $\Delta t$.
+Without this fix, sim headway predictions differ from SUMO by a $13.2\sigma$ gap on matched initial conditions---large enough to dominate any learned dynamics correction.
+
+\paragraph{(iii) Observation-normaliser freezing}
+The data-collection workers called the observation normaliser with default \texttt{update=True}, overwriting the running statistics with collected-distribution statistics rather than preserving those from the offline distribution.
+The fix is to pass \texttt{update=False} in collection workers and update statistics only in the offline pre-training loop.
+Without this fix, the mean per-step reward on SAC-collected data drifts from $-56$ to $-197$---an order-of-magnitude artefact that masks all algorithmic effects.
+
+\subsection{Offline dataset details}
+
+$\Doff$ aggregates transitions from four behaviour policies, collected under matched SUMO seeds:
+(a) SAC-trained: $180{,}000$ transitions from a previously trained online SAC agent, providing near-optimal coverage;
+(b) Heuristic headway-threshold: $160{,}000$ transitions from an analytical rule-based controller;
+(c) Weak $\epsilon$-random: $180{,}000$ transitions from an $\epsilon$-greedy random policy with $\epsilon = 0.3$, providing coverage of low-quality actions;
+(d) RE-SAC SUMO expert ep39: $155{,}000$ transitions from the best checkpoint of a prior RE-SAC run in the SUMO environment (a deterministic learned policy, not a hand-coded rule).
+Observations are z-score normalised using full-$\Doff$ statistics; actions are already in $[-1, 1]$ by the policy mapping; rewards are used raw (not normalised).
+
+\subsection{Auto-parallel launcher}
+\label{app:impl:parallel}
+
+The experiment sweep uses a hardware-aware launcher \texttt{run\_\allowbreak full\_\allowbreak experiments.sh --parallel auto} that:
+(i) detects CPU cores, system RAM, and GPU count/VRAM;
+(ii) assumes per-job resource consumption of 2 CPU cores, 4\,GB RAM, and 2\,GB VRAM;
+(iii) caps parallelism at 2 jobs per GPU to avoid thrashing, and at a global ceiling of 8;
+(iv) forces the SUMO-online group to run sequentially due to libsumo's single-session restriction;
+(v) assigns jobs to GPUs in round-robin when multiple GPUs are available.
+On our evaluation hardware (32 CPU cores, 29\,GB RAM, $1\times$ 7\,GB GPU), the launcher runs 2 jobs in parallel for SIM-online groups and 1 job at a time for SUMO-online, yielding a total wall time of approximately 120 CPU-hours for the full sweep ($\approx$30 configurations $\times$ 4--5 seeds $\approx$ 150 runs).
+
+\subsection{Action-invariance test details}
+\label{app:assumption1}
+
+The data-level test of \Cref{ass:action_invariance} reported in \Cref{sec:exp:analysis} is implemented in \texttt{SimpleSAC/verify\_assumption1.py}.
+We summarise its protocol and limitations here.
+
+\paragraph{Inputs and grid}
+The real-side h5 is the merged offline buffer ($n_{\text{real}} = 50{,}000$ sub-sampled transitions from $\Doff$).
+The sim-side h5 is generated by replaying $\Doff$'s initial-state snapshots through sim-core under uniform-random actions ($n_{\text{sim}} = 12{,}999$ transitions; smaller because some snapshots fail to advance under random actions).
+We z-score-normalise the concatenated $(s, s')$ vectors, project to two PCA components, bin into a $5 \times 5$ grid, and discretise actions into $K_a = 3$ bins (no-hold, short-hold $> 0$\,s, long-hold $\geq 30$\,s).
+
+\paragraph{Coverage caveat}
+Of $25$ $(s, s')$ cells $\times$ $3$ action bins $= 75$ cell-action combinations, only $6$ have $\geq 20$ samples in both real and sim h5; only $2$ of the $25$ $(s, s')$ cells have all three action bins covered.
+The reported $\hat{r} = 0.156$ is therefore computed on a small valid subset, and a bootstrap CI on the same subset is degenerate (all resamples produce the same point estimate because there is essentially one informative pair of cells).
+The $\hat{r} = 0.169$ value at the $6 \times 6$ grid (3 of 36 cells valid) is consistent.
+We read both numbers as a directionally supportive signal --- variation in $\log \hat\rho$ across actions is small relative to variation across $(s, s')$ in the cells we can measure --- not as a tight statistical verification of \Cref{ass:action_invariance} on the entire state space.
+A camera-ready version should rerun the test with (i) larger $n_{\text{sim}}$ ($\geq 50$K, by extending the rollout-for-verification budget), (ii) a coarser PCA grid ($3 \times 3$) for more cells with valid action coverage, and (iii) explicit per-cell sample-count reporting alongside the ratio.
+
+\paragraph{Heatmap}
+\Cref{fig:assumption1_heatmap} visualises $\log \hat\rho$ per cell, broken out by action bin.
+NaN cells (white) lack sufficient samples; coloured cells span $[-2, 2]$ in $\log \hat\rho$.
+The two valid $(s, s')$ cells show consistent log-ratios across all three action bins, which is the qualitative pattern \Cref{ass:action_invariance} predicts.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/assumption1_heatmap.pdf}
+\caption{Per-cell $\log \hat{\rho} = \log[\hat{P}_{\text{real}}(s' \mid s, a) / \hat{P}_{\text{sim}}(s' \mid s, a)]$ across a $5 \times 5$ PCA grid in $(s, s')$, broken out by action bin (no-hold / short-hold / long-hold). White cells lack the $\geq 20$-sample threshold needed for a stable estimate; coverage is sparse, and the action-dependence ratio reported in \Cref{sec:exp:analysis} is computed from the small number of cells with valid data in all action bins.}
+\label{fig:assumption1_heatmap}
+\end{figure}

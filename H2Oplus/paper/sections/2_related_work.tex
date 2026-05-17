@@ -1,0 +1,46 @@
+\section{Related Work}
+\label{sec:related}
+
+This work sits at the intersection of three literatures: hybrid offline-to-online reinforcement learning, sim-to-real dynamics transfer, and data-driven bus holding control.
+We survey each in turn and position our contributions against the closest prior work.
+
+\subsection{Hybrid offline-to-online RL and ensemble pessimism}
+
+Hybrid offline-to-online (H2O) RL combines an offline dataset with online interactions to escape the conservative bound of pure offline methods while avoiding the safety cost of pure online learning.
+Early works framed the problem as offline RL with a fine-tuning phase: AWAC \citep{nair2020awac} regularises online updates toward the offline behaviour, while RLPD \citep{ball2023efficient} over-samples online transitions to accelerate adaptation.
+JSRL \citep{uchendu2023jumpstart} instead uses an offline policy as a guide during online rollouts.
+These methods assume a single environment shared between offline and online phases and do not address dynamics gaps.
+
+H2O \citep{niu2022h2o} and its successor H2O+ \citep{liu2024h2oplus} extend the setting to \emph{inaccurate} simulators: the offline dataset may come from the real environment while online rollouts occur in a lower-fidelity simulator.
+The central technical device is an importance-sampling (IS) correction on simulator transitions, estimated by a dynamics discriminator, which we review in \Cref{sec:method}.
+WSRL \citep{zhou2024wsrl} further proposes a warmup-collect phase and a KL anchor to a policy snapshot to stabilise the offline-to-online transition.
+Our method inherits the H2O+ hybrid Bellman structure and optionally uses the WSRL KL anchor, but replaces both the discriminator design and the pessimism mechanism.
+
+Ensemble pessimism is orthogonal to H2O but essential to our target calibration.
+EDAC and SAC-$N$ \citep{an2021uncertainty} showed that increasing ensemble disagreement serves as a free pessimism signal, and MSG \citep{ghasemipour2022so} refined this with independent-target variants.
+Cal-QL \citep{nakamoto2023calql} re-calibrates conservative Q-learning \citep{kumar2020cql} against a Monte-Carlo reference to prevent over-conservatism during fine-tuning.
+These mechanisms were developed in single-environment settings.
+Our paper applies an ensemble LCB critic but does not use Cal-QL: instead of Monte-Carlo-based anchoring, we apply a simpler bootstrap one-sided floor (\Cref{eq:qfloor}) tracking the current Q-network's predictions on the offline batch.
+We distinguish the two approaches explicitly in \Cref{sec:method:floor}.
+
+\subsection{Sim-to-real transfer via dynamics discrimination}
+
+Two broad paradigms dominate sim-to-real RL: domain randomisation, which trains a policy robust to a family of perturbed dynamics \citep{tobin2017domain, peng2018sim}, and dynamics correction, which actively estimates and corrects the sim/real gap.
+Our work belongs to the latter.
+
+GARAT \citep{desai2020garat} and its predecessor grounded action transformation \citep{hanna2017grounded} learn an action transformation to make sim behave like real; these require paired data and do not extend naturally to transit, where paired trajectories are unavailable.
+DARC \citep{eysenbach2021off} instead learns a classifier $\disc(s,a,s')$ distinguishing real from sim transitions and uses it to reweight simulator rollouts via IS; H2O and H2O+ both adopt DARC-style discriminators.
+\Cref{sec:method} argues that DARC's reliance on action-conditioned transitions fails in sparse-action transit control, and proposes an InfoNCE-based action-invariant alternative.
+
+Contrastive representation learning has been used in RL for auxiliary tasks---CURL \citep{laskin2020curl} for image encoders and CPC++ \citep{mazoure2020deep} for dynamics---but not, to our knowledge, directly as a sim-to-real IS estimator.
+Our use of InfoNCE as a likelihood-ratio estimator is grounded in the classical identification of the optimal NCE score with the log-density ratio \citep{oord2018representation, ma2018nce, poole2019variational}---a connection that, to our knowledge, has not been exploited for multi-fidelity sim-to-sim IS correction in RL.
+
+\subsection{Bus holding control with reinforcement learning}
+
+Analytical bus holding control has a long pedigree, beginning with \citet{daganzo2009headway} and \citet{xuan2011dynamic}, who derived closed-form holding strategies to suppress bunching under simplified demand models.
+The RL literature has grown in the last five years: \citet{alesiani2018reinforcement} study RL-based holding for high-frequency services, \citet{wang2020real} develop a multi-agent deep RL framework for dynamic holding, and later studies extend the setting to stochastic event-driven holding and multi-line shared-corridor control \citep{liu2023deepholding, wang2023multiobjective}.
+
+All of these works treat their simulator as ground truth: the agent is trained and evaluated in the same environment, and the cross-fidelity gap (training in a cheaper simulator than the evaluation environment) is discussed only anecdotally or as future work.
+To our knowledge, this paper is the first to pose bus holding control as an explicit hybrid offline-to-online problem with a dynamics gap, and correspondingly the first to diagnose where off-the-shelf H2O+ components break down on transit-specific MDP structure.
+Offline and offline-to-online RL for transit operations remain comparatively underexplored relative to simulator-trained online RL.
+Our contribution is therefore not another simulator-only holding controller, but a diagnosis of what happens when historical data, a cheap online simulator, and a higher-fidelity evaluation simulator are intentionally separated.

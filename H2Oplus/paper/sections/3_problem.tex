@@ -1,0 +1,86 @@
+\section{Problem Formulation}
+\label{sec:problem}
+
+We formalise transit holding control as a hybrid offline-to-online Markov decision process (MDP) with two distinguishing features: (i) asynchronous sparse decision events triggered by per-bus station arrivals, and (ii) a dynamics-and-reward gap between a low-fidelity online simulator and a high-fidelity evaluation environment.
+\Cref{sec:problem:mdp} introduces the single-environment MDP; \Cref{sec:problem:h2o} adds the hybrid offline-to-online setting; \Cref{sec:problem:failures} states two failure modes that motivate \Cref{sec:method}.
+
+\subsection{Asynchronous per-bus MDP}
+\label{sec:problem:mdp}
+
+Let $\mathcal{B}$ denote a fleet of buses operating on a set of routes $\mathcal{L}$, and let $\mathcal{K}_\ell$ denote the ordered station sequence of route $\ell \in \mathcal{L}$.
+Time flows continuously at a simulation step $\Delta t$, but decisions are taken only at \emph{station-arrival events}: a tuple $e = (\bus, \ell, \station, t)$ indicating that bus $\bus$ on route $\ell$ arrived at station $\station$ at wall time $t$.
+Two consecutive events of the same bus are separated by a random inter-station travel time plus a hold-and-dwell interval; across the fleet, events interleave asynchronously.
+
+\paragraph{State}
+At event $e$, the state $s_e \in \mathcal{S}$ concatenates five categorical descriptors $(\ell, \bus, \station, \text{time-of-day}, \text{direction})$ with twelve continuous features: preceding and following headways $h_{\text{prev}}, h_{\text{next}}$, on-board load, expected arrival rate at the next station, mean travel speed on the upcoming segment, cumulative delay, and the previous action.
+Categorical descriptors enter the policy through a shared embedding $\phi$; continuous features are z-score-normalised with running statistics frozen during evaluation (\Cref{app:impl}).
+
+\paragraph{Action}
+The action $a_e \in [-1, 1]^2$ produced by the policy is mapped deterministically to a \emph{hold decision} and a \emph{hold duration}: $a_e^{(1)} > 0$ activates holding, and $a_e^{(2)}$ is rescaled to $\holdt \in [0, \holdt_{\max}]$ seconds.
+Setting $\holdt_{\max} = 60$\,s and sampling $a_e^{(1)} \le 0$ corresponds to immediate release, recovering the zero-hold baseline.
+
+\paragraph{Transition}
+The next state $s_{e'}$ corresponds to the \emph{next arrival event in the fleet}, which need not be the same bus.
+Letting $\tau(e, a_e)$ denote the random interval from event $e$ to the next event conditioned on hold decision $a_e$, the transition $P(s_{e'} \mid s_e, a_e)$ is the joint distribution of $(e', s_{e'})$ induced by the network dynamics, boarding / alighting, and the actions of the other agents over that interval.
+In practice we train a centralised policy shared across buses, treating the asynchronous stream of events as a single MDP trajectory.
+
+\paragraph{Reward}
+The per-event reward combines two headway deviations and a holding penalty:
+\begin{equation}
+r_e = -\left| h_{\text{prev}} - h^{\text{target}}_{\ell} \right| - \alpha \left| h_{\text{next}} - h^{\text{target}}_{\ell} \right| - \beta \holdt,
+\label{eq:reward}
+\end{equation}
+where $h^{\text{target}}_{\ell}$ is the scheduled headway for route $\ell$, and $\alpha, \beta > 0$ trade off forward-looking regularity against holding cost.
+Episode returns are undiscounted sums over all events in an 18\,000-second operating period.
+
+\subsection{Hybrid offline-to-online setting}
+\label{sec:problem:h2o}
+
+We consider two environments that share the state, action, and reward schemas above but differ in dynamics and reward magnitude.
+
+\paragraph{Evaluation environment $\Mreal$}
+A SUMO microsimulation \citep{lopez2018microscopic} of a real 12-line corridor with 389 vehicles, calibrated boarding/alighting times, and stochastic passenger arrival (\Cref{fig:network_topology}).
+All reported benchmark numbers use $\Mreal$ with a fixed OD profile for reproducibility.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.7\linewidth]{figures/network_topology.pdf}
+\caption{Changsha 12-line bus corridor used for the SUMO microsimulation $\Mreal$. All 12 lines are agent-controlled; Line 7X (bold red) is the longest, shown for reference. The same network topology is used by the low-fidelity sim-core $\Msim$.}
+\label{fig:network_topology}
+\end{figure*}
+
+\paragraph{Low-fidelity simulator $\Msim$}
+An LSTM-based travel-time model with analytic dwell dynamics; rolls forward roughly 40\,$\times$ faster than SUMO per event and is the only environment used for online interaction during training.
+Crucially, $\Msim$'s reward magnitude in \Cref{eq:reward} is systematically smaller than $\Mreal$'s, because its simplified passenger model under-states the variance of $h_{\text{prev}}$; we measure $|\E_{\Msim}[r]| / |\E_{\Mreal}[r]| \approx 0.2$ on matched initial conditions.
+
+\paragraph{Offline buffer $\Doff$}
+A pre-collected dataset of $\lvert \Doff \rvert = 675{,}000$ transitions drawn from four distinct behaviour policies---a previously trained SAC agent, a headway-threshold heuristic, an $\epsilon$-random controller, and the best RE-SAC checkpoint from a prior SUMO-environment run, which we refer to as \emph{ep39} (a deterministic learned expert, not a hand-coded rule).
+Source proportions are documented in \Cref{app:impl}.
+
+\paragraph{Objective}
+Given $\Doff$ and unlimited access to $\Msim$, train a policy $\piphi$ maximising undiscounted return in $\Mreal$ at evaluation time, without ever sampling from $\Mreal$ during training.
+This is the standard hybrid offline-to-online (H2O) objective \citep{niu2022h2o}, with the additional constraint that the two environments differ in \emph{both} transition dynamics and reward scale.
+
+\subsection{Two issues with direct application of H2O+ in this setting}
+\label{sec:problem:failures}
+
+Applying the recent H2O+ recipe \citep{liu2024h2oplus} directly to this multi-fidelity transit setting exposes two issues.
+We describe them informally here and return to concrete mechanisms in \Cref{sec:method}.
+
+\paragraph{Issue 1: weak action-conditional signal for the discriminator}
+H2O+ reweights simulator Bellman targets by an IS ratio $\wis(s,a,s') = \Preal(s'\mid s,a)/\Psim(s'\mid s,a)$, estimated by a factored discriminator $\disc(s,a,s')$ in the DARC formulation \citep{eysenbach2021off}.
+This estimator is consistent when $a$ carries substantial information about $s'$ conditional on $s$---typical in MuJoCo continuous control, where high-dimensional torques directly drive fine-grained transitions.
+In transit holding, the action is two-dimensional and nearly binary ($\holdt \in \{0\} \cup [0, \holdt_{\max}]$ with frequent zeros), while $s' - s$ is dominated by exogenous passenger and traffic dynamics.
+Mutual information $I(S'; A \mid S)$ is correspondingly small, and the factored classifier tends toward a function approximately independent of $a$.
+Empirically, we observe the DARC discriminator producing near-uniform IS weights on this benchmark across a hyperparameter sweep (\Cref{sec:exp:analysis}).
+We acknowledge upfront that whether this reflects a fundamental mutual-information constraint or a tuning artefact is an empirical question, addressed through that sweep and a data-level information estimate.
+
+\paragraph{Issue 2: reward-scale heterogeneity drags LCB-only targets downward}
+On our benchmark, $\lvert\E_{\Msim}[r]\rvert / \lvert\E_{\Mreal}[r]\rvert \approx 0.2$: the lower-fidelity simulator's simplified passenger model produces smaller-magnitude headway penalties than SUMO's.
+An LCB target \citep{an2021uncertainty}, $\Qlcb = \mu_Q - \beta \sigma_Q$, subtracts ensemble disagreement from the mean but does not constrain the mean itself; repeated sim-side Bellman updates therefore drift $\mu_Q$ toward the simulator's reward scale.
+A trivial first-line fix is to rescale sim rewards before training---multiplying $r_{\text{sim}}$ by the empirical ratio $\lvert\E[r_{\text{real}}]\rvert / \lvert\E[r_{\text{sim}}]\rvert$---which we evaluate as an explicit baseline in \Cref{sec:exp:main}.
+A second option, which we ultimately adopt, is to apply a one-sided floor on sim-side targets tracking the current Q-network's predictions on the offline batch, preserving the offline reward scale without pre-computed Monte Carlo returns or reward statistics.
+
+\medskip
+
+These two observations motivate the method in \Cref{sec:method}: (i) a contrastive discriminator that estimates an action-marginalised density ratio under a stated invariance assumption, and (ii) a one-sided bootstrap Q-floor on sim-side Bellman targets to counter reward-scale drift.
