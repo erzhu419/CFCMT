@@ -4,6 +4,7 @@ import math
 
 from cf_h2o.eval.synthetic_bus_ablation import (
     run_imperfect_sim_h2o_online_ablation,
+    run_learned_dag_data_efficiency_ablation,
     run_synthetic_causal_ablation,
     run_synthetic_data_efficiency_ablation,
 )
@@ -45,6 +46,31 @@ def test_synthetic_causal_factorization_is_data_efficient():
     assert result.points[1].causal_sparse_mse < result.points[-1].dense_unfactored_mse
     assert result.points[0].causal_to_dense_ratio < 0.25
     assert all(point.causal_to_dense_ratio < 0.02 for point in result.points[1:4])
+
+
+def test_gflownet_learned_dag_preserves_data_efficiency_signal():
+    result = run_learned_dag_data_efficiency_ablation(
+        {
+            "seed": 41,
+            "train_sizes": [16, 32, 64],
+            "n_eval": 512,
+            "ridge": 1.0,
+            "target_mse": 0.06,
+            "parent_top_k": 4,
+            "gflownet_train_steps": 120,
+            "gflownet_num_samples": 24,
+        }
+    )
+
+    assert result.oracle_n_at_target == 16
+    assert result.learned_n_at_target == 32
+    assert result.dense_n_at_target == 64
+    assert result.sample_efficiency_gain >= 2.0
+    assert result.points[1].learned_to_dense_ratio < 0.2
+    assert result.points[2].learned_to_dense_ratio < 0.5
+    assert result.points[2].learned_gflownet_mse < result.points[0].learned_gflownet_mse
+    assert min(point.parent_recall for point in result.points) >= 0.75
+    assert all(point.final_tb_loss < point.initial_tb_loss for point in result.points)
 
 
 def test_imperfect_sim_h2o_online_bridge_is_weighted_not_rejected():

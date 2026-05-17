@@ -7,6 +7,7 @@ from typing import Any
 
 import torch
 
+from cf_h2o.graph.dag_gflownet import DAGGFlowNetDiscoverer
 from cf_h2o.graph.feature_registry import FeatureRegistry
 from cf_h2o.rl.h2o_mcwm_bridge import H2OFactorTrustBridge
 from cf_h2o.schemas import GraphPosterior, GraphSpec, MechanismSpec, TransitionBatch
@@ -47,6 +48,34 @@ class SyntheticDataEfficiencyResult:
     points: list[DataEfficiencyPoint]
     target_mse: float
     causal_n_at_target: int | None
+    dense_n_at_target: int | None
+    sample_efficiency_gain: float
+
+
+@dataclass
+class LearnedDAGDataEfficiencyPoint:
+    n_train: int
+    learned_gflownet_mse: float
+    oracle_sparse_mse: float
+    dense_unfactored_mse: float
+    parent_recall: float
+    parent_precision: float
+    average_parent_count: float
+    initial_tb_loss: float
+    final_tb_loss: float
+    sample_log_reward_mean: float
+
+    @property
+    def learned_to_dense_ratio(self) -> float:
+        return self.learned_gflownet_mse / max(self.dense_unfactored_mse, 1e-12)
+
+
+@dataclass
+class LearnedDAGDataEfficiencyResult:
+    points: list[LearnedDAGDataEfficiencyPoint]
+    target_mse: float
+    learned_n_at_target: int | None
+    oracle_n_at_target: int | None
     dense_n_at_target: int | None
     sample_efficiency_gain: float
 
@@ -160,6 +189,78 @@ def run_synthetic_data_efficiency_ablation(config: dict[str, Any] | None = None)
         points=points,
         target_mse=target_mse,
         causal_n_at_target=causal_n,
+        dense_n_at_target=dense_n,
+        sample_efficiency_gain=float(gain),
+    )
+
+
+def run_learned_dag_data_efficiency_ablation(config: dict[str, Any] | None = None) -> LearnedDAGDataEfficiencyResult:
+    """Measure data efficiency when the parent sets come from DAG-GFlowNet."""
+
+    config = dict(config or {})
+    seed = int(config.get("seed", 41))
+    train_sizes = [int(value) for value in config.get("train_sizes", [16, 32, 64])]
+    eval_split = _make_split(int(config.get("n_eval", 512)), seed=seed + 1000)
+    ridge = float(config.get("ridge", 1.0))
+    target_mse = float(config.get("target_mse", 0.06))
+    parent_top_k = int(config.get("parent_top_k", 4))
+
+    points = []
+    for n_train in train_sizes:
+        train = _make_split(n_train, seed=seed)
+        posterior = _learn_gflownet_posterior(train.real, config, seed=seed + 700 + n_train)
+        registry = FeatureRegistry.from_transition_dataset(train.real)
+        learned_specs = _learned_specs_from_posterior(posterior, registry, parent_top_k=parent_top_k)
+        learned_next, learned_reward = _fit_eval_sparse_ridge_with_specs(train, eval_split, learned_specs, ridge)
+        oracle_next, oracle_reward = _fit_eval_causal_sparse_ridge(train, eval_split, ridge)
+        dense_next, dense_reward = _fit_eval_dense_unfactored_ridge(train, eval_split, ridge)
+        recall, precision, avg_parent_count = _parent_recovery_stats(learned_specs)
+        train_metrics = posterior.diagnostics.get("train", {})
+        points.append(
+            LearnedDAGDataEfficiencyPoint(
+                n_train=n_train,
+                learned_gflownet_mse=_transition_mse(
+                    learned_next,
+                    learned_reward,
+                    eval_split.real.next_observations,
+                    eval_split.real.rewards,
+                ),
+                oracle_sparse_mse=_transition_mse(
+                    oracle_next,
+                    oracle_reward,
+                    eval_split.real.next_observations,
+                    eval_split.real.rewards,
+                ),
+                dense_unfactored_mse=_transition_mse(
+                    dense_next,
+                    dense_reward,
+                    eval_split.real.next_observations,
+                    eval_split.real.rewards,
+                ),
+                parent_recall=recall,
+                parent_precision=precision,
+                average_parent_count=avg_parent_count,
+                initial_tb_loss=float(train_metrics.get("initial_tb_loss", 0.0)),
+                final_tb_loss=float(train_metrics.get("final_tb_loss", 0.0)),
+                sample_log_reward_mean=float(posterior.diagnostics.get("sample_log_reward_mean", 0.0)),
+            )
+        )
+
+    learned_n = _first_n_at_target(points, "learned_gflownet_mse", target_mse)
+    oracle_n = _first_n_at_target(points, "oracle_sparse_mse", target_mse)
+    dense_n = _first_n_at_target(points, "dense_unfactored_mse", target_mse)
+    if learned_n is None:
+        gain = 0.0
+    elif dense_n is None:
+        gain = float("inf")
+    else:
+        gain = dense_n / learned_n
+
+    return LearnedDAGDataEfficiencyResult(
+        points=points,
+        target_mse=target_mse,
+        learned_n_at_target=learned_n,
+        oracle_n_at_target=oracle_n,
         dense_n_at_target=dense_n,
         sample_efficiency_gain=float(gain),
     )
@@ -394,15 +495,24 @@ def _fit_eval_monolithic_linear(train: _Split, eval_split: _Split, ridge: float)
 
 
 def _fit_eval_causal_sparse_ridge(train: _Split, eval_split: _Split, ridge: float) -> tuple[torch.Tensor, torch.Tensor]:
+    return _fit_eval_sparse_ridge_with_specs(train, eval_split, _specs(correct=True), ridge)
+
+
+def _fit_eval_sparse_ridge_with_specs(
+    train: _Split,
+    eval_split: _Split,
+    specs: list[MechanismSpec],
+    ridge: float,
+) -> tuple[torch.Tensor, torch.Tensor]:
     coefficients = {}
     train_y = _residual_targets(train)
-    for spec in _specs(correct=True):
+    for spec in specs:
         child_idx = _child_output_index(spec.name)
         features = _causal_sparse_features(train, spec)
         coefficients[spec.name] = _ridge_solve(features, train_y[:, child_idx : child_idx + 1], ridge)
 
     residual = torch.zeros(eval_split.real.batch_size, len(OBS_NAMES) + 1, dtype=eval_split.real.observations.dtype)
-    for spec in _specs(correct=True):
+    for spec in specs:
         child_idx = _child_output_index(spec.name)
         residual[:, child_idx : child_idx + 1] = _causal_sparse_features(eval_split, spec) @ coefficients[spec.name]
     next_obs = eval_split.real.metadata["sim_next_observations"] + residual[:, : len(OBS_NAMES)]
@@ -473,6 +583,64 @@ def _dense_unfactored_features(split: _Split) -> torch.Tensor:
 def _ridge_solve(features: torch.Tensor, targets: torch.Tensor, ridge: float) -> torch.Tensor:
     eye = torch.eye(features.shape[1], dtype=features.dtype, device=features.device)
     return torch.linalg.solve(features.T @ features + float(ridge) * eye, features.T @ targets)
+
+
+def _learn_gflownet_posterior(batch: TransitionBatch, config: dict[str, Any], seed: int) -> GraphPosterior:
+    registry = FeatureRegistry.from_transition_dataset(batch)
+    discoverer = DAGGFlowNetDiscoverer(
+        {
+            "train_steps": int(config.get("gflownet_train_steps", 120)),
+            "num_samples": int(config.get("gflownet_num_samples", 24)),
+            "max_parents": int(config.get("gflownet_max_parents", 4)),
+            "reward_scale": float(config.get("gflownet_reward_scale", 0.002)),
+            "max_log_reward": float(config.get("gflownet_max_log_reward", 80.0)),
+            "complexity_penalty": float(config.get("gflownet_complexity_penalty", 0.45)),
+            "seed": int(seed),
+        }
+    )
+    return discoverer.fit(batch, registry=registry)
+
+
+def _learned_specs_from_posterior(
+    posterior: GraphPosterior,
+    registry: FeatureRegistry,
+    *,
+    parent_top_k: int,
+) -> list[MechanismSpec]:
+    hard_mask = posterior.graphs[0].hard_mask.to(dtype=torch.bool)
+    edge_marginals = posterior.edge_marginals.detach().cpu()
+    specs = []
+    for oracle_spec in _specs(correct=True):
+        child = oracle_spec.child_names[0]
+        child_idx = registry.node_index[child]
+        allowed = torch.where(hard_mask[:, child_idx])[0]
+        if allowed.numel() == 0:
+            parents = []
+        else:
+            probs = edge_marginals[allowed, child_idx]
+            order = torch.argsort(probs, descending=True)[: max(1, int(parent_top_k))]
+            parents = [registry.node_names[int(allowed[idx])] for idx in order.tolist()]
+        specs.append(
+            MechanismSpec(
+                name=oracle_spec.name,
+                child_names=list(oracle_spec.child_names),
+                parent_names=parents,
+                latent_dim=1,
+                output_dim=len(oracle_spec.child_names),
+                loss_type="mse",
+            )
+        )
+    return specs
+
+
+def _parent_recovery_stats(specs: list[MechanismSpec]) -> tuple[float, float, float]:
+    true_edges = {(spec.name, parent) for spec in _specs(correct=True) for parent in spec.parent_names}
+    learned_edges = {(spec.name, parent) for spec in specs for parent in spec.parent_names}
+    matched = true_edges & learned_edges
+    recall = len(matched) / max(1, len(true_edges))
+    precision = len(matched) / max(1, len(learned_edges))
+    avg_parent_count = sum(len(spec.parent_names) for spec in specs) / max(1, len(specs))
+    return float(recall), float(precision), float(avg_parent_count)
 
 
 def _child_output_index(mechanism_name: str) -> int:
