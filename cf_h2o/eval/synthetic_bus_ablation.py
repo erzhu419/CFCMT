@@ -8,7 +8,10 @@ from typing import Any
 import torch
 
 from cf_h2o.graph.feature_registry import FeatureRegistry
+from cf_h2o.rl.h2o_mcwm_bridge import H2OFactorTrustBridge
 from cf_h2o.schemas import GraphPosterior, GraphSpec, MechanismSpec, TransitionBatch
+from cf_h2o.trust.factor_trust import FactorTrustEstimator, FactorWiseTrustWeightProvider
+from cf_h2o.trust.weight_composer import WeightComposer
 from cf_h2o.world_model.causal_factored_residual import CausalFactoredResidualWorldModel
 
 
@@ -26,6 +29,38 @@ class SyntheticAblationResult:
     residual_initial_loss: float
     residual_final_loss: float
     wrong_residual_final_loss: float
+
+
+@dataclass
+class DataEfficiencyPoint:
+    n_train: int
+    causal_sparse_mse: float
+    dense_unfactored_mse: float
+
+    @property
+    def causal_to_dense_ratio(self) -> float:
+        return self.causal_sparse_mse / max(self.dense_unfactored_mse, 1e-12)
+
+
+@dataclass
+class SyntheticDataEfficiencyResult:
+    points: list[DataEfficiencyPoint]
+    target_mse: float
+    causal_n_at_target: int | None
+    dense_n_at_target: int | None
+    sample_efficiency_gain: float
+
+
+@dataclass
+class ImperfectSimH2OOnlineResult:
+    uncalibrated_sim_mse: float
+    corrected_sim_mse: float
+    good_sim_weight_mean: float
+    imperfect_sim_weight_mean: float
+    bad_sim_weight_mean: float
+    bridge_weight_mean: float
+    weighted_sim_loss: float
+    weight_ess_ratio: float
 
 
 def run_synthetic_causal_ablation(config: dict[str, Any] | None = None) -> SyntheticAblationResult:
@@ -70,6 +105,118 @@ def run_synthetic_causal_ablation(config: dict[str, Any] | None = None) -> Synth
         residual_initial_loss=float(correct_metrics["initial_loss"]),
         residual_final_loss=float(correct_metrics["final_loss"]),
         wrong_residual_final_loss=float(wrong_metrics["final_loss"]),
+    )
+
+
+def run_synthetic_data_efficiency_ablation(config: dict[str, Any] | None = None) -> SyntheticDataEfficiencyResult:
+    """Measure the sample-efficiency gain from sparse causal mechanisms.
+
+    The causal estimator receives only the known parent-theta interaction terms
+    for each mechanism. The dense estimator receives all variables and all
+    pairwise interactions jointly, which contains the right terms but buries
+    them among many irrelevant couplings.
+    """
+
+    config = dict(config or {})
+    seed = int(config.get("seed", 41))
+    train_sizes = [int(value) for value in config.get("train_sizes", [8, 16, 32, 64, 96])]
+    eval_split = _make_split(int(config.get("n_eval", 512)), seed=seed + 1000)
+    ridge = float(config.get("ridge", 1.0))
+    target_mse = float(config.get("target_mse", 0.02))
+
+    points = []
+    for n_train in train_sizes:
+        train = _make_split(n_train, seed=seed)
+        causal_next, causal_reward = _fit_eval_causal_sparse_ridge(train, eval_split, ridge=ridge)
+        dense_next, dense_reward = _fit_eval_dense_unfactored_ridge(train, eval_split, ridge=ridge)
+        points.append(
+            DataEfficiencyPoint(
+                n_train=n_train,
+                causal_sparse_mse=_transition_mse(
+                    causal_next,
+                    causal_reward,
+                    eval_split.real.next_observations,
+                    eval_split.real.rewards,
+                ),
+                dense_unfactored_mse=_transition_mse(
+                    dense_next,
+                    dense_reward,
+                    eval_split.real.next_observations,
+                    eval_split.real.rewards,
+                ),
+            )
+        )
+
+    causal_n = _first_n_at_target(points, "causal_sparse_mse", target_mse)
+    dense_n = _first_n_at_target(points, "dense_unfactored_mse", target_mse)
+    if causal_n is None:
+        gain = 0.0
+    elif dense_n is None:
+        gain = float("inf")
+    else:
+        gain = dense_n / causal_n
+
+    return SyntheticDataEfficiencyResult(
+        points=points,
+        target_mse=target_mse,
+        causal_n_at_target=causal_n,
+        dense_n_at_target=dense_n,
+        sample_efficiency_gain=float(gain),
+    )
+
+
+def run_imperfect_sim_h2o_online_ablation(config: dict[str, Any] | None = None) -> ImperfectSimH2OOnlineResult:
+    """Validate imperfect simulator use through the H2O+ external weight hook."""
+
+    config = dict(config or {})
+    seed = int(config.get("seed", 53))
+    train = _make_split(int(config.get("n_train", 160)), seed=seed)
+    eval_split = _make_split(int(config.get("n_eval", 128)), seed=seed + 1)
+    model_config = {
+        "hidden_dim": int(config.get("hidden_dim", 24)),
+        "batch_size": int(config.get("batch_size", 64)),
+        "train_epochs_residual": int(config.get("train_epochs_residual", 70)),
+        "residual_lr": float(config.get("residual_lr", 3e-3)),
+    }
+    model = _make_model(_specs(correct=True), _posterior(train.real, correct=True), model_config)
+    model.fit_residual_modules(train.real, theta_dict=train.theta)
+    corrected_next, corrected_reward = _exact_sim_plus_residual(model, eval_split.real, eval_split.theta)
+
+    estimator = FactorTrustEstimator(
+        MECHANISMS,
+        {
+            "w_min": float(config.get("w_min", 0.05)),
+            "w_max": float(config.get("w_max", 5.0)),
+            "residual_scale": float(config.get("residual_scale", 1.4)),
+            "graph_uncertainty_scale": 0.0,
+        },
+    )
+    provider = FactorWiseTrustWeightProvider(
+        model,
+        estimator,
+        WeightComposer(mode="geometric_mean", w_min=float(config.get("w_min", 0.05)), w_max=float(config.get("w_max", 5.0))),
+        theta_provider=_theta_from_batch_metadata,
+        config={"trust_warmup_steps": 0},
+    )
+    h2o = _SyntheticH2OOnlineHarness(_to_h2o_sim_batch(eval_split, theta_scale=1.0))
+    bridge = H2OFactorTrustBridge(h2o, provider, config={"trust_warmup_steps": 0})
+
+    good_weight = bridge.compute_sim_weight(_to_h2o_sim_batch(eval_split, theta_scale=0.25))
+    imperfect_weight = bridge.compute_sim_weight(_to_h2o_sim_batch(eval_split, theta_scale=1.0))
+    bad_weight = bridge.compute_sim_weight(_to_h2o_sim_batch(eval_split, theta_scale=2.0))
+    h2o_metrics = bridge.train_step(batch_size=min(64, eval_split.real.batch_size))
+
+    sim_next = eval_split.real.metadata["sim_next_observations"]
+    sim_reward = eval_split.real.metadata["sim_rewards"]
+    return ImperfectSimH2OOnlineResult(
+        uncalibrated_sim_mse=_transition_mse(sim_next, sim_reward, eval_split.real.next_observations, eval_split.real.rewards),
+        corrected_sim_mse=_transition_mse(corrected_next, corrected_reward, eval_split.real.next_observations, eval_split.real.rewards),
+        good_sim_weight_mean=float(good_weight.mean().detach().cpu()),
+        imperfect_sim_weight_mean=float(imperfect_weight.mean().detach().cpu()),
+        bad_sim_weight_mean=float(bad_weight.mean().detach().cpu()),
+        bridge_weight_mean=float(h2o_metrics["bridge_weight_mean"]),
+        weighted_sim_loss=float(h2o_metrics["weighted_sim_loss"]),
+        weight_ess_ratio=float(h2o_metrics["weight_ess_ratio"]),
     )
 
 
@@ -246,6 +393,33 @@ def _fit_eval_monolithic_linear(train: _Split, eval_split: _Split, ridge: float)
     return next_obs, reward
 
 
+def _fit_eval_causal_sparse_ridge(train: _Split, eval_split: _Split, ridge: float) -> tuple[torch.Tensor, torch.Tensor]:
+    coefficients = {}
+    train_y = _residual_targets(train)
+    for spec in _specs(correct=True):
+        child_idx = _child_output_index(spec.name)
+        features = _causal_sparse_features(train, spec)
+        coefficients[spec.name] = _ridge_solve(features, train_y[:, child_idx : child_idx + 1], ridge)
+
+    residual = torch.zeros(eval_split.real.batch_size, len(OBS_NAMES) + 1, dtype=eval_split.real.observations.dtype)
+    for spec in _specs(correct=True):
+        child_idx = _child_output_index(spec.name)
+        residual[:, child_idx : child_idx + 1] = _causal_sparse_features(eval_split, spec) @ coefficients[spec.name]
+    next_obs = eval_split.real.metadata["sim_next_observations"] + residual[:, : len(OBS_NAMES)]
+    reward = eval_split.real.metadata["sim_rewards"] + residual[:, len(OBS_NAMES)]
+    return next_obs, reward
+
+
+def _fit_eval_dense_unfactored_ridge(train: _Split, eval_split: _Split, ridge: float) -> tuple[torch.Tensor, torch.Tensor]:
+    train_x = _dense_unfactored_features(train)
+    eval_x = _dense_unfactored_features(eval_split)
+    coeff = _ridge_solve(train_x, _residual_targets(train), ridge)
+    residual = eval_x @ coeff
+    next_obs = eval_split.real.metadata["sim_next_observations"] + residual[:, : len(OBS_NAMES)]
+    reward = eval_split.real.metadata["sim_rewards"] + residual[:, len(OBS_NAMES)]
+    return next_obs, reward
+
+
 def _monolithic_features(batch: TransitionBatch, theta: dict[str, torch.Tensor]) -> torch.Tensor:
     theta_values = torch.cat([theta[name] for name in MECHANISMS], dim=1)
     return torch.cat(
@@ -257,6 +431,130 @@ def _monolithic_features(batch: TransitionBatch, theta: dict[str, torch.Tensor])
         ],
         dim=1,
     )
+
+
+def _residual_targets(split: _Split) -> torch.Tensor:
+    return torch.cat(
+        [
+            split.real.next_observations - split.real.metadata["sim_next_observations"],
+            (split.real.rewards - split.real.metadata["sim_rewards"]).reshape(-1, 1),
+        ],
+        dim=1,
+    )
+
+
+def _causal_sparse_features(split: _Split, spec: MechanismSpec) -> torch.Tensor:
+    values = []
+    for parent in spec.parent_names:
+        parent_value = _parent_value(split, parent).reshape(-1, 1)
+        values.append(parent_value * split.theta[spec.name])
+    values.append(torch.ones(split.real.batch_size, 1, dtype=split.real.observations.dtype, device=split.real.device))
+    return torch.cat(values, dim=1)
+
+
+def _dense_unfactored_features(split: _Split) -> torch.Tensor:
+    batch = split.real
+    theta_values = torch.cat([split.theta[name] for name in MECHANISMS], dim=1)
+    base = torch.cat([batch.observations, batch.actions, theta_values], dim=1)
+    pairwise = []
+    for row in range(base.shape[1]):
+        for col in range(row, base.shape[1]):
+            pairwise.append((base[:, row] * base[:, col]).reshape(-1, 1))
+    return torch.cat(
+        [
+            base,
+            *pairwise,
+            torch.ones(batch.batch_size, 1, dtype=batch.observations.dtype, device=batch.device),
+        ],
+        dim=1,
+    )
+
+
+def _ridge_solve(features: torch.Tensor, targets: torch.Tensor, ridge: float) -> torch.Tensor:
+    eye = torch.eye(features.shape[1], dtype=features.dtype, device=features.device)
+    return torch.linalg.solve(features.T @ features + float(ridge) * eye, features.T @ targets)
+
+
+def _child_output_index(mechanism_name: str) -> int:
+    mapping = {"demand": 0, "dwell": 1, "speed": 2, "headway": 3, "reward": 4}
+    return mapping[mechanism_name]
+
+
+def _parent_value(split: _Split, parent_name: str) -> torch.Tensor:
+    name = parent_name[:-2] if parent_name.endswith("@t") else parent_name
+    if name in OBS_NAMES:
+        return split.real.observations[:, OBS_NAMES.index(name)]
+    if name in ACTION_NAMES:
+        return split.real.actions[:, ACTION_NAMES.index(name)]
+    raise KeyError(f"Unknown parent name: {parent_name}")
+
+
+def _first_n_at_target(points: list[DataEfficiencyPoint], field: str, target_mse: float) -> int | None:
+    for point in sorted(points, key=lambda item: item.n_train):
+        if float(getattr(point, field)) <= target_mse:
+            return point.n_train
+    return None
+
+
+def _to_h2o_sim_batch(split: _Split, theta_scale: float) -> dict[str, Any]:
+    batch: dict[str, Any] = {
+        "observations": split.real.observations,
+        "actions": split.real.actions,
+        "rewards": split.real.metadata["sim_rewards"],
+        "next_observations": split.real.metadata["sim_next_observations"],
+        "dones": split.real.dones,
+        "z_t": torch.zeros(split.real.batch_size, 1, dtype=split.real.observations.dtype, device=split.real.device),
+        "z_t1": torch.zeros(split.real.batch_size, 1, dtype=split.real.observations.dtype, device=split.real.device),
+        "obs_names": OBS_NAMES,
+        "action_names": ACTION_NAMES,
+        "source": "sim",
+        "line_id": ["synthetic-line"] * split.real.batch_size,
+        "route_id": ["synthetic-route"] * split.real.batch_size,
+    }
+    for name in MECHANISMS:
+        batch[f"theta_{name}"] = split.theta[name] * float(theta_scale)
+    return batch
+
+
+def _theta_from_batch_metadata(batch: TransitionBatch) -> dict[str, torch.Tensor]:
+    return {name: batch.metadata[f"theta_{name}"] for name in MECHANISMS}
+
+
+class _SyntheticH2OOnlineHarness:
+    def __init__(self, sim_batch: dict[str, Any]):
+        self.sim_batch = sim_batch
+        self._total_steps = 1
+        self.external_sim_weight_provider = None
+
+    def train(self, batch_size: int, pretrain_steps: int = 0) -> dict[str, float]:
+        del pretrain_steps
+        self._total_steps += 1
+        if self.external_sim_weight_provider is None:
+            raise RuntimeError("external_sim_weight_provider must be installed")
+        batch = _slice_h2o_batch(self.sim_batch, batch_size)
+        weight = self.external_sim_weight_provider(batch)
+        transition_energy = (batch["next_observations"] - batch["observations"]).pow(2).mean(dim=1)
+        reward_energy = (batch["rewards"].reshape(-1) - batch["rewards"].reshape(-1).mean()).pow(2)
+        proxy_td_error = transition_energy + reward_energy
+        ess = (weight.sum() ** 2) / (weight.pow(2).sum() + 1e-8)
+        return {
+            "bridge_weight_mean": float(weight.mean().detach().cpu()),
+            "weighted_sim_loss": float((weight * proxy_td_error).mean().detach().cpu()),
+            "weight_ess_ratio": float((ess / max(weight.numel(), 1)).detach().cpu()),
+        }
+
+
+def _slice_h2o_batch(batch: dict[str, Any], batch_size: int) -> dict[str, Any]:
+    limit = min(int(batch_size), int(batch["observations"].shape[0]))
+    sliced = {}
+    for key, value in batch.items():
+        if torch.is_tensor(value) and value.shape[:1] == (batch["observations"].shape[0],):
+            sliced[key] = value[:limit]
+        elif isinstance(value, list) and len(value) == batch["observations"].shape[0]:
+            sliced[key] = value[:limit]
+        else:
+            sliced[key] = value
+    return sliced
 
 
 def _transition_mse(pred_next, pred_reward, target_next, target_reward) -> float:
