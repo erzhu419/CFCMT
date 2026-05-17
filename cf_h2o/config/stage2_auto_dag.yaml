@@ -2,6 +2,7 @@ stage: 2
 
 auto_dag:
   enabled: true
+  method: ridge_bootstrap
   llm_backend: none
   bootstrap_runs: 20
   max_parents: 8
@@ -11,6 +12,23 @@ auto_dag:
   mechanism_parent_threshold: 0.3
   min_edge_prob_for_hard: 0.8
   use_soft_masks: true
+  seed: 0
+
+dag_gflownet:
+  enabled: false
+  train_steps: 400
+  num_samples: 32
+  max_parents: 8
+  ridge_l2: 0.001
+  score_threshold: 0.08
+  score_temperature: 0.04
+  complexity_penalty: 0.5
+  reward_scale: 0.002
+  max_log_reward: 80.0
+  warm_start_ridge: true
+  initial_stop_logit: -2.0
+  stop_edge_count_slope: 0.12
+  mechanism_parent_threshold: 0.3
   seed: 0
 
 outputs:

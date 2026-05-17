@@ -5,6 +5,7 @@ import json
 import torch
 
 from cf_h2o.graph.auto_dag import AutoDAGDiscoverer
+from cf_h2o.graph.dag_gflownet import DAGGFlowNetDiscoverer
 from cf_h2o.graph.feature_registry import FeatureRegistry
 from cf_h2o.graph.validation import edge_auc, forbidden_edge_max_probability
 from cf_h2o.schemas import TransitionBatch
@@ -116,3 +117,38 @@ def test_auto_dag_synthetic_recovers_allowed_edges_and_saves_outputs(tmp_path):
     saved = json.loads(outputs["graph_posterior"].read_text(encoding="utf-8"))
     assert saved["node_names"] == registry.node_names
     assert saved["diagnostics"]["bootstrap_runs"] == 8
+
+
+def test_dag_gflownet_synthetic_samples_high_reward_posterior(tmp_path):
+    batch, true_edge_names = _make_synthetic_bus_batch()
+    registry = FeatureRegistry.from_transition_dataset(batch)
+    discoverer = DAGGFlowNetDiscoverer(
+        {
+            "train_steps": 180,
+            "num_samples": 24,
+            "max_parents": 5,
+            "reward_scale": 0.002,
+            "max_log_reward": 80.0,
+            "complexity_penalty": 0.45,
+            "seed": 7,
+        }
+    )
+
+    posterior = discoverer.fit(batch, registry=registry)
+    node_index = registry.node_index
+    hard_mask = posterior.graphs[0].hard_mask
+    true_edges = {(node_index[src], node_index[dst]) for src, dst in true_edge_names}
+    auc = edge_auc(posterior.edge_marginals, true_edges, hard_mask)
+
+    assert posterior.diagnostics["method"] == "dag_gflownet_tb"
+    assert posterior.edge_marginals.shape == (len(registry.node_names), len(registry.node_names))
+    assert len(posterior.graphs) == 24
+    assert forbidden_edge_max_probability(posterior.edge_marginals, hard_mask) < 0.05
+    assert auc > 0.72
+    assert posterior.diagnostics["sample_log_reward_mean"] > 1.0
+    assert posterior.diagnostics["sample_log_reward_max"] < 80.0
+    assert posterior.diagnostics["train"]["final_tb_loss"] < posterior.diagnostics["train"]["initial_tb_loss"]
+
+    outputs = discoverer.save(posterior, tmp_path)
+    saved = json.loads(outputs["graph_posterior"].read_text(encoding="utf-8"))
+    assert saved["diagnostics"]["method"] == "dag_gflownet_tb"

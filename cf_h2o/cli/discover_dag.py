@@ -11,6 +11,7 @@ from typing import Any
 import torch
 
 from cf_h2o.graph.auto_dag import AutoDAGDiscoverer
+from cf_h2o.graph.dag_gflownet import DAGGFlowNetDiscoverer
 from cf_h2o.graph.feature_registry import FeatureRegistry
 from cf_h2o.schemas import TransitionBatch
 
@@ -21,8 +22,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--sim-buffer", type=Path, default=None)
     parser.add_argument("--route-schema", type=Path, default=None)
     parser.add_argument("--out-dir", type=Path, required=True)
+    parser.add_argument("--method", choices=["ridge_bootstrap", "dag_gflownet"], default="ridge_bootstrap")
     parser.add_argument("--llm-backend", default="none")
     parser.add_argument("--bootstrap", type=int, default=20)
+    parser.add_argument("--gflownet-train-steps", type=int, default=400)
+    parser.add_argument("--gflownet-samples", type=int, default=32)
     parser.add_argument("--max-parents", type=int, default=8)
     parser.add_argument("--obs-names", default=None, help="Comma-separated observation names.")
     parser.add_argument("--action-names", default=None, help="Comma-separated action names.")
@@ -40,13 +44,21 @@ def main(argv: list[str] | None = None) -> int:
     action_names = args.action_names.split(",") if args.action_names else None
     registry = FeatureRegistry.from_transition_dataset(dataset, obs_names=obs_names, action_names=action_names)
     route_schema = json.loads(args.route_schema.read_text(encoding="utf-8")) if args.route_schema else None
-    discoverer = AutoDAGDiscoverer(
-        {
-            "llm_backend": args.llm_backend,
-            "bootstrap_runs": args.bootstrap,
-            "max_parents": args.max_parents,
-        }
-    )
+    config = {
+        "llm_backend": args.llm_backend,
+        "max_parents": args.max_parents,
+    }
+    if args.method == "dag_gflownet":
+        config.update(
+            {
+                "train_steps": args.gflownet_train_steps,
+                "num_samples": args.gflownet_samples,
+            }
+        )
+        discoverer = DAGGFlowNetDiscoverer(config)
+    else:
+        config["bootstrap_runs"] = args.bootstrap
+        discoverer = AutoDAGDiscoverer(config)
     posterior = discoverer.fit(dataset, registry=registry, route_schema=route_schema)
     outputs = discoverer.save(posterior, args.out_dir)
     for name, path in outputs.items():
@@ -100,4 +112,3 @@ def _concat_batches(batches: list[TransitionBatch]) -> TransitionBatch:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
