@@ -1,0 +1,26 @@
+stage: 3
+
+latent:
+  enabled: true
+  history_len: 8
+  hidden_dim: 128
+  mechanism_latent_dims:
+    demand: 2
+    speed: 2
+    dwell: 2
+    headway: 2
+    reward: 1
+  lambda_smooth: 0.01
+  lambda_independence: 0.01
+  lambda_prior: 0.001
+  lambda_domain_contrast: 0.0
+
+policy_input:
+  use_theta: false
+  forbidden_direct_inputs:
+    - domain_id
+    - source
+    - real_sim_label
+    - city_id
+    - snapshot_t1
+    - reward_t1
