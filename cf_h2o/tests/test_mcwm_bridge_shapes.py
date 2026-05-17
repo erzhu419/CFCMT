@@ -3,11 +3,13 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import numpy as np
 import torch
 from torch import nn
 
 from cf_h2o.data.h2o_buffer_adapter import transition_batch_from_h2o
 from cf_h2o.rl.h2o_mcwm_bridge import H2OMCWMBridge
+from cf_h2o.schemas import TransitionBatch
 from cf_h2o.world_model.mcwm_adapter import MCWMAdapter
 
 
@@ -44,6 +46,60 @@ def test_mcwm_adapter_predict_and_trust_shapes():
     assert torch.isfinite(weights).all()
     assert torch.all(weights >= 0.05)
     assert torch.all(weights <= 5.0)
+
+
+def test_mcwm_sim_model_converges_on_linear_synthetic_dynamics():
+    torch.manual_seed(7)
+    np.random.seed(7)
+
+    obs_dim = 3
+    act_dim = 1
+    n_train = 384
+    n_eval = 64
+    observations = torch.randn(n_train + n_eval, obs_dim) * 0.5
+    actions = torch.randn(n_train + n_eval, act_dim) * 0.5
+    delta = 0.2 * observations + 0.15 * actions.repeat(1, obs_dim)
+    rewards = (observations[:, 0] - 0.5 * observations[:, 1] + 0.25 * actions[:, 0])
+    next_observations = observations + delta
+    dones = torch.zeros(n_train + n_eval)
+
+    train_batch = TransitionBatch(
+        observations=observations[:n_train],
+        actions=actions[:n_train],
+        rewards=rewards[:n_train],
+        next_observations=next_observations[:n_train],
+        dones=dones[:n_train],
+    )
+
+    adapter = MCWMAdapter(
+        obs_dim,
+        act_dim,
+        {
+            "ensemble_size": 2,
+            "hidden_dim": 32,
+            "train_epochs_sim": 60,
+            "batch_size": 64,
+            "val_ratio": 0.2,
+            "patience": 60,
+        },
+        device="cpu",
+    )
+
+    eval_obs = observations[n_train:]
+    eval_actions = actions[n_train:]
+    eval_next = next_observations[n_train:]
+    with torch.no_grad():
+        before = adapter.predict(eval_obs, eval_actions, deterministic=True)["next_observations"]
+        before_mse = torch.mean((before - eval_next) ** 2).item()
+
+    adapter.fit_sim_model(train_batch)
+
+    with torch.no_grad():
+        after = adapter.predict(eval_obs, eval_actions, deterministic=True)["next_observations"]
+        after_mse = torch.mean((after - eval_next) ** 2).item()
+
+    assert after_mse < before_mse * 0.5
+    assert after_mse < 0.05
 
 
 def test_h2o_batch_adapter_preserves_metadata_without_policy_shortcutting():
