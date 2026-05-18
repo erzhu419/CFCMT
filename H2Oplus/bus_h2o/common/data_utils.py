@@ -28,7 +28,7 @@ For stops:
 from __future__ import annotations
 
 import xml.etree.ElementTree as ET
-from typing import Optional
+from typing import Mapping, Optional
 import numpy as np
 import torch
 import torch.nn as nn
@@ -88,6 +88,35 @@ def build_edge_linear_map(xml_path: str, line_id: str) -> dict[str, float]:
     return edge_map
 
 
+def build_all_edge_linear_maps(xml_path: str) -> tuple[dict[str, dict[str, float]], dict[str, float]]:
+    """
+    Parse every busline in ``a_sorted_busline_edge.xml``.
+
+    Returns:
+        edge_maps: {line_id: {edge_id: cumulative_start_distance_m}}
+        route_lengths: {line_id: total_route_length_m}
+    """
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+    edge_maps: dict[str, dict[str, float]] = {}
+    route_lengths: dict[str, float] = {}
+    for busline_elem in root.findall("busline"):
+        line_id = busline_elem.get("id")
+        if not line_id:
+            continue
+        edge_map: dict[str, float] = {}
+        cumulative = 0.0
+        for elem in busline_elem.findall("element"):
+            eid = elem.get("id")
+            length = float(elem.get("length", 0.0))
+            if eid is not None and eid not in edge_map:
+                edge_map[eid] = cumulative
+            cumulative += length
+        edge_maps[line_id] = edge_map
+        route_lengths[line_id] = cumulative
+    return edge_maps, route_lengths
+
+
 def sumo_pos_to_linear(
     edge_id: str,
     lane_offset: float,
@@ -122,6 +151,20 @@ def set_route_length(length_m: float) -> None:
     """Set the global route length used by extract_structured_context."""
     global ROUTE_LENGTH
     ROUTE_LENGTH = float(length_m)
+
+
+def set_route_length_from_lines(route_lengths: Mapping[str, float], fallback: float = 13119.0) -> float:
+    """
+    Set the global fallback route length from all available lines.
+
+    ``extract_structured_context`` prefers per-entry ``route_length`` from the
+    snapshot, so this value is only used when an older snapshot lacks per-line
+    lengths.  The median avoids reintroducing a 7X-specific fallback.
+    """
+    values = np.array([float(v) for v in route_lengths.values() if float(v) > 0], dtype=np.float64)
+    route_length = float(np.median(values)) if values.size else float(fallback)
+    set_route_length(route_length)
+    return route_length
 
 
 def extract_structured_context(

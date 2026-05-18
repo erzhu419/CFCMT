@@ -44,8 +44,8 @@ from common.data_utils import (
     ZOnlyDiscriminator,
     compute_z_importance_weight,
     extract_structured_context,
-    build_edge_linear_map,
-    set_route_length,
+    build_all_edge_linear_maps,
+    set_route_length_from_lines,
 )
 from envs.bus_sim_env import BusSimEnv
 from sumo_env.sumo_snapshot import make_mock_snapshot
@@ -155,9 +155,8 @@ def main(args):
     print(f"Device: {device}")
 
     # Set route length from edge map
-    edge_map = build_edge_linear_map(EDGE_XML, "7X")
-    route_len = max(edge_map.values()) if edge_map else 13119.0
-    set_route_length(route_len)
+    _, route_lengths = build_all_edge_linear_maps(EDGE_XML)
+    route_len = set_route_length_from_lines(route_lengths, fallback=13119.0)
 
     # ── 1. Load / generate real transitions ─────────────────────────
     if args.mock:

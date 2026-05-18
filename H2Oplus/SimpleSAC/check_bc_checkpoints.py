@@ -20,15 +20,15 @@ sys.path.insert(0, _BUS_H2O)
 
 from bus_replay_buffer import BusMixedReplayBuffer
 from model import EmbeddingLayer, BusEmbeddingPolicy
-from common.data_utils import set_route_length, build_edge_linear_map
+from common.data_utils import build_all_edge_linear_maps, set_route_length_from_lines
 
 # Setup route length
 edge_xml = os.path.join(_BUS_H2O, "network_data", "a_sorted_busline_edge.xml")
 if os.path.exists(edge_xml):
-    edge_map = build_edge_linear_map(edge_xml, "7X")
-    set_route_length(max(edge_map.values()) if edge_map else 13119.0)
+    _, route_lengths = build_all_edge_linear_maps(edge_xml)
+    set_route_length_from_lines(route_lengths)
 else:
-    set_route_length(13119.0)
+    set_route_length_from_lines({}, fallback=13119.0)
 
 # Load a small batch of obs from ep39 (used as sanity test inputs for both)
 print("[Check] Loading 1024 sanity obs from ep39 data ...")

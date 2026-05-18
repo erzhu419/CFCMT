@@ -33,7 +33,7 @@ sys.path.insert(0, SUMO_DIR)
 sys.path.insert(0, os.path.join(SUMO_DIR, "sim_obj"))
 
 from sumo_env.rl_bridge import SumoRLBridge
-from common.data_utils import build_edge_linear_map, set_route_length
+from common.data_utils import build_all_edge_linear_maps, set_route_length_from_lines
 from normalization import Normalization, RunningMeanStd
 
 EDGE_XML = os.path.join(_BUS_H2O, "network_data", "a_sorted_busline_edge.xml")
@@ -263,8 +263,8 @@ def main():
         line_idx_map, bus_idx_map = {}, {}
 
     if os.path.exists(EDGE_XML):
-        em = build_edge_linear_map(EDGE_XML, "7X")
-        set_route_length(max(em.values()) if em else 13119.0)
+        _, line_route_lengths = build_all_edge_linear_maps(EDGE_XML)
+        set_route_length_from_lines(line_route_lengths)
 
     bridge = SumoRLBridge(root_dir=SUMO_DIR, gui=False, max_steps=18000)
 

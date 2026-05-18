@@ -47,9 +47,9 @@ if os.path.isdir(_CASE_DIR):
 # ⚠️ 只导入 SumoRLBridge 和快照工具，绝不导入 SumoBusHoldingEnv / rl_env
 from sumo_env.rl_bridge import SumoRLBridge                     # noqa: E402
 from sumo_env.sumo_snapshot import bridge_to_snapshot            # noqa: E402
-from common.data_utils import (build_edge_linear_map,            # noqa: E402
+from common.data_utils import (build_all_edge_linear_maps,       # noqa: E402
                                extract_structured_context,
-                               set_route_length)
+                               set_route_length_from_lines)
 
 EDGE_XML = os.path.join(_HERE, "network_data", "a_sorted_busline_edge.xml")
 LINE_ID  = "7X"
@@ -161,10 +161,12 @@ def main(args):
 
     # 1. Edge map + route length
     print(f"[1] 构建 edge map: {EDGE_XML} ...")
-    edge_map = build_edge_linear_map(EDGE_XML, LINE_ID) if os.path.exists(EDGE_XML) else {}
-    route_len = max(edge_map.values()) if edge_map else 13119.0
-    set_route_length(route_len)
-    print(f"    路线长: {route_len:.0f} m, edges: {len(edge_map)}")
+    if os.path.exists(EDGE_XML):
+        all_edge_maps, line_route_lengths = build_all_edge_linear_maps(EDGE_XML)
+    else:
+        all_edge_maps, line_route_lengths = {}, {}
+    route_len = set_route_length_from_lines(line_route_lengths, fallback=13119.0)
+    print(f"    全线路 fallback 路线长: {route_len:.0f} m, lines: {len(all_edge_maps)}")
 
     # 2. 初始化 Bridge (不导入 SumoBusHoldingEnv!)
     print(f"[2] 初始化 SumoRLBridge (root_dir={SUMO_DIR}) ...")
@@ -197,7 +199,11 @@ def main(args):
             continue
 
         # 本批次的快照和 z (所有到站车共享同一时刻)
-        snap = bridge_to_snapshot(bridge, edge_map)
+        snap = bridge_to_snapshot(
+            bridge,
+            all_edge_maps=all_edge_maps,
+            line_route_lengths=line_route_lengths,
+        )
         z_now = extract_structured_context(snap)
 
         for ev in events:

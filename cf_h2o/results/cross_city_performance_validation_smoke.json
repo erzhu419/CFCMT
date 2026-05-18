@@ -1,0 +1,532 @@
+{
+  "ok": true,
+  "validation_level": "cross_city_static_offline_dynamics_performance",
+  "performance_validation": true,
+  "policy_rollout": false,
+  "config": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/cross_city_open_transit.json",
+  "actions_seconds": [
+    0.0,
+    30.0
+  ],
+  "ridge": 1.0,
+  "max_lines_per_city": 2,
+  "output_names": [
+    "next_forward_headway",
+    "next_backward_headway",
+    "next_waiting_passengers",
+    "next_base_stop_duration",
+    "next_gap",
+    "next_co_line_forward_headway",
+    "next_co_line_backward_headway",
+    "next_segment_mean_speed",
+    "reward"
+  ],
+  "cities": {
+    "singapore_lta_all": {
+      "city": "Singapore",
+      "env_path": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/lta_datamall/202604/h2o_city_envs/SINGAPORE_LTA_weekday_all_services",
+      "lines_seen": 2,
+      "transitions_seen": 3264,
+      "warnings": [
+        "stats_elapsed_sec=0.8"
+      ]
+    },
+    "austin_capmetro_all": {
+      "city": "Austin / CapMetro",
+      "env_path": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/austin_capmetro/h2o_city_envs/AUSTINCAPMETRO_weekday_all_routes",
+      "lines_seen": 2,
+      "transitions_seen": 2544,
+      "warnings": [
+        "stats_elapsed_sec=0.3"
+      ]
+    },
+    "halifax_transit_all": {
+      "city": "Halifax Transit",
+      "env_path": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/halifax_transit/h2o_city_envs/HALIFAXTRANSIT_weekday_all_routes",
+      "lines_seen": 2,
+      "transitions_seen": 2208,
+      "warnings": [
+        "stats_elapsed_sec=0.2"
+      ]
+    },
+    "mbta_all": {
+      "city": "MBTA",
+      "env_path": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/mbta/h2o_city_envs/MBTA_weekday_all_routes_v2",
+      "lines_seen": 2,
+      "transitions_seen": 1536,
+      "warnings": [
+        "stats_elapsed_sec=0.3"
+      ]
+    }
+  },
+  "splits": [
+    {
+      "name": "source_open_na_to_singapore",
+      "source_envs": [
+        "austin_capmetro_all",
+        "halifax_transit_all",
+        "mbta_all"
+      ],
+      "target_env": "singapore_lta_all",
+      "ok": true,
+      "performance_validation": true,
+      "policy_rollout": false,
+      "train_transitions": 6288,
+      "target_transitions": 3264,
+      "target_lines_seen": 2,
+      "metrics": {
+        "uncalibrated": {
+          "total_mse": 500.62144568183635,
+          "next_dynamic_mse": 563.1987108851392,
+          "reward_mse": 0.003324055412831107,
+          "per_output_mse": {
+            "next_forward_headway": 930.7464368557272,
+            "next_backward_headway": 394.66005215042287,
+            "next_waiting_passengers": 620.5357800770615,
+            "next_base_stop_duration": 2.742150740085483,
+            "next_gap": 2503.3746642004203,
+            "next_co_line_forward_headway": 27.566518751073197,
+            "next_co_line_backward_headway": 9.83460688826345,
+            "next_segment_mean_speed": 16.129477418059437,
+            "reward": 0.003324055412831107
+          }
+        },
+        "h2oplus_dense": {
+          "total_mse": 560.1777235174312,
+          "next_dynamic_mse": 630.1996547250876,
+          "reward_mse": 0.0022738561799791083,
+          "per_output_mse": {
+            "next_forward_headway": 1103.9383018108695,
+            "next_backward_headway": 393.3166327176243,
+            "next_waiting_passengers": 643.7473423866898,
+            "next_base_stop_duration": 0.8105477714940981,
+            "next_gap": 2814.632529147744,
+            "next_co_line_forward_headway": 34.46334024508112,
+            "next_co_line_backward_headway": 12.361050917295088,
+            "next_segment_mean_speed": 38.32749280390319,
+            "reward": 0.0022738561799791083
+          }
+        },
+        "cfcmt_mechanism": {
+          "total_mse": 514.1753335178959,
+          "next_dynamic_mse": 578.4469500090515,
+          "reward_mse": 0.002401588650447509,
+          "per_output_mse": {
+            "next_forward_headway": 996.9208735189178,
+            "next_backward_headway": 355.3968045039692,
+            "next_waiting_passengers": 667.3684185215382,
+            "next_base_stop_duration": 0.956111122008227,
+            "next_gap": 2542.6712259385845,
+            "next_co_line_forward_headway": 32.160109896151994,
+            "next_co_line_backward_headway": 11.528212322190711,
+            "next_segment_mean_speed": 20.573844249052282,
+            "reward": 0.002401588650447509
+          }
+        },
+        "target_transitions": 3264,
+        "target_lines_seen": 2,
+        "target_env": "singapore_lta_all",
+        "target_city": "Singapore"
+      },
+      "comparisons": {
+        "h2oplus_vs_uncalibrated_total_mse_ratio": 1.1189646954785974,
+        "cfcmt_vs_uncalibrated_total_mse_ratio": 1.0270741254753868,
+        "cfcmt_vs_h2oplus_total_mse_ratio": 0.917878937222494,
+        "cfcmt_beats_h2oplus": true,
+        "cfcmt_beats_uncalibrated": false,
+        "h2oplus_beats_uncalibrated": false
+      }
+    },
+    {
+      "name": "source_singapore_austin_halifax_to_mbta",
+      "source_envs": [
+        "singapore_lta_all",
+        "austin_capmetro_all",
+        "halifax_transit_all"
+      ],
+      "target_env": "mbta_all",
+      "ok": true,
+      "performance_validation": true,
+      "policy_rollout": false,
+      "train_transitions": 8016,
+      "target_transitions": 1536,
+      "target_lines_seen": 2,
+      "metrics": {
+        "uncalibrated": {
+          "total_mse": 152.16571598244084,
+          "next_dynamic_mse": 171.18631249370947,
+          "reward_mse": 0.0009438922918322163,
+          "per_output_mse": {
+            "next_forward_headway": 248.80277114478727,
+            "next_backward_headway": 163.3279022530672,
+            "next_waiting_passengers": 126.13155991118555,
+            "next_base_stop_duration": 0.83138556246973,
+            "next_gap": 813.4805998047401,
+            "next_co_line_forward_headway": 4.723543557729499,
+            "next_co_line_backward_headway": 2.7210771118407138,
+            "next_segment_mean_speed": 9.47166060385559,
+            "reward": 0.0009438922918322163
+          }
+        },
+        "h2oplus_dense": {
+          "total_mse": 154.44954598650844,
+          "next_dynamic_mse": 173.7556135005977,
+          "reward_mse": 0.001005873794291802,
+          "per_output_mse": {
+            "next_forward_headway": 292.6858009939535,
+            "next_backward_headway": 106.13043311251454,
+            "next_waiting_passengers": 220.03062583711866,
+            "next_base_stop_duration": 0.2923740304785462,
+            "next_gap": 750.5829286271845,
+            "next_co_line_forward_headway": 9.61980682441036,
+            "next_co_line_backward_headway": 3.4600120324881085,
+            "next_segment_mean_speed": 7.2429265466331705,
+            "reward": 0.001005873794291802
+          }
+        },
+        "cfcmt_mechanism": {
+          "total_mse": 23.961146764136473,
+          "next_dynamic_mse": 26.956237758433552,
+          "reward_mse": 0.00041880975985204605,
+          "per_output_mse": {
+            "next_forward_headway": 51.308162833374205,
+            "next_backward_headway": 17.150502397177277,
+            "next_waiting_passengers": 11.56416923614748,
+            "next_base_stop_duration": 0.02086243617933091,
+            "next_gap": 127.5530462764227,
+            "next_co_line_forward_headway": 1.1618559847314163,
+            "next_co_line_backward_headway": 0.40863589883014534,
+            "next_segment_mean_speed": 6.482667004605877,
+            "reward": 0.00041880975985204605
+          }
+        },
+        "target_transitions": 1536,
+        "target_lines_seen": 2,
+        "target_env": "mbta_all",
+        "target_city": "MBTA"
+      },
+      "comparisons": {
+        "h2oplus_vs_uncalibrated_total_mse_ratio": 1.0150088342128993,
+        "cfcmt_vs_uncalibrated_total_mse_ratio": 0.15746744665468185,
+        "cfcmt_vs_h2oplus_total_mse_ratio": 0.1551389912549794,
+        "cfcmt_beats_h2oplus": true,
+        "cfcmt_beats_uncalibrated": true,
+        "h2oplus_beats_uncalibrated": false
+      }
+    },
+    {
+      "name": "leave_one_city_out_all::singapore_lta_all",
+      "source_envs": [
+        "austin_capmetro_all",
+        "halifax_transit_all",
+        "mbta_all"
+      ],
+      "target_env": "singapore_lta_all",
+      "ok": true,
+      "performance_validation": true,
+      "policy_rollout": false,
+      "train_transitions": 6288,
+      "target_transitions": 3264,
+      "target_lines_seen": 2,
+      "metrics": {
+        "uncalibrated": {
+          "total_mse": 500.62144568183635,
+          "next_dynamic_mse": 563.1987108851392,
+          "reward_mse": 0.003324055412831107,
+          "per_output_mse": {
+            "next_forward_headway": 930.7464368557272,
+            "next_backward_headway": 394.66005215042287,
+            "next_waiting_passengers": 620.5357800770615,
+            "next_base_stop_duration": 2.742150740085483,
+            "next_gap": 2503.3746642004203,
+            "next_co_line_forward_headway": 27.566518751073197,
+            "next_co_line_backward_headway": 9.83460688826345,
+            "next_segment_mean_speed": 16.129477418059437,
+            "reward": 0.003324055412831107
+          }
+        },
+        "h2oplus_dense": {
+          "total_mse": 560.1777235174312,
+          "next_dynamic_mse": 630.1996547250876,
+          "reward_mse": 0.0022738561799791083,
+          "per_output_mse": {
+            "next_forward_headway": 1103.9383018108695,
+            "next_backward_headway": 393.3166327176243,
+            "next_waiting_passengers": 643.7473423866898,
+            "next_base_stop_duration": 0.8105477714940981,
+            "next_gap": 2814.632529147744,
+            "next_co_line_forward_headway": 34.46334024508112,
+            "next_co_line_backward_headway": 12.361050917295088,
+            "next_segment_mean_speed": 38.32749280390319,
+            "reward": 0.0022738561799791083
+          }
+        },
+        "cfcmt_mechanism": {
+          "total_mse": 514.1753335178959,
+          "next_dynamic_mse": 578.4469500090515,
+          "reward_mse": 0.002401588650447509,
+          "per_output_mse": {
+            "next_forward_headway": 996.9208735189178,
+            "next_backward_headway": 355.3968045039692,
+            "next_waiting_passengers": 667.3684185215382,
+            "next_base_stop_duration": 0.956111122008227,
+            "next_gap": 2542.6712259385845,
+            "next_co_line_forward_headway": 32.160109896151994,
+            "next_co_line_backward_headway": 11.528212322190711,
+            "next_segment_mean_speed": 20.573844249052282,
+            "reward": 0.002401588650447509
+          }
+        },
+        "target_transitions": 3264,
+        "target_lines_seen": 2,
+        "target_env": "singapore_lta_all",
+        "target_city": "Singapore"
+      },
+      "comparisons": {
+        "h2oplus_vs_uncalibrated_total_mse_ratio": 1.1189646954785974,
+        "cfcmt_vs_uncalibrated_total_mse_ratio": 1.0270741254753868,
+        "cfcmt_vs_h2oplus_total_mse_ratio": 0.917878937222494,
+        "cfcmt_beats_h2oplus": true,
+        "cfcmt_beats_uncalibrated": false,
+        "h2oplus_beats_uncalibrated": false
+      }
+    },
+    {
+      "name": "leave_one_city_out_all::austin_capmetro_all",
+      "source_envs": [
+        "singapore_lta_all",
+        "halifax_transit_all",
+        "mbta_all"
+      ],
+      "target_env": "austin_capmetro_all",
+      "ok": true,
+      "performance_validation": true,
+      "policy_rollout": false,
+      "train_transitions": 7008,
+      "target_transitions": 2544,
+      "target_lines_seen": 2,
+      "metrics": {
+        "uncalibrated": {
+          "total_mse": 355.1591232359907,
+          "next_dynamic_mse": 399.55356228231597,
+          "reward_mse": 0.003610865388291798,
+          "per_output_mse": {
+            "next_forward_headway": 594.6077130834906,
+            "next_backward_headway": 436.2179791596996,
+            "next_waiting_passengers": 99.28410597785475,
+            "next_base_stop_duration": 0.8270309014532313,
+            "next_gap": 2044.6146823736035,
+            "next_co_line_forward_headway": 10.076386158402904,
+            "next_co_line_backward_headway": 6.5450479644643575,
+            "next_segment_mean_speed": 4.255552639558623,
+            "reward": 0.003610865388291798
+          }
+        },
+        "h2oplus_dense": {
+          "total_mse": 339.34031496775873,
+          "next_dynamic_mse": 381.7574278373595,
+          "reward_mse": 0.003412010952658779,
+          "per_output_mse": {
+            "next_forward_headway": 696.8646795107063,
+            "next_backward_headway": 311.85661605081975,
+            "next_waiting_passengers": 61.82135540197448,
+            "next_base_stop_duration": 0.07237525604872697,
+            "next_gap": 1936.099581370035,
+            "next_co_line_forward_headway": 21.314230217249587,
+            "next_co_line_backward_headway": 8.460722332583819,
+            "next_segment_mean_speed": 17.56986255945871,
+            "reward": 0.003412010952658779
+          }
+        },
+        "cfcmt_mechanism": {
+          "total_mse": 75.95000526614369,
+          "next_dynamic_mse": 85.44365961223508,
+          "reward_mse": 0.0007704974124853269,
+          "per_output_mse": {
+            "next_forward_headway": 164.66631178798204,
+            "next_backward_headway": 64.69887005737564,
+            "next_waiting_passengers": 8.339985987089547,
+            "next_base_stop_duration": 0.01567072297601872,
+            "next_gap": 435.4276446081194,
+            "next_co_line_forward_headway": 6.357374866875609,
+            "next_co_line_backward_headway": 2.396590859497618,
+            "next_segment_mean_speed": 1.6468280079647752,
+            "reward": 0.0007704974124853269
+          }
+        },
+        "target_transitions": 2544,
+        "target_lines_seen": 2,
+        "target_env": "austin_capmetro_all",
+        "target_city": "Austin / CapMetro"
+      },
+      "comparisons": {
+        "h2oplus_vs_uncalibrated_total_mse_ratio": 0.9554599410987933,
+        "cfcmt_vs_uncalibrated_total_mse_ratio": 0.21384782284102438,
+        "cfcmt_vs_h2oplus_total_mse_ratio": 0.22381662866482524,
+        "cfcmt_beats_h2oplus": true,
+        "cfcmt_beats_uncalibrated": true,
+        "h2oplus_beats_uncalibrated": true
+      }
+    },
+    {
+      "name": "leave_one_city_out_all::halifax_transit_all",
+      "source_envs": [
+        "singapore_lta_all",
+        "austin_capmetro_all",
+        "mbta_all"
+      ],
+      "target_env": "halifax_transit_all",
+      "ok": true,
+      "performance_validation": true,
+      "policy_rollout": false,
+      "train_transitions": 7344,
+      "target_transitions": 2208,
+      "target_lines_seen": 2,
+      "metrics": {
+        "uncalibrated": {
+          "total_mse": 468.0177647670215,
+          "next_dynamic_mse": 526.5198519983503,
+          "reward_mse": 0.001066916391300985,
+          "per_output_mse": {
+            "next_forward_headway": 766.7892313593226,
+            "next_backward_headway": 535.062372498528,
+            "next_waiting_passengers": 309.1241148050675,
+            "next_base_stop_duration": 1.026186945549078,
+            "next_gap": 2580.5993652294446,
+            "next_co_line_forward_headway": 7.2024209509532815,
+            "next_co_line_backward_headway": 4.62455598927319,
+            "next_segment_mean_speed": 7.7305682086644465,
+            "reward": 0.001066916391300985
+          }
+        },
+        "h2oplus_dense": {
+          "total_mse": 104.74284395627086,
+          "next_dynamic_mse": 117.83561691946149,
+          "reward_mse": 0.0006602507457402969,
+          "per_output_mse": {
+            "next_forward_headway": 223.29281293961,
+            "next_backward_headway": 82.62059404440045,
+            "next_waiting_passengers": 47.77710349877029,
+            "next_base_stop_duration": 0.0525920253693993,
+            "next_gap": 576.3761024359599,
+            "next_co_line_forward_headway": 6.5338228920560235,
+            "next_co_line_backward_headway": 2.377192279834645,
+            "next_segment_mean_speed": 3.654715239691179,
+            "reward": 0.0006602507457402969
+          }
+        },
+        "cfcmt_mechanism": {
+          "total_mse": 59.43948813132359,
+          "next_dynamic_mse": 66.86936806065259,
+          "reward_mse": 0.0004486966915698399,
+          "per_output_mse": {
+            "next_forward_headway": 130.0431404363741,
+            "next_backward_headway": 46.22858409623037,
+            "next_waiting_passengers": 20.455245175991607,
+            "next_base_stop_duration": 0.05840262005305645,
+            "next_gap": 330.6005901793546,
+            "next_co_line_forward_headway": 2.7294065288677345,
+            "next_co_line_backward_headway": 0.9776423115822851,
+            "next_segment_mean_speed": 3.861933136767048,
+            "reward": 0.0004486966915698399
+          }
+        },
+        "target_transitions": 2208,
+        "target_lines_seen": 2,
+        "target_env": "halifax_transit_all",
+        "target_city": "Halifax Transit"
+      },
+      "comparisons": {
+        "h2oplus_vs_uncalibrated_total_mse_ratio": 0.22380100039239254,
+        "cfcmt_vs_uncalibrated_total_mse_ratio": 0.12700263239134196,
+        "cfcmt_vs_h2oplus_total_mse_ratio": 0.567480181807351,
+        "cfcmt_beats_h2oplus": true,
+        "cfcmt_beats_uncalibrated": true,
+        "h2oplus_beats_uncalibrated": true
+      }
+    },
+    {
+      "name": "leave_one_city_out_all::mbta_all",
+      "source_envs": [
+        "singapore_lta_all",
+        "austin_capmetro_all",
+        "halifax_transit_all"
+      ],
+      "target_env": "mbta_all",
+      "ok": true,
+      "performance_validation": true,
+      "policy_rollout": false,
+      "train_transitions": 8016,
+      "target_transitions": 1536,
+      "target_lines_seen": 2,
+      "metrics": {
+        "uncalibrated": {
+          "total_mse": 152.16571598244084,
+          "next_dynamic_mse": 171.18631249370947,
+          "reward_mse": 0.0009438922918322163,
+          "per_output_mse": {
+            "next_forward_headway": 248.80277114478727,
+            "next_backward_headway": 163.3279022530672,
+            "next_waiting_passengers": 126.13155991118555,
+            "next_base_stop_duration": 0.83138556246973,
+            "next_gap": 813.4805998047401,
+            "next_co_line_forward_headway": 4.723543557729499,
+            "next_co_line_backward_headway": 2.7210771118407138,
+            "next_segment_mean_speed": 9.47166060385559,
+            "reward": 0.0009438922918322163
+          }
+        },
+        "h2oplus_dense": {
+          "total_mse": 154.44954598650844,
+          "next_dynamic_mse": 173.7556135005977,
+          "reward_mse": 0.001005873794291802,
+          "per_output_mse": {
+            "next_forward_headway": 292.6858009939535,
+            "next_backward_headway": 106.13043311251454,
+            "next_waiting_passengers": 220.03062583711866,
+            "next_base_stop_duration": 0.2923740304785462,
+            "next_gap": 750.5829286271845,
+            "next_co_line_forward_headway": 9.61980682441036,
+            "next_co_line_backward_headway": 3.4600120324881085,
+            "next_segment_mean_speed": 7.2429265466331705,
+            "reward": 0.001005873794291802
+          }
+        },
+        "cfcmt_mechanism": {
+          "total_mse": 23.961146764136473,
+          "next_dynamic_mse": 26.956237758433552,
+          "reward_mse": 0.00041880975985204605,
+          "per_output_mse": {
+            "next_forward_headway": 51.308162833374205,
+            "next_backward_headway": 17.150502397177277,
+            "next_waiting_passengers": 11.56416923614748,
+            "next_base_stop_duration": 0.02086243617933091,
+            "next_gap": 127.5530462764227,
+            "next_co_line_forward_headway": 1.1618559847314163,
+            "next_co_line_backward_headway": 0.40863589883014534,
+            "next_segment_mean_speed": 6.482667004605877,
+            "reward": 0.00041880975985204605
+          }
+        },
+        "target_transitions": 1536,
+        "target_lines_seen": 2,
+        "target_env": "mbta_all",
+        "target_city": "MBTA"
+      },
+      "comparisons": {
+        "h2oplus_vs_uncalibrated_total_mse_ratio": 1.0150088342128993,
+        "cfcmt_vs_uncalibrated_total_mse_ratio": 0.15746744665468185,
+        "cfcmt_vs_h2oplus_total_mse_ratio": 0.1551389912549794,
+        "cfcmt_beats_h2oplus": true,
+        "cfcmt_beats_uncalibrated": true,
+        "h2oplus_beats_uncalibrated": false
+      }
+    }
+  ],
+  "summary": {
+    "splits": 6,
+    "cfcmt_wins_vs_h2oplus": 6,
+    "h2oplus_wins_vs_cfcmt": 0,
+    "mean_cfcmt_vs_h2oplus_total_mse_ratio": 0.4895554445711872
+  }
+}

@@ -37,8 +37,11 @@ if os.path.isdir(_CASE_DIR):
 sys.path.insert(0, _HERE)
 
 from sumo_env.rl_bridge import SumoRLBridge
-from common.data_utils import (build_edge_linear_map, extract_structured_context, set_route_length)
-import xml.etree.ElementTree as _ET
+from common.data_utils import (
+    build_all_edge_linear_maps,
+    extract_structured_context,
+    set_route_length_from_lines,
+)
 
 EDGE_XML = os.path.join(_BUS_H2O, "network_data", "a_sorted_busline_edge.xml")
 LINE_ID = "7X"
@@ -339,17 +342,11 @@ def main():
     all_edge_maps = {}
     line_route_lengths = {}
     if os.path.exists(EDGE_XML):
-        tree = _ET.parse(EDGE_XML)
-        root = tree.getroot()
-        for bl in root.findall("busline"):
-            lid = bl.get("id")
-            all_edge_maps[lid] = build_edge_linear_map(EDGE_XML, lid)
-            total_len = sum(float(e.get("length", 0)) for e in bl.findall("element"))
-            line_route_lengths[lid] = total_len
+        all_edge_maps, line_route_lengths = build_all_edge_linear_maps(EDGE_XML)
         print(f"Built edge_maps for {len(all_edge_maps)} lines")
 
-    route_len = line_route_lengths.get(LINE_ID, 13119.0)
-    set_route_length(route_len)
+    route_len = set_route_length_from_lines(line_route_lengths)
+    print(f"Fallback route length from all lines: {route_len:.0f}m")
 
     # Bridge
     bridge = SumoRLBridge(root_dir=SUMO_DIR, gui=False, max_steps=18000)

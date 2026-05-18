@@ -28,7 +28,7 @@ sys.path.insert(0, _BUS_H2O)
 
 from bus_replay_buffer import BusMixedReplayBuffer
 from model import EmbeddingLayer, BusEmbeddingPolicy, BusEmbeddingQFunction
-from common.data_utils import set_route_length, build_edge_linear_map
+from common.data_utils import build_all_edge_linear_maps, set_route_length_from_lines
 
 import matplotlib
 matplotlib.use('Agg')
@@ -58,8 +58,11 @@ os.makedirs(out_dir, exist_ok=True)
 print(f"[TD3+BC] Output dir: {out_dir}")
 
 edge_xml = os.path.join(_BUS_H2O, "network_data", "a_sorted_busline_edge.xml")
-route_length = max(build_edge_linear_map(edge_xml, "7X").values()) if os.path.exists(edge_xml) else 13119.0
-set_route_length(route_length)
+if os.path.exists(edge_xml):
+    _, route_lengths = build_all_edge_linear_maps(edge_xml)
+else:
+    route_lengths = {}
+route_length = set_route_length_from_lines(route_lengths, fallback=13119.0)
 
 print("[TD3+BC] Loading offline data...")
 ds_file = os.path.join(_BUS_H2O, "datasets_v2", "merged_all_v2.h5")

@@ -21,7 +21,7 @@ _BUS_H2O = os.path.join(_H2O_ROOT, "bus_h2o")
 sys.path.insert(0, _HERE)
 sys.path.insert(0, _BUS_H2O)
 
-from common.data_utils import build_edge_linear_map, set_route_length
+from common.data_utils import build_all_edge_linear_maps, set_route_length_from_lines
 from daganzo_policy import DaganzoPolicy
 
 SUMO_DIR = os.path.normpath(os.path.join(
@@ -163,8 +163,8 @@ def main():
     t_start = time.time()
 
     line_idx_map, bus_idx_map = build_sumo_indices(SCHEDULE_XML)
-    em = build_edge_linear_map(EDGE_XML, '7X')
-    set_route_length(max(em.values()) if em else 13119.0)
+    _, line_route_lengths = build_all_edge_linear_maps(EDGE_XML)
+    set_route_length_from_lines(line_route_lengths)
 
     from sumo_env.rl_bridge import SumoRLBridge
     _patch_bridge_for_seed_and_scale(SumoRLBridge, args.sumo_seed, args.od_scale)

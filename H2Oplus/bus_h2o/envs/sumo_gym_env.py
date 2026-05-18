@@ -23,7 +23,9 @@ _BUS_H2O = os.path.dirname(_HERE)
 sys.path.insert(0, _BUS_H2O)
 
 from common.data_utils import (
-    build_edge_linear_map, extract_structured_context, set_route_length
+    build_all_edge_linear_maps,
+    extract_structured_context,
+    set_route_length_from_lines,
 )
 
 
@@ -42,7 +44,7 @@ class SumoGymEnv:
     """
 
     def __init__(self, sumo_dir, edge_xml, schedule_xml=None, max_steps=18000,
-                 gui=False, line_id="7X"):
+                 gui=False, line_id="all"):
         # Lazy import to avoid libsumo conflicts
         self._sumo_dir = sumo_dir
         self._gui = gui
@@ -55,15 +57,8 @@ class SumoGymEnv:
         self._all_edge_maps = {}
         self._line_route_lengths = {}
         if os.path.exists(edge_xml):
-            tree = ET.parse(edge_xml)
-            root = tree.getroot()
-            for bl in root.findall("busline"):
-                lid = bl.get("id")
-                self._all_edge_maps[lid] = build_edge_linear_map(edge_xml, lid)
-                total_len = sum(float(e.get("length", 0)) for e in bl.findall("element"))
-                self._line_route_lengths[lid] = total_len
-            route_len = self._line_route_lengths.get(line_id, 13119.0)
-            set_route_length(route_len)
+            self._all_edge_maps, self._line_route_lengths = build_all_edge_linear_maps(edge_xml)
+        set_route_length_from_lines(self._line_route_lengths, fallback=13119.0)
 
         # SUMO indices for obs construction
         self._schedule_xml = schedule_xml or os.path.join(
@@ -329,10 +324,12 @@ class SumoGymEnv:
             return {"all_buses": [], "all_stations": []}
 
         from sumo_env.sumo_snapshot import bridge_to_snapshot
-        # Use the 7X edge map for z extraction
-        edge_map = self._all_edge_maps.get(self._line_id, {})
         try:
-            snap = bridge_to_snapshot(self._bridge, edge_map)
+            snap = bridge_to_snapshot(
+                self._bridge,
+                all_edge_maps=self._all_edge_maps,
+                line_route_lengths=self._line_route_lengths,
+            )
             return snap
         except Exception:
             return {"all_buses": [], "all_stations": []}

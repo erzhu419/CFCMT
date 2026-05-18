@@ -31,7 +31,6 @@ _CASE_DIR = os.path.join(_BUS_H2O, "sumo_env", "case")
 if os.path.isdir(_CASE_DIR):
     sys.path.insert(0, _CASE_DIR)
 
-import xml.etree.ElementTree as ET
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -39,9 +38,9 @@ import torch.optim as optim
 from sumo_env.rl_bridge import SumoRLBridge
 from sumo_env.sumo_snapshot import bridge_to_snapshot
 from common.data_utils import (
-    build_edge_linear_map,
+    build_all_edge_linear_maps,
     extract_structured_context,
-    set_route_length,
+    set_route_length_from_lines,
     ZOnlyDiscriminator,
 )
 from envs.bus_sim_env import MultiLineSimEnv
@@ -55,16 +54,7 @@ LINE_IDS = ['7X', '7S', '102X', '102S', '122X', '122S',
 
 def build_all_edge_maps():
     """Build per-line edge_maps and route_lengths for all 12 lines."""
-    all_edge_maps = {}
-    line_route_lengths = {}
-    tree = ET.parse(EDGE_XML)
-    root = tree.getroot()
-    for bl in root.findall("busline"):
-        lid = bl.get("id")
-        all_edge_maps[lid] = build_edge_linear_map(EDGE_XML, lid)
-        total_len = sum(float(e.get("length", 0)) for e in bl.findall("element"))
-        line_route_lengths[lid] = total_len
-    return all_edge_maps, line_route_lengths
+    return build_all_edge_linear_maps(EDGE_XML)
 
 
 def collect_sumo_z(max_time=4000, sample_every_sec=10):
@@ -77,7 +67,7 @@ def collect_sumo_z(max_time=4000, sample_every_sec=10):
     print(f"{'='*60}")
 
     all_edge_maps, line_route_lengths = build_all_edge_maps()
-    set_route_length(line_route_lengths.get('7X', 13298.0))
+    set_route_length_from_lines(line_route_lengths)
 
     print(f"  Edge maps: {len(all_edge_maps)} lines")
     print(f"  Route lengths: {len(line_route_lengths)} lines")
@@ -140,7 +130,7 @@ def collect_sim_z(n_resets=3, max_time_per_reset=4000, sample_every_sec=10):
     print(f"{'='*60}")
 
     _, line_route_lengths = build_all_edge_maps()
-    set_route_length(line_route_lengths.get('7X', 13298.0))
+    set_route_length_from_lines(line_route_lengths)
 
     env = MultiLineSimEnv(SIM_ENV_DIR)
 

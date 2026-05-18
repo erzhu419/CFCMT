@@ -50,8 +50,8 @@ sys.path.insert(0, _BUS_H2O)
 from common.data_utils import (
     ZOnlyDiscriminator,
     extract_structured_context,
-    set_route_length,
-    build_edge_linear_map,
+    build_all_edge_linear_maps,
+    set_route_length_from_lines,
 )
 from snapshot_store import SnapshotStore
 
@@ -347,11 +347,10 @@ def main():
 
     # Route length
     if os.path.exists(args.edge_xml):
-        edge_map = build_edge_linear_map(args.edge_xml, args.line_id)
-        route_length = max(edge_map.values()) if edge_map else 13119.0
+        _, route_lengths = build_all_edge_linear_maps(args.edge_xml)
+        route_length = set_route_length_from_lines(route_lengths)
     else:
-        route_length = 13119.0
-    set_route_length(route_length)
+        route_length = set_route_length_from_lines({}, fallback=13119.0)
     print(f"Route length: {route_length:.1f} m")
 
     # Phase 1: Train discriminator + create sim env

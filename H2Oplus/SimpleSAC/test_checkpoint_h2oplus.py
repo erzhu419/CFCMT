@@ -18,7 +18,7 @@ sys.path.insert(0, _BUS_H2O)
 from model import BusEmbeddingPolicy, EmbeddingLayer, BusSamplerPolicy
 from bus_sampler import _map_raw_to_env, _extract_active_buses
 from envs.bus_sim_env import BusSimEnv
-from common.data_utils import set_route_length, build_edge_linear_map
+from common.data_utils import build_all_edge_linear_maps, set_route_length_from_lines
 
 # ── Config ────────────────────────────────────────────────────────
 CKPT = os.path.join(_H2O_ROOT, "collect_policy", "checkpoint_episode_39_policy")
@@ -29,9 +29,8 @@ DEVICE = "cpu"
 
 # ── Setup ─────────────────────────────────────────────────────────
 # Route length
-edge_map = build_edge_linear_map(EDGE_XML, "7X")
-route_length = max(edge_map.values()) if edge_map else 13119.0
-set_route_length(route_length)
+_, route_lengths = build_all_edge_linear_maps(EDGE_XML)
+route_length = set_route_length_from_lines(route_lengths, fallback=13119.0)
 
 # Load normalizer
 from normalization import Normalization, RunningMeanStd

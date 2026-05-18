@@ -43,7 +43,7 @@ sys.path.insert(0, _HERE)
 sys.path.insert(0, _BUS_H2O)
 
 from model import EmbeddingLayer, BusEmbeddingPolicy
-from common.data_utils import build_edge_linear_map, set_route_length
+from common.data_utils import build_all_edge_linear_maps, set_route_length_from_lines
 
 SUMO_DIR = os.path.normpath(os.path.join(_BUS_H2O, os.pardir, os.pardir, "SUMO_ruiguang", "online_control"))
 sys.path.insert(0, SUMO_DIR)
@@ -194,8 +194,8 @@ def main():
 
     # Setup
     line_idx_map, bus_idx_map = build_sumo_indices(SCHEDULE_XML)
-    em = build_edge_linear_map(EDGE_XML, '7X')
-    set_route_length(max(em.values()) if em else 13119.0)
+    _, line_route_lengths = build_all_edge_linear_maps(EDGE_XML)
+    set_route_length_from_lines(line_route_lengths)
 
     from sumo_env.rl_bridge import SumoRLBridge
 

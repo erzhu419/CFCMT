@@ -56,7 +56,12 @@ from utils import (
     prefix_metrics,
     set_random_seed,
 )
-from common.data_utils import ZOnlyDiscriminator, TransitionDiscriminator, set_route_length, build_edge_linear_map
+from common.data_utils import (
+    ZOnlyDiscriminator,
+    TransitionDiscriminator,
+    build_all_edge_linear_maps,
+    set_route_length_from_lines,
+)
 from priority_index import PriorityIndex
 from snapshot_store import SnapshotStore
 
@@ -95,7 +100,7 @@ FLAGS_DEF = define_flags_with_default(
     dataset_glob="sumo_*.h5",
     sim_env_path=os.path.join(_BUS_H2O, "calibrated_env"),
     edge_xml=os.path.join(_BUS_H2O, "network_data", "a_sorted_busline_edge.xml"),
-    line_id="7X",
+    line_id="all",      # legacy SUMO argument; z/snapshot extraction now uses all lines
     use_sumo_online=False,  # Use SUMO instead of SIM for online rollout (debug: zero dynamics gap)
     sumo_dir=os.path.normpath(os.path.join(_BUS_H2O, os.pardir, os.pardir, "SUMO_ruiguang", "online_control")),
     sumo_max_steps=18000,
@@ -307,11 +312,10 @@ def main(argv):
 
     # ── Set route length (critical for z feature extraction) ──────
     if os.path.exists(FLAGS.edge_xml):
-        edge_map = build_edge_linear_map(FLAGS.edge_xml, FLAGS.line_id)
-        route_length = max(edge_map.values()) if edge_map else 13119.0
+        _, route_lengths = build_all_edge_linear_maps(FLAGS.edge_xml)
+        route_length = set_route_length_from_lines(route_lengths)
     else:
-        route_length = 13119.0
-    set_route_length(route_length)
+        route_length = set_route_length_from_lines({}, fallback=13119.0)
     log.info(f"Route length set to {route_length:.1f} m")
 
     # ── Load replay buffer ────────────────────────────────────────

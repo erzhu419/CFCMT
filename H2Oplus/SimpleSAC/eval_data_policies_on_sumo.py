@@ -26,7 +26,7 @@ from collect_worker import (
     load_sac_policy, _SUMO_LINE_INDEX, _SUMO_BUS_INDEX,
 )
 from sumo_env.rl_bridge import SumoRLBridge
-from common.data_utils import build_edge_linear_map, set_route_length
+from common.data_utils import build_all_edge_linear_maps, set_route_length_from_lines
 import xml.etree.ElementTree as ET
 
 EDGE_XML = os.path.join(_H2O_ROOT, "bus_h2o", "network_data", "a_sorted_busline_edge.xml")
@@ -80,8 +80,8 @@ def main():
     print("=" * 70)
 
     if os.path.exists(EDGE_XML):
-        em = build_edge_linear_map(EDGE_XML, "7X")
-        set_route_length(max(em.values()) if em else 13119.0)
+        _, line_route_lengths = build_all_edge_linear_maps(EDGE_XML)
+        set_route_length_from_lines(line_route_lengths)
 
     bridge = SumoRLBridge(root_dir=SUMO_DIR, gui=False, max_steps=18000)
 

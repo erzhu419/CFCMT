@@ -52,9 +52,9 @@ sys.path.insert(0, _HERE)
 
 from sumo_env.rl_bridge import SumoRLBridge                          # noqa
 from sumo_env.sumo_snapshot import bridge_to_snapshot                 # noqa
-from common.data_utils import (build_edge_linear_map,                 # noqa
+from common.data_utils import (build_all_edge_linear_maps,            # noqa
                                extract_structured_context,
-                               set_route_length)
+                               set_route_length_from_lines)
 import pickle
 import zlib
 import ctypes
@@ -82,7 +82,6 @@ def _build_sumo_indices(schedule_xml):
 
     Returns (line_index, bus_index) dicts.
     """
-    import xml.etree.ElementTree as _ET
     from collections import defaultdict as _dd
 
     tree = _ET.parse(schedule_xml)
@@ -526,13 +525,7 @@ def main(args):
     all_edge_maps = {}    # {line_id: {edge_id: cumulative_dist}}
     line_route_lengths = {}  # {line_id: total_route_length_m}
     if os.path.exists(EDGE_XML):
-        tree = _ET.parse(EDGE_XML)
-        root = tree.getroot()
-        for bl in root.findall("busline"):
-            lid = bl.get("id")
-            all_edge_maps[lid] = build_edge_linear_map(EDGE_XML, lid)
-            total_len = sum(float(e.get("length", 0)) for e in bl.findall("element"))
-            line_route_lengths[lid] = total_len
+        all_edge_maps, line_route_lengths = build_all_edge_linear_maps(EDGE_XML)
         print(f"[collect_worker] Built edge_maps for {len(all_edge_maps)} lines: "
               f"{sorted(all_edge_maps.keys())}", flush=True)
         print(f"[collect_worker] Route lengths: "
@@ -541,9 +534,8 @@ def main(args):
     else:
         print(f"[collect_worker] WARNING: edge XML not found at {EDGE_XML}", flush=True)
 
-    # Set global ROUTE_LENGTH to 7X (for backward compat fallback)
-    route_len = line_route_lengths.get(LINE_ID, 13119.0)
-    set_route_length(route_len)
+    route_len = set_route_length_from_lines(line_route_lengths)
+    print(f"[collect_worker] Fallback route length from all lines: {route_len:.0f}m", flush=True)
 
     # Policy
     policy_fn, needs_obs = make_policy_fn(args.policy, rng)

@@ -10,25 +10,11 @@ sys.path.insert(0, _HERE)
 sys.path.insert(0, _BUS_H2O)
 
 from envs.bus_sim_env import MultiLineSimEnv
+from bus_sampler import _extract_active_buses, _lookup_reward, _put_action, _state_has_obs
 
 SIM_ENV_PATH = os.path.join(_BUS_H2O, "calibrated_env")
 MAX_TRAJ_EVENTS = 100   # same as training default
 N_EPISODES = 10
-
-
-def _extract_active_buses(state_dict):
-    active = []
-    for bus_id, obs_list in state_dict.items():
-        if not obs_list:
-            continue
-        inner = obs_list[-1]
-        if isinstance(inner, (list, np.ndarray)):
-            vec = inner
-            if isinstance(vec, list) and vec and isinstance(vec[0], list):
-                vec = vec[-1]
-            if vec:
-                active.append((bus_id, np.array(vec, dtype=np.float32)))
-    return active
 
 
 def run_episode(env, hold_time=0.0, max_events=MAX_TRAJ_EVENTS):
@@ -36,7 +22,7 @@ def run_episode(env, hold_time=0.0, max_events=MAX_TRAJ_EVENTS):
     env.reset()
 
     # _init_env_state: step_fast until 7X has obs (same as real sampler)
-    action_dict = {k: 0.0 for k in range(env.max_agent_num)}
+    action_dict = {}
     init_steps = 0
     for _ in range(10000):
         state, reward, done = env.step_fast(action_dict)
@@ -44,7 +30,7 @@ def run_episode(env, hold_time=0.0, max_events=MAX_TRAJ_EVENTS):
         if done:
             print(f"    [WARN] done during init after {init_steps} ticks")
             return []
-        if any(v for v in state.values()):
+        if _state_has_obs(state):
             print(f"    [init] first obs after {init_steps} ticks")
             break
 
@@ -58,17 +44,17 @@ def run_episode(env, hold_time=0.0, max_events=MAX_TRAJ_EVENTS):
 
         action_dict = {k: None for k in range(env.max_agent_num)}
 
-        for bus_id, obs_vec in active_buses:
+        for agent_id, obs_vec in active_buses:
             station_idx = int(obs_vec[2]) if len(obs_vec) > 2 else -1
-            reward_val = env.reward.get(bus_id, 0.0)
+            reward_val = _lookup_reward(env.reward, agent_id)
 
-            if bus_id in pending:
-                prev = pending.pop(bus_id)
+            if agent_id in pending:
+                prev = pending.pop(agent_id)
                 if station_idx != prev["station_idx"]:
                     rewards_list.append(reward_val)
 
-            action_dict[bus_id] = hold_time
-            pending[bus_id] = {"station_idx": station_idx}
+            _put_action(action_dict, agent_id, hold_time)
+            pending[agent_id] = {"station_idx": station_idx}
 
         state, reward, done = env.step_to_event(action_dict)
         if done:

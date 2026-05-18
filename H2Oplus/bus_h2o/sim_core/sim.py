@@ -224,7 +224,9 @@ class env_bus(object):
         from sim_core.passenger import Passenger
 
         hour_offset = int(current_time) // 3600
-        effective_hour = max(6, min(6 + hour_offset, 19))
+        start_hour = int(self.args.get("sim_start_hour", 6))
+        end_hour = int(self.args.get("sim_end_hour", 19))
+        effective_hour = max(start_hour, min(start_hour + hour_offset, end_hour))
 
         if self._pax_cache_hour != effective_hour:
             self._rebuild_pax_cache(effective_hour)
@@ -598,6 +600,7 @@ class MultiLineEnv:
         Returns the path.
         """
         import tempfile, shutil
+        base_path = os.path.abspath(base_path)
         tmp = os.path.join(base_path, '_line_envs', line_id)
         os.makedirs(tmp, exist_ok=True)
 
@@ -610,6 +613,8 @@ class MultiLineEnv:
         # data dir: symlink to base_path/data/<line_id>/
         src_data = os.path.join(base_path, 'data', line_id)
         dst_data = os.path.join(tmp, 'data')
+        if os.path.islink(dst_data) and not os.path.exists(dst_data):
+            os.unlink(dst_data)
         if not os.path.exists(dst_data):
             os.symlink(src_data, dst_data)
 

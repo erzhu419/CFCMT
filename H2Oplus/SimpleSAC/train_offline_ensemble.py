@@ -87,12 +87,14 @@ os.makedirs(out_dir, exist_ok=True)
 
 # ── Load data ──
 from bus_replay_buffer import BusMixedReplayBuffer
-from common.data_utils import set_route_length, build_edge_linear_map
+from common.data_utils import build_all_edge_linear_maps, set_route_length_from_lines
 
 edge_xml = os.path.join(_BUS_H2O, "network_data", "a_sorted_busline_edge.xml")
 if os.path.exists(edge_xml):
-    em = build_edge_linear_map(edge_xml, "7X")
-    set_route_length(max(em.values()) if em else 13119.0)
+    _, route_lengths = build_all_edge_linear_maps(edge_xml)
+    set_route_length_from_lines(route_lengths)
+else:
+    set_route_length_from_lines({}, fallback=13119.0)
 
 print("Loading offline data...")
 ds_file = os.path.join(_BUS_H2O, "datasets_v2", "merged_all_v2.h5")

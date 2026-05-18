@@ -31,7 +31,7 @@ from model import (
     EmbeddingLayer, BusEmbeddingPolicy,
     BusEmbeddingQFunction, BusEmbeddingVFunction, BusSamplerPolicy,
 )
-from common.data_utils import set_route_length, build_edge_linear_map
+from common.data_utils import build_all_edge_linear_maps, set_route_length_from_lines
 
 import matplotlib
 matplotlib.use('Agg')
@@ -57,11 +57,10 @@ print(f"[IQL] Output dir: {out_dir}")
 # ── Route length ──
 edge_xml = os.path.join(_BUS_H2O, "network_data", "a_sorted_busline_edge.xml")
 if os.path.exists(edge_xml):
-    edge_map = build_edge_linear_map(edge_xml, "7X")
-    route_length = max(edge_map.values()) if edge_map else 13119.0
+    _, route_lengths = build_all_edge_linear_maps(edge_xml)
+    route_length = set_route_length_from_lines(route_lengths)
 else:
-    route_length = 13119.0
-set_route_length(route_length)
+    route_length = set_route_length_from_lines({}, fallback=13119.0)
 
 # ── Load offline data ──
 print("Loading offline data...")

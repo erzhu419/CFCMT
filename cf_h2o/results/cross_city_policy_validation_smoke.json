@@ -1,0 +1,850 @@
+{
+  "ok": true,
+  "validation_level": "cross_city_static_offline_headway_stress_policy_lookahead",
+  "policy_validation": true,
+  "live_env_rollout": false,
+  "one_step_lookahead": true,
+  "config": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/cross_city_open_transit.json",
+  "actions_seconds": [
+    0.0,
+    15.0,
+    30.0,
+    45.0,
+    60.0
+  ],
+  "headway_stress": [
+    [
+      0.75,
+      1.25
+    ],
+    [
+      0.9,
+      1.1
+    ],
+    [
+      1.0,
+      1.0
+    ],
+    [
+      1.1,
+      0.9
+    ],
+    [
+      1.25,
+      0.75
+    ]
+  ],
+  "policy_hold_cost": 0.0008,
+  "ridge": 1.0,
+  "max_lines_per_city": 2,
+  "cities": {
+    "singapore_lta_all": {
+      "city": "Singapore",
+      "env_path": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/lta_datamall/202604/h2o_city_envs/SINGAPORE_LTA_weekday_all_services",
+      "lines_seen": 2,
+      "transitions_seen": 40800,
+      "warnings": [
+        "stats_elapsed_sec=1.1"
+      ]
+    },
+    "austin_capmetro_all": {
+      "city": "Austin / CapMetro",
+      "env_path": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/austin_capmetro/h2o_city_envs/AUSTINCAPMETRO_weekday_all_routes",
+      "lines_seen": 2,
+      "transitions_seen": 31800,
+      "warnings": [
+        "stats_elapsed_sec=0.7"
+      ]
+    },
+    "halifax_transit_all": {
+      "city": "Halifax Transit",
+      "env_path": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/halifax_transit/h2o_city_envs/HALIFAXTRANSIT_weekday_all_routes",
+      "lines_seen": 2,
+      "transitions_seen": 27600,
+      "warnings": [
+        "stats_elapsed_sec=0.6"
+      ]
+    },
+    "mbta_all": {
+      "city": "MBTA",
+      "env_path": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/mbta/h2o_city_envs/MBTA_weekday_all_routes_v2",
+      "lines_seen": 2,
+      "transitions_seen": 19200,
+      "warnings": [
+        "stats_elapsed_sec=0.4"
+      ]
+    }
+  },
+  "splits": [
+    {
+      "name": "source_open_na_to_singapore",
+      "source_envs": [
+        "austin_capmetro_all",
+        "halifax_transit_all",
+        "mbta_all"
+      ],
+      "target_env": "singapore_lta_all",
+      "ok": true,
+      "policy_validation": true,
+      "live_env_rollout": false,
+      "one_step_lookahead": true,
+      "train_transitions": 78600,
+      "target_city": "Singapore",
+      "target_lines_seen": 2,
+      "elapsed_sec": 0.8433597087860107,
+      "methods": {
+        "no_hold": {
+          "n": 8160,
+          "mean_reward": -0.35079714213224017,
+          "mean_oracle_reward": -0.33326383151990524,
+          "mean_regret_to_oracle": 0.017533310612334926,
+          "mean_headway_abs_error": 108.63877967853172,
+          "mean_abs_gap": 217.24503470028148,
+          "mean_waiting_passengers": 33.693790402131924,
+          "mean_hold_seconds": 0.0,
+          "action_counts": {
+            "0.0": 8160
+          },
+          "mean_reward_gain_vs_no_hold": 0.0,
+          "oracle_reward_gap": 0.01753331061233493
+        },
+        "fixed_30": {
+          "n": 8160,
+          "mean_reward": -0.37149035946703424,
+          "mean_oracle_reward": -0.33326383151990524,
+          "mean_regret_to_oracle": 0.03822652794712899,
+          "mean_headway_abs_error": 107.79414689307119,
+          "mean_abs_gap": 215.5485407847984,
+          "mean_waiting_passengers": 32.34619031793931,
+          "mean_hold_seconds": 30.0,
+          "action_counts": {
+            "30.0": 8160
+          },
+          "mean_reward_gain_vs_no_hold": -0.020693217334794067,
+          "oracle_reward_gap": 0.038226527947128996
+        },
+        "uncalibrated_policy": {
+          "n": 8160,
+          "mean_reward": -0.35079714213224017,
+          "mean_oracle_reward": -0.33326383151990524,
+          "mean_regret_to_oracle": 0.017533310612334926,
+          "mean_headway_abs_error": 108.63877967853172,
+          "mean_abs_gap": 217.24503470028148,
+          "mean_waiting_passengers": 33.693790402131924,
+          "mean_hold_seconds": 0.0,
+          "action_counts": {
+            "0.0": 8160
+          },
+          "mean_reward_gain_vs_no_hold": 0.0,
+          "oracle_reward_gap": 0.01753331061233493
+        },
+        "h2oplus_dense_policy": {
+          "n": 8160,
+          "mean_reward": -0.33473715847175495,
+          "mean_oracle_reward": -0.33326383151990524,
+          "mean_regret_to_oracle": 0.0014733269518496944,
+          "mean_headway_abs_error": 95.56106935762891,
+          "mean_abs_gap": 191.07617822721892,
+          "mean_waiting_passengers": 32.47261054282095,
+          "mean_hold_seconds": 27.185661764705884,
+          "action_counts": {
+            "0.0": 4141,
+            "15.0": 189,
+            "30.0": 301,
+            "45.0": 118,
+            "60.0": 3411
+          },
+          "mean_reward_gain_vs_no_hold": 0.016059983660485222,
+          "oracle_reward_gap": 0.0014733269518497072
+        },
+        "cfcmt_mechanism_policy": {
+          "n": 8160,
+          "mean_reward": -0.333870629966259,
+          "mean_oracle_reward": -0.33326383151990524,
+          "mean_regret_to_oracle": 0.0006067984463537441,
+          "mean_headway_abs_error": 95.32990879545025,
+          "mean_abs_gap": 190.6137292207456,
+          "mean_waiting_passengers": 32.483427690992166,
+          "mean_hold_seconds": 26.94485294117647,
+          "action_counts": {
+            "0.0": 4139,
+            "15.0": 225,
+            "30.0": 244,
+            "45.0": 263,
+            "60.0": 3289
+          },
+          "mean_reward_gain_vs_no_hold": 0.016926512165981178,
+          "oracle_reward_gap": 0.0006067984463537512
+        },
+        "oracle_policy": {
+          "n": 8160,
+          "mean_reward": -0.33326383151990524,
+          "mean_oracle_reward": -0.33326383151990524,
+          "mean_regret_to_oracle": 0.0,
+          "mean_headway_abs_error": 94.85427411771288,
+          "mean_abs_gap": 189.65384575572668,
+          "mean_waiting_passengers": 32.43982884837132,
+          "mean_hold_seconds": 27.915441176470587,
+          "action_counts": {
+            "0.0": 4021,
+            "15.0": 216,
+            "30.0": 258,
+            "45.0": 206,
+            "60.0": 3459
+          },
+          "mean_reward_gain_vs_no_hold": 0.01753331061233493,
+          "oracle_reward_gap": 0.0
+        }
+      },
+      "comparisons": {
+        "cfcmt_reward_beats_h2oplus": true,
+        "cfcmt_reward_gain_vs_h2oplus": 0.000866528505495956,
+        "cfcmt_regret_ratio_vs_h2oplus": 0.4118559329902548,
+        "cfcmt_headway_error_ratio_vs_h2oplus": 0.9975810174192007
+      }
+    },
+    {
+      "name": "source_singapore_austin_halifax_to_mbta",
+      "source_envs": [
+        "singapore_lta_all",
+        "austin_capmetro_all",
+        "halifax_transit_all"
+      ],
+      "target_env": "mbta_all",
+      "ok": true,
+      "policy_validation": true,
+      "live_env_rollout": false,
+      "one_step_lookahead": true,
+      "train_transitions": 100200,
+      "target_city": "MBTA",
+      "target_lines_seen": 2,
+      "elapsed_sec": 0.4604501724243164,
+      "methods": {
+        "no_hold": {
+          "n": 3840,
+          "mean_reward": -0.33745279219001534,
+          "mean_oracle_reward": -0.31395338151293495,
+          "mean_regret_to_oracle": 0.023499410677080352,
+          "mean_headway_abs_error": 98.01106342673302,
+          "mean_abs_gap": 196.02175458669663,
+          "mean_waiting_passengers": 16.35179415345192,
+          "mean_hold_seconds": 0.0,
+          "action_counts": {
+            "0.0": 3840
+          },
+          "mean_reward_gain_vs_no_hold": 0.0,
+          "oracle_reward_gap": 0.02349941067708039
+        },
+        "fixed_30": {
+          "n": 3840,
+          "mean_reward": -0.36001613084226847,
+          "mean_oracle_reward": -0.31395338151293495,
+          "mean_regret_to_oracle": 0.046062749329333505,
+          "mean_headway_abs_error": 97.95894538760186,
+          "mean_abs_gap": 195.91358095010122,
+          "mean_waiting_passengers": 15.004194162289302,
+          "mean_hold_seconds": 30.0,
+          "action_counts": {
+            "30.0": 3840
+          },
+          "mean_reward_gain_vs_no_hold": -0.02256333865225313,
+          "oracle_reward_gap": 0.04606274932933352
+        },
+        "uncalibrated_policy": {
+          "n": 3840,
+          "mean_reward": -0.33745279219001534,
+          "mean_oracle_reward": -0.31395338151293495,
+          "mean_regret_to_oracle": 0.023499410677080352,
+          "mean_headway_abs_error": 98.01106342673302,
+          "mean_abs_gap": 196.02175458669663,
+          "mean_waiting_passengers": 16.35179415345192,
+          "mean_hold_seconds": 0.0,
+          "action_counts": {
+            "0.0": 3840
+          },
+          "mean_reward_gain_vs_no_hold": 0.0,
+          "oracle_reward_gap": 0.02349941067708039
+        },
+        "h2oplus_dense_policy": {
+          "n": 3840,
+          "mean_reward": -0.3167071871459484,
+          "mean_oracle_reward": -0.31395338151293495,
+          "mean_regret_to_oracle": 0.002753805633013447,
+          "mean_headway_abs_error": 85.50672995448113,
+          "mean_abs_gap": 171.00087883472443,
+          "mean_waiting_passengers": 15.138778700431187,
+          "mean_hold_seconds": 27.00390625,
+          "action_counts": {
+            "0.0": 1911,
+            "15.0": 146,
+            "30.0": 137,
+            "45.0": 91,
+            "60.0": 1555
+          },
+          "mean_reward_gain_vs_no_hold": 0.020745605044066917,
+          "oracle_reward_gap": 0.002753805633013473
+        },
+        "cfcmt_mechanism_policy": {
+          "n": 3840,
+          "mean_reward": -0.31705124865596496,
+          "mean_oracle_reward": -0.31395338151293495,
+          "mean_regret_to_oracle": 0.003097867143029968,
+          "mean_headway_abs_error": 85.22862371404966,
+          "mean_abs_gap": 170.42998109857243,
+          "mean_waiting_passengers": 15.064555420478184,
+          "mean_hold_seconds": 28.65625,
+          "action_counts": {
+            "0.0": 1744,
+            "15.0": 193,
+            "30.0": 165,
+            "45.0": 139,
+            "60.0": 1599
+          },
+          "mean_reward_gain_vs_no_hold": 0.02040154353405038,
+          "oracle_reward_gap": 0.0030978671430300087
+        },
+        "oracle_policy": {
+          "n": 3840,
+          "mean_reward": -0.31395338151293495,
+          "mean_oracle_reward": -0.31395338151293495,
+          "mean_regret_to_oracle": 0.0,
+          "mean_headway_abs_error": 84.79216298063596,
+          "mean_abs_gap": 169.54824581543605,
+          "mean_waiting_passengers": 15.144042724370957,
+          "mean_hold_seconds": 26.88671875,
+          "action_counts": {
+            "0.0": 1897,
+            "15.0": 197,
+            "30.0": 105,
+            "45.0": 88,
+            "60.0": 1553
+          },
+          "mean_reward_gain_vs_no_hold": 0.02349941067708039,
+          "oracle_reward_gap": 0.0
+        }
+      },
+      "comparisons": {
+        "cfcmt_reward_beats_h2oplus": false,
+        "cfcmt_reward_gain_vs_h2oplus": -0.0003440615100165356,
+        "cfcmt_regret_ratio_vs_h2oplus": 1.1249403755631147,
+        "cfcmt_headway_error_ratio_vs_h2oplus": 0.9967475514432663
+      }
+    },
+    {
+      "name": "leave_one_city_out_all::singapore_lta_all",
+      "source_envs": [
+        "austin_capmetro_all",
+        "halifax_transit_all",
+        "mbta_all"
+      ],
+      "target_env": "singapore_lta_all",
+      "ok": true,
+      "policy_validation": true,
+      "live_env_rollout": false,
+      "one_step_lookahead": true,
+      "train_transitions": 78600,
+      "target_city": "Singapore",
+      "target_lines_seen": 2,
+      "elapsed_sec": 0.8433597087860107,
+      "methods": {
+        "no_hold": {
+          "n": 8160,
+          "mean_reward": -0.35079714213224017,
+          "mean_oracle_reward": -0.33326383151990524,
+          "mean_regret_to_oracle": 0.017533310612334926,
+          "mean_headway_abs_error": 108.63877967853172,
+          "mean_abs_gap": 217.24503470028148,
+          "mean_waiting_passengers": 33.693790402131924,
+          "mean_hold_seconds": 0.0,
+          "action_counts": {
+            "0.0": 8160
+          },
+          "mean_reward_gain_vs_no_hold": 0.0,
+          "oracle_reward_gap": 0.01753331061233493
+        },
+        "fixed_30": {
+          "n": 8160,
+          "mean_reward": -0.37149035946703424,
+          "mean_oracle_reward": -0.33326383151990524,
+          "mean_regret_to_oracle": 0.03822652794712899,
+          "mean_headway_abs_error": 107.79414689307119,
+          "mean_abs_gap": 215.5485407847984,
+          "mean_waiting_passengers": 32.34619031793931,
+          "mean_hold_seconds": 30.0,
+          "action_counts": {
+            "30.0": 8160
+          },
+          "mean_reward_gain_vs_no_hold": -0.020693217334794067,
+          "oracle_reward_gap": 0.038226527947128996
+        },
+        "uncalibrated_policy": {
+          "n": 8160,
+          "mean_reward": -0.35079714213224017,
+          "mean_oracle_reward": -0.33326383151990524,
+          "mean_regret_to_oracle": 0.017533310612334926,
+          "mean_headway_abs_error": 108.63877967853172,
+          "mean_abs_gap": 217.24503470028148,
+          "mean_waiting_passengers": 33.693790402131924,
+          "mean_hold_seconds": 0.0,
+          "action_counts": {
+            "0.0": 8160
+          },
+          "mean_reward_gain_vs_no_hold": 0.0,
+          "oracle_reward_gap": 0.01753331061233493
+        },
+        "h2oplus_dense_policy": {
+          "n": 8160,
+          "mean_reward": -0.33473715847175495,
+          "mean_oracle_reward": -0.33326383151990524,
+          "mean_regret_to_oracle": 0.0014733269518496944,
+          "mean_headway_abs_error": 95.56106935762891,
+          "mean_abs_gap": 191.07617822721892,
+          "mean_waiting_passengers": 32.47261054282095,
+          "mean_hold_seconds": 27.185661764705884,
+          "action_counts": {
+            "0.0": 4141,
+            "15.0": 189,
+            "30.0": 301,
+            "45.0": 118,
+            "60.0": 3411
+          },
+          "mean_reward_gain_vs_no_hold": 0.016059983660485222,
+          "oracle_reward_gap": 0.0014733269518497072
+        },
+        "cfcmt_mechanism_policy": {
+          "n": 8160,
+          "mean_reward": -0.333870629966259,
+          "mean_oracle_reward": -0.33326383151990524,
+          "mean_regret_to_oracle": 0.0006067984463537441,
+          "mean_headway_abs_error": 95.32990879545025,
+          "mean_abs_gap": 190.6137292207456,
+          "mean_waiting_passengers": 32.483427690992166,
+          "mean_hold_seconds": 26.94485294117647,
+          "action_counts": {
+            "0.0": 4139,
+            "15.0": 225,
+            "30.0": 244,
+            "45.0": 263,
+            "60.0": 3289
+          },
+          "mean_reward_gain_vs_no_hold": 0.016926512165981178,
+          "oracle_reward_gap": 0.0006067984463537512
+        },
+        "oracle_policy": {
+          "n": 8160,
+          "mean_reward": -0.33326383151990524,
+          "mean_oracle_reward": -0.33326383151990524,
+          "mean_regret_to_oracle": 0.0,
+          "mean_headway_abs_error": 94.85427411771288,
+          "mean_abs_gap": 189.65384575572668,
+          "mean_waiting_passengers": 32.43982884837132,
+          "mean_hold_seconds": 27.915441176470587,
+          "action_counts": {
+            "0.0": 4021,
+            "15.0": 216,
+            "30.0": 258,
+            "45.0": 206,
+            "60.0": 3459
+          },
+          "mean_reward_gain_vs_no_hold": 0.01753331061233493,
+          "oracle_reward_gap": 0.0
+        }
+      },
+      "comparisons": {
+        "cfcmt_reward_beats_h2oplus": true,
+        "cfcmt_reward_gain_vs_h2oplus": 0.000866528505495956,
+        "cfcmt_regret_ratio_vs_h2oplus": 0.4118559329902548,
+        "cfcmt_headway_error_ratio_vs_h2oplus": 0.9975810174192007
+      }
+    },
+    {
+      "name": "leave_one_city_out_all::austin_capmetro_all",
+      "source_envs": [
+        "singapore_lta_all",
+        "halifax_transit_all",
+        "mbta_all"
+      ],
+      "target_env": "austin_capmetro_all",
+      "ok": true,
+      "policy_validation": true,
+      "live_env_rollout": false,
+      "one_step_lookahead": true,
+      "train_transitions": 87600,
+      "target_city": "Austin / CapMetro",
+      "target_lines_seen": 2,
+      "elapsed_sec": 0.6163041591644287,
+      "methods": {
+        "no_hold": {
+          "n": 6360,
+          "mean_reward": -0.34211108628309,
+          "mean_oracle_reward": -0.31991477608680724,
+          "mean_regret_to_oracle": 0.02219631019628273,
+          "mean_headway_abs_error": 93.27178146554239,
+          "mean_abs_gap": 186.53459253850974,
+          "mean_waiting_passengers": 15.267939470399101,
+          "mean_hold_seconds": 0.0,
+          "action_counts": {
+            "0.0": 6360
+          },
+          "mean_reward_gain_vs_no_hold": 0.0,
+          "oracle_reward_gap": 0.022196310196282765
+        },
+        "fixed_30": {
+          "n": 6360,
+          "mean_reward": -0.36754406004581813,
+          "mean_oracle_reward": -0.31991477608680724,
+          "mean_regret_to_oracle": 0.047629283959010865,
+          "mean_headway_abs_error": 94.21306528055443,
+          "mean_abs_gap": 188.4105172595138,
+          "mean_waiting_passengers": 13.920339140502161,
+          "mean_hold_seconds": 30.0,
+          "action_counts": {
+            "30.0": 6360
+          },
+          "mean_reward_gain_vs_no_hold": -0.025432973762728128,
+          "oracle_reward_gap": 0.04762928395901089
+        },
+        "uncalibrated_policy": {
+          "n": 6360,
+          "mean_reward": -0.34211108628309,
+          "mean_oracle_reward": -0.31991477608680724,
+          "mean_regret_to_oracle": 0.02219631019628273,
+          "mean_headway_abs_error": 93.27178146554239,
+          "mean_abs_gap": 186.53459253850974,
+          "mean_waiting_passengers": 15.267939470399101,
+          "mean_hold_seconds": 0.0,
+          "action_counts": {
+            "0.0": 6360
+          },
+          "mean_reward_gain_vs_no_hold": 0.0,
+          "oracle_reward_gap": 0.022196310196282765
+        },
+        "h2oplus_dense_policy": {
+          "n": 6360,
+          "mean_reward": -0.3223496419828643,
+          "mean_oracle_reward": -0.31991477608680724,
+          "mean_regret_to_oracle": 0.002434865896057033,
+          "mean_headway_abs_error": 81.89532356502126,
+          "mean_abs_gap": 163.72723023996414,
+          "mean_waiting_passengers": 14.162526076694704,
+          "mean_hold_seconds": 24.608490566037737,
+          "action_counts": {
+            "0.0": 3478,
+            "15.0": 229,
+            "30.0": 129,
+            "45.0": 149,
+            "60.0": 2375
+          },
+          "mean_reward_gain_vs_no_hold": 0.019761444300225695,
+          "oracle_reward_gap": 0.00243486589605707
+        },
+        "cfcmt_mechanism_policy": {
+          "n": 6360,
+          "mean_reward": -0.32176947046375876,
+          "mean_oracle_reward": -0.31991477608680724,
+          "mean_regret_to_oracle": 0.0018546943769514935,
+          "mean_headway_abs_error": 81.33369162217626,
+          "mean_abs_gap": 162.59637708364042,
+          "mean_waiting_passengers": 14.105528506392952,
+          "mean_hold_seconds": 25.87735849056604,
+          "action_counts": {
+            "0.0": 3358,
+            "15.0": 114,
+            "30.0": 208,
+            "45.0": 278,
+            "60.0": 2402
+          },
+          "mean_reward_gain_vs_no_hold": 0.02034161581933125,
+          "oracle_reward_gap": 0.0018546943769515156
+        },
+        "oracle_policy": {
+          "n": 6360,
+          "mean_reward": -0.31991477608680724,
+          "mean_oracle_reward": -0.31991477608680724,
+          "mean_regret_to_oracle": 0.0,
+          "mean_headway_abs_error": 80.97057273912729,
+          "mean_abs_gap": 161.84788002637947,
+          "mean_waiting_passengers": 14.145363206683465,
+          "mean_hold_seconds": 24.99056603773585,
+          "action_counts": {
+            "0.0": 3397,
+            "15.0": 162,
+            "30.0": 257,
+            "45.0": 256,
+            "60.0": 2288
+          },
+          "mean_reward_gain_vs_no_hold": 0.022196310196282765,
+          "oracle_reward_gap": 0.0
+        }
+      },
+      "comparisons": {
+        "cfcmt_reward_beats_h2oplus": true,
+        "cfcmt_reward_gain_vs_h2oplus": 0.0005801715191055545,
+        "cfcmt_regret_ratio_vs_h2oplus": 0.7617234197394378,
+        "cfcmt_headway_error_ratio_vs_h2oplus": 0.9931420755374502
+      }
+    },
+    {
+      "name": "leave_one_city_out_all::halifax_transit_all",
+      "source_envs": [
+        "singapore_lta_all",
+        "austin_capmetro_all",
+        "mbta_all"
+      ],
+      "target_env": "halifax_transit_all",
+      "ok": true,
+      "policy_validation": true,
+      "live_env_rollout": false,
+      "one_step_lookahead": true,
+      "train_transitions": 91800,
+      "target_city": "Halifax Transit",
+      "target_lines_seen": 2,
+      "elapsed_sec": 0.44621729850769043,
+      "methods": {
+        "no_hold": {
+          "n": 5520,
+          "mean_reward": -0.34855744467265365,
+          "mean_oracle_reward": -0.3466967596092086,
+          "mean_regret_to_oracle": 0.0018606850634450497,
+          "mean_headway_abs_error": 171.29653246782829,
+          "mean_abs_gap": 342.5915026789126,
+          "mean_waiting_passengers": 29.452807235717774,
+          "mean_hold_seconds": 0.0,
+          "action_counts": {
+            "0.0": 5520
+          },
+          "mean_reward_gain_vs_no_hold": 0.0,
+          "oracle_reward_gap": 0.0018606850634450556
+        },
+        "fixed_30": {
+          "n": 5520,
+          "mean_reward": -0.37125597829404083,
+          "mean_oracle_reward": -0.3466967596092086,
+          "mean_regret_to_oracle": 0.024559218684832254,
+          "mean_headway_abs_error": 171.02189532846646,
+          "mean_abs_gap": 342.03676746755406,
+          "mean_waiting_passengers": 28.10520673005477,
+          "mean_hold_seconds": 30.0,
+          "action_counts": {
+            "30.0": 5520
+          },
+          "mean_reward_gain_vs_no_hold": -0.022698533621387185,
+          "oracle_reward_gap": 0.02455921868483224
+        },
+        "uncalibrated_policy": {
+          "n": 5520,
+          "mean_reward": -0.34855744467265365,
+          "mean_oracle_reward": -0.3466967596092086,
+          "mean_regret_to_oracle": 0.0018606850634450497,
+          "mean_headway_abs_error": 171.29653246782829,
+          "mean_abs_gap": 342.5915026789126,
+          "mean_waiting_passengers": 29.452807235717774,
+          "mean_hold_seconds": 0.0,
+          "action_counts": {
+            "0.0": 5520
+          },
+          "mean_reward_gain_vs_no_hold": 0.0,
+          "oracle_reward_gap": 0.0018606850634450556
+        },
+        "h2oplus_dense_policy": {
+          "n": 5520,
+          "mean_reward": -0.34706276776134104,
+          "mean_oracle_reward": -0.3466967596092086,
+          "mean_regret_to_oracle": 0.00036600815213244897,
+          "mean_headway_abs_error": 157.41795040628185,
+          "mean_abs_gap": 314.8207846987075,
+          "mean_waiting_passengers": 28.172709064207215,
+          "mean_hold_seconds": 28.497282608695652,
+          "action_counts": {
+            "0.0": 2690,
+            "15.0": 163,
+            "30.0": 112,
+            "45.0": 120,
+            "60.0": 2435
+          },
+          "mean_reward_gain_vs_no_hold": 0.001494676911312609,
+          "oracle_reward_gap": 0.00036600815213244653
+        },
+        "cfcmt_mechanism_policy": {
+          "n": 5520,
+          "mean_reward": -0.34800438345342444,
+          "mean_oracle_reward": -0.3466967596092086,
+          "mean_regret_to_oracle": 0.0013076238442158354,
+          "mean_headway_abs_error": 157.50928924118264,
+          "mean_abs_gap": 315.01316447050675,
+          "mean_waiting_passengers": 28.126690568785737,
+          "mean_hold_seconds": 29.52173913043478,
+          "action_counts": {
+            "0.0": 2637,
+            "15.0": 87,
+            "30.0": 148,
+            "45.0": 111,
+            "60.0": 2537
+          },
+          "mean_reward_gain_vs_no_hold": 0.0005530612192292117,
+          "oracle_reward_gap": 0.0013076238442158439
+        },
+        "oracle_policy": {
+          "n": 5520,
+          "mean_reward": -0.3466967596092086,
+          "mean_oracle_reward": -0.3466967596092086,
+          "mean_regret_to_oracle": 0.0,
+          "mean_headway_abs_error": 157.31099873418393,
+          "mean_abs_gap": 314.61900227864584,
+          "mean_waiting_passengers": 28.18357273599376,
+          "mean_hold_seconds": 28.255434782608695,
+          "action_counts": {
+            "0.0": 2755,
+            "15.0": 121,
+            "30.0": 102,
+            "45.0": 95,
+            "60.0": 2447
+          },
+          "mean_reward_gain_vs_no_hold": 0.0018606850634450556,
+          "oracle_reward_gap": 0.0
+        }
+      },
+      "comparisons": {
+        "cfcmt_reward_beats_h2oplus": false,
+        "cfcmt_reward_gain_vs_h2oplus": -0.0009416156920833973,
+        "cfcmt_regret_ratio_vs_h2oplus": 3.5726631677390612,
+        "cfcmt_headway_error_ratio_vs_h2oplus": 1.0005802313819043
+      }
+    },
+    {
+      "name": "leave_one_city_out_all::mbta_all",
+      "source_envs": [
+        "singapore_lta_all",
+        "austin_capmetro_all",
+        "halifax_transit_all"
+      ],
+      "target_env": "mbta_all",
+      "ok": true,
+      "policy_validation": true,
+      "live_env_rollout": false,
+      "one_step_lookahead": true,
+      "train_transitions": 100200,
+      "target_city": "MBTA",
+      "target_lines_seen": 2,
+      "elapsed_sec": 0.4604501724243164,
+      "methods": {
+        "no_hold": {
+          "n": 3840,
+          "mean_reward": -0.33745279219001534,
+          "mean_oracle_reward": -0.31395338151293495,
+          "mean_regret_to_oracle": 0.023499410677080352,
+          "mean_headway_abs_error": 98.01106342673302,
+          "mean_abs_gap": 196.02175458669663,
+          "mean_waiting_passengers": 16.35179415345192,
+          "mean_hold_seconds": 0.0,
+          "action_counts": {
+            "0.0": 3840
+          },
+          "mean_reward_gain_vs_no_hold": 0.0,
+          "oracle_reward_gap": 0.02349941067708039
+        },
+        "fixed_30": {
+          "n": 3840,
+          "mean_reward": -0.36001613084226847,
+          "mean_oracle_reward": -0.31395338151293495,
+          "mean_regret_to_oracle": 0.046062749329333505,
+          "mean_headway_abs_error": 97.95894538760186,
+          "mean_abs_gap": 195.91358095010122,
+          "mean_waiting_passengers": 15.004194162289302,
+          "mean_hold_seconds": 30.0,
+          "action_counts": {
+            "30.0": 3840
+          },
+          "mean_reward_gain_vs_no_hold": -0.02256333865225313,
+          "oracle_reward_gap": 0.04606274932933352
+        },
+        "uncalibrated_policy": {
+          "n": 3840,
+          "mean_reward": -0.33745279219001534,
+          "mean_oracle_reward": -0.31395338151293495,
+          "mean_regret_to_oracle": 0.023499410677080352,
+          "mean_headway_abs_error": 98.01106342673302,
+          "mean_abs_gap": 196.02175458669663,
+          "mean_waiting_passengers": 16.35179415345192,
+          "mean_hold_seconds": 0.0,
+          "action_counts": {
+            "0.0": 3840
+          },
+          "mean_reward_gain_vs_no_hold": 0.0,
+          "oracle_reward_gap": 0.02349941067708039
+        },
+        "h2oplus_dense_policy": {
+          "n": 3840,
+          "mean_reward": -0.3167071871459484,
+          "mean_oracle_reward": -0.31395338151293495,
+          "mean_regret_to_oracle": 0.002753805633013447,
+          "mean_headway_abs_error": 85.50672995448113,
+          "mean_abs_gap": 171.00087883472443,
+          "mean_waiting_passengers": 15.138778700431187,
+          "mean_hold_seconds": 27.00390625,
+          "action_counts": {
+            "0.0": 1911,
+            "15.0": 146,
+            "30.0": 137,
+            "45.0": 91,
+            "60.0": 1555
+          },
+          "mean_reward_gain_vs_no_hold": 0.020745605044066917,
+          "oracle_reward_gap": 0.002753805633013473
+        },
+        "cfcmt_mechanism_policy": {
+          "n": 3840,
+          "mean_reward": -0.31705124865596496,
+          "mean_oracle_reward": -0.31395338151293495,
+          "mean_regret_to_oracle": 0.003097867143029968,
+          "mean_headway_abs_error": 85.22862371404966,
+          "mean_abs_gap": 170.42998109857243,
+          "mean_waiting_passengers": 15.064555420478184,
+          "mean_hold_seconds": 28.65625,
+          "action_counts": {
+            "0.0": 1744,
+            "15.0": 193,
+            "30.0": 165,
+            "45.0": 139,
+            "60.0": 1599
+          },
+          "mean_reward_gain_vs_no_hold": 0.02040154353405038,
+          "oracle_reward_gap": 0.0030978671430300087
+        },
+        "oracle_policy": {
+          "n": 3840,
+          "mean_reward": -0.31395338151293495,
+          "mean_oracle_reward": -0.31395338151293495,
+          "mean_regret_to_oracle": 0.0,
+          "mean_headway_abs_error": 84.79216298063596,
+          "mean_abs_gap": 169.54824581543605,
+          "mean_waiting_passengers": 15.144042724370957,
+          "mean_hold_seconds": 26.88671875,
+          "action_counts": {
+            "0.0": 1897,
+            "15.0": 197,
+            "30.0": 105,
+            "45.0": 88,
+            "60.0": 1553
+          },
+          "mean_reward_gain_vs_no_hold": 0.02349941067708039,
+          "oracle_reward_gap": 0.0
+        }
+      },
+      "comparisons": {
+        "cfcmt_reward_beats_h2oplus": false,
+        "cfcmt_reward_gain_vs_h2oplus": -0.0003440615100165356,
+        "cfcmt_regret_ratio_vs_h2oplus": 1.1249403755631147,
+        "cfcmt_headway_error_ratio_vs_h2oplus": 0.9967475514432663
+      }
+    }
+  ],
+  "summary": {
+    "splits": 6,
+    "cfcmt_reward_wins_vs_h2oplus": 3,
+    "h2oplus_reward_wins_vs_cfcmt": 3,
+    "reward_ties": 0,
+    "mean_cfcmt_reward_gain_vs_h2oplus": 0.00011391496966349964,
+    "mean_cfcmt_regret_ratio_vs_h2oplus": 1.2346632007642062
+  }
+}

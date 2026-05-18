@@ -76,27 +76,67 @@ def _extract_active_buses(state_dict):
     """
     Parse the env state dict into (bus_id, obs_vec) pairs.
 
-    The env returns state[bus_id] as:
+    Single-line envs return state[bus_id] as:
         [[15-float list]]   — list containing one inner 15-element list
         or [] / None        — bus has no pending decision
 
+    Multi-line envs return state[line_id][bus_id] with the same leaf format.
+    In that case the agent id returned here is ``(line_id, bus_id)`` so bus
+    ids from different lines do not collide in pending-transition caches.
+
     Returns:
-        list of (bus_id: int, obs_vec: np.ndarray shape (15,))
+        list of (agent_id, obs_vec: np.ndarray shape (15,))
     """
+    if state_dict and all(isinstance(v, dict) for v in state_dict.values()):
+        active = []
+        for line_id, line_state in state_dict.items():
+            for bus_id, obs_list in line_state.items():
+                parsed = _parse_obs_leaf(obs_list)
+                if parsed is not None:
+                    active.append(((line_id, bus_id), parsed))
+        return active
+
     active = []
     for bus_id, obs_list in state_dict.items():
-        if not obs_list:
-            continue
-        # obs_list is e.g. [[11.0, 0.0, 6.0, ...]]
-        inner = obs_list[-1]
-        if isinstance(inner, (list, np.ndarray)):
-            vec = inner
-            # Handle nested lists: [[...]] → [...]
-            if isinstance(vec, list) and vec and isinstance(vec[0], list):
-                vec = vec[-1]
-            if vec:
-                active.append((bus_id, np.array(vec, dtype=np.float32)))
+        parsed = _parse_obs_leaf(obs_list)
+        if parsed is not None:
+            active.append((bus_id, parsed))
     return active
+
+
+def _parse_obs_leaf(obs_list):
+    if not obs_list:
+        return None
+    inner = obs_list[-1]
+    if not isinstance(inner, (list, np.ndarray)):
+        return None
+    vec = inner
+    if isinstance(vec, list) and vec and isinstance(vec[0], list):
+        vec = vec[-1]
+    if vec is None or len(vec) == 0:
+        return None
+    return np.array(vec, dtype=np.float32)
+
+
+def _lookup_reward(reward_dict, agent_id):
+    if isinstance(agent_id, tuple) and len(agent_id) == 2:
+        line_id, bus_id = agent_id
+        return reward_dict.get(line_id, {}).get(bus_id, 0.0)
+    return reward_dict.get(agent_id, 0.0)
+
+
+def _put_action(action_dict, agent_id, action):
+    if isinstance(agent_id, tuple) and len(agent_id) == 2:
+        line_id, bus_id = agent_id
+        action_dict.setdefault(line_id, {})[bus_id] = action
+    else:
+        action_dict[agent_id] = action
+
+
+def _state_has_obs(state_dict):
+    if state_dict and all(isinstance(v, dict) for v in state_dict.values()):
+        return any(any(obs for obs in line_state.values()) for line_state in state_dict.values())
+    return any(v for v in state_dict.values())
 
 
 class BusStepSampler:
@@ -260,20 +300,20 @@ class BusStepSampler:
 
                 action_dict = {}
 
-                for bus_id, obs_vec in active_buses:
+                for agent_id, obs_vec in active_buses:
                     total_events += 1
                     station_idx = int(obs_vec[2]) if len(obs_vec) > 2 else -1
-                    reward_val = self.env.reward.get(bus_id, 0.0)
+                    reward_val = _lookup_reward(self.env.reward, agent_id)
 
                     # ── Augment obs with last_action ───────────────────
                     prev_a = self._last_action.get(
-                        bus_id, np.zeros(self.action_dim, dtype=np.float32)
+                        agent_id, np.zeros(self.action_dim, dtype=np.float32)
                     )
                     obs_aug = np.concatenate([obs_vec, prev_a])  # 15 + 2 = 17
 
                     # ── Settle pending transition ─────────────────────
-                    if bus_id in self._pending:
-                        prev = self._pending.pop(bus_id)
+                    if agent_id in self._pending:
+                        prev = self._pending.pop(agent_id)
                         if station_idx != prev["station_idx"]:
                             # Buffer stores raw [0,60] actions
                             self.replay_buffer.append(
@@ -293,13 +333,13 @@ class BusStepSampler:
                     action_raw = policy(obs_tensor, deterministic=deterministic)[0]
                     # Map to env action via Residual Control + Bang-Bang
                     hold, speed = _map_raw_to_env(action_raw)
-                    action_dict[bus_id] = [hold, speed]
+                    _put_action(action_dict, agent_id, [hold, speed])
 
                     # Track last_action as raw tanh (for obs augmentation)
-                    self._last_action[bus_id] = action_raw.copy()
+                    self._last_action[agent_id] = action_raw.copy()
 
                     # ── Cache as pending ───────────────────────────────
-                    self._pending[bus_id] = {
+                    self._pending[agent_id] = {
                         "obs_aug": obs_aug.copy(),
                         "action_raw": action_raw.copy(),
                         "z_t": z_now.copy(),
@@ -308,7 +348,7 @@ class BusStepSampler:
 
                 # ── Track last settled transition for TransitionDiscriminator ─
                 # (obs_aug and action_raw of the most recent settled bus)
-                if bus_id in self._last_action:
+                if agent_id in self._last_action:
                     last_settled_obs = obs_aug.copy()
                     last_settled_action = action_raw.copy()
 
@@ -348,7 +388,7 @@ class BusStepSampler:
                 last_z_t = z_now.copy()
 
                 if truncate:
-                    for bus_id, prev in self._pending.items():
+                    for agent_id, prev in self._pending.items():
                         self.replay_buffer.append(
                             obs=prev["obs_aug"],
                             action=prev["action_raw"],
@@ -367,7 +407,7 @@ class BusStepSampler:
                 event_in_episode += 1
 
                 if done:
-                    for bus_id, prev in self._pending.items():
+                    for agent_id, prev in self._pending.items():
                         snap_end = self.env.capture_full_system_snapshot()
                         z_end = extract_structured_context(snap_end)
                         self.replay_buffer.append(
@@ -480,19 +520,19 @@ class BusEvalSampler:
                     continue
 
                 action_dict = {}
-                for bus_id, obs_vec in active_buses:
+                for agent_id, obs_vec in active_buses:
                     station_idx = int(obs_vec[2]) if len(obs_vec) > 2 else -1
-                    reward_val = self.env.reward.get(bus_id, 0.0)
+                    reward_val = _lookup_reward(self.env.reward, agent_id)
 
                     # Settle pending
-                    if bus_id in pending:
-                        prev = pending.pop(bus_id)
+                    if agent_id in pending:
+                        prev = pending.pop(agent_id)
                         if station_idx != prev["station_idx"]:
                             rewards_list.append(reward_val)
 
                     # Augment obs with last_action
                     prev_a = _last_action.get(
-                        bus_id, np.zeros(self.action_dim, dtype=np.float32)
+                        agent_id, np.zeros(self.action_dim, dtype=np.float32)
                     )
                     obs_aug = np.concatenate([obs_vec, prev_a])  # 15 + 2 = 17
 
@@ -501,11 +541,11 @@ class BusEvalSampler:
                     action_raw = policy(obs_tensor, deterministic=deterministic)[0]
                     # Map to env action via Residual Control + Bang-Bang
                     hold, speed = _map_raw_to_env(action_raw)
-                    action_dict[bus_id] = [hold, speed]
+                    _put_action(action_dict, agent_id, [hold, speed])
 
-                    _last_action[bus_id] = action_raw.copy()
+                    _last_action[agent_id] = action_raw.copy()
 
-                    pending[bus_id] = {
+                    pending[agent_id] = {
                         "obs": obs_aug.copy(),
                         "station_idx": station_idx,
                     }
@@ -522,5 +562,5 @@ class BusEvalSampler:
             state, reward, done = self.env.step_fast(action_dict)
             if done:
                 break
-            if any(v for v in state.values()):
+            if _state_has_obs(state):
                 break

@@ -109,11 +109,13 @@ class BusSimEnv(env_bus):
         self._station_linear_pos: dict[str, float] = self._compute_station_positions()
 
         # SUMO alignment: inject line-level constants into the env so
-        # launch_bus() propagates them to each Bus instance.
-        # 7X is alphabetically last among 12 SUMO lines → index 11.
-        # Median headway for 7X = 360.0s (from save_obj_bus.add.xml schedule).
-        self.line_idx = 11       # _SUMO_LINE_INDEX['7X']
-        self.line_headway = 360.0  # matches rl_env._line_headway['7X']
+        # launch_bus() propagates them to each Bus instance. Defaults preserve
+        # the original 7X-calibrated behavior, while external city configs can
+        # override these fields without changing the simulator code.
+        self.line_idx = int(self.args.get("line_idx", 11))       # _SUMO_LINE_INDEX['7X']
+        self.line_id_str = self.args.get("line_id_str", None)
+        self.line_headway = float(self.args.get("line_headway", 360.0))
+        self.use_virtual_colines = bool(self.args.get("use_virtual_colines", True))
 
         # Virtual co-line scheduler: analytically tracks 102X/705X bus positions
         # so co-line headways (obs[12-13]) match SUMO rl_bridge logic.
@@ -194,11 +196,14 @@ class BusSimEnv(env_bus):
         # Build co-line bus positions from virtual 102X/705X scheduler
         # Mirrors MultiLineEnv.step() which populates co_line_buses from all other active lines.
         # Use current segment speed as conversion factor (mean across active buses, fallback 8 m/s)
-        active_speeds = [b.current_speed for b in self.bus_all if b.on_route and b.current_speed > 0]
-        seg_speed = float(np.mean(active_speeds)) if active_speeds else 8.0
-        co_line_buses = self._co_scheduler.get_co_line_buses(
-            self.current_time, seg_speed=seg_speed, target_headway=self.line_headway
-        )
+        if self.use_virtual_colines:
+            active_speeds = [b.current_speed for b in self.bus_all if b.on_route and b.current_speed > 0]
+            seg_speed = float(np.mean(active_speeds)) if active_speeds else 8.0
+            co_line_buses = self._co_scheduler.get_co_line_buses(
+                self.current_time, seg_speed=seg_speed, target_headway=self.line_headway
+            )
+        else:
+            co_line_buses = []
 
         state, reward, done = super().step(action_dict, co_line_buses=co_line_buses, **kwargs)
 
@@ -215,8 +220,12 @@ class BusSimEnv(env_bus):
 
     def step_fast(self, action_dict: dict, **kwargs) -> tuple[dict, dict, bool]:
         """Lightweight step for training — skips snapshot capture."""
-        co_line_buses = self._co_scheduler.get_co_line_buses(
-            self.current_time, target_headway=self.line_headway
+        co_line_buses = (
+            self._co_scheduler.get_co_line_buses(
+                self.current_time, target_headway=self.line_headway
+            )
+            if self.use_virtual_colines
+            else []
         )
         state, reward, done = super().step(action_dict, co_line_buses=co_line_buses, **kwargs)
         return state, reward, done
@@ -467,120 +476,140 @@ class MultiLineSimEnv(_MultiLineEnv):
     """
     Gym-compatible adapter around MultiLineEnv.
 
-    Operates over all 12 SUMO lines simultaneously for z-feature computation,
-    while exposing a BusSimEnv-compatible interface for the 7X policy rollout.
-
-    For H2O+ training:
-        - capture_full_system_snapshot() → all-lines snapshot for z
-        - state/reward/step_to_event/reset → proxied to 7X line
-        - Other lines step in the background with zero-hold actions
+    By default this exposes the full multi-line event stream.  Legacy callers
+    that need the old single-line proxy can pass ``target_line="7X"``.
     """
 
-    TARGET_LINE = "7X"
+    TARGET_LINE = None
 
-    def __init__(self, path: str, debug: bool = False, render: bool = False):
+    def __init__(
+        self,
+        path: str,
+        debug: bool = False,
+        render: bool = False,
+        target_line: str | None = None,
+    ):
         super().__init__(path, debug=debug, render=render)
-        if self.TARGET_LINE not in self.line_map:
+        self.target_line = self.TARGET_LINE if target_line is None else target_line
+        self._target_env = None
+        if self.target_line is not None and self.target_line not in self.line_map:
             raise RuntimeError(
-                f"Target line {self.TARGET_LINE} not found. "
+                f"Target line {self.target_line} not found. "
                 f"Available: {list(self.line_map.keys())}"
             )
-        self._x7 = self.line_map[self.TARGET_LINE]
-        # Override parent's aggregate values with 7X-only values
-        self.max_agent_num = self._x7.max_agent_num
-        self.action_space = self._x7.action_space
+        if self.target_line is not None:
+            self._target_env = self.line_map[self.target_line]
+            self.max_agent_num = self._target_env.max_agent_num
+            self.action_space = self._target_env.action_space
 
     # ------------------------------------------------------------------
-    # BusSimEnv-compatible properties (proxy to 7X)
+    # BusSimEnv-compatible properties.
     # ------------------------------------------------------------------
 
     @property
     def state(self):
-        return self._x7.state
+        if self._target_env is not None:
+            return self._target_env.state
+        return self._aggregate_state()
 
     @state.setter
     def state(self, val):
-        self._x7.state = val
+        if self._target_env is not None:
+            self._target_env.state = val
 
     @property
     def reward(self):
-        return self._x7.reward
+        if self._target_env is not None:
+            return self._target_env.reward
+        return self._aggregate_reward()
 
     @property
     def stations(self):
-        return self._x7.stations
+        if self._target_env is not None:
+            return self._target_env.stations
+        return [st for le in self.line_map.values() for st in le.stations]
+
+    @property
+    def routes(self):
+        if self._target_env is not None:
+            return self._target_env.routes
+        return [route for le in self.line_map.values() for route in le.routes]
+
+    @property
+    def timetables(self):
+        if self._target_env is not None:
+            return self._target_env.timetables
+        return [tt for le in self.line_map.values() for tt in le.timetables]
 
     # ------------------------------------------------------------------
-    # Reset: reset all lines, optionally inject snapshot into 7X
+    # Reset: reset all lines, optionally inject a full-system snapshot.
     # ------------------------------------------------------------------
 
     def reset(self, snapshot=None):
-        """Reset all lines. If snapshot given, inject into 7X (buffer reset)."""
+        """Reset all lines. If snapshot is given, restore matching line states."""
         super().reset()
         if snapshot is not None:
-            # If this is an all-lines snapshot (from raw_snapshot), filter
-            # to only buses/stations relevant to 7X before injecting.
-            if any(b.get("line_id") for b in snapshot.get("all_buses", [])):
-                x7_lines = {self.TARGET_LINE, self.TARGET_LINE.replace("X", "S")}
-                filtered = dict(snapshot)
-                filtered["all_buses"] = [
-                    b for b in snapshot["all_buses"]
-                    if b.get("line_id") in x7_lines or b.get("line_id") is None
-                ]
-                filtered["all_stations"] = [
-                    s for s in snapshot.get("all_stations", [])
-                    if s.get("line_id") in x7_lines or s.get("line_id") is None
-                ]
-                self._x7.restore_full_system_snapshot(filtered)
+            if self._target_env is not None:
+                filtered = self._filter_snapshot_for_line(snapshot, self.target_line)
+                self._target_env.restore_full_system_snapshot(filtered)
             else:
-                self._x7.restore_full_system_snapshot(snapshot)
-            return self._x7.state
-        # Standard reset: step all lines until 7X has obs
+                self._restore_all_line_snapshot(snapshot)
+            return self.state
+        # Standard reset: step all lines until the first decision event.
         self._init_all_lines()
-        return self._x7.state
+        return self.state
 
     def _init_all_lines(self):
-        """Step until 7X has at least one bus with obs."""
+        """Step until the target line, or any line, has at least one obs."""
         actions = self._zero_actions()
         for _ in range(5000):
             state, reward, done = super().step(actions)
             if done:
                 break
-            x7_state = state.get(self.TARGET_LINE, {})
-            if any(v for v in x7_state.values()):
+            if self._target_env is not None:
+                target_state = state.get(self.target_line, {})
+                if any(v for v in target_state.values()):
+                    break
+            elif any(any(v for v in line_state.values()) for line_state in state.values()):
                 break
 
     # ------------------------------------------------------------------
-    # Step: advance all lines, return only 7X state/reward
+    # Step: advance all lines; optionally return only the target line.
     # ------------------------------------------------------------------
 
     def step_to_event(self, action_dict, **kwargs):
         """
-        Step all lines until 7X produces a decision event.
+        Step all lines until a decision event.
 
-        action_dict: {bus_id: hold_time} for 7X only.
-        Other lines get zero-hold.
+        Full-line mode accepts nested ``{line_id: {bus_id: action}}`` actions
+        or tuple-key actions ``{(line_id, bus_id): action}``.  Target-line mode
+        accepts the legacy flat ``{bus_id: action}`` format.
         """
+        if self._target_env is None:
+            return super().step_to_event(self._normalize_actions(action_dict), **kwargs)
+
         full_actions = self._zero_actions()
-        full_actions[self.TARGET_LINE] = action_dict
+        full_actions[self.target_line] = action_dict
         while True:
             state, reward, done = super().step(full_actions, **kwargs)
             if done:
-                return self._x7.state, self._x7.reward, True
-            x7_state = state.get(self.TARGET_LINE, {})
-            if any(v for v in x7_state.values()):
-                return self._x7.state, self._x7.reward, False
-            # Reset 7X actions to None while waiting
-            full_actions[self.TARGET_LINE] = {
-                k: None for k in range(self._x7.max_agent_num)
+                return self._target_env.state, self._target_env.reward, True
+            target_state = state.get(self.target_line, {})
+            if any(v for v in target_state.values()):
+                return self._target_env.state, self._target_env.reward, False
+            full_actions[self.target_line] = {
+                k: None for k in range(self._target_env.max_agent_num)
             }
 
     def step_fast(self, action_dict, **kwargs):
-        """Single-tick step. action_dict is for 7X only."""
+        """Single-tick step."""
+        if self._target_env is None:
+            return super().step(self._normalize_actions(action_dict), **kwargs)
+
         full_actions = self._zero_actions()
-        full_actions[self.TARGET_LINE] = action_dict
+        full_actions[self.target_line] = action_dict
         state, reward, done = super().step(full_actions, **kwargs)
-        return self._x7.state, self._x7.reward, done
+        return self._target_env.state, self._target_env.reward, done
 
     # ------------------------------------------------------------------
     # Snapshot: aggregate all lines for z-feature computation
@@ -646,10 +675,86 @@ class MultiLineSimEnv(_MultiLineEnv):
     # Helpers
     # ------------------------------------------------------------------
 
+    def _normalize_actions(self, action_dict):
+        """Convert flat/tuple-key actions into MultiLineEnv's nested format."""
+        if not action_dict:
+            return {}
+        if any(line_id in action_dict and isinstance(action_dict[line_id], dict)
+               for line_id in self.line_map):
+            return action_dict
+        nested = {}
+        for key, value in action_dict.items():
+            if isinstance(key, tuple) and len(key) == 2:
+                line_id, bus_id = key
+                nested.setdefault(line_id, {})[bus_id] = value
+            elif isinstance(key, str) and isinstance(value, dict):
+                nested[key] = value
+        return nested if nested else action_dict
+
+    def _filter_snapshot_for_line(self, snapshot: dict, line_id: str) -> dict:
+        companion = line_id.replace("X", "S") if "X" in line_id else line_id
+        line_ids = {line_id, companion}
+        filtered = dict(snapshot)
+        if any(b.get("line_id") for b in snapshot.get("all_buses", [])):
+            filtered["all_buses"] = [
+                b for b in snapshot.get("all_buses", [])
+                if b.get("line_id") in line_ids or b.get("line_id") is None
+            ]
+            filtered["all_stations"] = [
+                s for s in snapshot.get("all_stations", [])
+                if s.get("line_id") in line_ids or s.get("line_id") is None
+            ]
+        if "launched_trips" not in filtered:
+            filtered["launched_trips"] = self._infer_launched_trips(
+                self.line_map[line_id],
+                filtered.get("current_time", filtered.get("sim_time", 0.0)),
+            )
+        filtered.setdefault("current_time", filtered.get("sim_time", 0.0))
+        return filtered
+
+    def _restore_all_line_snapshot(self, snapshot: dict) -> None:
+        """Restore every line that appears in a full-system snapshot."""
+        has_line_ids = any(b.get("line_id") for b in snapshot.get("all_buses", []))
+        if not has_line_ids:
+            first_line = next(iter(self.line_map))
+            self.line_map[first_line].restore_full_system_snapshot(
+                self._filter_snapshot_for_line(snapshot, first_line)
+            )
+            return
+
+        for line_id, line_env in self.line_map.items():
+            filtered = self._filter_snapshot_for_line(snapshot, line_id)
+            filtered["all_buses"] = [
+                b for b in filtered.get("all_buses", [])
+                if b.get("line_id") == line_id or b.get("line_id") is None
+            ]
+            filtered["all_stations"] = [
+                s for s in filtered.get("all_stations", [])
+                if s.get("line_id") == line_id or s.get("line_id") is None
+            ]
+            try:
+                line_env.restore_full_system_snapshot(filtered)
+            except Exception:
+                continue
+
+    @staticmethod
+    def _infer_launched_trips(line_env, current_time: float) -> list[int]:
+        launched = []
+        for idx, timetable in enumerate(line_env.timetables):
+            start_t = getattr(timetable, "start_time", getattr(timetable, "launch_time", float("inf")))
+            if start_t <= float(current_time):
+                launched.append(idx)
+        return launched
+
     def iter_bus_obs(self, state: dict):
         """Yield (line_id, bus_id, obs) for every bus with a non-empty state."""
+        if state and all(not isinstance(v, dict) for v in state.values()):
+            line_id = self.target_line or "_default"
+            for bid, v in state.items():
+                if v:
+                    yield line_id, bid, v[-1]
+            return
         for lid, bd in state.items():
             for bid, v in bd.items():
                 if v:
                     yield lid, bid, v[-1]
-
