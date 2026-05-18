@@ -115,6 +115,12 @@ class LinearStats:
         self.yty += other.yty
         self.n += other.n
 
+    def merge_scaled(self, other: "LinearStats", scale: float) -> None:
+        self.xtx += float(scale) * other.xtx
+        self.xty += float(scale) * other.xty
+        self.yty += float(scale) * other.yty
+        self.n += int(round(float(scale) * other.n))
+
     def solve(self, ridge: float) -> np.ndarray:
         reg = float(ridge) * np.eye(self.xtx.shape[0], dtype=np.float64)
         reg[0, 0] = 0.0
@@ -147,6 +153,11 @@ def _family_zero(feature_fn: FeatureFn) -> dict[str, LinearStats]:
 def _family_merge(dst: dict[str, LinearStats], src: dict[str, LinearStats]) -> None:
     for output_name in OUTPUT_NAMES:
         dst[output_name].merge(src[output_name])
+
+
+def _family_merge_scaled(dst: dict[str, LinearStats], src: dict[str, LinearStats], scale: float) -> None:
+    for output_name in OUTPUT_NAMES:
+        dst[output_name].merge_scaled(src[output_name], scale)
 
 
 def _family_solve(stats: dict[str, LinearStats], ridge: float) -> dict[str, np.ndarray]:
@@ -228,6 +239,15 @@ class ResidualStats:
         for name in ABLATION_FEATURES:
             _family_merge(self.ablations[name], other.ablations[name])
         self.n += other.n
+        self.lines_seen += other.lines_seen
+        self.line_keys.extend(other.line_keys)
+
+    def merge_scaled(self, other: "ResidualStats", scale: float) -> None:
+        self.h2o.merge_scaled(other.h2o, scale)
+        _family_merge_scaled(self.cfcmt, other.cfcmt, scale)
+        for name in ABLATION_FEATURES:
+            _family_merge_scaled(self.ablations[name], other.ablations[name], scale)
+        self.n += int(round(float(scale) * other.n))
         self.lines_seen += other.lines_seen
         self.line_keys.extend(other.line_keys)
 
@@ -440,6 +460,20 @@ def _merge_stats(key: str, city: str, stats_list: list[ResidualStats]) -> Residu
     return out
 
 
+def _merge_stats_weighted(key: str, city: str, stats_by_key: dict[str, ResidualStats], weights: dict[str, float]) -> ResidualStats:
+    out = ResidualStats.zeros(key, city)
+    active = {source: float(weight) for source, weight in weights.items() if weight > 0.0 and stats_by_key[source].n > 0}
+    if not active:
+        return out
+    total_weight = sum(active.values())
+    total_n = sum(stats_by_key[source].n for source in active)
+    for source, weight in active.items():
+        effective_n = (weight / total_weight) * total_n
+        scale = effective_n / max(float(stats_by_key[source].n), 1.0)
+        out.merge_scaled(stats_by_key[source], scale)
+    return out
+
+
 def _fit_h2o(stats: ResidualStats, ridge: float) -> np.ndarray:
     return stats.h2o.solve(ridge)
 
@@ -492,6 +526,134 @@ def _comparison(metrics: dict[str, Any]) -> dict[str, Any]:
         "cfcmt_beats_h2oplus": bool(cfcmt < h2o),
         "cfcmt_beats_uncalibrated": bool(cfcmt < uncal),
         "h2oplus_beats_uncalibrated": bool(h2o < uncal),
+    }
+
+
+def _method_total_mse(stats: ResidualStats, method_sse: np.ndarray) -> float:
+    return float((method_sse / float(max(1, stats.n))).mean())
+
+
+def _city_descriptor(summary: dict[str, Any]) -> np.ndarray:
+    def q(block: str, key: str, default: float) -> float:
+        value = summary.get(block, {}).get(key)
+        return float(value) if value is not None else default
+
+    speed = [q("speed_mps_quantiles", item, 5.0) for item in ("p25", "p50", "p75")]
+    headway = [math.log1p(q("headway_s_quantiles", item, 600.0)) for item in ("p25", "p50", "p75")]
+    route = [math.log1p(q("route_distance_m_quantiles", item, 10_000.0)) for item in ("p50", "p75")]
+    demand_share = np.asarray(summary.get("demand_by_hour_share", [0.0] * 24), dtype=np.float64)
+    if demand_share.shape[0] != 24:
+        demand_share = np.resize(demand_share, 24)
+    peak = summary.get("peak_demand_hour")
+    peak_hour = float(peak if peak is not None else int(np.argmax(demand_share)))
+    peak_vec = [math.sin((peak_hour / 24.0) * math.tau), math.cos((peak_hour / 24.0) * math.tau)]
+    return np.asarray(speed + headway + route + peak_vec + (0.35 * demand_share).tolist(), dtype=np.float64)
+
+
+def _source_similarity_weights(
+    sanity: dict[str, Any],
+    target: str,
+    sources: list[str],
+    *,
+    temperature: float,
+    floor: float,
+) -> dict[str, float]:
+    keys = sorted(set(sources + [target]))
+    raw = {key: _city_descriptor(sanity[key]) for key in keys}
+    matrix = np.vstack([raw[key] for key in keys])
+    mean = matrix.mean(axis=0)
+    std = matrix.std(axis=0)
+    std[std < 1e-6] = 1.0
+    target_vec = (raw[target] - mean) / std
+    distances = {}
+    for source in sources:
+        vec = (raw[source] - mean) / std
+        distances[source] = float(np.linalg.norm(vec - target_vec) / math.sqrt(vec.shape[0]))
+    temp = max(float(temperature), 1e-6)
+    base = {source: math.exp(-distance / temp) for source, distance in distances.items()}
+    if floor > 0.0 and base:
+        max_base = max(base.values())
+        base = {source: value + float(floor) * max_base for source, value in base.items()}
+    denom = sum(base.values()) or 1.0
+    return {source: value / denom for source, value in base.items()}
+
+
+def run_source_weighting(
+    city_stats: dict[str, ResidualStats],
+    config: dict[str, Any],
+    sanity: dict[str, Any],
+    ridge: float,
+    *,
+    temperature: float,
+    floor: float,
+) -> dict[str, Any]:
+    rows = []
+    for split in expand_splits(config):
+        sources = list(split["source_envs"])
+        target = split["target_env"]
+        target_stats = city_stats[target]
+        weights = _source_similarity_weights(sanity, target, sources, temperature=temperature, floor=floor)
+        train_unweighted = _merge_stats("source_unweighted", "source", [city_stats[key] for key in sources])
+        train_weighted = _merge_stats_weighted("source_similarity_weighted", "source", city_stats, weights)
+        h2o_unweighted = _fit_h2o(train_unweighted, ridge)
+        h2o_weighted = _fit_h2o(train_weighted, ridge)
+        cfcmt_unweighted = _fit_cfcmt(train_unweighted, ridge)
+        cfcmt_weighted = _fit_cfcmt(train_weighted, ridge)
+        uncal_sse = target_stats.h2o.sse(None)
+        h2o_unweighted_sse = target_stats.h2o.sse(h2o_unweighted)
+        h2o_weighted_sse = target_stats.h2o.sse(h2o_weighted)
+        cfcmt_unweighted_sse = _family_sse(target_stats.cfcmt, cfcmt_unweighted)
+        cfcmt_weighted_sse = _family_sse(target_stats.cfcmt, cfcmt_weighted)
+        metrics = {
+            "uncalibrated": _method_metrics_from_sse(uncal_sse, target_stats.n),
+            "h2oplus_dense": _method_metrics_from_sse(h2o_unweighted_sse, target_stats.n),
+            "h2oplus_similarity_weighted": _method_metrics_from_sse(h2o_weighted_sse, target_stats.n),
+            "cfcmt_mechanism": _method_metrics_from_sse(cfcmt_unweighted_sse, target_stats.n),
+            "cfcmt_similarity_weighted": _method_metrics_from_sse(cfcmt_weighted_sse, target_stats.n),
+        }
+        h2o_total = metrics["h2oplus_dense"]["total_mse"]
+        cfcmt_total = metrics["cfcmt_mechanism"]["total_mse"]
+        weighted_total = metrics["cfcmt_similarity_weighted"]["total_mse"]
+        rows.append(
+            {
+                **split,
+                "target_city": config["generated_envs"][target].get("city", target),
+                "source_weights": weights,
+                "train_transitions_unweighted": train_unweighted.n,
+                "train_transitions_weighted_effective": train_weighted.n,
+                "target_transitions": target_stats.n,
+                "metrics": metrics,
+                "comparisons": {
+                    "cfcmt_similarity_weighted_vs_h2oplus_ratio": weighted_total / h2o_total if h2o_total else None,
+                    "cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio": weighted_total / cfcmt_total if cfcmt_total else None,
+                    "cfcmt_similarity_weighted_beats_h2oplus": bool(weighted_total < h2o_total),
+                    "cfcmt_similarity_weighted_beats_unweighted_cfcmt": bool(weighted_total < cfcmt_total),
+                    "h2oplus_similarity_weighted_vs_unweighted_ratio": (
+                        metrics["h2oplus_similarity_weighted"]["total_mse"] / h2o_total if h2o_total else None
+                    ),
+                },
+            }
+        )
+    weighted_ratios = [row["comparisons"]["cfcmt_similarity_weighted_vs_h2oplus_ratio"] for row in rows]
+    improvement_ratios = [row["comparisons"]["cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio"] for row in rows]
+    return {
+        "ok": True,
+        "experiment": "source_similarity_weighting",
+        "definition": "City-balanced source sufficient statistics reweighted by static speed/headway/route/demand similarity to the target city.",
+        "temperature": temperature,
+        "floor": floor,
+        "splits": rows,
+        "summary": {
+            "splits": len(rows),
+            "cfcmt_similarity_weighted_wins_vs_h2oplus": sum(
+                1 for row in rows if row["comparisons"]["cfcmt_similarity_weighted_beats_h2oplus"]
+            ),
+            "cfcmt_similarity_weighted_wins_vs_unweighted_cfcmt": sum(
+                1 for row in rows if row["comparisons"]["cfcmt_similarity_weighted_beats_unweighted_cfcmt"]
+            ),
+            "mean_cfcmt_similarity_weighted_vs_h2oplus_ratio": float(np.mean(weighted_ratios)),
+            "mean_cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio": float(np.mean(improvement_ratios)),
+        },
     }
 
 
@@ -809,23 +971,42 @@ def _predict_action_from_obs(
 def run_sampled_rollout(
     city_stats: dict[str, ResidualStats],
     config: dict[str, Any],
+    sanity: dict[str, Any],
     root: Path,
     ridge: float,
     actions: list[float],
     lines_per_city: int,
     max_decisions: int,
     seed: int,
+    *,
+    source_weight_temperature: float,
+    source_weight_floor: float,
 ) -> dict[str, Any]:
     sys.path.insert(0, str(root / "H2Oplus" / "bus_h2o"))
     from envs.bus_sim_env import BusSimEnv  # noqa: WPS433
 
-    policies = ["no_hold", "fixed_30", "h2oplus_dense_policy", "cfcmt_mechanism_policy"]
+    policies = [
+        "no_hold",
+        "fixed_30",
+        "h2oplus_dense_policy",
+        "cfcmt_mechanism_policy",
+        "cfcmt_similarity_weighted_policy",
+    ]
     rows = []
     for target, spec in config["generated_envs"].items():
         sources = [key for key in config["generated_envs"] if key != target]
         train_stats = _merge_stats("source", "source", [city_stats[key] for key in sources])
+        source_weights = _source_similarity_weights(
+            sanity,
+            target,
+            sources,
+            temperature=source_weight_temperature,
+            floor=source_weight_floor,
+        )
+        train_weighted = _merge_stats_weighted("source_similarity_weighted", "source", city_stats, source_weights)
         h2o_beta = _fit_h2o(train_stats, ridge)
         cfcmt_beta = _fit_cfcmt(train_stats, ridge)
+        cfcmt_weighted_beta = _fit_cfcmt(train_weighted, ridge)
         env_path = _resolve_path(root, spec["env_path"])
         line_env_root = env_path / "_line_envs"
         if not line_env_root.exists():
@@ -876,7 +1057,9 @@ def run_sampled_rollout(
                         continue
                     action_dict = {}
                     for agent, vec in vectors.items():
-                        action = _predict_action_from_obs(vec, policy, h2o_beta, cfcmt_beta, actions)
+                        model_cfcmt_beta = cfcmt_weighted_beta if policy == "cfcmt_similarity_weighted_policy" else cfcmt_beta
+                        model_policy = "cfcmt_mechanism_policy" if policy == "cfcmt_similarity_weighted_policy" else policy
+                        action = _predict_action_from_obs(vec, model_policy, h2o_beta, model_cfcmt_beta, actions)
                         action_dict[agent] = action
                         reward_sum += float(rew.get(agent, 0.0))
                         target_hw = max(float(vec[8]), 60.0)
@@ -984,6 +1167,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "calibration_vs_no_calibration": run_calibration_sweep(city_stats, config, args.ridge, args.calibration_strengths),
         "ablation": run_ablation(city_stats, config, args.ridge),
         "source_sensitivity": run_source_sensitivity(city_stats, config, args.ridge),
+        "source_similarity_weighting": run_source_weighting(
+            city_stats,
+            config,
+            sanity,
+            args.ridge,
+            temperature=args.source_weight_temperature,
+            floor=args.source_weight_floor,
+        ),
         "bootstrap": run_bootstrap(city_stats, city_line_stats, config, args.ridge, args.bootstrap_samples, args.seed),
         "data_sanity": {
             "ok": True,
@@ -997,12 +1188,15 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         experiments["sampled_rollout"] = run_sampled_rollout(
             city_stats,
             config,
+            sanity,
             root,
             args.ridge,
             args.policy_actions,
             args.rollout_lines_per_city,
             args.rollout_max_decisions,
             args.seed,
+            source_weight_temperature=args.source_weight_temperature,
+            source_weight_floor=args.source_weight_floor,
         )
 
     existing_policy_path = _resolve_path(root, args.existing_policy_result)
@@ -1033,6 +1227,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--progress-every", type=int, default=250)
     parser.add_argument("--single-city-test-fraction", type=float, default=0.2)
     parser.add_argument("--calibration-strengths", type=_parse_float_list, default=[0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30])
+    parser.add_argument("--source-weight-temperature", type=float, default=1.0)
+    parser.add_argument("--source-weight-floor", type=float, default=0.05)
     parser.add_argument("--bootstrap-samples", type=int, default=500)
     parser.add_argument("--rollout-lines-per-city", type=int, default=1)
     parser.add_argument("--rollout-max-decisions", type=int, default=120)
@@ -1052,7 +1248,15 @@ def main(argv: list[str] | None = None) -> int:
             "elapsed_sec": result["elapsed_sec"],
             "experiments": sorted(result["experiments"].keys()),
         }
-        for key in ("single_city", "calibration_vs_no_calibration", "ablation", "source_sensitivity", "bootstrap", "sampled_rollout"):
+        for key in (
+            "single_city",
+            "calibration_vs_no_calibration",
+            "ablation",
+            "source_sensitivity",
+            "source_similarity_weighting",
+            "bootstrap",
+            "sampled_rollout",
+        ):
             value = result["experiments"].get(key)
             if isinstance(value, dict) and "summary" in value:
                 compact[key] = value["summary"]
