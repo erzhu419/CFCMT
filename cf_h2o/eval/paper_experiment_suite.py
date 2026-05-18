@@ -657,6 +657,100 @@ def run_source_weighting(
     }
 
 
+def run_source_weighting_sensitivity(
+    city_stats: dict[str, ResidualStats],
+    config: dict[str, Any],
+    sanity: dict[str, Any],
+    ridge: float,
+    *,
+    temperatures: list[float],
+    floors: list[float],
+    default_temperature: float,
+    default_floor: float,
+) -> dict[str, Any]:
+    grid_rows = []
+    split_rows = []
+    for temperature, floor in itertools.product(temperatures, floors):
+        result = run_source_weighting(
+            city_stats,
+            config,
+            sanity,
+            ridge,
+            temperature=float(temperature),
+            floor=float(floor),
+        )
+        summary = result["summary"]
+        grid_rows.append(
+            {
+                "temperature": float(temperature),
+                "floor": float(floor),
+                **summary,
+            }
+        )
+        for split in result["splits"]:
+            comparisons = split["comparisons"]
+            split_rows.append(
+                {
+                    "temperature": float(temperature),
+                    "floor": float(floor),
+                    "name": split["name"],
+                    "target_env": split["target_env"],
+                    "target_city": split["target_city"],
+                    "source_envs": split["source_envs"],
+                    "source_weights": split["source_weights"],
+                    "cfcmt_similarity_weighted_vs_h2oplus_ratio": comparisons[
+                        "cfcmt_similarity_weighted_vs_h2oplus_ratio"
+                    ],
+                    "cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio": comparisons[
+                        "cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio"
+                    ],
+                    "cfcmt_similarity_weighted_beats_h2oplus": comparisons[
+                        "cfcmt_similarity_weighted_beats_h2oplus"
+                    ],
+                    "cfcmt_similarity_weighted_beats_unweighted_cfcmt": comparisons[
+                        "cfcmt_similarity_weighted_beats_unweighted_cfcmt"
+                    ],
+                }
+            )
+
+    best_vs_h2o = min(grid_rows, key=lambda row: row["mean_cfcmt_similarity_weighted_vs_h2oplus_ratio"])
+    best_vs_unweighted = min(
+        grid_rows,
+        key=lambda row: row["mean_cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio"],
+    )
+    default_rows = [
+        row
+        for row in grid_rows
+        if math.isclose(row["temperature"], float(default_temperature)) and math.isclose(row["floor"], float(default_floor))
+    ]
+    vs_h2o_ratios = [row["mean_cfcmt_similarity_weighted_vs_h2oplus_ratio"] for row in grid_rows]
+    vs_unweighted_ratios = [row["mean_cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio"] for row in grid_rows]
+    return {
+        "ok": True,
+        "experiment": "source_weighting_sensitivity",
+        "definition": "Grid sensitivity for source-city similarity weighting temperature and floor.",
+        "temperatures": [float(value) for value in temperatures],
+        "floors": [float(value) for value in floors],
+        "grid": grid_rows,
+        "split_rows": split_rows,
+        "summary": {
+            "grid_points": len(grid_rows),
+            "splits_per_grid_point": len(expand_splits(config)),
+            "grid_points_with_all_splits_beating_h2oplus": sum(
+                1 for row in grid_rows if row["cfcmt_similarity_weighted_wins_vs_h2oplus"] == row["splits"]
+            ),
+            "grid_points_with_majority_beating_unweighted_cfcmt": sum(
+                1 for row in grid_rows if row["cfcmt_similarity_weighted_wins_vs_unweighted_cfcmt"] > row["splits"] / 2.0
+            ),
+            "mean_vs_h2oplus_ratio_range": [float(min(vs_h2o_ratios)), float(max(vs_h2o_ratios))],
+            "mean_vs_unweighted_cfcmt_ratio_range": [float(min(vs_unweighted_ratios)), float(max(vs_unweighted_ratios))],
+            "best_vs_h2oplus": best_vs_h2o,
+            "best_vs_unweighted_cfcmt": best_vs_unweighted,
+            "default_grid_point": default_rows[0] if default_rows else None,
+        },
+    }
+
+
 def run_single_city(city_line_stats: dict[str, list[ResidualStats]], config: dict[str, Any], ridge: float, test_fraction: float, seed: int) -> dict[str, Any]:
     results = []
     for key, lines in city_line_stats.items():
@@ -1175,6 +1269,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             temperature=args.source_weight_temperature,
             floor=args.source_weight_floor,
         ),
+        "source_weighting_sensitivity": run_source_weighting_sensitivity(
+            city_stats,
+            config,
+            sanity,
+            args.ridge,
+            temperatures=args.source_weight_temperatures,
+            floors=args.source_weight_floors,
+            default_temperature=args.source_weight_temperature,
+            default_floor=args.source_weight_floor,
+        ),
         "bootstrap": run_bootstrap(city_stats, city_line_stats, config, args.ridge, args.bootstrap_samples, args.seed),
         "data_sanity": {
             "ok": True,
@@ -1229,6 +1333,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--calibration-strengths", type=_parse_float_list, default=[0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30])
     parser.add_argument("--source-weight-temperature", type=float, default=1.0)
     parser.add_argument("--source-weight-floor", type=float, default=0.05)
+    parser.add_argument("--source-weight-temperatures", type=_parse_float_list, default=[0.5, 1.0, 2.0])
+    parser.add_argument("--source-weight-floors", type=_parse_float_list, default=[0.0, 0.05, 0.10])
     parser.add_argument("--bootstrap-samples", type=int, default=500)
     parser.add_argument("--rollout-lines-per-city", type=int, default=1)
     parser.add_argument("--rollout-max-decisions", type=int, default=120)
@@ -1254,6 +1360,7 @@ def main(argv: list[str] | None = None) -> int:
             "ablation",
             "source_sensitivity",
             "source_similarity_weighting",
+            "source_weighting_sensitivity",
             "bootstrap",
             "sampled_rollout",
         ):
