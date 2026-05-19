@@ -332,6 +332,184 @@ def build_source_weighting_sensitivity_table(suite: dict[str, Any]) -> pd.DataFr
     return pd.DataFrame(rows)
 
 
+def build_source_weights_table(suite: dict[str, Any]) -> pd.DataFrame:
+    rows = []
+    seen = set()
+    for split in suite["experiments"]["source_similarity_weighting"]["splits"]:
+        for source, weight in split.get("source_weights", {}).items():
+            key = (split["target_env"], source)
+            if key in seen:
+                continue
+            seen.add(key)
+            rows.append(
+                {
+                    "target_city": split["target_city"],
+                    "target_env": split["target_env"],
+                    "source_env": source,
+                    "source_weight": weight,
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def build_calibration_budget_table(suite: dict[str, Any]) -> pd.DataFrame:
+    rows = []
+    experiment = suite["experiments"]["calibration_vs_no_calibration"]
+    for row in experiment.get("rows", []):
+        metrics = row["metrics"]
+        comparisons = row["comparisons"]
+        rows.append(
+            {
+                "target_city": row["target_city"],
+                "budget": row["target_line_budget_fraction"],
+                "calib_lines": row["calibration_lines"],
+                "eval_lines": row["evaluation_lines"],
+                "oracle": row["in_sample_oracle"],
+                "h2oplus_cal_mse": metrics["h2oplus_source_plus_target_budget"]["total_mse"],
+                "weighted_cfcmt_no_cal_mse": metrics["cfcmt_weighted_source_only"]["total_mse"],
+                "weighted_cfcmt_cal_mse": metrics["cfcmt_weighted_source_plus_target_budget"]["total_mse"],
+                "weighted_no_cal_vs_h2oplus_cal_ratio": comparisons[
+                    "cfcmt_weighted_no_cal_vs_h2oplus_calibrated_ratio"
+                ],
+                "weighted_cal_vs_h2oplus_cal_ratio": comparisons[
+                    "cfcmt_weighted_calibrated_vs_h2oplus_calibrated_ratio"
+                ],
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def build_calibration_budget_summary_table(suite: dict[str, Any]) -> pd.DataFrame:
+    rows = []
+    for budget, summary in suite["experiments"]["calibration_vs_no_calibration"]["summary_by_budget"].items():
+        rows.append(
+            {
+                "budget": float(budget),
+                "splits": summary["splits"],
+                "mean_no_cal_ratio": summary["mean_cfcmt_weighted_no_cal_vs_h2oplus_calibrated_ratio"],
+                "mean_cal_ratio": summary["mean_cfcmt_weighted_calibrated_vs_h2oplus_calibrated_ratio"],
+                "no_cal_wins": summary["weighted_no_cal_wins_vs_h2oplus_calibrated"],
+                "cal_wins": summary["weighted_calibrated_wins_vs_h2oplus_calibrated"],
+                "mean_calib_lines": summary["mean_calibration_lines"],
+                "oracle": summary["contains_in_sample_oracle"],
+            }
+        )
+    return pd.DataFrame(rows).sort_values("budget")
+
+
+def build_per_mechanism_error_table(suite: dict[str, Any]) -> pd.DataFrame:
+    rows = []
+    for row in suite["experiments"]["per_mechanism_error"]["rows"]:
+        rows.append(
+            {
+                "target_city": row["target_city"],
+                "mechanism": row["mechanism"],
+                "h2oplus_mse": row["h2oplus_mse"],
+                "cfcmt_mse": row["cfcmt_mse"],
+                "weighted_cfcmt_mse": row["weighted_cfcmt_mse"],
+                "cfcmt_ratio": row["cfcmt_vs_h2oplus_ratio"],
+                "weighted_ratio": row["weighted_cfcmt_vs_h2oplus_ratio"],
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def build_per_mechanism_summary_table(suite: dict[str, Any]) -> pd.DataFrame:
+    rows = []
+    for mechanism, summary in suite["experiments"]["per_mechanism_error"]["summary_by_mechanism"].items():
+        rows.append(
+            {
+                "mechanism": mechanism,
+                "targets": summary["targets"],
+                "weighted_wins": summary["weighted_wins_vs_h2oplus"],
+                "mean_cfcmt_ratio": summary["mean_cfcmt_vs_h2oplus_ratio"],
+                "mean_weighted_ratio": summary["mean_weighted_cfcmt_vs_h2oplus_ratio"],
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def build_ablation_table(suite: dict[str, Any]) -> pd.DataFrame:
+    rows = []
+    for family, result in suite["experiments"]["ablation"]["families"].items():
+        summary = result["summary"]
+        rows.append(
+            {
+                "family": family,
+                "wins_vs_h2oplus": summary["cfcmt_wins_vs_h2oplus"],
+                "mean_ratio_vs_h2oplus": summary["mean_cfcmt_vs_h2oplus_total_mse_ratio"],
+            }
+        )
+    return pd.DataFrame(rows).sort_values("mean_ratio_vs_h2oplus")
+
+
+def build_source_size_sensitivity_table(suite: dict[str, Any]) -> pd.DataFrame:
+    rows = []
+    for source_size, summary in suite["experiments"]["source_sensitivity"]["summary_by_source_size"].items():
+        rows.append(
+            {
+                "source_size": int(source_size),
+                "splits": summary["splits"],
+                "cfcmt_wins_vs_h2oplus": summary["cfcmt_wins_vs_h2oplus"],
+                "mean_ratio_vs_h2oplus": summary["mean_cfcmt_vs_h2oplus_total_mse_ratio"],
+            }
+        )
+    return pd.DataFrame(rows).sort_values("source_size")
+
+
+def build_pairwise_transfer_table(suite: dict[str, Any]) -> pd.DataFrame:
+    rows = []
+    for row in suite["experiments"]["source_sensitivity"]["rows"]:
+        if int(row["source_size"]) != 1:
+            continue
+        rows.append(
+            {
+                "source_env": row["source_envs"][0],
+                "target_city": row["target_city"],
+                "target_env": row["target_env"],
+                "cfcmt_ratio_vs_h2oplus": row["comparisons"]["cfcmt_vs_h2oplus_total_mse_ratio"],
+                "cfcmt_beats_h2oplus": row["comparisons"]["cfcmt_beats_h2oplus"],
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def build_bootstrap_table(suite: dict[str, Any]) -> pd.DataFrame:
+    rows = []
+    for row in suite["experiments"]["bootstrap"]["rows"]:
+        rows.append(
+            {
+                "target_city": row["target_city"],
+                "lines": row["lines"],
+                "cfcmt_ratio": row["cfcmt_vs_h2oplus_total_mse_ratio"],
+                "cfcmt_ratio_ci95": f"[{row['ratio_ci95'][0]:.3f}, {row['ratio_ci95'][1]:.3f}]",
+                "weighted_ratio": row["weighted_cfcmt_vs_h2oplus_total_mse_ratio"],
+                "weighted_ratio_ci95": f"[{row['weighted_ratio_ci95'][0]:.3f}, {row['weighted_ratio_ci95'][1]:.3f}]",
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def build_target_construction_audit_table(suite: dict[str, Any]) -> pd.DataFrame:
+    rows = []
+    for row in suite["experiments"]["target_construction_audit"]["rows"]:
+        qs = row["line_total_mse_quantiles"]
+        rows.append(
+            {
+                "city": row["city"],
+                "demand_evidence": row["demand_evidence"],
+                "traffic_evidence": row["traffic_evidence"],
+                "lines": row["lines"],
+                "transitions": row["transitions"],
+                "uncal_mse": row["uncalibrated_total_mse"],
+                "line_mse_p25": qs["p25"],
+                "line_mse_p50": qs["p50"],
+                "line_mse_p75": qs["p75"],
+            }
+        )
+    return pd.DataFrame(rows)
+
+
 def build_sampled_rollout_table(suite: dict[str, Any]) -> pd.DataFrame:
     rollout = suite["experiments"].get("sampled_rollout", {})
     rows = []
@@ -491,6 +669,113 @@ def plot_source_weighting_heatmap(df: pd.DataFrame, out_dir: Path) -> str:
     return str(path)
 
 
+def plot_calibration_budget(summary_df: pd.DataFrame, out_dir: Path) -> str | None:
+    if summary_df.empty:
+        return None
+    out_dir.mkdir(parents=True, exist_ok=True)
+    df = summary_df.sort_values("budget")
+    fig, ax = plt.subplots(figsize=(6.8, 3.6))
+    ax.plot(
+        df["budget"],
+        df["mean_no_cal_ratio"],
+        marker="o",
+        linewidth=1.8,
+        label="Weighted CFCMT no target calibration / H2O+ calibrated",
+        color="#2f6f9f",
+    )
+    ax.plot(
+        df["budget"],
+        df["mean_cal_ratio"],
+        marker="o",
+        linewidth=1.8,
+        label="Weighted CFCMT calibrated / H2O+ calibrated",
+        color="#c05a2b",
+    )
+    ax.axhline(1.0, color="#444444", linewidth=1.0, linestyle="--")
+    ax.set_xlabel("Target route calibration budget")
+    ax.set_ylabel("Mean total MSE ratio")
+    ax.set_title("Calibration-budget sensitivity")
+    ax.grid(axis="y", color="#dddddd", linewidth=0.7)
+    ax.legend(loc="upper right")
+    fig.tight_layout()
+    path = out_dir / "calibration_budget_ratio.png"
+    fig.savefig(path)
+    plt.close(fig)
+    return str(path)
+
+
+def plot_per_mechanism(summary_df: pd.DataFrame, out_dir: Path) -> str | None:
+    if summary_df.empty:
+        return None
+    out_dir.mkdir(parents=True, exist_ok=True)
+    labels = [value.replace("_", "\n") for value in summary_df["mechanism"]]
+    x = np.arange(len(summary_df))
+    width = 0.34
+    fig, ax = plt.subplots(figsize=(6.4, 3.5))
+    ax.bar(x - width / 2, summary_df["mean_cfcmt_ratio"], width, label="CFCMT", color="#2f6f9f")
+    ax.bar(x + width / 2, summary_df["mean_weighted_ratio"], width, label="Weighted CFCMT", color="#c05a2b")
+    ax.axhline(1.0, color="#444444", linewidth=1.0, linestyle="--")
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.set_ylabel("Mean MSE ratio vs H2O+")
+    ax.set_title("Per-mechanism error ratios")
+    ax.grid(axis="y", color="#dddddd", linewidth=0.7)
+    ax.legend(loc="upper right")
+    fig.tight_layout()
+    path = out_dir / "per_mechanism_error_ratio.png"
+    fig.savefig(path)
+    plt.close(fig)
+    return str(path)
+
+
+def plot_ablation(ablation_df: pd.DataFrame, out_dir: Path) -> str | None:
+    if ablation_df.empty:
+        return None
+    out_dir.mkdir(parents=True, exist_ok=True)
+    df = ablation_df.sort_values("mean_ratio_vs_h2oplus", ascending=False)
+    labels = [value.replace("_", "\n") for value in df["family"]]
+    x = np.arange(len(df))
+    fig, ax = plt.subplots(figsize=(8.6, 4.0))
+    ax.bar(x, df["mean_ratio_vs_h2oplus"], color="#52796f")
+    ax.axhline(1.0, color="#444444", linewidth=1.0, linestyle="--")
+    ax.set_ylabel("Mean total MSE ratio vs H2O+")
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels, rotation=30, ha="right")
+    ax.set_title("Mechanism and capacity ablations")
+    ax.grid(axis="y", color="#dddddd", linewidth=0.7)
+    fig.tight_layout()
+    path = out_dir / "ablation_mean_ratio.png"
+    fig.savefig(path)
+    plt.close(fig)
+    return str(path)
+
+
+def plot_pairwise_transfer(pairwise_df: pd.DataFrame, out_dir: Path) -> str | None:
+    if pairwise_df.empty:
+        return None
+    out_dir.mkdir(parents=True, exist_ok=True)
+    pivot = pairwise_df.pivot(index="target_city", columns="source_env", values="cfcmt_ratio_vs_h2oplus")
+    values = pivot.to_numpy(dtype=float)
+    fig, ax = plt.subplots(figsize=(7.4, 3.8))
+    im = ax.imshow(values, cmap="RdYlGn_r", vmin=0.0, vmax=max(1.2, float(np.nanmax(values))))
+    ax.set_xticks(np.arange(len(pivot.columns)))
+    ax.set_xticklabels([str(value).replace("_", "\n") for value in pivot.columns], rotation=30, ha="right")
+    ax.set_yticks(np.arange(len(pivot.index)))
+    ax.set_yticklabels([str(value) for value in pivot.index])
+    ax.set_title("Single-source transfer matrix")
+    for y in range(values.shape[0]):
+        for x in range(values.shape[1]):
+            if np.isfinite(values[y, x]):
+                ax.text(x, y, f"{values[y, x]:.2f}", ha="center", va="center", fontsize=8)
+    cbar = fig.colorbar(im, ax=ax)
+    cbar.set_label("CFCMT / H2O+ total MSE")
+    fig.tight_layout()
+    path = out_dir / "pairwise_transfer_matrix.png"
+    fig.savefig(path)
+    plt.close(fig)
+    return str(path)
+
+
 def plot_policy_regret(policy_df: pd.DataFrame, out_dir: Path) -> str:
     out_dir.mkdir(parents=True, exist_ok=True)
     labels = [f"{row.target_city}\n{idx + 1}" for idx, row in enumerate(policy_df.itertuples())]
@@ -551,6 +836,16 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
     generator_df = build_generator_robustness_table(suite)
     rollout_df = build_sampled_rollout_table(suite)
     scope_df = build_experiment_scope_table(suite)
+    source_weights_df = build_source_weights_table(suite)
+    calibration_df = build_calibration_budget_table(suite)
+    calibration_summary_df = build_calibration_budget_summary_table(suite)
+    per_mechanism_df = build_per_mechanism_error_table(suite)
+    per_mechanism_summary_df = build_per_mechanism_summary_table(suite)
+    ablation_df = build_ablation_table(suite)
+    source_size_df = build_source_size_sensitivity_table(suite)
+    pairwise_df = build_pairwise_transfer_table(suite)
+    bootstrap_df = build_bootstrap_table(suite)
+    target_audit_df = build_target_construction_audit_table(suite)
 
     tables = {
         "dataset": _write_table(dataset_df, tables_dir, "dataset_table"),
@@ -566,6 +861,24 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
         "generator_robustness": _write_table(generator_df, tables_dir, "generator_robustness_table"),
         "sampled_rollout": _write_table(rollout_df, tables_dir, "sampled_rollout_table"),
         "experiment_scope": _write_table(scope_df, tables_dir, "experiment_scope_table"),
+        "source_weights": _write_table(source_weights_df, tables_dir, "source_weights_table"),
+        "calibration_budget": _write_table(calibration_df, tables_dir, "calibration_budget_table"),
+        "calibration_budget_summary": _write_table(
+            calibration_summary_df,
+            tables_dir,
+            "calibration_budget_summary_table",
+        ),
+        "per_mechanism_error": _write_table(per_mechanism_df, tables_dir, "per_mechanism_error_table"),
+        "per_mechanism_summary": _write_table(
+            per_mechanism_summary_df,
+            tables_dir,
+            "per_mechanism_summary_table",
+        ),
+        "ablation": _write_table(ablation_df, tables_dir, "ablation_table"),
+        "source_size_sensitivity": _write_table(source_size_df, tables_dir, "source_size_sensitivity_table"),
+        "pairwise_transfer": _write_table(pairwise_df, tables_dir, "pairwise_transfer_table"),
+        "bootstrap": _write_table(bootstrap_df, tables_dir, "bootstrap_table"),
+        "target_construction_audit": _write_table(target_audit_df, tables_dir, "target_construction_audit_table"),
     }
 
     figures = {
@@ -576,6 +889,18 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
         "generator_robustness": plot_generator_robustness(generator_df, figures_dir),
         "cross_city_policy_regret_ratio": plot_policy_regret(policy_df, figures_dir),
     }
+    calibration_path = plot_calibration_budget(calibration_summary_df, figures_dir)
+    if calibration_path:
+        figures["calibration_budget_ratio"] = calibration_path
+    mechanism_path = plot_per_mechanism(per_mechanism_summary_df, figures_dir)
+    if mechanism_path:
+        figures["per_mechanism_error_ratio"] = mechanism_path
+    ablation_path = plot_ablation(ablation_df, figures_dir)
+    if ablation_path:
+        figures["ablation_mean_ratio"] = ablation_path
+    pairwise_path = plot_pairwise_transfer(pairwise_df, figures_dir)
+    if pairwise_path:
+        figures["pairwise_transfer_matrix"] = pairwise_path
     sampled_path = plot_sampled_rollout(rollout_df, figures_dir)
     if sampled_path:
         figures["sampled_rollout_mean_reward"] = sampled_path
@@ -596,9 +921,18 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
             "strict_cross_city_policy": policy.get("strict_leave_one_city_out_summary"),
             "strict_leave_one_out": suite["experiments"]["strict_leave_one_city_out"]["summary"],
             "source_similarity_weighting": suite["experiments"]["source_similarity_weighting"]["summary"],
+            "calibration_vs_no_calibration": suite["experiments"]["calibration_vs_no_calibration"]["summary"],
+            "per_mechanism_error": suite["experiments"]["per_mechanism_error"]["summary"],
+            "ablation": {
+                family: result["summary"]
+                for family, result in suite["experiments"]["ablation"]["families"].items()
+            },
+            "source_sensitivity": suite["experiments"]["source_sensitivity"]["summary_by_source_size"],
             "source_weighting_sensitivity": suite["experiments"]["source_weighting_sensitivity"]["summary"],
             "source_subset_robustness": suite["experiments"]["source_subset_robustness"]["summary"],
             "generator_robustness": suite["experiments"]["generator_robustness"]["summary"],
+            "bootstrap": suite["experiments"]["bootstrap"]["summary"],
+            "target_construction_audit": suite["experiments"]["target_construction_audit"]["summary"],
             "sampled_rollout": suite["experiments"].get("sampled_rollout", {}).get("summary_by_policy"),
         },
     }

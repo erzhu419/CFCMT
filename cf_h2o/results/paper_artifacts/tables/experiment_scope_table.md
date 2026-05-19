@@ -4,4 +4,4 @@
 | generator_robustness         | bias/noise defense                   | scenario x city target | static-derived target perturbation; not real AVL/APC trajectory ground truth |
 | source_subset_robustness     | data-source confound defense         | city subset            | reports excluding Singapore and excluding Austin proxy-demand subsets        |
 | cross_city_policy_validation | primary one-step policy evidence     | city target            | one-step lookahead, not live SUMO rollout                                    |
-| sampled_rollout              | auxiliary sanity check only          | BusSimEnv episode      | 10 policy episodes across runnable line envs; do not use as primary claim    |
+| sampled_rollout              | auxiliary sanity check only          | BusSimEnv episode      | 50 policy episodes across runnable line envs; do not use as primary claim    |

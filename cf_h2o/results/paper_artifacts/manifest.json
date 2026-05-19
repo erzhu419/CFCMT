@@ -51,6 +51,56 @@
       "csv": "cf_h2o/results/paper_artifacts/tables/experiment_scope_table.csv",
       "tex": "cf_h2o/results/paper_artifacts/tables/experiment_scope_table.tex",
       "md": "cf_h2o/results/paper_artifacts/tables/experiment_scope_table.md"
+    },
+    "source_weights": {
+      "csv": "cf_h2o/results/paper_artifacts/tables/source_weights_table.csv",
+      "tex": "cf_h2o/results/paper_artifacts/tables/source_weights_table.tex",
+      "md": "cf_h2o/results/paper_artifacts/tables/source_weights_table.md"
+    },
+    "calibration_budget": {
+      "csv": "cf_h2o/results/paper_artifacts/tables/calibration_budget_table.csv",
+      "tex": "cf_h2o/results/paper_artifacts/tables/calibration_budget_table.tex",
+      "md": "cf_h2o/results/paper_artifacts/tables/calibration_budget_table.md"
+    },
+    "calibration_budget_summary": {
+      "csv": "cf_h2o/results/paper_artifacts/tables/calibration_budget_summary_table.csv",
+      "tex": "cf_h2o/results/paper_artifacts/tables/calibration_budget_summary_table.tex",
+      "md": "cf_h2o/results/paper_artifacts/tables/calibration_budget_summary_table.md"
+    },
+    "per_mechanism_error": {
+      "csv": "cf_h2o/results/paper_artifacts/tables/per_mechanism_error_table.csv",
+      "tex": "cf_h2o/results/paper_artifacts/tables/per_mechanism_error_table.tex",
+      "md": "cf_h2o/results/paper_artifacts/tables/per_mechanism_error_table.md"
+    },
+    "per_mechanism_summary": {
+      "csv": "cf_h2o/results/paper_artifacts/tables/per_mechanism_summary_table.csv",
+      "tex": "cf_h2o/results/paper_artifacts/tables/per_mechanism_summary_table.tex",
+      "md": "cf_h2o/results/paper_artifacts/tables/per_mechanism_summary_table.md"
+    },
+    "ablation": {
+      "csv": "cf_h2o/results/paper_artifacts/tables/ablation_table.csv",
+      "tex": "cf_h2o/results/paper_artifacts/tables/ablation_table.tex",
+      "md": "cf_h2o/results/paper_artifacts/tables/ablation_table.md"
+    },
+    "source_size_sensitivity": {
+      "csv": "cf_h2o/results/paper_artifacts/tables/source_size_sensitivity_table.csv",
+      "tex": "cf_h2o/results/paper_artifacts/tables/source_size_sensitivity_table.tex",
+      "md": "cf_h2o/results/paper_artifacts/tables/source_size_sensitivity_table.md"
+    },
+    "pairwise_transfer": {
+      "csv": "cf_h2o/results/paper_artifacts/tables/pairwise_transfer_table.csv",
+      "tex": "cf_h2o/results/paper_artifacts/tables/pairwise_transfer_table.tex",
+      "md": "cf_h2o/results/paper_artifacts/tables/pairwise_transfer_table.md"
+    },
+    "bootstrap": {
+      "csv": "cf_h2o/results/paper_artifacts/tables/bootstrap_table.csv",
+      "tex": "cf_h2o/results/paper_artifacts/tables/bootstrap_table.tex",
+      "md": "cf_h2o/results/paper_artifacts/tables/bootstrap_table.md"
+    },
+    "target_construction_audit": {
+      "csv": "cf_h2o/results/paper_artifacts/tables/target_construction_audit_table.csv",
+      "tex": "cf_h2o/results/paper_artifacts/tables/target_construction_audit_table.tex",
+      "md": "cf_h2o/results/paper_artifacts/tables/target_construction_audit_table.md"
     }
   },
   "figures": {
@@ -60,6 +110,10 @@
     "source_subset_robustness": "cf_h2o/results/paper_artifacts/figures/source_subset_robustness.png",
     "generator_robustness": "cf_h2o/results/paper_artifacts/figures/generator_robustness.png",
     "cross_city_policy_regret_ratio": "cf_h2o/results/paper_artifacts/figures/cross_city_policy_regret_ratio.png",
+    "calibration_budget_ratio": "cf_h2o/results/paper_artifacts/figures/calibration_budget_ratio.png",
+    "per_mechanism_error_ratio": "cf_h2o/results/paper_artifacts/figures/per_mechanism_error_ratio.png",
+    "ablation_mean_ratio": "cf_h2o/results/paper_artifacts/figures/ablation_mean_ratio.png",
+    "pairwise_transfer_matrix": "cf_h2o/results/paper_artifacts/figures/pairwise_transfer_matrix.png",
     "sampled_rollout_mean_reward": "cf_h2o/results/paper_artifacts/figures/sampled_rollout_mean_reward.png"
   },
   "summaries": {
@@ -126,6 +180,69 @@
       "mean_cfcmt_similarity_weighted_vs_h2oplus_ratio": 0.6105701219141944,
       "mean_cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio": 0.7560139171274325
     },
+    "calibration_vs_no_calibration": {
+      "budgets": [
+        0.0,
+        0.01,
+        0.05,
+        0.1,
+        0.25,
+        1.0
+      ],
+      "strict_splits": 4,
+      "mean_max_budget_where_weighted_cfcmt_no_cal_beats_h2oplus_calibrated": 0.1875
+    },
+    "per_mechanism_error": {
+      "mechanisms": 3,
+      "rows": 12
+    },
+    "ablation": {
+      "cfcmt_full": {
+        "cfcmt_wins_vs_h2oplus": 4,
+        "mean_cfcmt_vs_h2oplus_total_mse_ratio": 0.7587172944859035
+      },
+      "cfcmt_no_action_interaction": {
+        "cfcmt_wins_vs_h2oplus": 4,
+        "mean_cfcmt_vs_h2oplus_total_mse_ratio": 0.7582656623399876
+      },
+      "cfcmt_shared_sparse": {
+        "cfcmt_wins_vs_h2oplus": 4,
+        "mean_cfcmt_vs_h2oplus_total_mse_ratio": 0.750238682795363
+      },
+      "cfcmt_action_time_only": {
+        "cfcmt_wins_vs_h2oplus": 1,
+        "mean_cfcmt_vs_h2oplus_total_mse_ratio": 7.3401104460074595
+      },
+      "cfcmt_random_mechanism_grouping": {
+        "cfcmt_wins_vs_h2oplus": 1,
+        "mean_cfcmt_vs_h2oplus_total_mse_ratio": 7.5744385898193585
+      },
+      "dense_matched_sparse": {
+        "cfcmt_wins_vs_h2oplus": 3,
+        "mean_cfcmt_vs_h2oplus_total_mse_ratio": 0.7715941282471414
+      },
+      "dense_all_parents_no_pairwise": {
+        "cfcmt_wins_vs_h2oplus": 3,
+        "mean_cfcmt_vs_h2oplus_total_mse_ratio": 0.9332101697924045
+      }
+    },
+    "source_sensitivity": {
+      "1": {
+        "splits": 12,
+        "cfcmt_wins_vs_h2oplus": 6,
+        "mean_cfcmt_vs_h2oplus_total_mse_ratio": 0.9271551936716488
+      },
+      "2": {
+        "splits": 12,
+        "cfcmt_wins_vs_h2oplus": 8,
+        "mean_cfcmt_vs_h2oplus_total_mse_ratio": 0.8704590326150136
+      },
+      "3": {
+        "splits": 4,
+        "cfcmt_wins_vs_h2oplus": 4,
+        "mean_cfcmt_vs_h2oplus_total_mse_ratio": 0.7587172944859035
+      }
+    },
     "source_weighting_sensitivity": {
       "grid_points": 9,
       "splits_per_grid_point": 6,
@@ -178,36 +295,48 @@
       "scenarios_all_splits_weighted_cfcmt_beats_h2oplus": 5,
       "scenarios_all_splits_unweighted_cfcmt_beats_h2oplus": 5
     },
+    "bootstrap": {
+      "targets": 4,
+      "ci_excludes_zero_in_cfcmt_favor": 4,
+      "ci_excludes_one_in_cfcmt_favor": 4,
+      "weighted_ci_excludes_zero_in_cfcmt_favor": 3,
+      "weighted_ci_excludes_one_in_cfcmt_favor": 3
+    },
+    "target_construction_audit": {
+      "cities": 4,
+      "cities_with_observed_traffic": 1,
+      "cities_with_observed_or_apportioned_demand": 3
+    },
     "sampled_rollout": {
       "no_hold": {
-        "episodes": 2,
-        "mean_reward": -217.26525131695934,
-        "mean_headway_abs_error": 112.1612398147583,
+        "episodes": 10,
+        "mean_reward": -1138.411013163572,
+        "mean_headway_abs_error": 601.9113059722354,
         "mean_hold_seconds": 0.0
       },
       "fixed_30": {
-        "episodes": 2,
-        "mean_reward": -209.38019141511634,
-        "mean_headway_abs_error": 113.99755785544713,
+        "episodes": 10,
+        "mean_reward": -1151.2900795951823,
+        "mean_headway_abs_error": 598.4458815323758,
         "mean_hold_seconds": 30.0
       },
       "h2oplus_dense_policy": {
-        "episodes": 2,
-        "mean_reward": -176.8746747462895,
-        "mean_headway_abs_error": 117.57452189406834,
-        "mean_hold_seconds": 11.797297297297296
+        "episodes": 10,
+        "mean_reward": -1121.6119833490934,
+        "mean_headway_abs_error": 585.5525709877122,
+        "mean_hold_seconds": 3.117040598290598
       },
       "cfcmt_mechanism_policy": {
-        "episodes": 2,
-        "mean_reward": -171.37749689402048,
-        "mean_headway_abs_error": 87.89484232187272,
-        "mean_hold_seconds": 3.775
+        "episodes": 10,
+        "mean_reward": -1122.2105346508322,
+        "mean_headway_abs_error": 589.1994825629583,
+        "mean_hold_seconds": 3.4897115384615383
       },
       "cfcmt_similarity_weighted_policy": {
-        "episodes": 2,
-        "mean_reward": -165.9477523296634,
-        "mean_headway_abs_error": 97.59025704286992,
-        "mean_hold_seconds": 1.8125
+        "episodes": 10,
+        "mean_reward": -1121.5739989955732,
+        "mean_headway_abs_error": 588.2357044598095,
+        "mean_hold_seconds": 3.2858653846153842
       }
     }
   }

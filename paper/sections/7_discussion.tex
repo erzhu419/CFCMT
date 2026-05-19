@@ -10,6 +10,12 @@ Similarity weighting improves the mean strict leave-one-out ratio from $0.759$ t
 The Singapore target is the exception, where weighting is slightly worse than unweighted \ours.
 This suggests that static similarity is useful but imperfect; city descriptors built from open data may miss route-level operational differences that matter for transfer.
 
+\paragraph{Policy evidence remains secondary.}
+The one-step policy validation and sampled BusSimEnv rollout are useful checks, but they do not replace a closed-loop operational benchmark.
+The rollout result reaches reward parity with \Htwo only after aligning BusSimEnv observations to the static feature schema and using identical line-level random seeds across policies.
+That correction is necessary for a fair comparison, but the resulting rollout margin is small.
+The strongest claim should therefore remain dynamics transfer plus policy-proxy improvement, not full policy dominance.
+
 \paragraph{Static-derived validation is not operational validation.}
 The central limitation is target construction.
 The experiments use full-route open static data and deterministic transition rules to create paired simulator/target transitions.

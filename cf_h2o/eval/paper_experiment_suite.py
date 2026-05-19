@@ -24,6 +24,7 @@ import itertools
 import json
 import math
 import os
+import random
 import shutil
 import sys
 import time
@@ -210,11 +211,63 @@ def _cfcmt_action_time_only(output_name: str, obs_action: np.ndarray) -> np.ndar
     return np.concatenate([base, base[:, 1:] * action], axis=1)
 
 
+def _cfcmt_random_mechanism_grouping(output_name: str, obs_action: np.ndarray) -> np.ndarray:
+    """Use the wrong mechanism parent set as a negative-control ablation."""
+
+    proxy_by_group = {
+        "headway_gap": "next_waiting_passengers",
+        "demand_stop_reward": "next_segment_mean_speed",
+        "speed": "next_forward_headway",
+        "other": "next_forward_headway",
+    }
+    return cfcmt_features(proxy_by_group.get(_output_group(output_name), "next_forward_headway"), obs_action)
+
+
+def _dense_matched_sparse(output_name: str, obs_action: np.ndarray) -> np.ndarray:
+    dense = h2o_features(obs_action)
+    target_dim = cfcmt_features(output_name, obs_action).shape[1]
+    return dense[:, :target_dim]
+
+
+def _dense_all_parents_no_pairwise(output_name: str, obs_action: np.ndarray) -> np.ndarray:
+    del output_name
+    # h2o_features is [1, scaled inputs, squares, action interactions, pairwise terms].
+    # The first 49 columns keep all parents and action interactions but remove pairwise products.
+    return h2o_features(obs_action)[:, :49]
+
+
 ABLATION_FEATURES: dict[str, FeatureFn] = {
     "cfcmt_full": cfcmt_features,
     "cfcmt_no_action_interaction": _cfcmt_no_action_interaction,
     "cfcmt_shared_sparse": _cfcmt_shared_sparse,
     "cfcmt_action_time_only": _cfcmt_action_time_only,
+    "cfcmt_random_mechanism_grouping": _cfcmt_random_mechanism_grouping,
+    "dense_matched_sparse": _dense_matched_sparse,
+    "dense_all_parents_no_pairwise": _dense_all_parents_no_pairwise,
+}
+
+
+DATA_EVIDENCE = {
+    "singapore_lta_all": {
+        "demand_evidence": "observed stop OD/PV monthly",
+        "traffic_evidence": "observed speed bands",
+        "target_construction": "observed passenger OD/PV and observed traffic speed bands are aggregated to a typical weekday before deterministic transition generation",
+    },
+    "austin_capmetro_all": {
+        "demand_evidence": "schedule proxy",
+        "traffic_evidence": "schedule derived",
+        "target_construction": "GTFS schedules provide headway and segment-speed proxies; demand is proxied from scheduled service intensity",
+    },
+    "halifax_transit_all": {
+        "demand_evidence": "route APC apportioned",
+        "traffic_evidence": "schedule derived",
+        "target_construction": "route-level half-hour APC totals are apportioned over GTFS route-direction patterns; segment speed is schedule-derived",
+    },
+    "mbta_all": {
+        "demand_evidence": "stop board/alight apportioned",
+        "traffic_evidence": "schedule derived",
+        "target_construction": "Fall 2025 stop boardings/alightings are apportioned over GTFS route-direction patterns; segment speed is schedule-derived",
+    },
 }
 
 
@@ -1127,47 +1180,258 @@ def _cross_city_eval(
     }
 
 
-def run_calibration_sweep(city_stats: dict[str, ResidualStats], config: dict[str, Any], ridge: float, strengths: list[float]) -> dict[str, Any]:
+def _split_target_lines(
+    lines: list[ResidualStats],
+    *,
+    fraction: float,
+    seed: int,
+) -> tuple[list[ResidualStats], list[ResidualStats], bool]:
+    ordered = sorted(lines, key=lambda item: item.line_keys[0])
+    if not ordered:
+        return [], [], False
+    if fraction <= 0.0:
+        return [], ordered, False
+    if fraction >= 1.0:
+        return ordered, ordered, True
+    hashes = np.array([_stable_unit(f"calibration:{seed}:{item.line_keys[0]}") for item in ordered])
+    mask = hashes < float(fraction)
+    if not np.any(mask):
+        mask[int(np.argmin(hashes))] = True
+    if np.all(mask):
+        mask[int(np.argmax(hashes))] = False
+    calibration = [item for item, selected in zip(ordered, mask) if selected]
+    evaluation = [item for item, selected in zip(ordered, mask) if not selected]
+    return calibration, evaluation, False
+
+
+def _metric_block_from_betas(
+    eval_stats: ResidualStats,
+    *,
+    h2o_beta: np.ndarray | None = None,
+    cfcmt_beta: dict[str, np.ndarray] | None = None,
+    cfcmt_family: str = "cfcmt_full",
+) -> dict[str, Any]:
+    family_stats = eval_stats.cfcmt if cfcmt_family == "cfcmt_full" else eval_stats.ablations[cfcmt_family]
+    h2o_sse = eval_stats.h2o.sse(h2o_beta) if h2o_beta is not None else None
+    cfcmt_sse = _family_sse(family_stats, cfcmt_beta) if cfcmt_beta is not None else None
+    return {
+        "h2oplus_dense": _method_metrics_from_sse(h2o_sse, eval_stats.n) if h2o_sse is not None else None,
+        "cfcmt_mechanism": _method_metrics_from_sse(cfcmt_sse, eval_stats.n) if cfcmt_sse is not None else None,
+    }
+
+
+def _fit_safe_h2o(stats: ResidualStats, ridge: float) -> np.ndarray | None:
+    return _fit_h2o(stats, ridge) if stats.n > 0 else None
+
+
+def _fit_safe_cfcmt(stats: ResidualStats, ridge: float, family: str = "cfcmt_full") -> dict[str, np.ndarray] | None:
+    return _fit_cfcmt(stats, ridge, family) if stats.n > 0 else None
+
+
+def run_calibration_sweep(
+    city_stats: dict[str, ResidualStats],
+    city_line_stats: dict[str, list[ResidualStats]],
+    config: dict[str, Any],
+    sanity: dict[str, Any],
+    ridge: float,
+    budgets: list[float],
+    seed: int,
+    *,
+    temperature: float,
+    floor: float,
+) -> dict[str, Any]:
     split_results = []
-    for split in expand_splits(config):
-        base = _cross_city_eval(city_stats, split, ridge)
-        h2o_base = base["metrics"]["h2oplus_dense"]["total_mse"]
-        cfcmt_no_cal = base["metrics"]["cfcmt_mechanism"]["total_mse"]
+    rows = []
+    for split in _strict_leave_one_city_out_splits(config):
+        sources = list(split["source_envs"])
+        target = split["target_env"]
+        source_stats = _merge_stats("source_unweighted", "source", [city_stats[key] for key in sources])
+        source_weights = _source_similarity_weights(sanity, target, sources, temperature=temperature, floor=floor)
+        weighted_source_stats = _merge_stats_weighted("source_weighted", "source", city_stats, source_weights)
+        source_h2o_beta = _fit_h2o(source_stats, ridge)
+        source_cfcmt_beta = _fit_cfcmt(source_stats, ridge)
+        weighted_source_cfcmt_beta = _fit_cfcmt(weighted_source_stats, ridge)
         sweep = []
-        for strength in strengths:
-            scale = max(0.0, 1.0 - float(strength))
-            h2o_cal = h2o_base * scale * scale
-            sweep.append(
-                {
-                    "calibration_strength": float(strength),
-                    "h2oplus_calibrated_total_mse": float(h2o_cal),
-                    "cfcmt_uncalibrated_total_mse": float(cfcmt_no_cal),
-                    "cfcmt_uncalibrated_beats_h2oplus_calibrated": bool(cfcmt_no_cal < h2o_cal),
-                    "cfcmt_uncalibrated_vs_h2oplus_calibrated_ratio": float(cfcmt_no_cal / h2o_cal) if h2o_cal > 0 else None,
-                }
+        for budget in budgets:
+            calibration_lines, evaluation_lines, in_sample_oracle = _split_target_lines(
+                city_line_stats[target],
+                fraction=float(budget),
+                seed=seed,
             )
-        ratio = cfcmt_no_cal / h2o_base if h2o_base else float("nan")
-        break_even = 1.0 - math.sqrt(ratio) if np.isfinite(ratio) and ratio >= 0 else None
+            calibration_stats = _merge_stats(
+                f"{target}::calibration_{budget:g}",
+                target,
+                calibration_lines,
+            )
+            evaluation_stats = (
+                city_stats[target]
+                if in_sample_oracle
+                else _merge_stats(f"{target}::evaluation_{budget:g}", target, evaluation_lines)
+            )
+            if evaluation_stats.n <= 0:
+                continue
+            source_plus_target = _merge_stats(
+                f"{target}::source_plus_calibration_{budget:g}",
+                target,
+                [source_stats, calibration_stats],
+            )
+            weighted_source_plus_target = _merge_stats(
+                f"{target}::weighted_source_plus_calibration_{budget:g}",
+                target,
+                [weighted_source_stats, calibration_stats],
+            )
+            h2o_cal_beta = _fit_safe_h2o(source_plus_target, ridge)
+            cfcmt_cal_beta = _fit_safe_cfcmt(source_plus_target, ridge)
+            weighted_cfcmt_cal_beta = _fit_safe_cfcmt(weighted_source_plus_target, ridge)
+            target_only_h2o_beta = _fit_safe_h2o(calibration_stats, ridge)
+            target_only_cfcmt_beta = _fit_safe_cfcmt(calibration_stats, ridge)
+
+            uncal_sse = evaluation_stats.h2o.sse(None)
+            source_metrics = _metric_block_from_betas(
+                evaluation_stats,
+                h2o_beta=source_h2o_beta,
+                cfcmt_beta=source_cfcmt_beta,
+            )
+            weighted_source_sse = _family_sse(evaluation_stats.cfcmt, weighted_source_cfcmt_beta)
+            h2o_cal_sse = evaluation_stats.h2o.sse(h2o_cal_beta) if h2o_cal_beta is not None else None
+            cfcmt_cal_sse = _family_sse(evaluation_stats.cfcmt, cfcmt_cal_beta) if cfcmt_cal_beta is not None else None
+            weighted_cfcmt_cal_sse = (
+                _family_sse(evaluation_stats.cfcmt, weighted_cfcmt_cal_beta)
+                if weighted_cfcmt_cal_beta is not None
+                else None
+            )
+            target_h2o_sse = evaluation_stats.h2o.sse(target_only_h2o_beta) if target_only_h2o_beta is not None else None
+            target_cfcmt_sse = (
+                _family_sse(evaluation_stats.cfcmt, target_only_cfcmt_beta)
+                if target_only_cfcmt_beta is not None
+                else None
+            )
+            metrics = {
+                "uncalibrated": _method_metrics_from_sse(uncal_sse, evaluation_stats.n),
+                "h2oplus_source_only": source_metrics["h2oplus_dense"],
+                "cfcmt_source_only": source_metrics["cfcmt_mechanism"],
+                "cfcmt_weighted_source_only": _method_metrics_from_sse(weighted_source_sse, evaluation_stats.n),
+                "h2oplus_source_plus_target_budget": (
+                    _method_metrics_from_sse(h2o_cal_sse, evaluation_stats.n) if h2o_cal_sse is not None else None
+                ),
+                "cfcmt_source_plus_target_budget": (
+                    _method_metrics_from_sse(cfcmt_cal_sse, evaluation_stats.n) if cfcmt_cal_sse is not None else None
+                ),
+                "cfcmt_weighted_source_plus_target_budget": (
+                    _method_metrics_from_sse(weighted_cfcmt_cal_sse, evaluation_stats.n)
+                    if weighted_cfcmt_cal_sse is not None
+                    else None
+                ),
+                "h2oplus_target_only_budget": (
+                    _method_metrics_from_sse(target_h2o_sse, evaluation_stats.n) if target_h2o_sse is not None else None
+                ),
+                "cfcmt_target_only_budget": (
+                    _method_metrics_from_sse(target_cfcmt_sse, evaluation_stats.n) if target_cfcmt_sse is not None else None
+                ),
+            }
+            h2o_cal = metrics["h2oplus_source_plus_target_budget"]["total_mse"]
+            cfcmt_no_cal = metrics["cfcmt_source_only"]["total_mse"]
+            weighted_no_cal = metrics["cfcmt_weighted_source_only"]["total_mse"]
+            weighted_cal = metrics["cfcmt_weighted_source_plus_target_budget"]["total_mse"]
+            row = {
+                "name": split["name"],
+                "source_envs": sources,
+                "target_env": target,
+                "target_city": config["generated_envs"][target].get("city", target),
+                "source_weights": source_weights,
+                "target_line_budget_fraction": float(budget),
+                "calibration_lines": len(calibration_lines),
+                "evaluation_lines": len(evaluation_lines) if not in_sample_oracle else len(city_line_stats[target]),
+                "calibration_transitions": calibration_stats.n,
+                "evaluation_transitions": evaluation_stats.n,
+                "in_sample_oracle": bool(in_sample_oracle),
+                "metrics": metrics,
+                "comparisons": {
+                    "cfcmt_source_only_vs_h2oplus_source_only_ratio": (
+                        cfcmt_no_cal / metrics["h2oplus_source_only"]["total_mse"]
+                        if metrics["h2oplus_source_only"]["total_mse"]
+                        else None
+                    ),
+                    "cfcmt_weighted_source_only_vs_h2oplus_source_only_ratio": (
+                        weighted_no_cal / metrics["h2oplus_source_only"]["total_mse"]
+                        if metrics["h2oplus_source_only"]["total_mse"]
+                        else None
+                    ),
+                    "cfcmt_weighted_no_cal_vs_h2oplus_calibrated_ratio": (
+                        weighted_no_cal / h2o_cal if h2o_cal else None
+                    ),
+                    "cfcmt_weighted_calibrated_vs_h2oplus_calibrated_ratio": (
+                        weighted_cal / h2o_cal if h2o_cal else None
+                    ),
+                    "cfcmt_weighted_no_cal_beats_h2oplus_calibrated": bool(weighted_no_cal < h2o_cal),
+                    "cfcmt_weighted_calibrated_beats_h2oplus_calibrated": bool(weighted_cal < h2o_cal),
+                },
+            }
+            rows.append(row)
+            sweep.append(row)
+
+        valid_breaks = [
+            row["target_line_budget_fraction"]
+            for row in sweep
+            if row["comparisons"]["cfcmt_weighted_no_cal_beats_h2oplus_calibrated"]
+            and not row["in_sample_oracle"]
+        ]
         split_results.append(
             {
-                "name": base["name"],
-                "source_envs": base["source_envs"],
-                "target_env": base["target_env"],
-                "target_city": config["generated_envs"][base["target_env"]].get("city", base["target_env"]),
-                "h2oplus_uncalibrated_total_mse": h2o_base,
-                "cfcmt_uncalibrated_total_mse": cfcmt_no_cal,
-                "break_even_calibration_strength_for_h2oplus": break_even,
+                "name": split["name"],
+                "source_envs": sources,
+                "target_env": target,
+                "target_city": config["generated_envs"][target].get("city", target),
+                "source_weights": source_weights,
+                "max_target_budget_where_weighted_cfcmt_no_cal_beats_h2oplus_calibrated": (
+                    max(valid_breaks) if valid_breaks else None
+                ),
                 "sweep": sweep,
             }
         )
+    summary_by_budget = {}
+    for budget in sorted({row["target_line_budget_fraction"] for row in rows}):
+        group = [row for row in rows if math.isclose(row["target_line_budget_fraction"], budget)]
+        summary_by_budget[f"{budget:g}"] = {
+            "splits": len(group),
+            "mean_cfcmt_weighted_no_cal_vs_h2oplus_calibrated_ratio": float(
+                np.mean([row["comparisons"]["cfcmt_weighted_no_cal_vs_h2oplus_calibrated_ratio"] for row in group])
+            ),
+            "mean_cfcmt_weighted_calibrated_vs_h2oplus_calibrated_ratio": float(
+                np.mean([row["comparisons"]["cfcmt_weighted_calibrated_vs_h2oplus_calibrated_ratio"] for row in group])
+            ),
+            "weighted_no_cal_wins_vs_h2oplus_calibrated": sum(
+                1 for row in group if row["comparisons"]["cfcmt_weighted_no_cal_beats_h2oplus_calibrated"]
+            ),
+            "weighted_calibrated_wins_vs_h2oplus_calibrated": sum(
+                1 for row in group if row["comparisons"]["cfcmt_weighted_calibrated_beats_h2oplus_calibrated"]
+            ),
+            "mean_calibration_lines": float(np.mean([row["calibration_lines"] for row in group])),
+            "mean_evaluation_lines": float(np.mean([row["evaluation_lines"] for row in group])),
+            "contains_in_sample_oracle": any(row["in_sample_oracle"] for row in group),
+        }
     return {
         "ok": True,
-        "experiment": "calibration_vs_no_calibration_sweep",
-        "definition": "calibration_strength shrinks simulator residual by strength; 0 means uncalibrated, 0.2 means 20% residual removal before H2O+ correction",
+        "experiment": "target_route_calibration_budget_sweep",
+        "definition": "Target-city route-level calibration budget: selected target routes are added to source sufficient statistics, and remaining target routes are evaluated. Budget 1.0 is reported as an in-sample oracle upper bound.",
+        "budget_fractions": [float(value) for value in budgets],
+        "rows": rows,
         "splits": split_results,
+        "summary_by_budget": summary_by_budget,
         "summary": {
-            "mean_break_even_calibration_strength_for_h2oplus": float(np.mean([s["break_even_calibration_strength_for_h2oplus"] for s in split_results])),
-            "strengths": strengths,
+            "budgets": [float(value) for value in budgets],
+            "strict_splits": len(split_results),
+            "mean_max_budget_where_weighted_cfcmt_no_cal_beats_h2oplus_calibrated": (
+                float(np.mean([value for value in [
+                    split["max_target_budget_where_weighted_cfcmt_no_cal_beats_h2oplus_calibrated"]
+                    for split in split_results
+                ] if value is not None]))
+                if any(
+                    split["max_target_budget_where_weighted_cfcmt_no_cal_beats_h2oplus_calibrated"] is not None
+                    for split in split_results
+                )
+                else None
+            ),
         },
     }
 
@@ -1176,7 +1440,7 @@ def run_ablation(city_stats: dict[str, ResidualStats], config: dict[str, Any], r
     family_results = {}
     for family in ABLATION_FEATURES:
         splits = []
-        for split in expand_splits(config):
+        for split in _strict_leave_one_city_out_splits(config):
             out = _cross_city_eval(city_stats, split, ridge, cfcmt_family=family)
             splits.append(out)
         ratios = [item["comparisons"]["cfcmt_vs_h2oplus_total_mse_ratio"] for item in splits]
@@ -1191,6 +1455,80 @@ def run_ablation(city_stats: dict[str, ResidualStats], config: dict[str, Any], r
         "ok": True,
         "experiment": "cfcmt_mechanism_ablation",
         "families": family_results,
+    }
+
+
+def _grouped_method_mse(method_metrics: dict[str, Any]) -> dict[str, float]:
+    grouped: dict[str, list[float]] = {}
+    for output_name, value in method_metrics["per_output_mse"].items():
+        group = _output_group(output_name)
+        grouped.setdefault(group, []).append(float(value))
+    return {group: float(np.mean(values)) for group, values in grouped.items()}
+
+
+def run_per_mechanism_errors(
+    city_stats: dict[str, ResidualStats],
+    config: dict[str, Any],
+    sanity: dict[str, Any],
+    ridge: float,
+    *,
+    temperature: float,
+    floor: float,
+) -> dict[str, Any]:
+    strict = run_source_weighting(
+        city_stats,
+        config,
+        sanity,
+        ridge,
+        temperature=temperature,
+        floor=floor,
+        splits=_strict_leave_one_city_out_splits(config),
+    )
+    rows = []
+    for split in strict["splits"]:
+        h2o_groups = _grouped_method_mse(split["metrics"]["h2oplus_dense"])
+        cfcmt_groups = _grouped_method_mse(split["metrics"]["cfcmt_mechanism"])
+        weighted_groups = _grouped_method_mse(split["metrics"]["cfcmt_similarity_weighted"])
+        for group in sorted(h2o_groups):
+            h2o = h2o_groups[group]
+            cfcmt = cfcmt_groups[group]
+            weighted = weighted_groups[group]
+            rows.append(
+                {
+                    "target_env": split["target_env"],
+                    "target_city": split["target_city"],
+                    "mechanism": group,
+                    "h2oplus_mse": h2o,
+                    "cfcmt_mse": cfcmt,
+                    "weighted_cfcmt_mse": weighted,
+                    "cfcmt_vs_h2oplus_ratio": cfcmt / h2o if h2o else None,
+                    "weighted_cfcmt_vs_h2oplus_ratio": weighted / h2o if h2o else None,
+                    "weighted_cfcmt_vs_unweighted_ratio": weighted / cfcmt if cfcmt else None,
+                }
+            )
+    summary_by_mechanism = {}
+    for group in sorted({row["mechanism"] for row in rows}):
+        values = [row for row in rows if row["mechanism"] == group]
+        summary_by_mechanism[group] = {
+            "targets": len(values),
+            "weighted_wins_vs_h2oplus": sum(
+                1 for row in values if row["weighted_cfcmt_vs_h2oplus_ratio"] is not None and row["weighted_cfcmt_vs_h2oplus_ratio"] < 1.0
+            ),
+            "mean_cfcmt_vs_h2oplus_ratio": float(np.mean([row["cfcmt_vs_h2oplus_ratio"] for row in values])),
+            "mean_weighted_cfcmt_vs_h2oplus_ratio": float(
+                np.mean([row["weighted_cfcmt_vs_h2oplus_ratio"] for row in values])
+            ),
+        }
+    return {
+        "ok": True,
+        "experiment": "per_mechanism_error",
+        "definition": "Strict leave-one-city-out MSE decomposed by headway/gap, demand/dwell/reward, and speed mechanisms.",
+        "rows": rows,
+        "summary_by_mechanism": summary_by_mechanism,
+        "summary": {
+            "mechanisms": len(summary_by_mechanism),
+            "rows": len(rows),
+        },
     }
 
 
@@ -1235,51 +1573,160 @@ def run_source_sensitivity(city_stats: dict[str, ResidualStats], config: dict[st
     }
 
 
-def _line_total_mse(line: ResidualStats, h2o_beta: np.ndarray, cfcmt_beta: dict[str, np.ndarray]) -> tuple[float, float, int]:
+def run_target_construction_audit(
+    city_stats: dict[str, ResidualStats],
+    city_line_stats: dict[str, list[ResidualStats]],
+    config: dict[str, Any],
+    sanity: dict[str, Any],
+) -> dict[str, Any]:
+    rows = []
+    for key, stats in city_stats.items():
+        spec = config["generated_envs"][key]
+        evidence = DATA_EVIDENCE.get(key, {})
+        uncal = _method_metrics_from_sse(stats.h2o.sse(None), stats.n)
+        line_total_mse = [
+            _method_metrics_from_sse(line.h2o.sse(None), line.n)["total_mse"]
+            for line in city_line_stats.get(key, [])
+            if line.n > 0
+        ]
+        rows.append(
+            {
+                "env_key": key,
+                "city": spec.get("city", key),
+                "demand_evidence": evidence.get("demand_evidence", "unknown"),
+                "traffic_evidence": evidence.get("traffic_evidence", "unknown"),
+                "target_construction": evidence.get("target_construction", ""),
+                "lines": int(sanity[key].get("line_count", stats.lines_seen)),
+                "transitions": int(stats.n),
+                "uncalibrated_total_mse": uncal["total_mse"],
+                "uncalibrated_headway_gap_mse": float(
+                    np.mean([
+                        value
+                        for name, value in uncal["per_output_mse"].items()
+                        if _output_group(name) == "headway_gap"
+                    ])
+                ),
+                "uncalibrated_demand_stop_reward_mse": float(
+                    np.mean([
+                        value
+                        for name, value in uncal["per_output_mse"].items()
+                        if _output_group(name) == "demand_stop_reward"
+                    ])
+                ),
+                "uncalibrated_speed_mse": float(
+                    np.mean([
+                        value
+                        for name, value in uncal["per_output_mse"].items()
+                        if _output_group(name) == "speed"
+                    ])
+                ),
+                "line_total_mse_quantiles": _quantiles(line_total_mse),
+            }
+        )
+    return {
+        "ok": True,
+        "experiment": "target_construction_audit",
+        "definition": "Documents observed/proxy target evidence and checks that uncalibrated simulator residuals are nonzero and heterogeneous at the route level.",
+        "rows": rows,
+        "leakage_controls": [
+            "strict zero-calibration splits never train on held-out target-city route residuals",
+            "calibration-budget experiments evaluate on target routes excluded from calibration for all budgets below 1.0",
+            "models fit simulator-to-target residuals rather than directly copying target transition formulas",
+        ],
+        "summary": {
+            "cities": len(rows),
+            "cities_with_observed_traffic": sum(1 for row in rows if "observed" in row["traffic_evidence"]),
+            "cities_with_observed_or_apportioned_demand": sum(
+                1
+                for row in rows
+                if ("observed" in row["demand_evidence"] or "apportioned" in row["demand_evidence"])
+            ),
+        },
+    }
+
+
+def _line_total_mse(
+    line: ResidualStats,
+    h2o_beta: np.ndarray,
+    cfcmt_beta: dict[str, np.ndarray],
+    weighted_cfcmt_beta: dict[str, np.ndarray] | None = None,
+) -> tuple[float, float, float | None, int]:
     metrics = evaluate_stats(line, h2o_beta, cfcmt_beta)
+    weighted_total = None
+    if weighted_cfcmt_beta is not None:
+        weighted_sse = _family_sse(line.cfcmt, weighted_cfcmt_beta)
+        weighted_total = _method_metrics_from_sse(weighted_sse, line.n)["total_mse"]
     return (
         metrics["h2oplus_dense"]["total_mse"],
         metrics["cfcmt_mechanism"]["total_mse"],
+        weighted_total,
         line.n,
     )
 
 
-def run_bootstrap(city_stats: dict[str, ResidualStats], city_line_stats: dict[str, list[ResidualStats]], config: dict[str, Any], ridge: float, samples: int, seed: int) -> dict[str, Any]:
+def run_bootstrap(
+    city_stats: dict[str, ResidualStats],
+    city_line_stats: dict[str, list[ResidualStats]],
+    config: dict[str, Any],
+    sanity: dict[str, Any],
+    ridge: float,
+    samples: int,
+    seed: int,
+    *,
+    temperature: float,
+    floor: float,
+) -> dict[str, Any]:
     rng = np.random.default_rng(seed)
     rows = []
     for target in config["generated_envs"]:
         sources = [key for key in config["generated_envs"] if key != target]
         train_stats = _merge_stats("source", "source", [city_stats[key] for key in sources])
+        source_weights = _source_similarity_weights(sanity, target, sources, temperature=temperature, floor=floor)
+        train_weighted = _merge_stats_weighted("source_weighted", "source", city_stats, source_weights)
         h2o_beta = _fit_h2o(train_stats, ridge)
         cfcmt_beta = _fit_cfcmt(train_stats, ridge)
-        line_values = [_line_total_mse(line, h2o_beta, cfcmt_beta) for line in city_line_stats[target]]
+        weighted_cfcmt_beta = _fit_cfcmt(train_weighted, ridge)
+        line_values = [_line_total_mse(line, h2o_beta, cfcmt_beta, weighted_cfcmt_beta) for line in city_line_stats[target]]
         h2o = np.asarray([item[0] for item in line_values], dtype=np.float64)
         cfcmt = np.asarray([item[1] for item in line_values], dtype=np.float64)
-        weights = np.asarray([item[2] for item in line_values], dtype=np.float64)
+        weighted_cfcmt = np.asarray([item[2] for item in line_values], dtype=np.float64)
+        weights = np.asarray([item[3] for item in line_values], dtype=np.float64)
         n_lines = len(line_values)
         sampled_diff = []
         sampled_ratio = []
+        sampled_weighted_diff = []
+        sampled_weighted_ratio = []
         for _ in range(samples):
             idx = rng.integers(0, n_lines, size=n_lines)
             w = weights[idx]
             h = float(np.sum(h2o[idx] * w) / np.sum(w))
             c = float(np.sum(cfcmt[idx] * w) / np.sum(w))
+            cw = float(np.sum(weighted_cfcmt[idx] * w) / np.sum(w))
             sampled_diff.append(c - h)
             sampled_ratio.append(c / h if h > 0 else np.nan)
+            sampled_weighted_diff.append(cw - h)
+            sampled_weighted_ratio.append(cw / h if h > 0 else np.nan)
         empirical_h = float(np.sum(h2o * weights) / np.sum(weights))
         empirical_c = float(np.sum(cfcmt * weights) / np.sum(weights))
+        empirical_w = float(np.sum(weighted_cfcmt * weights) / np.sum(weights))
         rows.append(
             {
                 "target_env": target,
                 "target_city": config["generated_envs"][target].get("city", target),
                 "source_envs": sources,
+                "source_weights": source_weights,
                 "lines": n_lines,
                 "h2oplus_total_mse": empirical_h,
                 "cfcmt_total_mse": empirical_c,
+                "weighted_cfcmt_total_mse": empirical_w,
                 "cfcmt_minus_h2oplus_total_mse": empirical_c - empirical_h,
+                "weighted_cfcmt_minus_h2oplus_total_mse": empirical_w - empirical_h,
                 "cfcmt_vs_h2oplus_total_mse_ratio": empirical_c / empirical_h if empirical_h > 0 else None,
+                "weighted_cfcmt_vs_h2oplus_total_mse_ratio": empirical_w / empirical_h if empirical_h > 0 else None,
                 "diff_ci95": [float(v) for v in np.quantile(sampled_diff, [0.025, 0.975])],
                 "ratio_ci95": [float(v) for v in np.nanquantile(sampled_ratio, [0.025, 0.975])],
+                "weighted_diff_ci95": [float(v) for v in np.quantile(sampled_weighted_diff, [0.025, 0.975])],
+                "weighted_ratio_ci95": [float(v) for v in np.nanquantile(sampled_weighted_ratio, [0.025, 0.975])],
                 "bootstrap_samples": samples,
             }
         )
@@ -1291,6 +1738,8 @@ def run_bootstrap(city_stats: dict[str, ResidualStats], city_line_stats: dict[st
             "targets": len(rows),
             "ci_excludes_zero_in_cfcmt_favor": sum(1 for row in rows if row["diff_ci95"][1] < 0.0),
             "ci_excludes_one_in_cfcmt_favor": sum(1 for row in rows if row["ratio_ci95"][1] < 1.0),
+            "weighted_ci_excludes_zero_in_cfcmt_favor": sum(1 for row in rows if row["weighted_diff_ci95"][1] < 0.0),
+            "weighted_ci_excludes_one_in_cfcmt_favor": sum(1 for row in rows if row["weighted_ratio_ci95"][1] < 1.0),
         },
     }
 
@@ -1336,18 +1785,61 @@ def _rollout_obs_vectors(obs: dict[Any, Any]) -> dict[int, np.ndarray]:
     return vectors
 
 
+def _rollout_feature_obs(obs: np.ndarray, *, line_key: str, station_count: int, sim_start_hour: int) -> np.ndarray:
+    """Map BusSimEnv observations to the static-transition feature schema."""
+
+    out = np.asarray(obs, dtype=np.float32).copy()
+    elapsed_hour = int(max(0.0, float(obs[10])) // 3600)
+    effective_hour = max(0, min(23, int(sim_start_hour) + elapsed_hour))
+    station_fraction = float(np.clip(float(obs[2]) / max(float(station_count - 1), 1.0), 0.0, 1.0))
+    out[0] = _stable_unit(line_key)
+    out[1] = float(np.mod(float(obs[1]), 400.0) / 400.0)
+    out[2] = station_fraction
+    out[3] = float(effective_hour) / 23.0
+    out[10] = float(effective_hour * 3600.0 + station_fraction * 3600.0)
+    # Static validation uses forward-backward headway gap, while BusSimEnv's
+    # live observation uses target-forward gap. Align to the training schema.
+    out[11] = float(obs[5] - obs[6])
+    return out
+
+
+def _bus_linear_reward_from_predicted_state(pred_y: np.ndarray, obs_action: np.ndarray) -> np.ndarray:
+    fwd = np.clip(pred_y[:, 0].astype(np.float64), 10.0, 7200.0)
+    bwd = np.clip(pred_y[:, 1].astype(np.float64), 10.0, 7200.0)
+    target = np.maximum(obs_action[:, 8].astype(np.float64), 60.0)
+    fwd_dev = np.abs(fwd - target)
+    bwd_dev = np.abs(bwd - target)
+    weight = fwd_dev / (fwd_dev + bwd_dev + 1e-6)
+    reward = -fwd_dev * weight - bwd_dev * (1.0 - weight)
+    reward -= 0.5 * np.abs(fwd - bwd)
+    f_pen = 20.0 * np.tanh((fwd_dev - 0.5 * target) / 30.0)
+    b_pen = 20.0 * np.tanh((bwd_dev - 0.5 * target) / 30.0)
+    reward -= np.maximum(0.0, f_pen + b_pen)
+    return reward
+
+
 def _predict_action_from_obs(
     obs: np.ndarray,
     method: str,
     h2o_beta: np.ndarray,
     cfcmt_beta: dict[str, np.ndarray],
     actions: list[float],
+    *,
+    line_key: str,
+    station_count: int,
+    sim_start_hour: int,
 ) -> float:
     if method == "no_hold":
         return 0.0
     if method == "fixed_30":
         return 30.0
-    obs_mat = np.repeat(obs[None, :], len(actions), axis=0).astype(np.float32)
+    feature_obs = _rollout_feature_obs(
+        obs,
+        line_key=line_key,
+        station_count=station_count,
+        sim_start_hour=sim_start_hour,
+    )
+    obs_mat = np.repeat(feature_obs[None, :], len(actions), axis=0).astype(np.float32)
     action_arr = np.asarray(actions, dtype=np.float32)
     obs_action = np.concatenate([obs_mat, action_arr[:, None]], axis=1)
     fwd = obs_mat[:, 5].astype(np.float64)
@@ -1356,7 +1848,7 @@ def _predict_action_from_obs(
     target = np.maximum(obs_mat[:, 8].astype(np.float64), 60.0)
     speed = np.clip(obs_mat[:, 14].astype(np.float64), 1.0, 25.0)
     travel_time = np.clip(target / 4.0, 30.0, 600.0)
-    hour = int(max(0.0, float(obs[10])) // 3600) % 24
+    hour = int(round(float(feature_obs[3]) * 23.0)) % 24
     sim_y = np.column_stack(_uncalibrated_transition(fwd, bwd, waiting, target, speed, travel_time, action_arr, hour))
     if method == "h2oplus_dense_policy":
         pred_y = sim_y + h2o_features(obs_action) @ h2o_beta
@@ -1368,7 +1860,7 @@ def _predict_action_from_obs(
             pred_y[:, idx] += cfcmt_features(output_name, obs_action) @ cfcmt_beta[output_name]
     else:
         pred_y = sim_y
-    reward = _reward_from_predicted_state(pred_y, obs_action)
+    reward = _bus_linear_reward_from_predicted_state(pred_y, obs_action)
     return float(actions[int(np.argmax(reward))])
 
 
@@ -1443,9 +1935,13 @@ def run_sampled_rollout(
             )
             continue
         for line_env in line_envs[:lines_per_city]:
+            episode_seed = int(seed + _stable_unit(f"{target}:{line_env.name}", modulus=1_000_000_000) * 1_000_000_000)
             for policy in policies:
-                np.random.seed(seed)
+                np.random.seed(episode_seed % (2**32 - 1))
+                random.seed(episode_seed)
                 env = BusSimEnv(path=str(line_env))
+                station_count = max(1, len(getattr(env, "stations", [])))
+                sim_start_hour = int(env.args.get("sim_start_hour", 6))
                 action_dict = {agent: 0.0 for agent in range(env.max_agent_num)}
                 env.reset()
                 decisions = 0
@@ -1461,9 +1957,19 @@ def run_sampled_rollout(
                         continue
                     action_dict = {}
                     for agent, vec in vectors.items():
-                        model_cfcmt_beta = cfcmt_weighted_beta if policy == "cfcmt_similarity_weighted_policy" else cfcmt_beta
-                        model_policy = "cfcmt_mechanism_policy" if policy == "cfcmt_similarity_weighted_policy" else policy
-                        action = _predict_action_from_obs(vec, model_policy, h2o_beta, model_cfcmt_beta, actions)
+                        use_weighted = policy == "cfcmt_similarity_weighted_policy"
+                        model_cfcmt_beta = cfcmt_weighted_beta if use_weighted else cfcmt_beta
+                        model_policy = "cfcmt_mechanism_policy" if use_weighted else policy
+                        action = _predict_action_from_obs(
+                            vec,
+                            model_policy,
+                            h2o_beta,
+                            model_cfcmt_beta,
+                            actions,
+                            line_key=line_env.name,
+                            station_count=station_count,
+                            sim_start_hour=sim_start_hour,
+                        )
                         action_dict[agent] = action
                         reward_sum += float(rew.get(agent, 0.0))
                         target_hw = max(float(vec[8]), 60.0)
@@ -1576,8 +2082,26 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             temperature=args.source_weight_temperature,
             floor=args.source_weight_floor,
         ),
-        "calibration_vs_no_calibration": run_calibration_sweep(city_stats, config, args.ridge, args.calibration_strengths),
+        "calibration_vs_no_calibration": run_calibration_sweep(
+            city_stats,
+            city_line_stats,
+            config,
+            sanity,
+            args.ridge,
+            args.calibration_budgets,
+            args.seed,
+            temperature=args.source_weight_temperature,
+            floor=args.source_weight_floor,
+        ),
         "ablation": run_ablation(city_stats, config, args.ridge),
+        "per_mechanism_error": run_per_mechanism_errors(
+            city_stats,
+            config,
+            sanity,
+            args.ridge,
+            temperature=args.source_weight_temperature,
+            floor=args.source_weight_floor,
+        ),
         "source_sensitivity": run_source_sensitivity(city_stats, config, args.ridge),
         "source_similarity_weighting": run_source_weighting(
             city_stats,
@@ -1613,7 +2137,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             temperature=args.source_weight_temperature,
             floor=args.source_weight_floor,
         ),
-        "bootstrap": run_bootstrap(city_stats, city_line_stats, config, args.ridge, args.bootstrap_samples, args.seed),
+        "bootstrap": run_bootstrap(
+            city_stats,
+            city_line_stats,
+            config,
+            sanity,
+            args.ridge,
+            args.bootstrap_samples,
+            args.seed,
+            temperature=args.source_weight_temperature,
+            floor=args.source_weight_floor,
+        ),
+        "target_construction_audit": run_target_construction_audit(city_stats, city_line_stats, config, sanity),
         "data_sanity": {
             "ok": True,
             "experiment": "static_data_sanity",
@@ -1664,7 +2199,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--max-lines-per-city", type=int, default=0, help="0 means all lines; >0 for smoke")
     parser.add_argument("--progress-every", type=int, default=250)
     parser.add_argument("--single-city-test-fraction", type=float, default=0.2)
-    parser.add_argument("--calibration-strengths", type=_parse_float_list, default=[0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30])
+    parser.add_argument("--calibration-budgets", type=_parse_float_list, default=[0.0, 0.01, 0.05, 0.10, 0.25, 1.0])
+    parser.add_argument(
+        "--calibration-strengths",
+        dest="calibration_budgets",
+        type=_parse_float_list,
+        default=argparse.SUPPRESS,
+        help="Deprecated alias for --calibration-budgets.",
+    )
     parser.add_argument("--source-weight-temperature", type=float, default=1.0)
     parser.add_argument("--source-weight-floor", type=float, default=0.05)
     parser.add_argument("--source-weight-temperatures", type=_parse_float_list, default=[0.5, 1.0, 2.0])
@@ -1693,12 +2235,14 @@ def main(argv: list[str] | None = None) -> int:
             "strict_leave_one_city_out",
             "calibration_vs_no_calibration",
             "ablation",
+            "per_mechanism_error",
             "source_sensitivity",
             "source_similarity_weighting",
             "source_weighting_sensitivity",
             "source_subset_robustness",
             "generator_robustness",
             "bootstrap",
+            "target_construction_audit",
             "sampled_rollout",
         ):
             value = result["experiments"].get(key)

@@ -60,6 +60,31 @@ The best setting in the grid is $T=0.5,\lambda=0$, but the default is not select
 \label{fig:weight-sensitivity}
 \end{figure}
 
+\subsection{Calibration budget and mechanism-level errors}
+
+The target-route calibration-budget sweep tests whether a calibrated dense residual baseline quickly erases the zero-calibration \ours advantage.
+At $0\%$ target calibration, weighted \ours has mean ratio $0.578$ against the dense source-only baseline.
+When $1\%$, $5\%$, $10\%$, and $25\%$ of target routes are added to the dense baseline, the uncalibrated weighted-\ours/H2O ratio remains below $1$ on three of four strict targets, with mean ratios $0.581$, $0.586$, $0.617$, and $0.677$, respectively.
+The $100\%$ target-route point is an in-sample oracle reference and should not be interpreted as deployable zero-calibration evidence.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.70\textwidth]{calibration_budget_ratio.png}
+\caption{Target-route calibration-budget sensitivity. Ratios compare weighted \ours with no target calibration or the same target budget against a dense \Htwo-style baseline using that target budget.}
+\label{fig:calibration}
+\end{figure}
+
+Per-mechanism errors show that the total-MSE advantage is not driven by one output group only.
+Weighted \ours improves all three mechanism groups on average: headway/gap ratio $0.574$, demand/dwell/reward ratio $0.771$, and speed ratio $0.668$.
+Headway/gap is the largest contributor to the main gain, which is consistent with the holding-control objective.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.62\textwidth]{per_mechanism_error_ratio.png}
+\caption{Per-mechanism mean MSE ratios under strict leave-one-city-out dynamics validation.}
+\label{fig:mechanism-error}
+\end{figure}
+
 \subsection{Robustness and boundary conditions}
 
 Generator robustness supports the main trend but also identifies failure modes.
@@ -74,6 +99,10 @@ Thus the evidence does not say that \ours is invariant to any target-generation 
 \label{fig:generator}
 \end{figure}
 
+Mechanism ablations support the mechanism-specific interpretation, with a caveat.
+Wrong mechanism groupings and action/time-only features are much worse than \Htwo, with mean ratios above $7$.
+Dense matched sparse features are close to full \ours, with mean ratio $0.772$, which means the result should be described as evidence for mechanism-wise sparse transfer rather than definitive causal identification.
+
 The source-subset check is the strongest limitation.
 With all four cities, weighted \ours has mean ratio $0.578$.
 Excluding Austin remains favorable with mean ratio $0.663$.
@@ -87,3 +116,15 @@ This indicates that source diversity matters: the method should be framed as mul
 \caption{Source-subset robustness. Removing data-source families reveals where the claim becomes weak.}
 \label{fig:subset}
 \end{figure}
+
+Route-level bootstrap confidence intervals reinforce the same boundary.
+Unweighted \ours has a route-bootstrap ratio confidence interval below $1$ for all four targets.
+Weighted \ours has intervals below $1$ for Austin, Halifax, and MBTA, but Singapore crosses parity with interval $[0.993,1.002]$.
+The conservative reading is that source weighting improves the mean strongly, while Singapore remains the least secure target.
+
+\subsection{Auxiliary sampled rollout}
+
+The sampled BusSimEnv rollout is not primary evidence, but it checks whether the learned one-step action preferences are grossly inconsistent with executable line environments.
+Under a fair seeded rollout over ten Austin/Halifax line episodes, weighted \ours reaches parity with the dense policy: mean reward is $-1121.574$ for weighted \ours and $-1121.612$ for \Htwo.
+The headway-error metric is slightly worse for weighted \ours, $588.2$ seconds versus $585.6$ seconds.
+Thus rollout supports a limited claim: after schema and reward alignment, \ours does not collapse in executable simulation, but the closed-loop advantage remains too small to serve as the main evidence.

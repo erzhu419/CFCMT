@@ -32,11 +32,18 @@ Bunching rate is the fraction of decisions in which either adjacent headway is b
 Large-gap rate is the fraction in which either adjacent headway exceeds $1.5$ times the target headway.
 
 \paragraph{Reviewer-facing robustness checks.}
-We include four diagnostic families.
-First, source-weight sensitivity varies $T \in \{0.5,1.0,2.0\}$ and $\lambda \in \{0,0.05,0.1\}$.
-Second, generator robustness perturbs output groups or adds measurement-noise terms to the evaluation sufficient statistics.
-Third, source-subset robustness removes major data-source families, including excluding Singapore and excluding Austin.
-Fourth, sampled BusSimEnv rollout is reported only as an auxiliary sanity check because only a small number of line environments are executable.
+We include diagnostics targeted at common review objections.
+First, a target-construction audit separates observed, apportioned, schedule-proxy, and deterministic target components.
+Second, a target-route calibration-budget sweep adds $0\%$, $1\%$, $5\%$, $10\%$, $25\%$, or $100\%$ of held-out target-city routes to the source sufficient statistics and evaluates on the remaining target routes; the $100\%$ point is an in-sample oracle reference.
+Third, per-mechanism errors decompose total MSE into headway/gap, demand/dwell/reward, and speed groups.
+Fourth, mechanism ablations compare the proposed parent sets against wrong mechanism groupings, action/time-only features, and dense matched-capacity variants.
+Fifth, source-weight sensitivity varies $T \in \{0.5,1.0,2.0\}$ and $\lambda \in \{0,0.05,0.1\}$, while source-subset and pairwise-source checks remove major source families.
+Sixth, generator robustness perturbs output groups or adds measurement-noise terms to the evaluation sufficient statistics.
+
+\paragraph{Auxiliary executable rollout.}
+Sampled BusSimEnv rollout is reported only as an auxiliary sanity check because only Austin and Halifax have runnable generated line environments.
+For this rollout, each policy is evaluated on the same line-level random seed, including Python signal-delay randomness, and live observations are mapped back to the static-transition feature schema before model scoring.
+The policy score uses the BusSimEnv linear headway reward rather than the static one-step reward.
 
 \begin{table}[t]
 \centering
