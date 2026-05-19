@@ -46,6 +46,9 @@ The July--December 2021 and August 2016 files contain observed stop events with 
 We filter records with valid stop, trip, GPS, and import-quality flags, reconstruct stop-level headways by route-direction-stop event times, and evaluate passive action-$0$ one-step dynamics against the observed next stop event.
 The no-correction baseline in this experiment is a state-informed passive transition using the APC-derived current state, not a schedule-only free-running simulator.
 This is real historical APC/AVL validation, but it is still offline passive validation rather than a field control deployment because counterfactual hold actions are not observed.
+We also run a few-shot APC adaptation sweep at $0\%$, $1\%$, $5\%$, $10\%$, and $25\%$ of Austin line groups.
+This sweep compares source-only transfer, source-plus-target residual refitting, target-only residual fitting, a residual gate that learns how much of the source correction to trust, and a target residual-bias adapter.
+The gate and bias-adapter variants are lightweight AdaRL/FANsRL-style checks of what changes should be adapted; they are not full reimplementations of those neural RL systems.
 
 \paragraph{Auxiliary executable rollout.}
 Sampled BusSimEnv rollout is reported only as an auxiliary sanity check because only Austin and Halifax have runnable generated line environments.

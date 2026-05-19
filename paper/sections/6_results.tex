@@ -136,6 +136,12 @@ This does not mean that a free-running uncalibrated simulator is operationally b
 The overshoot is concentrated in headway/gap outputs, which dominate the unnormalized total MSE, while \ours is better than the passive baseline on several demand, dwell, and speed outputs.
 Thus the real APC result strengthens the comparison between \ours and dense residual transfer, but it also shows that a safe residual gate or small target-city calibration budget is needed before claiming improvement over a state-informed passive baseline.
 
+The few-shot APC sweep confirms this diagnosis.
+With only $1\%$ of Austin line groups used for target residual calibration, the weighted-\ours residual gate improves over the passive baseline in both APC datasets, with ratios $0.970$ and $0.957$.
+At $25\%$ target line-group budget, target-only \ours reaches the best ratios, $0.893$ on July--December 2021 and $0.879$ on August 2016.
+Thus the real APC gap is not evidence against the mechanism-factored representation; it is evidence that source-only residual transfer needs target-domain trust calibration under real APC noise.
+This is the same qualitative regime targeted by AdaRL/FANsRL-style few-shot adaptation, while the direct AdaRL/FANsRL codebases are environment-specific RL systems rather than drop-in bus residual evaluators.
+
 \subsection{Auxiliary sampled rollout}
 
 The sampled BusSimEnv rollout is not primary evidence, but it checks whether the learned one-step action preferences are grossly inconsistent with executable line environments.

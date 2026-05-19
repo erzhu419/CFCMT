@@ -536,6 +536,29 @@ def build_real_apc_validation_table(summary: dict[str, Any] | None) -> pd.DataFr
     return pd.DataFrame(rows)
 
 
+def build_real_apc_few_shot_table(summary: dict[str, Any] | None) -> pd.DataFrame:
+    rows = []
+    if not summary:
+        return pd.DataFrame(rows)
+    def show(value: Any) -> Any:
+        return "-" if value is None else value
+
+    for row in summary.get("few_shot_rows", []):
+        rows.append(
+            {
+                "dataset": row["dataset"],
+                "budget": row["target_line_budget_fraction"],
+                "cal_lines": row["calibration_lines"],
+                "cal_transitions": row["calibration_transitions"],
+                "source_only_vs_passive": row["weighted_source_only_vs_passive"],
+                "source_plus_target_vs_passive": row["weighted_source_plus_target_vs_passive"],
+                "target_only_vs_passive": show(row["target_only_vs_passive"]),
+                "residual_gate_vs_passive": row["residual_gate_vs_passive"],
+            }
+        )
+    return pd.DataFrame(rows)
+
+
 def build_sampled_rollout_table(suite: dict[str, Any]) -> pd.DataFrame:
     rollout = suite["experiments"].get("sampled_rollout", {})
     rows = []
@@ -874,6 +897,7 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
     bootstrap_df = build_bootstrap_table(suite)
     target_audit_df = build_target_construction_audit_table(suite)
     real_apc_df = build_real_apc_validation_table(real_apc)
+    real_apc_few_shot_df = build_real_apc_few_shot_table(real_apc)
 
     tables = {
         "dataset": _write_table(dataset_df, tables_dir, "dataset_table"),
@@ -908,6 +932,7 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
         "bootstrap": _write_table(bootstrap_df, tables_dir, "bootstrap_table"),
         "target_construction_audit": _write_table(target_audit_df, tables_dir, "target_construction_audit_table"),
         "real_apc_validation": _write_table(real_apc_df, tables_dir, "real_apc_validation_table"),
+        "real_apc_few_shot": _write_table(real_apc_few_shot_df, tables_dir, "real_apc_few_shot_table"),
     }
 
     figures = {
@@ -963,6 +988,7 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
             "bootstrap": suite["experiments"]["bootstrap"]["summary"],
             "target_construction_audit": suite["experiments"]["target_construction_audit"]["summary"],
             "real_apc_validation": real_apc.get("summary") if real_apc else None,
+            "real_apc_few_shot": real_apc.get("summary", {}).get("few_shot") if real_apc else None,
             "sampled_rollout": suite["experiments"].get("sampled_rollout", {}).get("summary_by_policy"),
         },
     }

@@ -1,6 +1,7 @@
 {
   "ok": true,
   "validation_level": "austin_real_apc_external_validation_summary",
+  "created_at": "2026-05-19T05:48:50.172850+00:00",
   "rows": [
     {
       "result_path": "cf_h2o/results/austin_real_apc_validation.json",
@@ -14,13 +15,33 @@
       "date_min": "2021-07-01T00:18:02",
       "date_max": "2021-12-30T23:48:09",
       "h2oplus_vs_passive_ratio": 10.161437459015138,
-      "cfcmt_vs_passive_ratio": 5.366345306249433,
-      "weighted_cfcmt_vs_passive_ratio": 3.3519992078497594,
+      "cfcmt_vs_passive_ratio": 5.366345306249436,
+      "weighted_cfcmt_vs_passive_ratio": 3.35199920784976,
       "h2oplus_vs_uncalibrated_ratio": 10.161437459015138,
-      "cfcmt_vs_uncalibrated_ratio": 5.366345306249433,
-      "weighted_cfcmt_vs_uncalibrated_ratio": 3.3519992078497594,
-      "cfcmt_vs_h2oplus_ratio": 0.5281088751364068,
+      "cfcmt_vs_uncalibrated_ratio": 5.366345306249436,
+      "weighted_cfcmt_vs_uncalibrated_ratio": 3.35199920784976,
+      "cfcmt_vs_h2oplus_ratio": 0.5281088751364071,
       "weighted_cfcmt_vs_h2oplus_ratio": 0.32987451050794936,
+      "few_shot_summary": {
+        "budgets": [
+          0.0,
+          0.01,
+          0.05,
+          0.1,
+          0.25
+        ],
+        "best_budget": 0.25,
+        "best_method": "cfcmt_target_only_budget",
+        "best_vs_passive_ratio": 0.8932913073949691,
+        "budgets_where_gate_beats_passive": [
+          0.01,
+          0.05,
+          0.1,
+          0.25
+        ],
+        "budgets_where_bias_beats_passive": [],
+        "mean_passive_total_mse": 2769756.3198228544
+      },
       "notes": "Observed APC stop-event validation; action fixed to 0 because no counterfactual holding action is observed. The passive no-correction baseline is a state-informed one-step transition using APC-derived current state, not a schedule-only free-running simulator."
     },
     {
@@ -34,15 +55,167 @@
       "trips": 220011,
       "date_min": "2016-08-21T00:06:27",
       "date_max": "2017-01-07T23:54:43",
-      "h2oplus_vs_passive_ratio": 10.366478820366353,
-      "cfcmt_vs_passive_ratio": 5.362357309155346,
-      "weighted_cfcmt_vs_passive_ratio": 3.345184202318545,
-      "h2oplus_vs_uncalibrated_ratio": 10.366478820366353,
-      "cfcmt_vs_uncalibrated_ratio": 5.362357309155346,
-      "weighted_cfcmt_vs_uncalibrated_ratio": 3.345184202318545,
-      "cfcmt_vs_h2oplus_ratio": 0.5172785670116132,
-      "weighted_cfcmt_vs_h2oplus_ratio": 0.32269242626015665,
+      "h2oplus_vs_passive_ratio": 10.36647882036635,
+      "cfcmt_vs_passive_ratio": 5.362357309155344,
+      "weighted_cfcmt_vs_passive_ratio": 3.345184202318543,
+      "h2oplus_vs_uncalibrated_ratio": 10.36647882036635,
+      "cfcmt_vs_uncalibrated_ratio": 5.362357309155344,
+      "weighted_cfcmt_vs_uncalibrated_ratio": 3.345184202318543,
+      "cfcmt_vs_h2oplus_ratio": 0.5172785670116131,
+      "weighted_cfcmt_vs_h2oplus_ratio": 0.32269242626015654,
+      "few_shot_summary": {
+        "budgets": [
+          0.0,
+          0.01,
+          0.05,
+          0.1,
+          0.25
+        ],
+        "best_budget": 0.25,
+        "best_method": "cfcmt_target_only_budget",
+        "best_vs_passive_ratio": 0.8789525420413385,
+        "budgets_where_gate_beats_passive": [
+          0.01,
+          0.05,
+          0.1,
+          0.25
+        ],
+        "budgets_where_bias_beats_passive": [],
+        "mean_passive_total_mse": 2712288.567640469
+      },
       "notes": "Observed APC stop-event validation; action fixed to 0 because no counterfactual holding action is observed. The passive no-correction baseline is a state-informed one-step transition using APC-derived current state, not a schedule-only free-running simulator."
+    }
+  ],
+  "few_shot_rows": [
+    {
+      "dataset": "CapMetro APC Raw July 2021 - December 2021",
+      "target_line_budget_fraction": 0.0,
+      "calibration_lines": 0,
+      "evaluation_lines": 96,
+      "calibration_transitions": 0,
+      "evaluation_transitions": 5771472,
+      "weighted_source_only_vs_passive": 3.351999207849758,
+      "weighted_source_plus_target_vs_passive": 3.351999207849758,
+      "target_only_vs_passive": null,
+      "residual_gate_vs_passive": 3.351999207849758,
+      "bias_adapter_vs_passive": 3.351999207849758
+    },
+    {
+      "dataset": "CapMetro APC Raw July 2021 - December 2021",
+      "target_line_budget_fraction": 0.01,
+      "calibration_lines": 1,
+      "evaluation_lines": 95,
+      "calibration_transitions": 745,
+      "evaluation_transitions": 5770727,
+      "weighted_source_only_vs_passive": 3.3519756530962272,
+      "weighted_source_plus_target_vs_passive": 0.9802725588777887,
+      "target_only_vs_passive": 1.06624385647907,
+      "residual_gate_vs_passive": 0.970028038338873,
+      "bias_adapter_vs_passive": 4.954794700174084
+    },
+    {
+      "dataset": "CapMetro APC Raw July 2021 - December 2021",
+      "target_line_budget_fraction": 0.05,
+      "calibration_lines": 8,
+      "evaluation_lines": 88,
+      "calibration_transitions": 293425,
+      "evaluation_transitions": 5478047,
+      "weighted_source_only_vs_passive": 3.346641784731461,
+      "weighted_source_plus_target_vs_passive": 0.9300082092076057,
+      "target_only_vs_passive": 0.8981561634370595,
+      "residual_gate_vs_passive": 0.9700719171233017,
+      "bias_adapter_vs_passive": 3.175362695069363
+    },
+    {
+      "dataset": "CapMetro APC Raw July 2021 - December 2021",
+      "target_line_budget_fraction": 0.1,
+      "calibration_lines": 12,
+      "evaluation_lines": 84,
+      "calibration_transitions": 650668,
+      "evaluation_transitions": 5120804,
+      "weighted_source_only_vs_passive": 3.343715589621866,
+      "weighted_source_plus_target_vs_passive": 0.9207124453984219,
+      "target_only_vs_passive": 0.9087020097455331,
+      "residual_gate_vs_passive": 0.9698960535521067,
+      "bias_adapter_vs_passive": 3.1663996431987735
+    },
+    {
+      "dataset": "CapMetro APC Raw July 2021 - December 2021",
+      "target_line_budget_fraction": 0.25,
+      "calibration_lines": 24,
+      "evaluation_lines": 72,
+      "calibration_transitions": 1537062,
+      "evaluation_transitions": 4234410,
+      "weighted_source_only_vs_passive": 3.338144696700371,
+      "weighted_source_plus_target_vs_passive": 0.9109713433004502,
+      "target_only_vs_passive": 0.8932913073949691,
+      "residual_gate_vs_passive": 0.9699164540444456,
+      "bias_adapter_vs_passive": 3.1683716434858598
+    },
+    {
+      "dataset": "CapMetro APC Raw August 2016",
+      "target_line_budget_fraction": 0.0,
+      "calibration_lines": 0,
+      "evaluation_lines": 91,
+      "calibration_transitions": 0,
+      "evaluation_transitions": 5796060,
+      "weighted_source_only_vs_passive": 3.3451842023185403,
+      "weighted_source_plus_target_vs_passive": 3.3451842023185403,
+      "target_only_vs_passive": null,
+      "residual_gate_vs_passive": 3.3451842023185403,
+      "bias_adapter_vs_passive": 3.3451842023185403
+    },
+    {
+      "dataset": "CapMetro APC Raw August 2016",
+      "target_line_budget_fraction": 0.01,
+      "calibration_lines": 1,
+      "evaluation_lines": 90,
+      "calibration_transitions": 5088,
+      "evaluation_transitions": 5790972,
+      "weighted_source_only_vs_passive": 3.345159487037076,
+      "weighted_source_plus_target_vs_passive": 0.9515337178795545,
+      "target_only_vs_passive": 0.9764581582531652,
+      "residual_gate_vs_passive": 0.9566781624098837,
+      "bias_adapter_vs_passive": 3.1621151096473583
+    },
+    {
+      "dataset": "CapMetro APC Raw August 2016",
+      "target_line_budget_fraction": 0.05,
+      "calibration_lines": 8,
+      "evaluation_lines": 83,
+      "calibration_transitions": 512496,
+      "evaluation_transitions": 5283564,
+      "weighted_source_only_vs_passive": 3.3555832013880873,
+      "weighted_source_plus_target_vs_passive": 0.9028039524055954,
+      "target_only_vs_passive": 0.8749373950544398,
+      "residual_gate_vs_passive": 0.9550571916536528,
+      "bias_adapter_vs_passive": 3.1670736701176914
+    },
+    {
+      "dataset": "CapMetro APC Raw August 2016",
+      "target_line_budget_fraction": 0.1,
+      "calibration_lines": 14,
+      "evaluation_lines": 77,
+      "calibration_transitions": 922153,
+      "evaluation_transitions": 4873907,
+      "weighted_source_only_vs_passive": 3.347166620189852,
+      "weighted_source_plus_target_vs_passive": 0.8963171625036351,
+      "target_only_vs_passive": 0.878365038588355,
+      "residual_gate_vs_passive": 0.9549424932150536,
+      "bias_adapter_vs_passive": 3.191758281647576
+    },
+    {
+      "dataset": "CapMetro APC Raw August 2016",
+      "target_line_budget_fraction": 0.25,
+      "calibration_lines": 26,
+      "evaluation_lines": 65,
+      "calibration_transitions": 1620309,
+      "evaluation_transitions": 4175751,
+      "weighted_source_only_vs_passive": 3.327695769398482,
+      "weighted_source_plus_target_vs_passive": 0.890262328269623,
+      "target_only_vs_passive": 0.8789525420413385,
+      "residual_gate_vs_passive": 0.9555902429961386,
+      "bias_adapter_vs_passive": 3.1827707525373956
     }
   ],
   "summary": {
@@ -52,13 +225,26 @@
     "all_weighted_cfcmt_beats_h2oplus": true,
     "all_weighted_cfcmt_beats_passive": false,
     "all_weighted_cfcmt_beats_uncalibrated": false,
-    "mean_h2oplus_vs_passive_ratio": 10.263958139690747,
-    "mean_cfcmt_vs_passive_ratio": 5.364351307702389,
-    "mean_weighted_cfcmt_vs_passive_ratio": 3.3485917050841523,
-    "mean_h2oplus_vs_uncalibrated_ratio": 10.263958139690747,
-    "mean_cfcmt_vs_uncalibrated_ratio": 5.364351307702389,
-    "mean_weighted_cfcmt_vs_uncalibrated_ratio": 3.3485917050841523,
-    "mean_cfcmt_vs_h2oplus_ratio": 0.52269372107401,
-    "mean_weighted_cfcmt_vs_h2oplus_ratio": 0.326283468384053
+    "mean_h2oplus_vs_passive_ratio": 10.263958139690743,
+    "mean_cfcmt_vs_passive_ratio": 5.364351307702391,
+    "mean_weighted_cfcmt_vs_passive_ratio": 3.3485917050841514,
+    "mean_h2oplus_vs_uncalibrated_ratio": 10.263958139690743,
+    "mean_cfcmt_vs_uncalibrated_ratio": 5.364351307702391,
+    "mean_weighted_cfcmt_vs_uncalibrated_ratio": 3.3485917050841514,
+    "mean_cfcmt_vs_h2oplus_ratio": 0.5226937210740101,
+    "mean_weighted_cfcmt_vs_h2oplus_ratio": 0.326283468384053,
+    "few_shot": {
+      "rows": 10,
+      "budgets": [
+        0.0,
+        0.01,
+        0.05,
+        0.1,
+        0.25
+      ],
+      "min_residual_gate_vs_passive": 0.9549424932150536,
+      "min_target_only_vs_passive": 0.8749373950544398,
+      "all_positive_budget_gate_beats_passive": true
+    }
   }
 }

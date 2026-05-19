@@ -50,6 +50,9 @@ from cf_h2o.eval.paper_experiment_suite import (
 )
 
 
+DEFAULT_FEW_SHOT_BUDGETS = [0.0, 0.01, 0.05, 0.10, 0.25]
+
+
 APC_DATASETS: dict[str, dict[str, str]] = {
     "austin_apc_2021_h2": {
         "id": "im6q-3pc9",
@@ -165,7 +168,13 @@ def _download_socrata_csv(
     offsets = list(range(rows_written, target, int(page_size)))
     if workers <= 1 or len(offsets) <= 1:
         for offset in offsets:
-            chunk = _download_socrata_chunk(base, select, where, offset, min(int(page_size), target - offset))
+            _completed_offset, chunk = _download_socrata_chunk(
+                base,
+                select,
+                where,
+                offset,
+                min(int(page_size), target - offset),
+            )
             if chunk.empty:
                 break
             chunk.to_csv(tmp, mode="a", index=False, header=header)
@@ -427,15 +436,23 @@ def _line_apc_stats_worker(payload: tuple[str, pd.DataFrame]) -> ResidualStats:
     return one
 
 
-def build_real_apc_stats(csv_path: Path, *, max_rows: int = 0, workers: int = 1) -> tuple[ResidualStats, dict[str, Any]]:
+def build_real_apc_stats(
+    csv_path: Path,
+    *,
+    max_rows: int = 0,
+    workers: int = 1,
+) -> tuple[ResidualStats, list[ResidualStats], dict[str, Any]]:
     t0 = time.time()
     df = _prepare_apc_rows(csv_path, max_rows)
     line_keys = sorted(df["line_key"].unique())
     aggregate = ResidualStats.zeros("austin_capmetro_real_apc", "Austin / CapMetro real APC")
+    line_stats: list[ResidualStats] = []
     groups = ((str(line_key), group.copy()) for line_key, group in df.groupby("line_key", sort=False))
     if workers <= 1:
         for item in groups:
-            aggregate.merge(_line_apc_stats_worker(item))
+            one = _line_apc_stats_worker(item)
+            aggregate.merge(one)
+            line_stats.append(one)
     else:
         group_iter = iter(groups)
         pending: set[futures.Future[ResidualStats]] = set()
@@ -449,7 +466,9 @@ def build_real_apc_stats(csv_path: Path, *, max_rows: int = 0, workers: int = 1)
                     submitted += 1
                 done, pending = futures.wait(pending, return_when=futures.FIRST_COMPLETED)
                 for fut in done:
-                    aggregate.merge(fut.result())
+                    one = fut.result()
+                    aggregate.merge(one)
+                    line_stats.append(one)
                     completed += 1
                     if completed % 25 == 0 or completed == len(line_keys):
                         print(f"[apc] processed {completed}/{len(line_keys)} line groups", flush=True)
@@ -467,7 +486,8 @@ def build_real_apc_stats(csv_path: Path, *, max_rows: int = 0, workers: int = 1)
         "elapsed_sec": time.time() - t0,
         "notes": "Observed APC stop-event validation; action fixed to 0 because no counterfactual holding action is observed. The passive no-correction baseline is a state-informed one-step transition using APC-derived current state, not a schedule-only free-running simulator.",
     }
-    return aggregate, summary
+    line_stats.sort(key=lambda item: item.line_keys[0] if item.line_keys else item.key)
+    return aggregate, line_stats, summary
 
 
 def _static_city_stats_worker(payload: tuple[str, dict[str, Any], str, dict[str, Any]]) -> tuple[str, ResidualStats, dict[str, Any]]:
@@ -505,6 +525,104 @@ def _fit_static_sources(
                 sanity[key] = summary
                 print(f"[static] {key}: lines={aggregate.lines_seen} transitions={aggregate.n}", flush=True)
     return city_stats, sanity
+
+
+def _split_target_lines(
+    lines: list[ResidualStats],
+    *,
+    fraction: float,
+    seed: int,
+) -> tuple[list[ResidualStats], list[ResidualStats], bool]:
+    ordered = sorted(lines, key=lambda item: item.line_keys[0] if item.line_keys else item.key)
+    if not ordered:
+        return [], [], False
+    if fraction <= 0.0:
+        return [], ordered, False
+    if fraction >= 1.0:
+        return ordered, ordered, True
+    hashes = np.array(
+        [
+            _stable_unit(f"austin-real-apc-calibration:{seed}:{item.line_keys[0] if item.line_keys else item.key}")
+            for item in ordered
+        ],
+        dtype=np.float64,
+    )
+    mask = hashes < float(fraction)
+    if not np.any(mask):
+        mask[int(np.argmin(hashes))] = True
+    if np.all(mask):
+        mask[int(np.argmax(hashes))] = False
+    calibration = [item for item, selected in zip(ordered, mask) if selected]
+    evaluation = [item for item, selected in zip(ordered, mask) if not selected]
+    return calibration, evaluation, False
+
+
+def _fit_safe_h2o(stats: ResidualStats, ridge: float) -> np.ndarray | None:
+    return _fit_h2o(stats, ridge) if stats.n > 0 else None
+
+
+def _fit_safe_cfcmt(stats: ResidualStats, ridge: float) -> dict[str, np.ndarray] | None:
+    return _fit_cfcmt(stats, ridge) if stats.n > 0 else None
+
+
+def _linear_gate(stats_xtx: np.ndarray, stats_xty: np.ndarray, beta: np.ndarray) -> np.ndarray:
+    b = np.asarray(beta, dtype=np.float64)
+    if b.ndim == 1:
+        b = b[:, None]
+    pred_sq = np.einsum("ik,ij,jk->k", b, stats_xtx, b)
+    pred_y = np.einsum("ij,ij->j", b, stats_xty)
+    alpha = np.divide(pred_y, pred_sq, out=np.zeros_like(pred_y, dtype=np.float64), where=pred_sq > 1e-12)
+    return np.clip(alpha, 0.0, 1.0)
+
+
+def _linear_bias(stats_xtx: np.ndarray, stats_xty: np.ndarray, beta: np.ndarray, n: int) -> np.ndarray:
+    b = np.array(beta, dtype=np.float64, copy=True)
+    if b.ndim == 1:
+        b = b[:, None]
+    if n <= 0:
+        return b
+    feature_sum = stats_xtx[0, :]
+    pred_sum = feature_sum @ b
+    residual_sum = stats_xty[0, :] - pred_sum
+    b[0, :] += residual_sum / float(n)
+    return b
+
+
+def _gate_h2o_beta(calibration: ResidualStats, beta: np.ndarray) -> tuple[np.ndarray, dict[str, float]]:
+    alpha = _linear_gate(calibration.h2o.xtx, calibration.h2o.xty, beta)
+    gated = np.asarray(beta, dtype=np.float64) * alpha[None, :]
+    return gated, {name: float(value) for name, value in zip(OUTPUT_NAMES, alpha)}
+
+
+def _bias_h2o_beta(calibration: ResidualStats, beta: np.ndarray) -> np.ndarray:
+    return _linear_bias(calibration.h2o.xtx, calibration.h2o.xty, beta, calibration.n)
+
+
+def _gate_cfcmt_beta(
+    calibration: ResidualStats,
+    beta: dict[str, np.ndarray],
+) -> tuple[dict[str, np.ndarray], dict[str, float]]:
+    gated: dict[str, np.ndarray] = {}
+    alpha_by_output: dict[str, float] = {}
+    for output_name in OUTPUT_NAMES:
+        stats = calibration.cfcmt[output_name]
+        coef = np.asarray(beta[output_name], dtype=np.float64).reshape(-1, 1)
+        alpha = float(_linear_gate(stats.xtx, stats.xty, coef)[0])
+        gated[output_name] = beta[output_name] * alpha
+        alpha_by_output[output_name] = alpha
+    return gated, alpha_by_output
+
+
+def _bias_cfcmt_beta(calibration: ResidualStats, beta: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
+    out: dict[str, np.ndarray] = {}
+    for output_name in OUTPUT_NAMES:
+        stats = calibration.cfcmt[output_name]
+        out[output_name] = _linear_bias(stats.xtx, stats.xty, beta[output_name], calibration.n).reshape(-1)
+    return out
+
+
+def _metrics_from_optional_sse(sse: np.ndarray | None, n: int) -> dict[str, Any] | None:
+    return _method_metrics_from_sse(sse, n) if sse is not None else None
 
 
 def _evaluate_external(
@@ -567,6 +685,228 @@ def _evaluate_external(
     }
 
 
+def _evaluate_external_few_shot(
+    external_lines: list[ResidualStats],
+    city_stats: dict[str, ResidualStats],
+    sanity: dict[str, Any],
+    *,
+    ridge: float,
+    budgets: list[float],
+    seed: int,
+    temperature: float,
+    floor: float,
+) -> dict[str, Any]:
+    target = "austin_capmetro_all"
+    sources = [key for key in city_stats if key != target]
+    weights = _source_similarity_weights(sanity, target, sources, temperature=temperature, floor=floor)
+    source_stats = _merge_stats("source_unweighted", "source", [city_stats[key] for key in sources])
+    weighted_source_stats = _merge_stats_weighted("source_similarity_weighted", "source", city_stats, weights)
+    source_h2o_beta = _fit_h2o(source_stats, ridge)
+    source_weighted_h2o_beta = _fit_h2o(weighted_source_stats, ridge)
+    source_cfcmt_beta = _fit_cfcmt(source_stats, ridge)
+    source_weighted_cfcmt_beta = _fit_cfcmt(weighted_source_stats, ridge)
+
+    rows = []
+    for budget in budgets:
+        calibration_lines, evaluation_lines, in_sample_oracle = _split_target_lines(
+            external_lines,
+            fraction=float(budget),
+            seed=seed,
+        )
+        calibration_stats = _merge_stats(
+            f"austin_real_apc::calibration_{budget:g}",
+            "Austin / CapMetro real APC",
+            calibration_lines,
+        )
+        evaluation_stats = (
+            _merge_stats("austin_real_apc::evaluation_in_sample", "Austin / CapMetro real APC", external_lines)
+            if in_sample_oracle
+            else _merge_stats(f"austin_real_apc::evaluation_{budget:g}", "Austin / CapMetro real APC", evaluation_lines)
+        )
+        if evaluation_stats.n <= 0:
+            continue
+
+        source_plus_target = _merge_stats(
+            f"austin_real_apc::source_plus_target_{budget:g}",
+            "source + Austin / CapMetro real APC",
+            [source_stats, calibration_stats],
+        )
+        weighted_source_plus_target = _merge_stats(
+            f"austin_real_apc::weighted_source_plus_target_{budget:g}",
+            "weighted source + Austin / CapMetro real APC",
+            [weighted_source_stats, calibration_stats],
+        )
+        h2o_source_plus_target = _fit_safe_h2o(source_plus_target, ridge)
+        cfcmt_source_plus_target = _fit_safe_cfcmt(source_plus_target, ridge)
+        h2o_weighted_source_plus_target = _fit_safe_h2o(weighted_source_plus_target, ridge)
+        cfcmt_weighted_source_plus_target = _fit_safe_cfcmt(weighted_source_plus_target, ridge)
+        h2o_target_only = _fit_safe_h2o(calibration_stats, ridge)
+        cfcmt_target_only = _fit_safe_cfcmt(calibration_stats, ridge)
+
+        if calibration_stats.n > 0:
+            gated_h2o_beta, h2o_gate = _gate_h2o_beta(calibration_stats, source_weighted_h2o_beta)
+            gated_cfcmt_beta, cfcmt_gate = _gate_cfcmt_beta(calibration_stats, source_weighted_cfcmt_beta)
+            bias_h2o_beta = _bias_h2o_beta(calibration_stats, source_weighted_h2o_beta)
+            bias_cfcmt_beta = _bias_cfcmt_beta(calibration_stats, source_weighted_cfcmt_beta)
+        else:
+            gated_h2o_beta, h2o_gate = source_weighted_h2o_beta, {name: 1.0 for name in OUTPUT_NAMES}
+            gated_cfcmt_beta, cfcmt_gate = source_weighted_cfcmt_beta, {name: 1.0 for name in OUTPUT_NAMES}
+            bias_h2o_beta = source_weighted_h2o_beta
+            bias_cfcmt_beta = source_weighted_cfcmt_beta
+
+        passive_sse = evaluation_stats.h2o.sse(None)
+        h2o_source_sse = evaluation_stats.h2o.sse(source_h2o_beta)
+        h2o_weighted_source_sse = evaluation_stats.h2o.sse(source_weighted_h2o_beta)
+        cfcmt_source_sse = _family_sse(evaluation_stats.cfcmt, source_cfcmt_beta)
+        cfcmt_weighted_source_sse = _family_sse(evaluation_stats.cfcmt, source_weighted_cfcmt_beta)
+        h2o_source_plus_target_sse = (
+            evaluation_stats.h2o.sse(h2o_source_plus_target) if h2o_source_plus_target is not None else None
+        )
+        cfcmt_source_plus_target_sse = (
+            _family_sse(evaluation_stats.cfcmt, cfcmt_source_plus_target)
+            if cfcmt_source_plus_target is not None
+            else None
+        )
+        h2o_weighted_source_plus_target_sse = (
+            evaluation_stats.h2o.sse(h2o_weighted_source_plus_target)
+            if h2o_weighted_source_plus_target is not None
+            else None
+        )
+        cfcmt_weighted_source_plus_target_sse = (
+            _family_sse(evaluation_stats.cfcmt, cfcmt_weighted_source_plus_target)
+            if cfcmt_weighted_source_plus_target is not None
+            else None
+        )
+        h2o_target_only_sse = evaluation_stats.h2o.sse(h2o_target_only) if h2o_target_only is not None else None
+        cfcmt_target_only_sse = (
+            _family_sse(evaluation_stats.cfcmt, cfcmt_target_only) if cfcmt_target_only is not None else None
+        )
+        h2o_gate_sse = evaluation_stats.h2o.sse(gated_h2o_beta)
+        cfcmt_gate_sse = _family_sse(evaluation_stats.cfcmt, gated_cfcmt_beta)
+        h2o_bias_sse = evaluation_stats.h2o.sse(bias_h2o_beta)
+        cfcmt_bias_sse = _family_sse(evaluation_stats.cfcmt, bias_cfcmt_beta)
+
+        metrics = {
+            "passive_no_correction": _method_metrics_from_sse(passive_sse, evaluation_stats.n),
+            "h2oplus_source_only": _method_metrics_from_sse(h2o_source_sse, evaluation_stats.n),
+            "h2oplus_weighted_source_only": _method_metrics_from_sse(h2o_weighted_source_sse, evaluation_stats.n),
+            "cfcmt_source_only": _method_metrics_from_sse(cfcmt_source_sse, evaluation_stats.n),
+            "cfcmt_weighted_source_only": _method_metrics_from_sse(cfcmt_weighted_source_sse, evaluation_stats.n),
+            "h2oplus_source_plus_target_budget": _metrics_from_optional_sse(
+                h2o_source_plus_target_sse,
+                evaluation_stats.n,
+            ),
+            "cfcmt_source_plus_target_budget": _metrics_from_optional_sse(
+                cfcmt_source_plus_target_sse,
+                evaluation_stats.n,
+            ),
+            "h2oplus_weighted_source_plus_target_budget": _metrics_from_optional_sse(
+                h2o_weighted_source_plus_target_sse,
+                evaluation_stats.n,
+            ),
+            "cfcmt_weighted_source_plus_target_budget": _metrics_from_optional_sse(
+                cfcmt_weighted_source_plus_target_sse,
+                evaluation_stats.n,
+            ),
+            "h2oplus_target_only_budget": _metrics_from_optional_sse(h2o_target_only_sse, evaluation_stats.n),
+            "cfcmt_target_only_budget": _metrics_from_optional_sse(cfcmt_target_only_sse, evaluation_stats.n),
+            "h2oplus_weighted_source_residual_gate": _method_metrics_from_sse(h2o_gate_sse, evaluation_stats.n),
+            "cfcmt_weighted_source_residual_gate": _method_metrics_from_sse(cfcmt_gate_sse, evaluation_stats.n),
+            "h2oplus_weighted_source_bias_adapter": _method_metrics_from_sse(h2o_bias_sse, evaluation_stats.n),
+            "cfcmt_weighted_source_bias_adapter": _method_metrics_from_sse(cfcmt_bias_sse, evaluation_stats.n),
+        }
+        passive = metrics["passive_no_correction"]["total_mse"]
+        h2o_source = metrics["h2oplus_source_only"]["total_mse"]
+        weighted_source = metrics["cfcmt_weighted_source_only"]["total_mse"]
+        weighted_gate = metrics["cfcmt_weighted_source_residual_gate"]["total_mse"]
+        weighted_bias = metrics["cfcmt_weighted_source_bias_adapter"]["total_mse"]
+        weighted_target = metrics["cfcmt_weighted_source_plus_target_budget"]["total_mse"]
+        row = {
+            "target_line_budget_fraction": float(budget),
+            "calibration_lines": len(calibration_lines),
+            "evaluation_lines": len(external_lines) if in_sample_oracle else len(evaluation_lines),
+            "calibration_transitions": calibration_stats.n,
+            "evaluation_transitions": evaluation_stats.n,
+            "in_sample_oracle": bool(in_sample_oracle),
+            "metrics": metrics,
+            "adaptation_parameters": {
+                "h2oplus_weighted_source_residual_gate": h2o_gate,
+                "cfcmt_weighted_source_residual_gate": cfcmt_gate,
+            },
+            "comparisons": {
+                "cfcmt_weighted_source_only_vs_h2oplus_source_only_ratio": (
+                    weighted_source / h2o_source if h2o_source else None
+                ),
+                "cfcmt_weighted_source_only_vs_passive_ratio": weighted_source / passive if passive else None,
+                "cfcmt_weighted_source_plus_target_vs_passive_ratio": weighted_target / passive if passive else None,
+                "cfcmt_weighted_source_residual_gate_vs_passive_ratio": weighted_gate / passive if passive else None,
+                "cfcmt_weighted_source_bias_adapter_vs_passive_ratio": weighted_bias / passive if passive else None,
+                "cfcmt_weighted_source_plus_target_beats_passive": bool(weighted_target < passive),
+                "cfcmt_weighted_source_residual_gate_beats_passive": bool(weighted_gate < passive),
+                "cfcmt_weighted_source_bias_adapter_beats_passive": bool(weighted_bias < passive),
+            },
+        }
+        rows.append(row)
+
+    best_key = None
+    if rows:
+        candidate_keys = [
+            "cfcmt_weighted_source_plus_target_budget",
+            "cfcmt_weighted_source_residual_gate",
+            "cfcmt_weighted_source_bias_adapter",
+            "cfcmt_target_only_budget",
+        ]
+        best_by_budget = []
+        for row in rows:
+            available = [
+                (key, row["metrics"][key]["total_mse"])
+                for key in candidate_keys
+                if row["metrics"].get(key) is not None
+            ]
+            method, value = min(available, key=lambda item: item[1])
+            best_by_budget.append({**row, "best_method": method, "best_total_mse": value})
+        best_overall = min(best_by_budget, key=lambda item: item["best_total_mse"])
+        best_key = best_overall["best_method"]
+        passive_values = [row["metrics"]["passive_no_correction"]["total_mse"] for row in rows]
+        summary = {
+            "budgets": [row["target_line_budget_fraction"] for row in rows],
+            "best_budget": best_overall["target_line_budget_fraction"],
+            "best_method": best_key,
+            "best_vs_passive_ratio": (
+                best_overall["best_total_mse"] / best_overall["metrics"]["passive_no_correction"]["total_mse"]
+                if best_overall["metrics"]["passive_no_correction"]["total_mse"]
+                else None
+            ),
+            "budgets_where_gate_beats_passive": [
+                row["target_line_budget_fraction"]
+                for row in rows
+                if row["comparisons"]["cfcmt_weighted_source_residual_gate_beats_passive"]
+            ],
+            "budgets_where_bias_beats_passive": [
+                row["target_line_budget_fraction"]
+                for row in rows
+                if row["comparisons"]["cfcmt_weighted_source_bias_adapter_beats_passive"]
+            ],
+            "mean_passive_total_mse": float(np.mean(passive_values)),
+        }
+    else:
+        summary = {"budgets": [], "best_method": best_key}
+
+    return {
+        "ok": True,
+        "experiment": "austin_real_apc_target_budget_sweep",
+        "definition": "Target APC line groups are split into calibration and evaluation sets. Source-only models are trained only on non-Austin static-derived source cities; few-shot variants add or gate residual correction using calibration APC residual labels and evaluate on held-out Austin APC line groups.",
+        "source_envs": sources,
+        "source_weights": weights,
+        "rows": rows,
+        "summary": summary,
+    }
+
+
+def _parse_float_list(text: str) -> list[float]:
+    return [float(item) for item in str(text).replace(",", " ").split() if item.strip()]
+
+
 def run(args: argparse.Namespace) -> dict[str, Any]:
     root = _repo_root()
     config = _read_json(_resolve_path(root, args.config))
@@ -584,13 +924,23 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         force=args.force_download,
         workers=args.workers,
     )
-    external_stats, external_summary = build_real_apc_stats(csv_path, max_rows=0, workers=args.workers)
+    external_stats, external_line_stats, external_summary = build_real_apc_stats(csv_path, max_rows=0, workers=args.workers)
     city_stats, sanity = _fit_static_sources(config, root, args)
     validation = _evaluate_external(
         external_stats,
         city_stats,
         sanity,
         ridge=args.ridge,
+        temperature=args.source_weight_temperature,
+        floor=args.source_weight_floor,
+    )
+    few_shot = _evaluate_external_few_shot(
+        external_line_stats,
+        city_stats,
+        sanity,
+        ridge=args.ridge,
+        budgets=args.few_shot_budgets,
+        seed=args.seed,
         temperature=args.source_weight_temperature,
         floor=args.source_weight_floor,
     )
@@ -611,11 +961,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         },
         "real_apc_summary": external_summary,
         "validation": validation,
+        "few_shot_validation": few_shot,
     }
     out_path = _resolve_path(root, args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(validation["comparisons"], indent=2), flush=True)
+    print(json.dumps(few_shot["summary"], indent=2), flush=True)
     print(f"[out] {out_path}", flush=True)
     return result
 
@@ -634,6 +986,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--actions", type=float, nargs="+", default=[0.0, 30.0])
     parser.add_argument("--progress-every", type=int, default=250)
     parser.add_argument("--ridge", type=float, default=1.0)
+    parser.add_argument("--seed", type=int, default=2026)
+    parser.add_argument("--few-shot-budgets", type=_parse_float_list, default=DEFAULT_FEW_SHOT_BUDGETS)
     parser.add_argument("--source-weight-temperature", type=float, default=1.0)
     parser.add_argument("--source-weight-floor", type=float, default=0.05)
     return parser.parse_args(argv)

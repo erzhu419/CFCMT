@@ -19,11 +19,12 @@ The strongest claim should therefore remain dynamics transfer plus policy-proxy 
 \paragraph{Static-derived validation is not operational validation.}
 The central limitation is target construction.
 The experiments use full-route open static data and deterministic transition rules to create paired simulator/target transitions.
-This is valuable for reproducibility and reviewer scrutiny, but it is not the same as evaluating on AVL/APC trajectories or a calibrated live SUMO rollout.
+This is valuable for reproducibility and reviewer scrutiny, but it is not the same as evaluating counterfactual holding actions on AVL/APC trajectories or a calibrated live SUMO rollout.
+The Austin raw APC/AVL slice partially addresses the trajectory-ground-truth concern for passive action-$0$ dynamics, but it still cannot identify how unobserved holding actions would have changed passenger and headway outcomes.
 The paper should therefore avoid claims such as ``CFCMT is better on real bus systems''.
-A precise claim is: under open static-data-derived cross-city validation with little or no target-city calibration, mechanism-factored residual transfer generalizes better than dense residual correction.
+A precise claim is: under open static-data-derived cross-city validation with little or no target-city calibration, and under passive real APC validation with few-shot adaptation, mechanism-factored residual transfer is more robust than dense residual correction.
 
 \paragraph{How to strengthen the next version.}
-The most valuable addition would be one city with vehicle-level AVL/APC trajectories, even if only for a subset of routes.
+The most valuable addition would be counterfactual or interventional validation on one city with vehicle-level AVL/APC trajectories, even if only for a subset of routes.
 The second priority is to expand executable line environments so sampled rollout can move from auxiliary sanity check to a stronger policy benchmark.
 The third priority is to add more cities, because city-level generalization is ultimately limited by the number of held-out cities.
