@@ -20,6 +20,7 @@ statistics instead of re-reading every Excel file for every table.
 from __future__ import annotations
 
 import argparse
+import concurrent.futures as futures
 import itertools
 import json
 import math
@@ -30,6 +31,7 @@ import sys
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Callable
 
 import numpy as np
@@ -511,6 +513,48 @@ def build_city_stats(key: str, spec: dict[str, Any], root: Path, args: argparse.
         "env_path": str(env_path),
         **sanity.summary(),
     }
+
+
+def _build_city_stats_worker(
+    payload: tuple[str, dict[str, Any], str, dict[str, Any]],
+) -> tuple[str, ResidualStats, list[ResidualStats], dict[str, Any]]:
+    key, spec, root_text, arg_values = payload
+    worker_args = SimpleNamespace(**arg_values)
+    aggregate, lines, city_sanity = build_city_stats(key, spec, Path(root_text), worker_args)
+    return key, aggregate, lines, city_sanity
+
+
+def build_all_city_stats(
+    config: dict[str, Any],
+    root: Path,
+    args: argparse.Namespace,
+) -> tuple[dict[str, ResidualStats], dict[str, list[ResidualStats]], dict[str, Any]]:
+    city_stats: dict[str, ResidualStats] = {}
+    city_line_stats: dict[str, list[ResidualStats]] = {}
+    sanity: dict[str, Any] = {}
+    items = list(config["generated_envs"].items())
+    arg_values = {
+        "max_lines_per_city": args.max_lines_per_city,
+        "actions": args.actions,
+        "progress_every": args.progress_every,
+    }
+    if args.workers <= 1 or len(items) <= 1:
+        for key, spec in items:
+            print(f"[build] {key}: streaming route-level stats", flush=True)
+            aggregate, lines, city_sanity = build_city_stats(key, spec, root, args)
+            city_stats[key] = aggregate
+            city_line_stats[key] = lines
+            sanity[key] = city_sanity
+            print(f"[build] {key}: lines={aggregate.lines_seen}, rows={aggregate.n}", flush=True)
+    else:
+        payloads = [(key, spec, str(root), arg_values) for key, spec in items]
+        with futures.ProcessPoolExecutor(max_workers=min(int(args.workers), len(payloads))) as executor:
+            for key, aggregate, lines, city_sanity in executor.map(_build_city_stats_worker, payloads):
+                city_stats[key] = aggregate
+                city_line_stats[key] = lines
+                sanity[key] = city_sanity
+                print(f"[build] {key}: lines={aggregate.lines_seen}, rows={aggregate.n}", flush=True)
+    return city_stats, city_line_stats, sanity
 
 
 def _merge_stats(key: str, city: str, stats_list: list[ResidualStats]) -> ResidualStats:
@@ -2060,17 +2104,8 @@ def run_efficiency(city_stats: dict[str, ResidualStats], config: dict[str, Any],
 def run(args: argparse.Namespace) -> dict[str, Any]:
     root = _repo_root()
     config = _read_json(_resolve_path(root, args.config))
-    city_stats: dict[str, ResidualStats] = {}
-    city_line_stats: dict[str, list[ResidualStats]] = {}
-    sanity: dict[str, Any] = {}
     t0 = time.time()
-    for key, spec in config["generated_envs"].items():
-        print(f"[build] {key}: streaming route-level stats", flush=True)
-        aggregate, lines, city_sanity = build_city_stats(key, spec, root, args)
-        city_stats[key] = aggregate
-        city_line_stats[key] = lines
-        sanity[key] = city_sanity
-        print(f"[build] {key}: lines={aggregate.lines_seen}, rows={aggregate.n}", flush=True)
+    city_stats, city_line_stats, sanity = build_all_city_stats(config, root, args)
 
     experiments = {
         "single_city": run_single_city(city_line_stats, config, args.ridge, args.single_city_test_fraction, args.seed),
@@ -2198,6 +2233,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--policy-actions", type=_parse_float_list, default=list(POLICY_ACTIONS))
     parser.add_argument("--max-lines-per-city", type=int, default=0, help="0 means all lines; >0 for smoke")
     parser.add_argument("--progress-every", type=int, default=250)
+    parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--single-city-test-fraction", type=float, default=0.2)
     parser.add_argument("--calibration-budgets", type=_parse_float_list, default=[0.0, 0.01, 0.05, 0.10, 0.25, 1.0])
     parser.add_argument(

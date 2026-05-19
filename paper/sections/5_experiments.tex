@@ -40,6 +40,13 @@ Fourth, mechanism ablations compare the proposed parent sets against wrong mecha
 Fifth, source-weight sensitivity varies $T \in \{0.5,1.0,2.0\}$ and $\lambda \in \{0,0.05,0.1\}$, while source-subset and pairwise-source checks remove major source families.
 Sixth, generator robustness perturbs output groups or adds measurement-noise terms to the evaluation sufficient statistics.
 
+\paragraph{External real APC/AVL validation.}
+To partially address the static-derived target limitation, we add an external Austin/CapMetro validation slice from public raw APC stop-event data.
+The July--December 2021 and August 2016 files contain observed stop events with boardings, alightings, vehicle load, dwell time, vehicle position, route, trip, stop, and vehicle identifiers.
+We filter records with valid stop, trip, GPS, and import-quality flags, reconstruct stop-level headways by route-direction-stop event times, and evaluate passive action-$0$ one-step dynamics against the observed next stop event.
+The no-correction baseline in this experiment is a state-informed passive transition using the APC-derived current state, not a schedule-only free-running simulator.
+This is real historical APC/AVL validation, but it is still offline passive validation rather than a field control deployment because counterfactual hold actions are not observed.
+
 \paragraph{Auxiliary executable rollout.}
 Sampled BusSimEnv rollout is reported only as an auxiliary sanity check because only Austin and Halifax have runnable generated line environments.
 For this rollout, each policy is evaluated on the same line-level random seed, including Python signal-delay randomness, and live observations are mapped back to the static-transition feature schema before model scoring.

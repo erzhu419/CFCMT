@@ -510,6 +510,32 @@ def build_target_construction_audit_table(suite: dict[str, Any]) -> pd.DataFrame
     return pd.DataFrame(rows)
 
 
+def build_real_apc_validation_table(summary: dict[str, Any] | None) -> pd.DataFrame:
+    rows = []
+    if not summary:
+        return pd.DataFrame(rows)
+    for row in summary.get("rows", []):
+        rows.append(
+            {
+                "dataset": row["dataset"],
+                "transitions": row["transitions"],
+                "routes": row["routes"],
+                "stops": row["stops"],
+                "trips": row["trips"],
+                "date_min": row["date_min"][:10] if row.get("date_min") else None,
+                "date_max": row["date_max"][:10] if row.get("date_max") else None,
+                "h2oplus_vs_passive": row.get("h2oplus_vs_passive_ratio", row.get("h2oplus_vs_uncalibrated_ratio")),
+                "weighted_vs_passive": row.get(
+                    "weighted_cfcmt_vs_passive_ratio",
+                    row.get("weighted_cfcmt_vs_uncalibrated_ratio"),
+                ),
+                "cfcmt_ratio": row["cfcmt_vs_h2oplus_ratio"],
+                "weighted_ratio": row["weighted_cfcmt_vs_h2oplus_ratio"],
+            }
+        )
+    return pd.DataFrame(rows)
+
+
 def build_sampled_rollout_table(suite: dict[str, Any]) -> pd.DataFrame:
     rollout = suite["experiments"].get("sampled_rollout", {})
     rows = []
@@ -821,6 +847,7 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
     suite = _read_json(args.suite)
     performance = _read_json(args.performance)
     policy = _read_json(args.policy)
+    real_apc = _read_json(args.real_apc) if args.real_apc.exists() else None
     config = _read_json(Path(suite["config"]))
 
     tables_dir = args.out_dir / "tables"
@@ -846,6 +873,7 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
     pairwise_df = build_pairwise_transfer_table(suite)
     bootstrap_df = build_bootstrap_table(suite)
     target_audit_df = build_target_construction_audit_table(suite)
+    real_apc_df = build_real_apc_validation_table(real_apc)
 
     tables = {
         "dataset": _write_table(dataset_df, tables_dir, "dataset_table"),
@@ -879,6 +907,7 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
         "pairwise_transfer": _write_table(pairwise_df, tables_dir, "pairwise_transfer_table"),
         "bootstrap": _write_table(bootstrap_df, tables_dir, "bootstrap_table"),
         "target_construction_audit": _write_table(target_audit_df, tables_dir, "target_construction_audit_table"),
+        "real_apc_validation": _write_table(real_apc_df, tables_dir, "real_apc_validation_table"),
     }
 
     figures = {
@@ -933,6 +962,7 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
             "generator_robustness": suite["experiments"]["generator_robustness"]["summary"],
             "bootstrap": suite["experiments"]["bootstrap"]["summary"],
             "target_construction_audit": suite["experiments"]["target_construction_audit"]["summary"],
+            "real_apc_validation": real_apc.get("summary") if real_apc else None,
             "sampled_rollout": suite["experiments"].get("sampled_rollout", {}).get("summary_by_policy"),
         },
     }
@@ -946,6 +976,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--suite", type=Path, default=Path("cf_h2o/results/paper_experiment_suite.json"))
     parser.add_argument("--performance", type=Path, default=Path("cf_h2o/results/cross_city_performance_validation.json"))
     parser.add_argument("--policy", type=Path, default=Path("cf_h2o/results/cross_city_policy_validation.json"))
+    parser.add_argument("--real-apc", type=Path, default=Path("cf_h2o/results/austin_real_apc_validation_summary.json"))
     parser.add_argument("--out-dir", type=Path, default=Path("cf_h2o/results/paper_artifacts"))
     return parser.parse_args(argv)
 

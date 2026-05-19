@@ -122,6 +122,20 @@ Unweighted \ours has a route-bootstrap ratio confidence interval below $1$ for a
 Weighted \ours has intervals below $1$ for Austin, Halifax, and MBTA, but Singapore crosses parity with interval $[0.993,1.002]$.
 The conservative reading is that source weighting improves the mean strongly, while Singapore remains the least secure target.
 
+\subsection{External real APC/AVL validation}
+
+The public Austin raw APC validation is the strongest non-static check in the current paper.
+Across two real APC/AVL datasets, the evaluation uses 11.57 million observed stop-event transitions after quality filtering.
+Weighted \ours beats the dense \Htwo-style residual transfer baseline in both years: the total-MSE ratio is $0.330$ on July--December 2021 and $0.323$ on August 2016.
+Unweighted \ours also beats the dense baseline, with ratios $0.528$ and $0.517$.
+This supports the mechanism-factored transfer claim on real historical APC/AVL observations.
+
+The result should still be read conservatively.
+The APC-derived no-correction passive baseline has lower total MSE than both residual-transfer models on this real APC slice.
+This does not mean that a free-running uncalibrated simulator is operationally better; it means that the baseline is given the observed current APC state and that source-only residual corrections can overshoot under real operational noise.
+The overshoot is concentrated in headway/gap outputs, which dominate the unnormalized total MSE, while \ours is better than the passive baseline on several demand, dwell, and speed outputs.
+Thus the real APC result strengthens the comparison between \ours and dense residual transfer, but it also shows that a safe residual gate or small target-city calibration budget is needed before claiming improvement over a state-informed passive baseline.
+
 \subsection{Auxiliary sampled rollout}
 
 The sampled BusSimEnv rollout is not primary evidence, but it checks whether the learned one-step action preferences are grossly inconsistent with executable line environments.

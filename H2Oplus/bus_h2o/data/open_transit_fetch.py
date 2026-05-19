@@ -34,7 +34,7 @@ PRESETS: dict[str, dict[str, Any]] = {
             "filename": "capmetro_gtfs.zip",
             "source": "https://data.texas.gov/dataset/CapMetro-GTFS/r4v4-vz24",
         },
-        "notes": "CapMetro public source gives GTFS/static schedule. Stop-level ridership was not found in the public no-key feed.",
+        "notes": "CapMetro public source gives GTFS/static schedule. Public no-key raw APC stop-event data is handled by cf_h2o.eval.austin_apc_real_validation.",
     },
     "halifax_transit": {
         "label": "Halifax Transit",

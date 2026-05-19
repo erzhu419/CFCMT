@@ -1,0 +1,151 @@
+{
+  "ok": true,
+  "validation_level": "austin_real_apc_external_validation",
+  "created_at": "2026-05-19T04:47:01.091868+00:00",
+  "config": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/cross_city_open_transit.json",
+  "dataset": {
+    "id": "im6q-3pc9",
+    "label": "CapMetro APC Raw July 2021 - December 2021",
+    "source": "https://catalog.data.gov/dataset/apc-raw-july-2021-december-2021",
+    "download": {
+      "path": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/austin_capmetro/apc/austin_apc_2021_h2_valid_full.csv",
+      "rows_available": 6964976,
+      "rows_downloaded": null,
+      "skipped": true,
+      "source_url": "https://data.austintexas.gov/resource/im6q-3pc9.csv"
+    },
+    "valid_where": "bs_id != '0' AND route_id != '0' AND ext_trip_id != '0' AND veh_lat != '0' AND veh_long != '0' AND import_error = '0' AND import_trip_error = '0'"
+  },
+  "static_training": {
+    "max_lines_per_city": 0,
+    "workers": 8,
+    "source_envs": [
+      "singapore_lta_all",
+      "halifax_transit_all",
+      "mbta_all"
+    ]
+  },
+  "real_apc_summary": {
+    "csv_path": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/austin_capmetro/apc/austin_apc_2021_h2_valid_full.csv",
+    "rows_loaded_after_filters": 5771472,
+    "transitions": 5771472,
+    "line_count": 96,
+    "route_count": 68,
+    "stop_count": 2315,
+    "trip_count": 421255,
+    "date_min": "2021-07-01T00:18:02",
+    "date_max": "2021-12-30T23:48:09",
+    "elapsed_sec": 287.6085855960846,
+    "notes": "Observed APC stop-event validation; action fixed to 0 because no counterfactual holding action is observed. The passive no-correction baseline is a state-informed one-step transition using APC-derived current state, not a schedule-only free-running simulator."
+  },
+  "validation": {
+    "target_env": "austin_capmetro_real_apc",
+    "target_city": "Austin / CapMetro real APC",
+    "source_envs": [
+      "singapore_lta_all",
+      "halifax_transit_all",
+      "mbta_all"
+    ],
+    "source_weights": {
+      "singapore_lta_all": 0.298803024891188,
+      "halifax_transit_all": 0.3634597104368773,
+      "mbta_all": 0.33773726467193477
+    },
+    "target_transitions": 5771472,
+    "target_lines_seen": 96,
+    "metrics": {
+      "uncalibrated": {
+        "total_mse": 2796271.501817952,
+        "next_dynamic_mse": 3145804.943466233,
+        "reward_mse": 3.968631702267138,
+        "per_output_mse": {
+          "next_forward_headway": 5118662.260816492,
+          "next_backward_headway": 4693276.01171755,
+          "next_waiting_passengers": 6613.951268113116,
+          "next_base_stop_duration": 3725.611519283601,
+          "next_gap": 5975107.958737289,
+          "next_co_line_forward_headway": 4882264.332974776,
+          "next_co_line_backward_headway": 4486780.90017377,
+          "next_segment_mean_speed": 8.520522588120974,
+          "reward": 3.968631702267138
+        }
+      },
+      "h2oplus_dense": {
+        "total_mse": 28414137.984149452,
+        "next_dynamic_mse": 31965880.816122424,
+        "reward_mse": 195.32836568928792,
+        "per_output_mse": {
+          "next_forward_headway": 56312416.221561186,
+          "next_backward_headway": 30861349.418594383,
+          "next_waiting_passengers": 982525.7946447334,
+          "next_base_stop_duration": 7433.60055419911,
+          "next_gap": 156796768.70389068,
+          "next_co_line_forward_headway": 4895689.1006819215,
+          "next_co_line_backward_headway": 5439557.32051639,
+          "next_segment_mean_speed": 431306.3685358885,
+          "reward": 195.32836568928792
+        }
+      },
+      "h2oplus_similarity_weighted": {
+        "total_mse": 12923218.479815053,
+        "next_dynamic_mse": 14538599.634750161,
+        "reward_mse": 169.24033418835631,
+        "per_output_mse": {
+          "next_forward_headway": 26902941.70849656,
+          "next_backward_headway": 13457134.65620893,
+          "next_waiting_passengers": 1442911.7265606693,
+          "next_base_stop_duration": 4812.602814174981,
+          "next_gap": 64749318.42183614,
+          "next_co_line_forward_headway": 4690447.022988646,
+          "next_co_line_backward_headway": 4810985.253587583,
+          "next_segment_mean_speed": 250245.68550858012,
+          "reward": 169.24033418835631
+        }
+      },
+      "cfcmt_mechanism": {
+        "total_mse": 15005758.448779818,
+        "next_dynamic_mse": 16881477.70041403,
+        "reward_mse": 4.435706121932665,
+        "per_output_mse": {
+          "next_forward_headway": 24885402.869823385,
+          "next_backward_headway": 20966266.521016307,
+          "next_waiting_passengers": 237.65184220265107,
+          "next_base_stop_duration": 3514.0948323508837,
+          "next_gap": 79410771.84594998,
+          "next_co_line_forward_headway": 4672152.261412722,
+          "next_co_line_backward_headway": 5113468.767239648,
+          "next_segment_mean_speed": 7.591195670971232,
+          "reward": 4.435706121932665
+        }
+      },
+      "cfcmt_similarity_weighted": {
+        "total_mse": 9373099.859026631,
+        "next_dynamic_mse": 10544736.835515238,
+        "reward_mse": 4.0471177640380365,
+        "per_output_mse": {
+          "next_forward_headway": 15829249.452917704,
+          "next_backward_headway": 13223555.912558973,
+          "next_waiting_passengers": 212.60736392808272,
+          "next_base_stop_duration": 3510.3513311957104,
+          "next_gap": 45857284.00577866,
+          "next_co_line_forward_headway": 4650639.235385339,
+          "next_co_line_backward_headway": 4793435.235473704,
+          "next_segment_mean_speed": 7.883312411750979,
+          "reward": 4.0471177640380365
+        }
+      }
+    },
+    "comparisons": {
+      "cfcmt_vs_h2oplus_total_mse_ratio": 0.5281088751364068,
+      "cfcmt_similarity_weighted_vs_h2oplus_total_mse_ratio": 0.32987451050794936,
+      "cfcmt_beats_h2oplus": true,
+      "cfcmt_similarity_weighted_beats_h2oplus": true,
+      "h2oplus_vs_passive_total_mse_ratio": 10.161437459015138,
+      "cfcmt_vs_passive_total_mse_ratio": 5.366345306249433,
+      "cfcmt_similarity_weighted_vs_passive_total_mse_ratio": 3.3519992078497594,
+      "h2oplus_vs_uncalibrated_total_mse_ratio": 10.161437459015138,
+      "cfcmt_vs_uncalibrated_total_mse_ratio": 5.366345306249433,
+      "cfcmt_similarity_weighted_vs_uncalibrated_total_mse_ratio": 3.3519992078497594
+    }
+  }
+}
