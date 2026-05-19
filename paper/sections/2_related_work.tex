@@ -1,0 +1,24 @@
+\section{Related Work}
+
+\paragraph{Bus holding control.}
+Classical holding policies analyze headway stability and bunching through control rules and queueing approximations \citep{daganzo2009headway,xuan2011dynamic}.
+Recent work has applied deep RL and multi-agent RL to bus holding under stochastic demand and travel times \citep{alesiani2018reinforcement,wang2020real,liu2023deepholding,wang2023multiobjective}.
+These studies typically focus on one calibrated network or one simulation benchmark.
+Our focus is different: we evaluate whether a learned dynamics correction transfers across city bundles with heterogeneous open data sources.
+
+\paragraph{Hybrid offline-to-online RL and dynamics gaps.}
+\Htwo and \Htwo-style methods address the mismatch between offline data and online simulator interaction by estimating dynamics-related weights or residuals \citep{niu2022h2o,liu2024h2oplus}.
+Related sim-to-real and offline-to-online methods use domain classifiers, calibrated Q-learning, residual dynamics, or world-model adaptation to reduce transfer error \citep{eysenbach2021off,nakamoto2023calql,lanier2025redraw}.
+In this paper, \Htwo is treated as the dense residual-correction baseline: it can learn flexible source-city corrections, but the correction is not explicitly decomposed by transit mechanism.
+
+\paragraph{Causal and factored transfer.}
+The independent causal mechanisms principle suggests that distribution shifts may be localized when represented in appropriate mechanisms \citep{bengio2020meta}.
+Factored adaptation methods use this idea to improve non-stationary RL and transfer by separating latent change factors \citep{feng2022factored}.
+\ours applies this principle to bus holding dynamics: rather than learning one dense correction, it learns mechanism-wise residuals aligned with interpretable transit outputs.
+The approach is intentionally lightweight in this paper: the reported cross-city experiments use sufficient-statistics ridge models for reproducibility, while the repository also contains neural causal-factored residual modules for later end-to-end training.
+
+\paragraph{Traffic simulation and open transit data.}
+SUMO provides a standard microscopic traffic simulation platform \citep{lopez2018microscopic}.
+For cross-city public transit studies, however, fully calibrated SUMO networks and vehicle-level AVL/APC data are rarely available across many agencies.
+We therefore use open static data to create full-route city bundles.
+This makes the experiments reproducible but also limits their interpretation; the static-derived targets are not a substitute for live operational trajectory validation.

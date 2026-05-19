@@ -1,0 +1,11 @@
+\begin{abstract}
+Hybrid offline-to-online reinforcement learning for transit control is attractive because operators often have rich historical data but only imperfect simulators.
+However, a bus holding policy tuned in one city may fail in another city unless the target simulator is manually calibrated, and such calibration is expensive.
+We study this cross-city transfer problem for bus holding using four open transit city bundles: Singapore, Austin/CapMetro, Halifax Transit, and MBTA.
+We propose Causal-Factored Cross-City Model Transfer (\ours), a mechanism-wise residual world-model adapter that decomposes dense simulator corrections into headway, demand/dwell, speed, and reward mechanisms, and optionally reweights source cities by static speed, headway, route, and demand similarity.
+Against a dense \Htwo-style residual baseline, \ours is evaluated under a strict leave-one-city-out protocol in which each of the four cities is the target exactly once.
+On static-derived cross-city dynamics validation, unweighted \ours beats \Htwo on all four targets with mean total-MSE ratio $0.759$, while similarity-weighted \ours also wins on all four targets and lowers the mean ratio to $0.578$.
+In one-step policy validation, \ours improves reward/regret on three of four targets and lowers bunching rate on all four targets.
+Sensitivity, source-subset, and generator-bias checks show that the main advantage is strongest in multi-source cross-city transfer and should not be overstated as a proof of superiority on every small city subset.
+The resulting contribution is a reproducible, reviewer-facing protocol and an empirically supported boundary condition: under open static-data-derived validation with little or no target-city calibration, mechanism-factored transfer generalizes better than dense residual correction, but live AVL/APC trajectory validation remains necessary before operational claims.
+\end{abstract}

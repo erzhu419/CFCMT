@@ -1,0 +1,36 @@
+\section{Problem Setting}
+
+Let $s_t \in \Sstate$ denote a bus-system state at a decision event and $a_t \in \Aact$ denote a holding action in seconds.
+The state contains line and station identifiers, time of day, direction, forward and backward headways, waiting passengers, target headway, base dwell, co-line headways, gap, and segment speed.
+The transition target is
+\[
+    \y_t =
+    (h^+_{t+1}, h^-_{t+1}, q_{t+1}, d_{t+1}, g_{t+1},
+     \bar h^+_{t+1}, \bar h^-_{t+1}, v_{t+1}, r_{t+1}),
+\]
+covering next headways, waiting passengers, dwell, gap, co-line headways, speed, and reward.
+
+Each city $c$ provides a bundle $\D_c$ of route, timetable, speed, and demand tables.
+From these tables we construct paired simulator and static-derived target transitions:
+\[
+    \y^{\mathrm{sim}} = f_0(s,a), \qquad
+    \y^{\mathrm{target}} = f_c(s,a),
+\]
+and train residual models on
+\[
+    \Delta_c(s,a) = \y^{\mathrm{target}} - \y^{\mathrm{sim}}.
+\]
+For cross-city validation, source cities $\mathcal{C}_{\mathrm{src}}$ are used for fitting and a held-out target city $c^\star$ is used only for evaluation.
+
+The main evaluation unit is a city target, not a route.
+For four cities, the strict leave-one-city-out protocol has exactly four target evaluations:
+\[
+    \{(\mathcal{C}\setminus\{c\}) \rightarrow c : c \in \mathcal{C}\}.
+\]
+This avoids counting repeated target cities as independent evidence.
+
+\paragraph{Claim scope.}
+The target transitions are static-data-derived pseudo-observations.
+They combine agency data, schedule-derived speeds or headways, passenger-demand summaries, and deterministic transition rules.
+They are useful for reproducible cross-city validation, but they are not vehicle-level AVL/APC ground truth.
+Accordingly, the paper evaluates transfer robustness under open static-data-derived dynamics, not operational field performance.

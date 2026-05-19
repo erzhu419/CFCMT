@@ -1,0 +1,47 @@
+\section{Experiments}
+
+\subsection{Data}
+
+We evaluate on four full-route city bundles.
+Singapore uses LTA DataMall passenger-volume and OD bus data with traffic speed bands.
+Austin/CapMetro uses GTFS schedules with demand proxied from scheduled headways.
+Halifax Transit uses route-level APC summaries apportioned over GTFS route-direction patterns.
+MBTA uses Fall 2025 stop-level boardings and alightings apportioned over GTFS route-direction patterns.
+\Cref{tab:dataset} summarizes the bundles and their evidence levels.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/dataset_table.tex}}
+\caption{Open transit city bundles. Evidence levels distinguish observed passenger/traffic data from schedule-derived proxies.}
+\label{tab:dataset}
+\end{table}
+
+\subsection{Validation protocols}
+
+\paragraph{Primary dynamics validation.}
+The main dynamics experiment is strict leave-one-city-out.
+Each city is held out once as the target, and all remaining cities are used as sources.
+The metric is total MSE averaged over the nine transition outputs.
+Ratios below 1 indicate improvement over the dense \Htwo-style residual baseline.
+
+\paragraph{Policy validation.}
+The one-step policy experiment uses the same source-target splits and evaluates action selection under headway-stress states.
+We report reward/regret and traffic-domain metrics.
+Bunching rate is the fraction of decisions in which either adjacent headway is below $0.5$ times the target headway.
+Large-gap rate is the fraction in which either adjacent headway exceeds $1.5$ times the target headway.
+
+\paragraph{Reviewer-facing robustness checks.}
+We include four diagnostic families.
+First, source-weight sensitivity varies $T \in \{0.5,1.0,2.0\}$ and $\lambda \in \{0,0.05,0.1\}$.
+Second, generator robustness perturbs output groups or adds measurement-noise terms to the evaluation sufficient statistics.
+Third, source-subset robustness removes major data-source families, including excluding Singapore and excluding Austin.
+Fourth, sampled BusSimEnv rollout is reported only as an auxiliary sanity check because only a small number of line environments are executable.
+
+\begin{table}[t]
+\centering
+\small
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/experiment_scope_table.tex}}
+\caption{Experimental scope and paper role. The primary evidence is strict city-level leave-one-out dynamics and one-step policy validation.}
+\label{tab:scope}
+\end{table}

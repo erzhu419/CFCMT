@@ -1,0 +1,89 @@
+\section{Results}
+
+\subsection{Strict leave-one-city-out dynamics}
+
+\Cref{fig:strict-loo,tab:strict-loo} show the primary dynamics result.
+Unweighted \ours beats the dense \Htwo-style residual baseline on all four held-out cities, with mean total-MSE ratio $0.759$.
+Similarity-weighted \ours also wins on all four targets and improves the mean ratio to $0.578$.
+The largest gains occur for Austin, Halifax, and MBTA.
+Singapore is the hardest target: unweighted \ours is only slightly better than \Htwo, and similarity weighting is slightly worse than unweighted \ours while still remaining below the \Htwo baseline.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.78\textwidth]{strict_leave_one_out_total_mse_ratio.png}
+\caption{Strict leave-one-city-out dynamics validation. Bars show total-MSE ratio relative to \Htwo. The dashed line is parity with \Htwo.}
+\label{fig:strict-loo}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/strict_leave_one_out_table.tex}}
+\caption{Strict leave-one-city-out dynamics results. Ratios below 1 indicate lower total MSE than \Htwo.}
+\label{tab:strict-loo}
+\end{table}
+
+\subsection{Policy-level validation}
+
+The strict one-step policy summary is more mixed but still favorable.
+\ours improves reward/regret on three of four targets, improves mean absolute headway error on three of four, and lowers bunching rate on all four targets.
+The mean regret ratio is $0.876$, and the mean bunching-rate ratio is $0.644$.
+Halifax is the main policy exception: \ours lowers headway error slightly but has worse reward/regret than \Htwo.
+This is consistent with a limited policy claim: mechanism-factored transfer improves cross-city dynamics strongly and often improves one-step policy quality, but it is not a universal policy dominance result.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.78\textwidth]{cross_city_policy_regret_ratio.png}
+\caption{Strict leave-one-city-out one-step policy regret ratio. Ratios below 1 favor \ours over \Htwo.}
+\label{fig:policy-regret}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/cross_city_policy_table.tex}}
+\caption{Strict leave-one-city-out one-step policy metrics. The table includes reward, regret ratio, headway error ratio, bunching, large-gap rate, and hold-time difference.}
+\label{tab:policy}
+\end{table}
+
+\subsection{Source weighting is stable under a small grid}
+
+The default source weighting uses $T=1.0$ and $\lambda=0.05$.
+Across the $3 \times 3$ grid, all nine settings beat \Htwo on all six configured cross-city splits.
+The mean weighted-\ours/\Htwo total-MSE ratio ranges only from $0.6025$ to $0.6149$.
+The best setting in the grid is $T=0.5,\lambda=0$, but the default is not selected by post-hoc optimization and remains within the same narrow band.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.58\textwidth]{source_weighting_sensitivity_heatmap.png}
+\caption{Source-weighting sensitivity. Each cell reports mean total-MSE ratio versus \Htwo across configured cross-city splits.}
+\label{fig:weight-sensitivity}
+\end{figure}
+
+\subsection{Robustness and boundary conditions}
+
+Generator robustness supports the main trend but also identifies failure modes.
+Weighted \ours beats \Htwo on every city target in five of seven perturbation/noise scenarios.
+Under headway-gap bias and mixed-mechanism bias, the result weakens to three of four targets.
+Thus the evidence does not say that \ours is invariant to any target-generation change; it says that the result is robust to several plausible perturbations.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.9\textwidth]{generator_robustness.png}
+\caption{Generator-bias and measurement-noise robustness under strict leave-one-city-out evaluation.}
+\label{fig:generator}
+\end{figure}
+
+The source-subset check is the strongest limitation.
+With all four cities, weighted \ours has mean ratio $0.578$.
+Excluding Austin remains favorable with mean ratio $0.663$.
+Excluding Singapore makes the result nearly tied with \Htwo, with mean ratio $0.998$.
+The two-city Halifax-MBTA pair is slightly worse than \Htwo, with ratio $1.042$.
+This indicates that source diversity matters: the method should be framed as multi-source cross-city transfer, not as guaranteed transfer between every pair of cities.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.9\textwidth]{source_subset_robustness.png}
+\caption{Source-subset robustness. Removing data-source families reveals where the claim becomes weak.}
+\label{fig:subset}
+\end{figure}

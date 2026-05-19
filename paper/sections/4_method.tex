@@ -1,0 +1,63 @@
+\section{Method}
+
+\subsection{Dense \Htwo-style residual baseline}
+
+The \Htwo-style baseline fits one dense residual model over all transition outputs:
+\[
+    \hat \Delta_{\mathrm{dense}}(s,a) = \phi_{\mathrm{dense}}(s,a)^\top B,
+\]
+where $\phi_{\mathrm{dense}}$ includes normalized state/action features, squares, action interactions, and selected pairwise products.
+At evaluation time the corrected prediction is
+\[
+    \hat \y_{\Htwomath}(s,a) = f_0(s,a) + \hat \Delta_{\mathrm{dense}}(s,a).
+\]
+The baseline is intentionally strong: it can use many cross terms and is fit on all source-city transitions.
+
+\subsection{Causal-factored residual transfer}
+
+\ours decomposes the residual by output mechanism:
+\[
+    \hat \Delta_j(s,a) = \phi_j(s,a)^\top \beta_j, \qquad j \in \{1,\ldots,9\}.
+\]
+The feature map $\phi_j$ is chosen according to the output mechanism.
+Headway and gap residuals use current headways, target headway, speed, action, and time.
+Waiting and dwell residuals use waiting passengers, target headway, speed, station fraction, action, and time.
+Speed residuals use current speed, event time, and station position.
+Reward residuals use policy-relevant headway deviations, waiting passengers, gap, speed, action, and time.
+The corrected prediction is
+\[
+    \hat \y_{\oursmath}(s,a)
+    = f_0(s,a) +
+      \left(\hat\Delta_1(s,a),\ldots,\hat\Delta_9(s,a)\right).
+\]
+All reported models use ridge-regularized sufficient statistics, so the experiment can be reproduced without stochastic neural training.
+
+\subsection{Source-city similarity weighting}
+
+For each city we compute a static descriptor $z_c$ from speed quantiles, headway quantiles, route-distance quantiles, peak-demand hour, and the 24-hour demand-share vector.
+For a target city $t$ and source city $c$, the distance is computed after feature-wise standardization over the source-plus-target set:
+\[
+    d(c,t) =
+    \frac{1}{\sqrt{m}}\left\|
+    \frac{z_c-\mu}{\sigma} -
+    \frac{z_t-\mu}{\sigma}
+    \right\|_2.
+\]
+The source weight is
+\[
+    w_c =
+    \frac{\exp(-d(c,t)/T) + \lambda \max_{c'} \exp(-d(c',t)/T)}
+         {\sum_{k \in \mathcal{C}_{\mathrm{src}}}
+          \left[\exp(-d(k,t)/T) + \lambda \max_{c'} \exp(-d(c',t)/T)\right]}.
+\]
+The default values are $T=1.0$ and $\lambda=0.05$.
+The source sufficient statistics are rescaled so that these weights control the effective number of source transitions rather than simply reflecting raw city size.
+
+\subsection{One-step policy validation}
+
+For policy-level validation, each method evaluates a discrete hold set
+$\{0,15,30,45,60\}$ seconds under a set of headway-stress states.
+The policy selects the action with the highest predicted reward under its corrected transition model.
+The selected action is then scored against the static-derived target transition.
+We report reward, regret to an oracle action, mean absolute headway error, bunching rate, large-gap rate, and mean hold seconds.
+This is a policy-level one-step lookahead benchmark, not a live SUMO rollout.

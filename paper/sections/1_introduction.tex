@@ -1,0 +1,31 @@
+\section{Introduction}
+
+Bus holding control aims to reduce headway instability by delaying selected vehicles at stops.
+The control problem is local in execution but system-wide in consequence: a hold action changes forward and backward headways, passenger waiting, dwell, and downstream bunching.
+Modern reinforcement learning (RL) methods can learn holding policies in simulation, but practical deployment is constrained by two persistent gaps.
+First, high-fidelity simulation and manual calibration are expensive to reproduce in each city.
+Second, public data availability differs sharply across agencies: one city may expose speed bands and passenger OD data, while another may only provide GTFS schedules and coarse ridership summaries.
+
+Hybrid offline-to-online methods such as \Htwo learn from both logged data and simulator interaction by correcting or reweighting dynamics gaps \citep{niu2022h2o,liu2024h2oplus}.
+This is a natural starting point for transit systems, where a historical buffer and a lower-fidelity simulator are often available.
+The difficulty is cross-city transfer.
+A dense monolithic residual model can fit simulator error in the source cities, but its parameters mix mechanisms that may shift differently across cities: schedule headways, route speeds, stop demand, and dwell behavior do not all change together.
+If cross-city transfer depends on localized changes in mechanisms, a factored representation should be more stable than a dense one \citep{bengio2020meta,feng2022factored}.
+
+This paper studies that hypothesis in a deliberately conservative setting.
+We do not claim that the current data are vehicle-level real-world trajectories.
+Instead, we construct full-route open transit city bundles and evaluate models on static-data-derived offline dynamics targets.
+The protocol is meant to answer a narrower question: when only open static data and an uncalibrated simulator-like transition generator are available, does a mechanism-factored residual adapter transfer better across cities than a dense \Htwo-style residual correction?
+
+We introduce Causal-Factored Cross-City Model Transfer (\ours).
+\ours fits residual corrections at the level of output mechanisms rather than one dense residual over all outputs.
+For each target quantity, it uses a mechanism-specific sparse parent set: headway and gap outputs depend primarily on neighboring headways, target headway, speed, time, and action; demand and dwell outputs depend on waiting passengers, speed, target headway, time, and action; speed outputs use speed, time, and route-position features; reward uses policy-relevant headway and waiting quantities.
+We also add a city-similarity source weighting rule that uses only static descriptors available before target calibration.
+
+The paper contributes:
+\begin{enumerate}[leftmargin=1.5em]
+    \item A cross-city open-transit validation protocol using four full-route city bundles and a strict leave-one-city-out evaluation unit.
+    \item A mechanism-wise residual transfer model and a static descriptor based source weighting rule.
+    \item A set of reviewer-facing diagnostics: source-weight sensitivity, source-subset robustness, generator-bias/noise robustness, and traffic-domain policy metrics.
+    \item An explicit boundary on the claim: the evidence supports static-derived cross-city transfer and not yet operational deployment without vehicle-level validation.
+\end{enumerate}
