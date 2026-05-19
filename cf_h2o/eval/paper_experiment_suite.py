@@ -126,17 +126,22 @@ class LinearStats:
         reg[0, 0] = 0.0
         return np.linalg.solve(self.xtx + reg, self.xty)
 
-    def sse(self, beta: np.ndarray | None = None, *, target_scale: float = 1.0) -> np.ndarray:
-        scale = float(target_scale)
+    def sse(self, beta: np.ndarray | None = None, *, target_scale: float | np.ndarray = 1.0) -> np.ndarray:
+        scale = np.asarray(target_scale, dtype=np.float64)
+        if scale.ndim == 0:
+            scale = np.full(self.yty.shape[0], float(scale), dtype=np.float64)
+        scale = scale.reshape(-1)
+        if scale.shape[0] != self.yty.shape[0]:
+            raise ValueError(f"target_scale has {scale.shape[0]} outputs, expected {self.yty.shape[0]}")
         if beta is None:
-            return self.yty * scale * scale
+            return self.yty * np.square(scale)
         b = np.asarray(beta, dtype=np.float64)
         if b.ndim == 1:
             b = b[:, None]
         # If the residual target is scaled, the fitted beta scales with it.
-        b = b * scale
-        xty = self.xty * scale
-        out = self.yty * scale * scale
+        b = b * scale[None, :]
+        xty = self.xty * scale[None, :]
+        out = self.yty * np.square(scale)
         out = out + np.einsum("ik,ij,jk->k", b, self.xtx, b)
         out = out - 2.0 * np.einsum("ij,ij->j", b, xty)
         return np.maximum(out, 0.0)
@@ -168,12 +173,14 @@ def _family_sse(
     stats: dict[str, LinearStats],
     beta: dict[str, np.ndarray] | None = None,
     *,
-    target_scale: float = 1.0,
+    target_scale: float | np.ndarray = 1.0,
 ) -> np.ndarray:
     values = []
-    for output_name in OUTPUT_NAMES:
+    scale = np.asarray(target_scale, dtype=np.float64)
+    for idx, output_name in enumerate(OUTPUT_NAMES):
         coef = None if beta is None else beta[output_name]
-        values.append(float(stats[output_name].sse(coef, target_scale=target_scale)[0]))
+        output_scale = float(scale) if scale.ndim == 0 else float(scale.reshape(-1)[idx])
+        values.append(float(stats[output_name].sse(coef, target_scale=output_scale)[0]))
     return np.asarray(values, dtype=np.float64)
 
 
@@ -529,6 +536,61 @@ def _comparison(metrics: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _strict_leave_one_city_out_splits(config: dict[str, Any], env_keys: list[str] | None = None, prefix: str = "strict_leave_one_city_out") -> list[dict[str, Any]]:
+    keys = list(env_keys or config["generated_envs"].keys())
+    return [
+        {
+            "name": f"{prefix}::{target}",
+            "source_envs": [key for key in keys if key != target],
+            "target_env": target,
+        }
+        for target in keys
+        if len(keys) > 1
+    ]
+
+
+def _output_group(output_name: str) -> str:
+    if "headway" in output_name or "gap" in output_name:
+        return "headway_gap"
+    if "waiting" in output_name or "base_stop_duration" in output_name or output_name == "reward":
+        return "demand_stop_reward"
+    if "segment_mean_speed" in output_name:
+        return "speed"
+    return "other"
+
+
+def _output_scale_vector(group_scales: dict[str, float] | None = None) -> np.ndarray:
+    group_scales = group_scales or {}
+    return np.asarray([float(group_scales.get(_output_group(name), 1.0)) for name in OUTPUT_NAMES], dtype=np.float64)
+
+
+def _add_measurement_noise(sse: np.ndarray, reference_sse: np.ndarray, noise_fraction: float) -> np.ndarray:
+    if noise_fraction <= 0.0:
+        return sse
+    return sse + np.square(float(noise_fraction)) * reference_sse
+
+
+def _method_bundle_from_sse(
+    target_stats: ResidualStats,
+    h2o_sse: np.ndarray,
+    cfcmt_sse: np.ndarray,
+    *,
+    uncal_sse: np.ndarray,
+    weighted_cfcmt_sse: np.ndarray | None = None,
+    weighted_h2o_sse: np.ndarray | None = None,
+) -> dict[str, Any]:
+    metrics = {
+        "uncalibrated": _method_metrics_from_sse(uncal_sse, target_stats.n),
+        "h2oplus_dense": _method_metrics_from_sse(h2o_sse, target_stats.n),
+        "cfcmt_mechanism": _method_metrics_from_sse(cfcmt_sse, target_stats.n),
+    }
+    if weighted_h2o_sse is not None:
+        metrics["h2oplus_similarity_weighted"] = _method_metrics_from_sse(weighted_h2o_sse, target_stats.n)
+    if weighted_cfcmt_sse is not None:
+        metrics["cfcmt_similarity_weighted"] = _method_metrics_from_sse(weighted_cfcmt_sse, target_stats.n)
+    return metrics
+
+
 def _method_total_mse(stats: ResidualStats, method_sse: np.ndarray) -> float:
     return float((method_sse / float(max(1, stats.n))).mean())
 
@@ -586,9 +648,10 @@ def run_source_weighting(
     *,
     temperature: float,
     floor: float,
+    splits: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     rows = []
-    for split in expand_splits(config):
+    for split in (expand_splits(config) if splits is None else splits):
         sources = list(split["source_envs"])
         target = split["target_env"]
         target_stats = city_stats[target]
@@ -747,6 +810,253 @@ def run_source_weighting_sensitivity(
             "best_vs_h2oplus": best_vs_h2o,
             "best_vs_unweighted_cfcmt": best_vs_unweighted,
             "default_grid_point": default_rows[0] if default_rows else None,
+        },
+    }
+
+
+def _summarize_weighted_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    cfcmt_ratios = [
+        row["metrics"]["cfcmt_mechanism"]["total_mse"] / row["metrics"]["h2oplus_dense"]["total_mse"]
+        for row in rows
+    ]
+    weighted_ratios = [row["comparisons"]["cfcmt_similarity_weighted_vs_h2oplus_ratio"] for row in rows]
+    weighted_vs_unweighted = [row["comparisons"]["cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio"] for row in rows]
+    return {
+        "splits": len(rows),
+        "unique_targets": len({row["target_env"] for row in rows}),
+        "cfcmt_wins_vs_h2oplus": sum(
+            1 for row in rows if row["metrics"]["cfcmt_mechanism"]["total_mse"] < row["metrics"]["h2oplus_dense"]["total_mse"]
+        ),
+        "cfcmt_similarity_weighted_wins_vs_h2oplus": sum(
+            1 for row in rows if row["comparisons"]["cfcmt_similarity_weighted_beats_h2oplus"]
+        ),
+        "cfcmt_similarity_weighted_wins_vs_unweighted_cfcmt": sum(
+            1 for row in rows if row["comparisons"]["cfcmt_similarity_weighted_beats_unweighted_cfcmt"]
+        ),
+        "mean_cfcmt_vs_h2oplus_ratio": float(np.mean(cfcmt_ratios)),
+        "mean_cfcmt_similarity_weighted_vs_h2oplus_ratio": float(np.mean(weighted_ratios)),
+        "mean_cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio": float(np.mean(weighted_vs_unweighted)),
+    }
+
+
+def run_strict_leave_one_out(
+    city_stats: dict[str, ResidualStats],
+    config: dict[str, Any],
+    sanity: dict[str, Any],
+    ridge: float,
+    *,
+    temperature: float,
+    floor: float,
+) -> dict[str, Any]:
+    splits = _strict_leave_one_city_out_splits(config)
+    result = run_source_weighting(
+        city_stats,
+        config,
+        sanity,
+        ridge,
+        temperature=temperature,
+        floor=floor,
+        splits=splits,
+    )
+    return {
+        "ok": True,
+        "experiment": "strict_leave_one_city_out_cross_city",
+        "definition": "Primary city-level leave-one-city-out validation: each of the four cities appears exactly once as target.",
+        "temperature": temperature,
+        "floor": floor,
+        "splits": result["splits"],
+        "summary": _summarize_weighted_rows(result["splits"]),
+    }
+
+
+def run_source_subset_robustness(
+    city_stats: dict[str, ResidualStats],
+    config: dict[str, Any],
+    sanity: dict[str, Any],
+    ridge: float,
+    *,
+    temperature: float,
+    floor: float,
+) -> dict[str, Any]:
+    all_keys = list(config["generated_envs"].keys())
+    subset_specs = [
+        {
+            "name": "all_four_strict_leave_one_out",
+            "env_keys": all_keys,
+            "definition": "All available cities; each city is target once.",
+        },
+        {
+            "name": "exclude_singapore_gtfs_traffic_only",
+            "env_keys": [key for key in all_keys if key != "singapore_lta_all"],
+            "definition": "Singapore removed; remaining cities all use GTFS schedule-derived traffic.",
+        },
+        {
+            "name": "exclude_austin_schedule_demand_proxy",
+            "env_keys": [key for key in all_keys if key != "austin_capmetro_all"],
+            "definition": "Austin removed; remaining cities have observed or apportioned passenger demand sources.",
+        },
+        {
+            "name": "north_american_observed_ridership_pair",
+            "env_keys": [key for key in ("halifax_transit_all", "mbta_all") if key in all_keys],
+            "definition": "Two North American systems with observed/apportioned ridership; one city is source and one is target.",
+        },
+    ]
+    subsets = []
+    for spec in subset_specs:
+        env_keys = [key for key in spec["env_keys"] if key in city_stats]
+        if len(env_keys) < 2:
+            continue
+        splits = _strict_leave_one_city_out_splits(config, env_keys, prefix=spec["name"])
+        result = run_source_weighting(
+            city_stats,
+            config,
+            sanity,
+            ridge,
+            temperature=temperature,
+            floor=floor,
+            splits=splits,
+        )
+        subsets.append(
+            {
+                "name": spec["name"],
+                "definition": spec["definition"],
+                "env_keys": env_keys,
+                "cities": [config["generated_envs"][key].get("city", key) for key in env_keys],
+                "splits": result["splits"],
+                "summary": _summarize_weighted_rows(result["splits"]),
+            }
+        )
+    return {
+        "ok": True,
+        "experiment": "source_subset_robustness",
+        "definition": "Checks whether cross-city conclusions hold after removing major data-source families.",
+        "subsets": subsets,
+        "summary": {
+            "subsets": len(subsets),
+            "subsets_all_splits_weighted_cfcmt_beats_h2oplus": sum(
+                1 for subset in subsets if subset["summary"]["cfcmt_similarity_weighted_wins_vs_h2oplus"] == subset["summary"]["splits"]
+            ),
+            "subsets_all_splits_unweighted_cfcmt_beats_h2oplus": sum(
+                1 for subset in subsets if subset["summary"]["cfcmt_wins_vs_h2oplus"] == subset["summary"]["splits"]
+            ),
+        },
+    }
+
+
+def _robustness_scenarios() -> list[dict[str, Any]]:
+    return [
+        {"name": "baseline", "group_scales": {}, "noise_fraction": 0.0},
+        {"name": "headway_gap_bias_125", "group_scales": {"headway_gap": 1.25}, "noise_fraction": 0.0},
+        {"name": "demand_stop_reward_bias_125", "group_scales": {"demand_stop_reward": 1.25}, "noise_fraction": 0.0},
+        {"name": "speed_bias_150", "group_scales": {"speed": 1.50}, "noise_fraction": 0.0},
+        {
+            "name": "mixed_mechanism_bias",
+            "group_scales": {"headway_gap": 1.15, "demand_stop_reward": 0.85, "speed": 1.25},
+            "noise_fraction": 0.0,
+        },
+        {"name": "measurement_noise_10pct", "group_scales": {}, "noise_fraction": 0.10},
+        {"name": "measurement_noise_25pct", "group_scales": {}, "noise_fraction": 0.25},
+    ]
+
+
+def run_generator_robustness(
+    city_stats: dict[str, ResidualStats],
+    config: dict[str, Any],
+    sanity: dict[str, Any],
+    ridge: float,
+    *,
+    temperature: float,
+    floor: float,
+) -> dict[str, Any]:
+    rows = []
+    strict_splits = _strict_leave_one_city_out_splits(config)
+    for scenario in _robustness_scenarios():
+        output_scales = _output_scale_vector(scenario["group_scales"])
+        noise_fraction = float(scenario["noise_fraction"])
+        for split in strict_splits:
+            sources = list(split["source_envs"])
+            target = split["target_env"]
+            target_stats = city_stats[target]
+            weights = _source_similarity_weights(sanity, target, sources, temperature=temperature, floor=floor)
+            train_unweighted = _merge_stats("source_unweighted", "source", [city_stats[key] for key in sources])
+            train_weighted = _merge_stats_weighted("source_similarity_weighted", "source", city_stats, weights)
+            h2o_unweighted = _fit_h2o(train_unweighted, ridge)
+            cfcmt_unweighted = _fit_cfcmt(train_unweighted, ridge)
+            cfcmt_weighted = _fit_cfcmt(train_weighted, ridge)
+
+            uncal_sse = target_stats.h2o.sse(None, target_scale=output_scales)
+            h2o_sse = target_stats.h2o.sse(h2o_unweighted, target_scale=output_scales)
+            cfcmt_sse = _family_sse(target_stats.cfcmt, cfcmt_unweighted, target_scale=output_scales)
+            weighted_sse = _family_sse(target_stats.cfcmt, cfcmt_weighted, target_scale=output_scales)
+            noise_reference_sse = uncal_sse.copy()
+            uncal_sse = _add_measurement_noise(uncal_sse, noise_reference_sse, noise_fraction)
+            h2o_sse = _add_measurement_noise(h2o_sse, noise_reference_sse, noise_fraction)
+            cfcmt_sse = _add_measurement_noise(cfcmt_sse, noise_reference_sse, noise_fraction)
+            weighted_sse = _add_measurement_noise(weighted_sse, noise_reference_sse, noise_fraction)
+            metrics = _method_bundle_from_sse(
+                target_stats,
+                h2o_sse,
+                cfcmt_sse,
+                uncal_sse=uncal_sse,
+                weighted_cfcmt_sse=weighted_sse,
+            )
+            h2o_total = metrics["h2oplus_dense"]["total_mse"]
+            cfcmt_total = metrics["cfcmt_mechanism"]["total_mse"]
+            weighted_total = metrics["cfcmt_similarity_weighted"]["total_mse"]
+            rows.append(
+                {
+                    **split,
+                    "scenario": scenario["name"],
+                    "output_group_scales": dict(scenario["group_scales"]),
+                    "noise_fraction": noise_fraction,
+                    "target_city": config["generated_envs"][target].get("city", target),
+                    "metrics": metrics,
+                    "comparisons": {
+                        "cfcmt_vs_h2oplus_ratio": cfcmt_total / h2o_total if h2o_total else None,
+                        "cfcmt_similarity_weighted_vs_h2oplus_ratio": weighted_total / h2o_total if h2o_total else None,
+                        "cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio": weighted_total / cfcmt_total if cfcmt_total else None,
+                        "cfcmt_beats_h2oplus": bool(cfcmt_total < h2o_total),
+                        "cfcmt_similarity_weighted_beats_h2oplus": bool(weighted_total < h2o_total),
+                        "cfcmt_similarity_weighted_beats_unweighted_cfcmt": bool(weighted_total < cfcmt_total),
+                    },
+                }
+            )
+
+    by_scenario = {}
+    for scenario in [item["name"] for item in _robustness_scenarios()]:
+        group = [row for row in rows if row["scenario"] == scenario]
+        by_scenario[scenario] = {
+            "splits": len(group),
+            "cfcmt_wins_vs_h2oplus": sum(1 for row in group if row["comparisons"]["cfcmt_beats_h2oplus"]),
+            "cfcmt_similarity_weighted_wins_vs_h2oplus": sum(
+                1 for row in group if row["comparisons"]["cfcmt_similarity_weighted_beats_h2oplus"]
+            ),
+            "cfcmt_similarity_weighted_wins_vs_unweighted_cfcmt": sum(
+                1 for row in group if row["comparisons"]["cfcmt_similarity_weighted_beats_unweighted_cfcmt"]
+            ),
+            "mean_cfcmt_vs_h2oplus_ratio": float(np.mean([row["comparisons"]["cfcmt_vs_h2oplus_ratio"] for row in group])),
+            "mean_cfcmt_similarity_weighted_vs_h2oplus_ratio": float(
+                np.mean([row["comparisons"]["cfcmt_similarity_weighted_vs_h2oplus_ratio"] for row in group])
+            ),
+            "mean_cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio": float(
+                np.mean([row["comparisons"]["cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio"] for row in group])
+            ),
+        }
+    return {
+        "ok": True,
+        "experiment": "generator_bias_noise_robustness",
+        "definition": "Strict leave-one-city-out evaluation under output-group target perturbations and expected measurement noise.",
+        "rows": rows,
+        "summary_by_scenario": by_scenario,
+        "summary": {
+            "scenarios": len(by_scenario),
+            "splits_per_scenario": len(strict_splits),
+            "scenarios_all_splits_weighted_cfcmt_beats_h2oplus": sum(
+                1 for value in by_scenario.values() if value["cfcmt_similarity_weighted_wins_vs_h2oplus"] == value["splits"]
+            ),
+            "scenarios_all_splits_unweighted_cfcmt_beats_h2oplus": sum(
+                1 for value in by_scenario.values() if value["cfcmt_wins_vs_h2oplus"] == value["splits"]
+            ),
         },
     }
 
@@ -1258,6 +1568,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
     experiments = {
         "single_city": run_single_city(city_line_stats, config, args.ridge, args.single_city_test_fraction, args.seed),
+        "strict_leave_one_city_out": run_strict_leave_one_out(
+            city_stats,
+            config,
+            sanity,
+            args.ridge,
+            temperature=args.source_weight_temperature,
+            floor=args.source_weight_floor,
+        ),
         "calibration_vs_no_calibration": run_calibration_sweep(city_stats, config, args.ridge, args.calibration_strengths),
         "ablation": run_ablation(city_stats, config, args.ridge),
         "source_sensitivity": run_source_sensitivity(city_stats, config, args.ridge),
@@ -1278,6 +1596,22 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             floors=args.source_weight_floors,
             default_temperature=args.source_weight_temperature,
             default_floor=args.source_weight_floor,
+        ),
+        "source_subset_robustness": run_source_subset_robustness(
+            city_stats,
+            config,
+            sanity,
+            args.ridge,
+            temperature=args.source_weight_temperature,
+            floor=args.source_weight_floor,
+        ),
+        "generator_robustness": run_generator_robustness(
+            city_stats,
+            config,
+            sanity,
+            args.ridge,
+            temperature=args.source_weight_temperature,
+            floor=args.source_weight_floor,
         ),
         "bootstrap": run_bootstrap(city_stats, city_line_stats, config, args.ridge, args.bootstrap_samples, args.seed),
         "data_sanity": {
@@ -1356,11 +1690,14 @@ def main(argv: list[str] | None = None) -> int:
         }
         for key in (
             "single_city",
+            "strict_leave_one_city_out",
             "calibration_vs_no_calibration",
             "ablation",
             "source_sensitivity",
             "source_similarity_weighting",
             "source_weighting_sensitivity",
+            "source_subset_robustness",
+            "generator_robustness",
             "bootstrap",
             "sampled_rollout",
         ):

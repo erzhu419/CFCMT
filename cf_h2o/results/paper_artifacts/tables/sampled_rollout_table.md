@@ -1,7 +1,7 @@
 | policy                           | episodes | mean_reward | mean_headway_abs_error | mean_hold_seconds |
 | -------------------------------- | -------- | ----------- | ---------------------- | ----------------- |
-| no_hold                          | 2        | -196.8196   | 111.5576               | 0.0               |
-| fixed_30                         | 2        | -173.8135   | 97.3146                | 30.0              |
-| h2oplus_dense_policy             | 2        | -183.1828   | 92.9247                | 12.1706           |
-| cfcmt_mechanism_policy           | 2        | -193.4554   | 103.2978               | 3.3625            |
-| cfcmt_similarity_weighted_policy | 2        | -175.8484   | 97.0667                | 2.475             |
+| no_hold                          | 2        | -217.2653   | 112.1612               | 0.0               |
+| fixed_30                         | 2        | -209.3802   | 113.9976               | 30.0              |
+| h2oplus_dense_policy             | 2        | -176.8747   | 117.5745               | 11.7973           |
+| cfcmt_mechanism_policy           | 2        | -171.3775   | 87.8948                | 3.775             |
+| cfcmt_similarity_weighted_policy | 2        | -165.9478   | 97.5903                | 1.8125            |

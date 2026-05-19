@@ -98,6 +98,26 @@ def _write_table(df: pd.DataFrame, out_dir: Path, name: str) -> dict[str, str]:
     return {"csv": str(csv_path), "tex": str(tex_path), "md": str(md_path)}
 
 
+DATA_EVIDENCE = {
+    "singapore_lta_all": {
+        "demand_evidence": "observed stop OD/PV monthly",
+        "traffic_evidence": "observed speed bands",
+    },
+    "austin_capmetro_all": {
+        "demand_evidence": "schedule proxy",
+        "traffic_evidence": "schedule derived",
+    },
+    "halifax_transit_all": {
+        "demand_evidence": "route APC apportioned",
+        "traffic_evidence": "schedule derived",
+    },
+    "mbta_all": {
+        "demand_evidence": "stop board/alight apportioned",
+        "traffic_evidence": "schedule derived",
+    },
+}
+
+
 def build_dataset_table(suite: dict[str, Any], config: dict[str, Any]) -> pd.DataFrame:
     sanity = suite["experiments"]["data_sanity"]["cities"]
     transitions = suite["experiments"]["efficiency"]["city_transitions"]
@@ -108,6 +128,8 @@ def build_dataset_table(suite: dict[str, Any], config: dict[str, Any]) -> pd.Dat
             {
                 "city": spec.get("city", key),
                 "env_key": key,
+                "demand_evidence": DATA_EVIDENCE.get(key, {}).get("demand_evidence", "unknown"),
+                "traffic_evidence": DATA_EVIDENCE.get(key, {}).get("traffic_evidence", "unknown"),
                 "lines": int(city.get("line_count", spec.get("line_count", 0))),
                 "stops": int(city.get("stop_count", spec.get("stations", 0))),
                 "segments": int(city.get("segment_count", spec.get("segments", 0))),
@@ -119,6 +141,32 @@ def build_dataset_table(suite: dict[str, Any], config: dict[str, Any]) -> pd.Dat
                 "peak_demand_hour": city.get("peak_demand_hour"),
                 "demand_source": spec.get("demand_source", ""),
                 "traffic_source": spec.get("traffic_source", ""),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def build_strict_leave_one_out_table(suite: dict[str, Any]) -> pd.DataFrame:
+    rows = []
+    for split in suite["experiments"]["strict_leave_one_city_out"]["splits"]:
+        h2o = split["metrics"]["h2oplus_dense"]["total_mse"]
+        cfcmt = split["metrics"]["cfcmt_mechanism"]["total_mse"]
+        weighted = split["metrics"]["cfcmt_similarity_weighted"]["total_mse"]
+        rows.append(
+            {
+                "target_city": split["target_city"],
+                "source_cities": ", ".join(split["source_envs"]),
+                "target_transitions": int(split["target_transitions"]),
+                "h2oplus_total_mse": h2o,
+                "cfcmt_total_mse": cfcmt,
+                "weighted_cfcmt_total_mse": weighted,
+                "cfcmt_vs_h2oplus_ratio": cfcmt / h2o if h2o else None,
+                "weighted_cfcmt_vs_h2oplus_ratio": split["comparisons"][
+                    "cfcmt_similarity_weighted_vs_h2oplus_ratio"
+                ],
+                "weighted_cfcmt_vs_unweighted_ratio": split["comparisons"][
+                    "cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio"
+                ],
             }
         )
     return pd.DataFrame(rows)
@@ -159,7 +207,7 @@ def build_cross_city_dynamics_table(performance: dict[str, Any], suite: dict[str
 
 def build_cross_city_policy_table(policy: dict[str, Any]) -> pd.DataFrame:
     rows = []
-    for split in policy["splits"]:
+    for split in [item for item in policy["splits"] if item["name"].startswith("leave_one_city_out_all::")]:
         h2o = split["methods"]["h2oplus_dense_policy"]
         cfcmt = split["methods"]["cfcmt_mechanism_policy"]
         comparisons = split["comparisons"]
@@ -172,8 +220,97 @@ def build_cross_city_policy_table(policy: dict[str, Any]) -> pd.DataFrame:
                 "cfcmt_reward_gain": comparisons["cfcmt_reward_gain_vs_h2oplus"],
                 "cfcmt_regret_ratio": comparisons["cfcmt_regret_ratio_vs_h2oplus"],
                 "cfcmt_headway_error_ratio": comparisons["cfcmt_headway_error_ratio_vs_h2oplus"],
+                "h2oplus_bunching_rate": h2o.get("bunching_rate"),
+                "cfcmt_bunching_rate": cfcmt.get("bunching_rate"),
+                "cfcmt_bunching_rate_ratio": comparisons.get("cfcmt_bunching_rate_ratio_vs_h2oplus"),
+                "h2oplus_large_gap_rate": h2o.get("large_gap_rate"),
+                "cfcmt_large_gap_rate": cfcmt.get("large_gap_rate"),
+                "cfcmt_large_gap_rate_ratio": comparisons.get("cfcmt_large_gap_rate_ratio_vs_h2oplus"),
+                "cfcmt_hold_seconds_delta": comparisons.get("cfcmt_mean_hold_seconds_delta_vs_h2oplus"),
             }
         )
+    return pd.DataFrame(rows)
+
+
+def build_source_subset_robustness_table(suite: dict[str, Any]) -> pd.DataFrame:
+    rows = []
+    for subset in suite["experiments"]["source_subset_robustness"]["subsets"]:
+        summary = subset["summary"]
+        rows.append(
+            {
+                "subset": subset["name"],
+                "cities": ", ".join(subset["cities"]),
+                "splits": summary["splits"],
+                "weighted_wins_vs_h2oplus": summary["cfcmt_similarity_weighted_wins_vs_h2oplus"],
+                "unweighted_wins_vs_h2oplus": summary["cfcmt_wins_vs_h2oplus"],
+                "mean_unweighted_ratio_vs_h2oplus": summary["mean_cfcmt_vs_h2oplus_ratio"],
+                "mean_weighted_ratio_vs_h2oplus": summary["mean_cfcmt_similarity_weighted_vs_h2oplus_ratio"],
+                "mean_weighted_ratio_vs_unweighted": summary[
+                    "mean_cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio"
+                ],
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def build_generator_robustness_table(suite: dict[str, Any]) -> pd.DataFrame:
+    rows = []
+    for scenario, summary in suite["experiments"]["generator_robustness"]["summary_by_scenario"].items():
+        rows.append(
+            {
+                "scenario": scenario,
+                "splits": summary["splits"],
+                "weighted_wins_vs_h2oplus": summary["cfcmt_similarity_weighted_wins_vs_h2oplus"],
+                "unweighted_wins_vs_h2oplus": summary["cfcmt_wins_vs_h2oplus"],
+                "weighted_wins_vs_unweighted": summary["cfcmt_similarity_weighted_wins_vs_unweighted_cfcmt"],
+                "mean_unweighted_ratio_vs_h2oplus": summary["mean_cfcmt_vs_h2oplus_ratio"],
+                "mean_weighted_ratio_vs_h2oplus": summary["mean_cfcmt_similarity_weighted_vs_h2oplus_ratio"],
+                "mean_weighted_ratio_vs_unweighted": summary[
+                    "mean_cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio"
+                ],
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def build_experiment_scope_table(suite: dict[str, Any]) -> pd.DataFrame:
+    rollout = suite["experiments"].get("sampled_rollout", {})
+    rollout_episodes = sum(
+        int(value.get("episodes") or 0)
+        for value in rollout.get("summary_by_policy", {}).values()
+    )
+    rows = [
+        {
+            "experiment": "strict_leave_one_city_out",
+            "paper_role": "primary cross-city dynamics evidence",
+            "unit": "city target",
+            "scope_note": "four unique targets; no duplicated target counted as independent",
+        },
+        {
+            "experiment": "generator_robustness",
+            "paper_role": "bias/noise defense",
+            "unit": "scenario x city target",
+            "scope_note": "static-derived target perturbation; not real AVL/APC trajectory ground truth",
+        },
+        {
+            "experiment": "source_subset_robustness",
+            "paper_role": "data-source confound defense",
+            "unit": "city subset",
+            "scope_note": "reports excluding Singapore and excluding Austin proxy-demand subsets",
+        },
+        {
+            "experiment": "cross_city_policy_validation",
+            "paper_role": "primary one-step policy evidence",
+            "unit": "city target",
+            "scope_note": "one-step lookahead, not live SUMO rollout",
+        },
+        {
+            "experiment": "sampled_rollout",
+            "paper_role": "auxiliary sanity check only",
+            "unit": "BusSimEnv episode",
+            "scope_note": f"{rollout_episodes} policy episodes across runnable line envs; do not use as primary claim",
+        },
+    ]
     return pd.DataFrame(rows)
 
 
@@ -250,6 +387,80 @@ def plot_cross_city_dynamics(df: pd.DataFrame, out_dir: Path) -> str:
     ax.grid(axis="y", color="#dddddd", linewidth=0.7)
     fig.tight_layout()
     path = out_dir / "cross_city_total_mse_ratio.png"
+    fig.savefig(path)
+    plt.close(fig)
+    return str(path)
+
+
+def plot_strict_leave_one_out(df: pd.DataFrame, out_dir: Path) -> str:
+    out_dir.mkdir(parents=True, exist_ok=True)
+    labels = list(df["target_city"])
+    x = np.arange(len(df))
+    width = 0.34
+    fig, ax = plt.subplots(figsize=(6.8, 3.6))
+    ax.bar(x - width / 2, df["cfcmt_vs_h2oplus_ratio"], width, label="CFCMT", color="#2f6f9f")
+    ax.bar(
+        x + width / 2,
+        df["weighted_cfcmt_vs_h2oplus_ratio"],
+        width,
+        label="CFCMT + source weighting",
+        color="#c05a2b",
+    )
+    ax.axhline(1.0, color="#444444", linewidth=1.0, linestyle="--", label="H2O+ baseline")
+    ax.set_ylabel("Total MSE ratio vs H2O+")
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.set_ylim(0.0, max(1.08, float(np.nanmax(df["cfcmt_vs_h2oplus_ratio"])) + 0.08))
+    ax.set_title("Strict leave-one-city-out dynamics")
+    ax.legend(loc="upper right")
+    ax.grid(axis="y", color="#dddddd", linewidth=0.7)
+    fig.tight_layout()
+    path = out_dir / "strict_leave_one_out_total_mse_ratio.png"
+    fig.savefig(path)
+    plt.close(fig)
+    return str(path)
+
+
+def plot_source_subset_robustness(df: pd.DataFrame, out_dir: Path) -> str:
+    out_dir.mkdir(parents=True, exist_ok=True)
+    labels = [value.replace("_", "\n") for value in df["subset"]]
+    x = np.arange(len(df))
+    width = 0.34
+    fig, ax = plt.subplots(figsize=(8.2, 3.8))
+    ax.bar(x - width / 2, df["mean_unweighted_ratio_vs_h2oplus"], width, label="CFCMT", color="#2f6f9f")
+    ax.bar(x + width / 2, df["mean_weighted_ratio_vs_h2oplus"], width, label="Weighted CFCMT", color="#c05a2b")
+    ax.axhline(1.0, color="#444444", linewidth=1.0, linestyle="--", label="H2O+ baseline")
+    ax.set_ylabel("Mean MSE ratio vs H2O+")
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.set_ylim(0.0, max(1.08, float(np.nanmax(df["mean_unweighted_ratio_vs_h2oplus"])) + 0.08))
+    ax.set_title("Source subset robustness")
+    ax.legend(loc="upper right")
+    ax.grid(axis="y", color="#dddddd", linewidth=0.7)
+    fig.tight_layout()
+    path = out_dir / "source_subset_robustness.png"
+    fig.savefig(path)
+    plt.close(fig)
+    return str(path)
+
+
+def plot_generator_robustness(df: pd.DataFrame, out_dir: Path) -> str:
+    out_dir.mkdir(parents=True, exist_ok=True)
+    labels = [value.replace("_", "\n") for value in df["scenario"]]
+    x = np.arange(len(df))
+    fig, ax = plt.subplots(figsize=(9.2, 3.9))
+    ax.plot(x, df["mean_unweighted_ratio_vs_h2oplus"], marker="o", linewidth=1.8, label="CFCMT", color="#2f6f9f")
+    ax.plot(x, df["mean_weighted_ratio_vs_h2oplus"], marker="o", linewidth=1.8, label="Weighted CFCMT", color="#c05a2b")
+    ax.axhline(1.0, color="#444444", linewidth=1.0, linestyle="--", label="H2O+ baseline")
+    ax.set_ylabel("Mean MSE ratio vs H2O+")
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.set_ylim(0.0, max(1.08, float(np.nanmax(df["mean_unweighted_ratio_vs_h2oplus"])) + 0.08))
+    ax.set_title("Generator bias and noise robustness")
+    ax.legend(loc="upper right")
+    ax.grid(axis="y", color="#dddddd", linewidth=0.7)
+    fig.tight_layout()
+    path = out_dir / "generator_robustness.png"
     fig.savefig(path)
     plt.close(fig)
     return str(path)
@@ -332,13 +543,18 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
     _figure_style()
 
     dataset_df = build_dataset_table(suite, config)
+    strict_loo_df = build_strict_leave_one_out_table(suite)
     dynamics_df = build_cross_city_dynamics_table(performance, suite)
     policy_df = build_cross_city_policy_table(policy)
     sensitivity_df = build_source_weighting_sensitivity_table(suite)
+    subset_df = build_source_subset_robustness_table(suite)
+    generator_df = build_generator_robustness_table(suite)
     rollout_df = build_sampled_rollout_table(suite)
+    scope_df = build_experiment_scope_table(suite)
 
     tables = {
         "dataset": _write_table(dataset_df, tables_dir, "dataset_table"),
+        "strict_leave_one_out": _write_table(strict_loo_df, tables_dir, "strict_leave_one_out_table"),
         "cross_city_dynamics": _write_table(dynamics_df, tables_dir, "cross_city_dynamics_table"),
         "cross_city_policy": _write_table(policy_df, tables_dir, "cross_city_policy_table"),
         "source_weighting_sensitivity": _write_table(
@@ -346,12 +562,18 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
             tables_dir,
             "source_weighting_sensitivity_table",
         ),
+        "source_subset_robustness": _write_table(subset_df, tables_dir, "source_subset_robustness_table"),
+        "generator_robustness": _write_table(generator_df, tables_dir, "generator_robustness_table"),
         "sampled_rollout": _write_table(rollout_df, tables_dir, "sampled_rollout_table"),
+        "experiment_scope": _write_table(scope_df, tables_dir, "experiment_scope_table"),
     }
 
     figures = {
+        "strict_leave_one_out_total_mse_ratio": plot_strict_leave_one_out(strict_loo_df, figures_dir),
         "cross_city_total_mse_ratio": plot_cross_city_dynamics(dynamics_df, figures_dir),
         "source_weighting_sensitivity_heatmap": plot_source_weighting_heatmap(sensitivity_df, figures_dir),
+        "source_subset_robustness": plot_source_subset_robustness(subset_df, figures_dir),
+        "generator_robustness": plot_generator_robustness(generator_df, figures_dir),
         "cross_city_policy_regret_ratio": plot_policy_regret(policy_df, figures_dir),
     }
     sampled_path = plot_sampled_rollout(rollout_df, figures_dir)
@@ -371,8 +593,12 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
         "summaries": {
             "cross_city_performance": performance["summary"],
             "cross_city_policy": policy["summary"],
+            "strict_cross_city_policy": policy.get("strict_leave_one_city_out_summary"),
+            "strict_leave_one_out": suite["experiments"]["strict_leave_one_city_out"]["summary"],
             "source_similarity_weighting": suite["experiments"]["source_similarity_weighting"]["summary"],
             "source_weighting_sensitivity": suite["experiments"]["source_weighting_sensitivity"]["summary"],
+            "source_subset_robustness": suite["experiments"]["source_subset_robustness"]["summary"],
+            "generator_robustness": suite["experiments"]["generator_robustness"]["summary"],
             "sampled_rollout": suite["experiments"].get("sampled_rollout", {}).get("summary_by_policy"),
         },
     }

@@ -12,6 +12,11 @@
       "tex": "cf_h2o/results/paper_artifacts/tables/dataset_table.tex",
       "md": "cf_h2o/results/paper_artifacts/tables/dataset_table.md"
     },
+    "strict_leave_one_out": {
+      "csv": "cf_h2o/results/paper_artifacts/tables/strict_leave_one_out_table.csv",
+      "tex": "cf_h2o/results/paper_artifacts/tables/strict_leave_one_out_table.tex",
+      "md": "cf_h2o/results/paper_artifacts/tables/strict_leave_one_out_table.md"
+    },
     "cross_city_dynamics": {
       "csv": "cf_h2o/results/paper_artifacts/tables/cross_city_dynamics_table.csv",
       "tex": "cf_h2o/results/paper_artifacts/tables/cross_city_dynamics_table.tex",
@@ -27,15 +32,33 @@
       "tex": "cf_h2o/results/paper_artifacts/tables/source_weighting_sensitivity_table.tex",
       "md": "cf_h2o/results/paper_artifacts/tables/source_weighting_sensitivity_table.md"
     },
+    "source_subset_robustness": {
+      "csv": "cf_h2o/results/paper_artifacts/tables/source_subset_robustness_table.csv",
+      "tex": "cf_h2o/results/paper_artifacts/tables/source_subset_robustness_table.tex",
+      "md": "cf_h2o/results/paper_artifacts/tables/source_subset_robustness_table.md"
+    },
+    "generator_robustness": {
+      "csv": "cf_h2o/results/paper_artifacts/tables/generator_robustness_table.csv",
+      "tex": "cf_h2o/results/paper_artifacts/tables/generator_robustness_table.tex",
+      "md": "cf_h2o/results/paper_artifacts/tables/generator_robustness_table.md"
+    },
     "sampled_rollout": {
       "csv": "cf_h2o/results/paper_artifacts/tables/sampled_rollout_table.csv",
       "tex": "cf_h2o/results/paper_artifacts/tables/sampled_rollout_table.tex",
       "md": "cf_h2o/results/paper_artifacts/tables/sampled_rollout_table.md"
+    },
+    "experiment_scope": {
+      "csv": "cf_h2o/results/paper_artifacts/tables/experiment_scope_table.csv",
+      "tex": "cf_h2o/results/paper_artifacts/tables/experiment_scope_table.tex",
+      "md": "cf_h2o/results/paper_artifacts/tables/experiment_scope_table.md"
     }
   },
   "figures": {
+    "strict_leave_one_out_total_mse_ratio": "cf_h2o/results/paper_artifacts/figures/strict_leave_one_out_total_mse_ratio.png",
     "cross_city_total_mse_ratio": "cf_h2o/results/paper_artifacts/figures/cross_city_total_mse_ratio.png",
     "source_weighting_sensitivity_heatmap": "cf_h2o/results/paper_artifacts/figures/source_weighting_sensitivity_heatmap.png",
+    "source_subset_robustness": "cf_h2o/results/paper_artifacts/figures/source_subset_robustness.png",
+    "generator_robustness": "cf_h2o/results/paper_artifacts/figures/generator_robustness.png",
     "cross_city_policy_regret_ratio": "cf_h2o/results/paper_artifacts/figures/cross_city_policy_regret_ratio.png",
     "sampled_rollout_mean_reward": "cf_h2o/results/paper_artifacts/figures/sampled_rollout_mean_reward.png"
   },
@@ -48,6 +71,7 @@
     },
     "cross_city_policy": {
       "splits": 6,
+      "unique_targets": 4,
       "cfcmt_reward_wins_vs_h2oplus": 5,
       "h2oplus_reward_wins_vs_cfcmt": 1,
       "reward_ties": 0,
@@ -57,7 +81,43 @@
       "mean_cfcmt_regret_ratio_vs_h2oplus": 0.8363858695107244,
       "cfcmt_headway_error_wins_vs_h2oplus": 4,
       "h2oplus_headway_error_wins_vs_cfcmt": 2,
-      "mean_cfcmt_headway_error_ratio_vs_h2oplus": 0.9990061148546556
+      "mean_cfcmt_headway_error_ratio_vs_h2oplus": 0.9990061148546556,
+      "cfcmt_bunching_rate_wins_vs_h2oplus": 6,
+      "h2oplus_bunching_rate_wins_vs_cfcmt": 0,
+      "mean_cfcmt_bunching_rate_ratio_vs_h2oplus": 0.702149748967786,
+      "cfcmt_large_gap_rate_wins_vs_h2oplus": 3,
+      "h2oplus_large_gap_rate_wins_vs_cfcmt": 0,
+      "mean_cfcmt_large_gap_rate_ratio_vs_h2oplus": 0.6057978630232966
+    },
+    "strict_cross_city_policy": {
+      "splits": 4,
+      "unique_targets": 4,
+      "cfcmt_reward_wins_vs_h2oplus": 3,
+      "h2oplus_reward_wins_vs_cfcmt": 1,
+      "reward_ties": 0,
+      "mean_cfcmt_reward_gain_vs_h2oplus": 0.0012737588524466548,
+      "cfcmt_regret_wins_vs_h2oplus": 3,
+      "h2oplus_regret_wins_vs_cfcmt": 1,
+      "mean_cfcmt_regret_ratio_vs_h2oplus": 0.8755738265309332,
+      "cfcmt_headway_error_wins_vs_h2oplus": 3,
+      "h2oplus_headway_error_wins_vs_cfcmt": 1,
+      "mean_cfcmt_headway_error_ratio_vs_h2oplus": 0.9991639255977017,
+      "cfcmt_bunching_rate_wins_vs_h2oplus": 4,
+      "h2oplus_bunching_rate_wins_vs_cfcmt": 0,
+      "mean_cfcmt_bunching_rate_ratio_vs_h2oplus": 0.6435477955968072,
+      "cfcmt_large_gap_rate_wins_vs_h2oplus": 2,
+      "h2oplus_large_gap_rate_wins_vs_cfcmt": 0,
+      "mean_cfcmt_large_gap_rate_ratio_vs_h2oplus": 0.5793483972674724
+    },
+    "strict_leave_one_out": {
+      "splits": 4,
+      "unique_targets": 4,
+      "cfcmt_wins_vs_h2oplus": 4,
+      "cfcmt_similarity_weighted_wins_vs_h2oplus": 4,
+      "cfcmt_similarity_weighted_wins_vs_unweighted_cfcmt": 3,
+      "mean_cfcmt_vs_h2oplus_ratio": 0.7587172944859035,
+      "mean_cfcmt_similarity_weighted_vs_h2oplus_ratio": 0.5782162460526709,
+      "mean_cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio": 0.732898032192015
     },
     "source_similarity_weighting": {
       "splits": 6,
@@ -107,36 +167,47 @@
         "mean_cfcmt_similarity_weighted_vs_unweighted_cfcmt_ratio": 0.7560139171274325
       }
     },
+    "source_subset_robustness": {
+      "subsets": 4,
+      "subsets_all_splits_weighted_cfcmt_beats_h2oplus": 2,
+      "subsets_all_splits_unweighted_cfcmt_beats_h2oplus": 2
+    },
+    "generator_robustness": {
+      "scenarios": 7,
+      "splits_per_scenario": 4,
+      "scenarios_all_splits_weighted_cfcmt_beats_h2oplus": 5,
+      "scenarios_all_splits_unweighted_cfcmt_beats_h2oplus": 5
+    },
     "sampled_rollout": {
       "no_hold": {
         "episodes": 2,
-        "mean_reward": -196.81955903142858,
-        "mean_headway_abs_error": 111.55763680483525,
+        "mean_reward": -217.26525131695934,
+        "mean_headway_abs_error": 112.1612398147583,
         "mean_hold_seconds": 0.0
       },
       "fixed_30": {
         "episodes": 2,
-        "mean_reward": -173.81352282245788,
-        "mean_headway_abs_error": 97.31463871796925,
+        "mean_reward": -209.38019141511634,
+        "mean_headway_abs_error": 113.99755785544713,
         "mean_hold_seconds": 30.0
       },
       "h2oplus_dense_policy": {
         "episodes": 2,
-        "mean_reward": -183.18284572315616,
-        "mean_headway_abs_error": 92.92469957986393,
-        "mean_hold_seconds": 12.170608108108109
+        "mean_reward": -176.8746747462895,
+        "mean_headway_abs_error": 117.57452189406834,
+        "mean_hold_seconds": 11.797297297297296
       },
       "cfcmt_mechanism_policy": {
         "episodes": 2,
-        "mean_reward": -193.45544021839095,
-        "mean_headway_abs_error": 103.29783254193762,
-        "mean_hold_seconds": 3.3625
+        "mean_reward": -171.37749689402048,
+        "mean_headway_abs_error": 87.89484232187272,
+        "mean_hold_seconds": 3.775
       },
       "cfcmt_similarity_weighted_policy": {
         "episodes": 2,
-        "mean_reward": -175.84843260325465,
-        "mean_headway_abs_error": 97.06669009049733,
-        "mean_hold_seconds": 2.475
+        "mean_reward": -165.9477523296634,
+        "mean_headway_abs_error": 97.59025704286992,
+        "mean_hold_seconds": 1.8125
       }
     }
   }

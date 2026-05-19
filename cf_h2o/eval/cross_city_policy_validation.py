@@ -87,6 +87,8 @@ class PolicyAccumulator:
     oracle_reward_sum: float = 0.0
     headway_abs_sum: float = 0.0
     gap_abs_sum: float = 0.0
+    bunching_sum: float = 0.0
+    large_gap_sum: float = 0.0
     waiting_sum: float = 0.0
     hold_sum: float = 0.0
     action_counts: dict[str, int] = field(default_factory=dict)
@@ -95,8 +97,11 @@ class PolicyAccumulator:
         self.n += int(chosen.shape[0])
         self.reward_sum += float(chosen[:, -1].sum())
         self.oracle_reward_sum += float(oracle_reward.sum())
-        self.headway_abs_sum += float((0.5 * (np.abs(chosen[:, 0] - target) + np.abs(chosen[:, 1] - target))).sum())
+        target_safe = np.maximum(target, 60.0)
+        self.headway_abs_sum += float((0.5 * (np.abs(chosen[:, 0] - target_safe) + np.abs(chosen[:, 1] - target_safe))).sum())
         self.gap_abs_sum += float(np.abs(chosen[:, 4]).sum())
+        self.bunching_sum += float(((chosen[:, 0] < 0.5 * target_safe) | (chosen[:, 1] < 0.5 * target_safe)).sum())
+        self.large_gap_sum += float(((chosen[:, 0] > 1.5 * target_safe) | (chosen[:, 1] > 1.5 * target_safe)).sum())
         self.waiting_sum += float(chosen[:, 2].sum())
         self.hold_sum += float(action.sum())
         for value, count in zip(*np.unique(action, return_counts=True)):
@@ -112,6 +117,8 @@ class PolicyAccumulator:
             "mean_regret_to_oracle": (self.oracle_reward_sum - self.reward_sum) / denom,
             "mean_headway_abs_error": self.headway_abs_sum / denom,
             "mean_abs_gap": self.gap_abs_sum / denom,
+            "bunching_rate": self.bunching_sum / denom,
+            "large_gap_rate": self.large_gap_sum / denom,
             "mean_waiting_passengers": self.waiting_sum / denom,
             "mean_hold_seconds": self.hold_sum / denom,
             "action_counts": dict(sorted(self.action_counts.items(), key=lambda item: float(item[0]))),
@@ -387,12 +394,116 @@ def evaluate_policy(target_key: str, spec: dict[str, Any], root: Path, model, ar
                 metrics["cfcmt_mechanism_policy"]["mean_headway_abs_error"],
                 metrics["h2oplus_dense_policy"]["mean_headway_abs_error"],
             ),
+            "cfcmt_bunching_rate_ratio_vs_h2oplus": _safe_ratio(
+                metrics["cfcmt_mechanism_policy"]["bunching_rate"],
+                metrics["h2oplus_dense_policy"]["bunching_rate"],
+            ),
+            "cfcmt_large_gap_rate_ratio_vs_h2oplus": _safe_ratio(
+                metrics["cfcmt_mechanism_policy"]["large_gap_rate"],
+                metrics["h2oplus_dense_policy"]["large_gap_rate"],
+            ),
+            "cfcmt_mean_hold_seconds_delta_vs_h2oplus": (
+                metrics["cfcmt_mechanism_policy"]["mean_hold_seconds"]
+                - metrics["h2oplus_dense_policy"]["mean_hold_seconds"]
+            ),
         },
     }
 
 
 def _safe_ratio(num: float, den: float) -> float | None:
     return float(num / den) if abs(den) > 1e-12 else None
+
+
+def _summarize_policy_splits(split_results: list[dict[str, Any]]) -> dict[str, Any]:
+    eps = 1e-12
+    cfcmt_wins_reward = sum(
+        1 for split in split_results if split["comparisons"]["cfcmt_reward_gain_vs_h2oplus"] > eps
+    )
+    h2o_wins_reward = sum(
+        1 for split in split_results if split["comparisons"]["cfcmt_reward_gain_vs_h2oplus"] < -eps
+    )
+    regret_ratios = [
+        split["comparisons"]["cfcmt_regret_ratio_vs_h2oplus"]
+        for split in split_results
+        if split["comparisons"]["cfcmt_regret_ratio_vs_h2oplus"] is not None
+    ]
+    headway_ratios = [
+        split["comparisons"]["cfcmt_headway_error_ratio_vs_h2oplus"]
+        for split in split_results
+        if split["comparisons"]["cfcmt_headway_error_ratio_vs_h2oplus"] is not None
+    ]
+    bunching_ratios = [
+        split["comparisons"]["cfcmt_bunching_rate_ratio_vs_h2oplus"]
+        for split in split_results
+        if split["comparisons"]["cfcmt_bunching_rate_ratio_vs_h2oplus"] is not None
+    ]
+    large_gap_ratios = [
+        split["comparisons"]["cfcmt_large_gap_rate_ratio_vs_h2oplus"]
+        for split in split_results
+        if split["comparisons"]["cfcmt_large_gap_rate_ratio_vs_h2oplus"] is not None
+    ]
+    return {
+        "splits": len(split_results),
+        "unique_targets": len({split["target_env"] for split in split_results}),
+        "cfcmt_reward_wins_vs_h2oplus": cfcmt_wins_reward,
+        "h2oplus_reward_wins_vs_cfcmt": h2o_wins_reward,
+        "reward_ties": len(split_results) - cfcmt_wins_reward - h2o_wins_reward,
+        "mean_cfcmt_reward_gain_vs_h2oplus": float(
+            np.mean([split["comparisons"]["cfcmt_reward_gain_vs_h2oplus"] for split in split_results])
+        ) if split_results else None,
+        "cfcmt_regret_wins_vs_h2oplus": sum(
+            1
+            for split in split_results
+            if split["methods"]["cfcmt_mechanism_policy"]["mean_regret_to_oracle"]
+            < split["methods"]["h2oplus_dense_policy"]["mean_regret_to_oracle"] - eps
+        ),
+        "h2oplus_regret_wins_vs_cfcmt": sum(
+            1
+            for split in split_results
+            if split["methods"]["cfcmt_mechanism_policy"]["mean_regret_to_oracle"]
+            > split["methods"]["h2oplus_dense_policy"]["mean_regret_to_oracle"] + eps
+        ),
+        "mean_cfcmt_regret_ratio_vs_h2oplus": float(np.mean(regret_ratios)) if regret_ratios else None,
+        "cfcmt_headway_error_wins_vs_h2oplus": sum(
+            1
+            for split in split_results
+            if split["methods"]["cfcmt_mechanism_policy"]["mean_headway_abs_error"]
+            < split["methods"]["h2oplus_dense_policy"]["mean_headway_abs_error"] - eps
+        ),
+        "h2oplus_headway_error_wins_vs_cfcmt": sum(
+            1
+            for split in split_results
+            if split["methods"]["cfcmt_mechanism_policy"]["mean_headway_abs_error"]
+            > split["methods"]["h2oplus_dense_policy"]["mean_headway_abs_error"] + eps
+        ),
+        "mean_cfcmt_headway_error_ratio_vs_h2oplus": float(np.mean(headway_ratios)) if headway_ratios else None,
+        "cfcmt_bunching_rate_wins_vs_h2oplus": sum(
+            1
+            for split in split_results
+            if split["methods"]["cfcmt_mechanism_policy"]["bunching_rate"]
+            < split["methods"]["h2oplus_dense_policy"]["bunching_rate"] - eps
+        ),
+        "h2oplus_bunching_rate_wins_vs_cfcmt": sum(
+            1
+            for split in split_results
+            if split["methods"]["cfcmt_mechanism_policy"]["bunching_rate"]
+            > split["methods"]["h2oplus_dense_policy"]["bunching_rate"] + eps
+        ),
+        "mean_cfcmt_bunching_rate_ratio_vs_h2oplus": float(np.mean(bunching_ratios)) if bunching_ratios else None,
+        "cfcmt_large_gap_rate_wins_vs_h2oplus": sum(
+            1
+            for split in split_results
+            if split["methods"]["cfcmt_mechanism_policy"]["large_gap_rate"]
+            < split["methods"]["h2oplus_dense_policy"]["large_gap_rate"] - eps
+        ),
+        "h2oplus_large_gap_rate_wins_vs_cfcmt": sum(
+            1
+            for split in split_results
+            if split["methods"]["cfcmt_mechanism_policy"]["large_gap_rate"]
+            > split["methods"]["h2oplus_dense_policy"]["large_gap_rate"] + eps
+        ),
+        "mean_cfcmt_large_gap_rate_ratio_vs_h2oplus": float(np.mean(large_gap_ratios)) if large_gap_ratios else None,
+    }
 
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
@@ -432,50 +543,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             }
         )
 
-    eps = 1e-12
-    cfcmt_wins_reward = sum(
-        1 for split in split_results if split["comparisons"]["cfcmt_reward_gain_vs_h2oplus"] > eps
-    )
-    h2o_wins_reward = sum(
-        1 for split in split_results if split["comparisons"]["cfcmt_reward_gain_vs_h2oplus"] < -eps
-    )
-    ties_reward = len(split_results) - cfcmt_wins_reward - h2o_wins_reward
-    mean_reward_gain = float(np.mean([split["comparisons"]["cfcmt_reward_gain_vs_h2oplus"] for split in split_results]))
-    regret_ratios = [
-        split["comparisons"]["cfcmt_regret_ratio_vs_h2oplus"]
-        for split in split_results
-        if split["comparisons"]["cfcmt_regret_ratio_vs_h2oplus"] is not None
-    ]
-    headway_ratios = [
-        split["comparisons"]["cfcmt_headway_error_ratio_vs_h2oplus"]
-        for split in split_results
-        if split["comparisons"]["cfcmt_headway_error_ratio_vs_h2oplus"] is not None
-    ]
-    mean_regret_ratio = float(np.mean(regret_ratios)) if regret_ratios else None
-    cfcmt_wins_regret = sum(
-        1
-        for split in split_results
-        if split["methods"]["cfcmt_mechanism_policy"]["mean_regret_to_oracle"]
-        < split["methods"]["h2oplus_dense_policy"]["mean_regret_to_oracle"] - eps
-    )
-    h2o_wins_regret = sum(
-        1
-        for split in split_results
-        if split["methods"]["cfcmt_mechanism_policy"]["mean_regret_to_oracle"]
-        > split["methods"]["h2oplus_dense_policy"]["mean_regret_to_oracle"] + eps
-    )
-    cfcmt_wins_headway = sum(
-        1
-        for split in split_results
-        if split["methods"]["cfcmt_mechanism_policy"]["mean_headway_abs_error"]
-        < split["methods"]["h2oplus_dense_policy"]["mean_headway_abs_error"] - eps
-    )
-    h2o_wins_headway = sum(
-        1
-        for split in split_results
-        if split["methods"]["cfcmt_mechanism_policy"]["mean_headway_abs_error"]
-        > split["methods"]["h2oplus_dense_policy"]["mean_headway_abs_error"] + eps
-    )
+    strict_split_results = [split for split in split_results if split["name"].startswith("leave_one_city_out_all::")]
     return {
         "ok": True,
         "validation_level": "cross_city_static_offline_headway_stress_policy_lookahead",
@@ -499,19 +567,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             for key, value in city_stats.items()
         },
         "splits": split_results,
-        "summary": {
-            "splits": len(split_results),
-            "cfcmt_reward_wins_vs_h2oplus": cfcmt_wins_reward,
-            "h2oplus_reward_wins_vs_cfcmt": h2o_wins_reward,
-            "reward_ties": ties_reward,
-            "mean_cfcmt_reward_gain_vs_h2oplus": mean_reward_gain,
-            "cfcmt_regret_wins_vs_h2oplus": cfcmt_wins_regret,
-            "h2oplus_regret_wins_vs_cfcmt": h2o_wins_regret,
-            "mean_cfcmt_regret_ratio_vs_h2oplus": mean_regret_ratio,
-            "cfcmt_headway_error_wins_vs_h2oplus": cfcmt_wins_headway,
-            "h2oplus_headway_error_wins_vs_cfcmt": h2o_wins_headway,
-            "mean_cfcmt_headway_error_ratio_vs_h2oplus": float(np.mean(headway_ratios)) if headway_ratios else None,
-        },
+        "summary": _summarize_policy_splits(split_results),
+        "strict_leave_one_city_out_summary": _summarize_policy_splits(strict_split_results),
     }
 
 
