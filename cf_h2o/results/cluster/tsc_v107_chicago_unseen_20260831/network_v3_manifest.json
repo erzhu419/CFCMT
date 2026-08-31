@@ -1,0 +1,84 @@
+{
+  "acquisition_manifest_sha256": "b0170254aecc92780d309ff30acfb044a77ea7e0048f962f531845d2ff1ba485",
+  "acquisition_protocol": "cfcmt-chicago-full-week-for-hire-acquisition-v1",
+  "acquisition_root": "/home/zhengliang01/scheduleurm_work/CFCMT_DATA/chicago_v107_72d64ce/acquisition_v1",
+  "anchor_file": "anchors.json",
+  "anchor_protocol": "cfcmt-chicago-capacity-farthest-passenger-scc-anchors-v3",
+  "anchor_summary": {
+    "anchor_eligible_passenger_edge_count": 290495,
+    "anchors_per_area": 32,
+    "component_fraction_of_eligible": 0.9964011047998282,
+    "component_unassigned_to_chicago_area_count": 166552,
+    "eligible_passenger_edge_count": 409848,
+    "largest_strong_component_edge_count": 408373,
+    "total_anchor_count": 2464
+  },
+  "build_dependency": {
+    "package": "pyproj",
+    "protocol": "cfcmt-brunswick-build-pyproj-wheel-v1",
+    "site_packages": "/home/zhengliang01/scheduleurm_work/runtimes/cfcmt-brunswick-build-pyproj371-v1/site-packages",
+    "version": "3.7.1",
+    "wheel": "pyproj-3.7.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "wheel_sha256": "1e47c4e93b88d99dd118875ee3ca0171932444cdc0b52d493371b5d98d0f30ee"
+  },
+  "created_at_utc": "2026-08-31T04:30:01.618562+00:00",
+  "netconvert": {
+    "command": [
+      "/home/zhengliang01/scheduleurm_work/runtimes/cfcmt-sumo122-py310-v1/bin/netconvert",
+      "--osm-files",
+      "/home/zhengliang01/scheduleurm_work/CFCMT_DATA/chicago_v107_72d64ce/acquisition_v1/Chicago.osm.gz",
+      "--type-files",
+      "/home/zhengliang01/scheduleurm_work/runtimes/cfcmt-sumo122-py310-v1/sumo/data/typemap/osmNetconvert.typ.xml",
+      "--geometry.remove",
+      "--ramps.guess",
+      "--junctions.join",
+      "--tls.guess-signals",
+      "--tls.discard-simple",
+      "--tls.join",
+      "--tls.default-type",
+      "actuated",
+      "--output.original-names",
+      "true",
+      "--output-file",
+      "/home/zhengliang01/scheduleurm_work/CFCMT_DATA/chicago_v107_409aec2/.network_v3.staging-v3/chicago_full.net.xml.gz"
+    ],
+    "duration_sec": 0.0,
+    "execution": "adopted byte-identical successful v1 output",
+    "returncode": 0,
+    "stderr_log": "logs/netconvert.stderr.log",
+    "stderr_tail": "see adopted parent log",
+    "stdout_log": "logs/netconvert.stdout.log",
+    "stdout_tail": "Success.\n"
+  },
+  "network_file": "chicago_full.net.xml.gz",
+  "network_inventory": {
+    "connection_count": 5674164,
+    "edge_count": 4492660,
+    "junction_count": 1050674,
+    "lane_count": 4655236,
+    "location": {
+      "convBoundary": "0.00,0.00,59000.13,60506.27",
+      "netOffset": "-407089.84,-4606414.24",
+      "origBoundary": "-88.603181,40.398551,-84.875909,45.829996",
+      "projParameter": "+proj=utm +zone=16 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
+    },
+    "noninternal_edge_count": 1538949,
+    "traffic_light_count": 4960,
+    "traffic_light_phase_count": 30664,
+    "traffic_light_program_count": 4960
+  },
+  "network_reuse": {
+    "mode": "adopted_from_dependency_only_rejected_static_build",
+    "source_failure_sha256": "b924fa93c47f26a8226f3310fe3130b11303f872f5e6f098205df8928d88c968",
+    "source_netconvert_stdout": "Success.",
+    "source_network_sha256": "45250772dcff2cd79bd4472e0657d09c20eb32be280a1099d5ba93b831ac42ae",
+    "source_network_size_bytes": 362471296,
+    "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_DATA/chicago_v107_2c70eed/network_v1.rejected"
+  },
+  "network_sha256": "45250772dcff2cd79bd4472e0657d09c20eb32be280a1099d5ba93b831ac42ae",
+  "network_size_bytes": 362471296,
+  "protocol": "cfcmt-chicago-osm-sumo122-network-and-anchor-v3",
+  "static_scan_duration_sec": 209.92641310801264,
+  "status": "PASS",
+  "sumo_version": "1.22.0"
+}
