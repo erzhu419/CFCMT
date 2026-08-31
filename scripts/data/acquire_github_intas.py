@@ -9,6 +9,7 @@ import json
 from pathlib import Path, PurePosixPath
 import shlex
 import sys
+import time
 from typing import Any, Mapping, Sequence
 from urllib.request import Request, urlopen
 
@@ -147,6 +148,39 @@ def _manifest(
     }
 
 
+def _remote_run_transport_retry(
+    ssh: Sequence[str],
+    target: str,
+    command: str,
+    *,
+    stdin: bytes | None = None,
+    attempts: int = 3,
+) -> Any:
+    result = None
+    for attempt in range(attempts):
+        result = _remote_run(ssh, target, command, stdin=stdin)
+        if result.returncode != 255:
+            return result
+        if attempt + 1 < attempts:
+            time.sleep(5)
+    assert result is not None
+    return result
+
+
+def _finalize_command(
+    *, staging: PurePosixPath, output_root: PurePosixPath
+) -> str:
+    return (
+        "set -e; "
+        f"if test -d {shlex.quote(str(output_root))}; then "
+        f"test ! -e {shlex.quote(str(staging))}; "
+        f"test -f {shlex.quote(str(output_root / 'acquisition_manifest.json'))}; "
+        "else "
+        f"mv {shlex.quote(str(staging))} {shlex.quote(str(output_root))}; "
+        "fi"
+    )
+
+
 def acquire_remote(
     *, output_root: PurePosixPath, node: str, scheduler_skill_dir: Path
 ) -> dict[str, Any]:
@@ -206,22 +240,26 @@ def acquire_remote(
             blobs=blobs,
             commit_payload=commit_payload,
         )
-        upload = _remote_run(
+        upload = _remote_run_transport_retry(
             ssh,
             target,
             f"cat > {shlex.quote(str(staging / 'acquisition_manifest.json'))}",
             stdin=(json.dumps(payload, indent=2, sort_keys=True) + "\n").encode(),
         )
         _check_remote(upload, "InTAS acquisition manifest upload")
-        finalize = _remote_run(
+        finalize = _remote_run_transport_retry(
             ssh,
             target,
-            f"mv {shlex.quote(str(staging))} {shlex.quote(str(output_root))}",
+            _finalize_command(staging=staging, output_root=output_root),
         )
         _check_remote(finalize, "InTAS acquisition finalization")
         return payload
     except Exception:
-        _remote_run(ssh, target, f"rm -rf -- {shlex.quote(str(staging))}")
+        _remote_run_transport_retry(
+            ssh,
+            target,
+            f"rm -rf -- {shlex.quote(str(staging))}",
+        )
         raise
 
 

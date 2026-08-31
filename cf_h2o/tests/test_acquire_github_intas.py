@@ -10,6 +10,7 @@ from scripts.data.acquire_github_intas import (
     EXPECTED_BLOB_COUNT,
     REQUIRED_PATHS,
     _extraction_command,
+    _finalize_command,
     _validate_git_tree,
 )
 
@@ -67,3 +68,15 @@ def test_extraction_command_checks_every_blob_without_local_raw_data() -> None:
     assert "/remote/staging/source/scenario/ingolstadt.net.xml" in command
     assert "-eq 123" in command
     assert f"-eq {EXPECTED_BLOB_COUNT}" in command
+
+
+def test_finalize_command_is_idempotent_after_transport_disconnect() -> None:
+    command = _finalize_command(
+        staging=PurePosixPath("/remote/.staging"),
+        output_root=PurePosixPath("/remote/acquisition"),
+    )
+
+    assert "if test -d /remote/acquisition" in command
+    assert "test ! -e /remote/.staging" in command
+    assert "/remote/acquisition/acquisition_manifest.json" in command
+    assert "mv /remote/.staging /remote/acquisition" in command
