@@ -24,6 +24,10 @@ from scripts.data.acquire_chicago_for_hire_unseen import (
     speed_page_url,
     trip_page_url,
 )
+from scripts.data.acquire_chicago_for_hire_unseen_remote import (
+    TRANSFER_MODE,
+    remote_receive_command,
+)
 
 
 def test_frozen_week_and_source_inventory_are_complete() -> None:
@@ -68,3 +72,16 @@ def test_frozen_metadata_identities_are_nonempty_and_unique() -> None:
     assert len({source.key for source in SOURCES}) == len(SOURCES)
     with pytest.raises(KeyError):
         _ = EXPECTED_TRIP_ROWS["private_cars"]
+
+
+def test_remote_receiver_stages_before_atomic_validation() -> None:
+    from pathlib import PurePosixPath
+
+    command = remote_receive_command(
+        PurePosixPath("/remote/acquisition/.speed.csv.part")
+    )
+
+    assert "cat > /remote/acquisition/.speed.csv.part" in command
+    assert "sha256sum /remote/acquisition/.speed.csv.part" in command
+    assert "mv " not in command
+    assert TRANSFER_MODE.endswith("no_local_raw_file")
