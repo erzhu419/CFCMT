@@ -14,11 +14,13 @@ import sys
 import time
 from typing import Any, Mapping, Sequence
 
-from cf_h2o.traffic_signal.dataset_cache import atomic_write_json
-from scripts.data.acquire_chicago_for_hire_unseen import DATES
-
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(PROJECT_ROOT))
+
+from cf_h2o.traffic_signal.dataset_cache import atomic_write_json  # noqa: E402
+from scripts.data.acquire_chicago_for_hire_unseen import DATES  # noqa: E402
+
+
 DEFAULT_SCHEDULER_DIR = Path("/home/erzhu419/mine_code/scheduleurm/skill")
 DEFAULT_NODES = tuple(f"node{index:03d}" for index in range(1, 7))
 RUNNER_RELATIVE = Path(

@@ -8,8 +8,11 @@ from typing import Any, Mapping, Sequence
 
 import numpy as np
 
-from cf_h2o.eval.traffic_signal_resco_cfcmt_v3 import _group_adjusted_scores
-from cf_h2o.eval.traffic_signal_resco_cfcmt_v3 import CONTRAST_FEATURES_V3
+from cf_h2o.eval.traffic_signal_resco_cfcmt_v3 import (
+    CONTRAST_FEATURES_V3,
+    _group_adjusted_scores,
+    _relative_contrast_rule_gap,
+)
 from cf_h2o.traffic_signal.action_contrast import (
     action_group_ids,
     build_action_contrast_dataset,
@@ -30,6 +33,12 @@ OFFLINE_SOURCE_SELECTION_PROTOCOL = (
 )
 FAMILYWISE_OFFLINE_SOURCE_SELECTION_PROTOCOL = (
     "target-offline-familywise-negative-transfer-selector-v1"
+)
+OFFLINE_GUARD_EVALUATION_PROTOCOL = (
+    "target-offline-cross-fitted-deployment-guard-evaluation-v1"
+)
+OFFLINE_GUARD_SELECTION_PROTOCOL = (
+    "target-offline-familywise-deployment-guard-selector-v1"
 )
 
 
@@ -108,6 +117,7 @@ class FrozenCausalSourceMixtureModel:
         source_objective_modes: Mapping[str, str],
         target_only_objective_mode: str,
         source_city_weights: Mapping[str, float],
+        uncertainty_scale: float = 1.0,
     ) -> None:
         names = set(str(value) for value in source_models)
         if set(str(value) for value in source_objective_modes) != names:
@@ -123,6 +133,9 @@ class FrozenCausalSourceMixtureModel:
         mass = float(sum(weights.values()))
         if mass > 1.0 + 1e-12:
             raise ValueError("source-city weights must sum to at most one")
+        scale = float(uncertainty_scale)
+        if not np.isfinite(scale) or scale <= 0.0:
+            raise ValueError("uncertainty_scale must be finite and positive")
         self.source_models = {
             name: source_models[name] for name in sorted(names)
         }
@@ -135,6 +148,7 @@ class FrozenCausalSourceMixtureModel:
             name: weights[name] for name in sorted(weights) if weights[name] > 0.0
         }
         self.source_mass = mass
+        self.uncertainty_scale = scale
         self.audit = SourceWeightAudit()
 
     def predict(self, dataset):
@@ -164,10 +178,321 @@ class FrozenCausalSourceMixtureModel:
         return {
             "control_cost": {
                 "mean": score,
-                "uncertainty": uncertainty,
+                "uncertainty": self.uncertainty_scale * uncertainty,
                 "context_trust": trust,
             }
         }
+
+
+def offline_guard_profile_key(
+    risk_multiplier: float,
+    max_relative_rule_gap: float,
+) -> str:
+    def token(value: float) -> str:
+        return f"{float(value):g}".replace("-", "m").replace(".", "p")
+
+    return (
+        f"risk_{token(risk_multiplier)}"
+        f"__gap_{token(max_relative_rule_gap)}"
+    )
+
+
+def evaluate_target_offline_guard_grid(
+    dataset,
+    *,
+    reference_policy: Any,
+    source_model: Any,
+    target_only_model: Any,
+    source_objective_mode: str,
+    target_only_objective_mode: str,
+    source_weight: float,
+    scenarios: Sequence[str],
+    risk_multipliers: Sequence[float] = (0.0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0),
+    max_relative_rule_gaps: Sequence[float] = (0.0, 0.10, 0.25, 0.50, 1.0),
+    min_context_trust: float = 0.1,
+    margin: float = 0.0,
+    contrast_features: Sequence[str] = CONTRAST_FEATURES_V3,
+) -> dict[str, Any]:
+    """Score deployment guards on held-out target offline action groups."""
+
+    weight = float(source_weight)
+    risks = tuple(float(value) for value in risk_multipliers)
+    gaps = tuple(float(value) for value in max_relative_rule_gaps)
+    scenario_names = tuple(str(value) for value in scenarios)
+    if (
+        not 0.0 <= weight <= 1.0
+        or not risks
+        or not gaps
+        or len(risks) != len(set(risks))
+        or len(gaps) != len(set(gaps))
+        or any(value < 0.0 for value in risks)
+        or any(value < 0.0 for value in gaps)
+        or not 0.0 <= float(min_context_trust) <= 1.0
+        or float(margin) < 0.0
+        or not scenario_names
+    ):
+        raise ValueError("invalid target-offline guard grid")
+    contrast = build_action_contrast_dataset(
+        dataset,
+        reference_policy=reference_policy,
+        contrast_features=tuple(str(value) for value in contrast_features),
+    )
+    actual = np.asarray(contrast.targets["interval_cost"], dtype=float)
+    groups = np.asarray(action_group_ids(contrast), dtype=str)
+    is_reference = np.asarray(contrast.metadata["is_reference"], dtype=bool)
+    source_score, source_uncertainty, source_trust, _ = _group_adjusted_scores(
+        contrast,
+        source_model.predict(contrast),
+        objective_mode=str(source_objective_mode),
+    )
+    target_score, target_uncertainty, target_trust, _ = _group_adjusted_scores(
+        contrast,
+        target_only_model.predict(contrast),
+        objective_mode=str(target_only_objective_mode),
+    )
+    score = target_score + weight * (source_score - target_score)
+    uncertainty = (
+        (1.0 - weight) * target_uncertainty + weight * source_uncertainty
+    )
+    trust = (
+        target_trust
+        if weight == 0.0
+        else source_trust
+        if weight == 1.0
+        else np.minimum(source_trust, target_trust)
+    )
+    rule_gap = _relative_contrast_rule_gap(contrast)
+    arrays = (actual, score, uncertainty, trust, rule_gap)
+    if any(
+        np.asarray(values).shape != (contrast.size,)
+        or not np.all(np.isfinite(values))
+        for values in arrays
+    ):
+        raise ValueError("target-offline guard arrays must be finite and aligned")
+
+    group_rows = []
+    for group in np.unique(groups):
+        rows = np.flatnonzero(groups == group)
+        reference = rows[is_reference[rows]]
+        matches = [
+            scenario
+            for scenario in scenario_names
+            if str(group).startswith(f"{scenario}:")
+        ]
+        if reference.size != 1 or len(matches) != 1:
+            raise ValueError(f"invalid target-offline guard group: {group}")
+        group_rows.append((str(group), matches[0], rows, int(reference[0])))
+    if {row[1] for row in group_rows} != set(scenario_names):
+        raise ValueError("target-offline guard fold misses a scenario")
+
+    grid = {}
+    for risk in risks:
+        for gap_limit in gaps:
+            scenario_deltas = {scenario: [] for scenario in scenario_names}
+            scenario_regrets = {scenario: [] for scenario in scenario_names}
+            accepted = 0
+            learned_differences = 0
+            for _, scenario, rows, reference in group_rows:
+                learned = int(rows[int(np.argmin(score[rows]))])
+                learned_differences += int(learned != reference)
+                use_learned = bool(
+                    learned != reference
+                    and float(trust[learned]) >= float(min_context_trust)
+                    and float(rule_gap[learned]) <= gap_limit + 1e-12
+                    and float(score[learned])
+                    + risk * float(uncertainty[learned])
+                    + float(margin)
+                    < 0.0
+                )
+                selected = learned if use_learned else reference
+                accepted += int(use_learned)
+                values = actual[rows]
+                scale = action_group_range(values)
+                scenario_deltas[scenario].append(
+                    (float(actual[selected]) - float(actual[reference])) / scale
+                )
+                scenario_regrets[scenario].append(
+                    (float(actual[selected]) - float(np.min(values))) / scale
+                )
+            mean_delta_by_scenario = {
+                scenario: float(np.mean(values))
+                for scenario, values in scenario_deltas.items()
+            }
+            mean_regret_by_scenario = {
+                scenario: float(np.mean(values))
+                for scenario, values in scenario_regrets.items()
+            }
+            key = offline_guard_profile_key(risk, gap_limit)
+            grid[key] = {
+                "profile_key": key,
+                "risk_multiplier": risk,
+                "max_relative_rule_gap": gap_limit,
+                "min_context_trust": float(min_context_trust),
+                "margin": float(margin),
+                "group_count": len(group_rows),
+                "learned_difference_count": learned_differences,
+                "accepted_override_count": accepted,
+                "scenario_mean_normalized_delta_vs_rule": mean_delta_by_scenario,
+                "scenario_mean_normalized_action_regret": mean_regret_by_scenario,
+                "equal_scenario_mean_normalized_delta_vs_rule": float(
+                    np.mean(
+                        [mean_delta_by_scenario[name] for name in scenario_names]
+                    )
+                ),
+                "equal_scenario_mean_normalized_action_regret": float(
+                    np.mean(
+                        [mean_regret_by_scenario[name] for name in scenario_names]
+                    )
+                ),
+            }
+    return {
+        "protocol": OFFLINE_GUARD_EVALUATION_PROTOCOL,
+        "source_weight": weight,
+        "scenarios": list(scenario_names),
+        "profile_count": len(grid),
+        "grid": grid,
+    }
+
+
+def select_target_offline_guard_with_familywise_control(
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    familywise_alpha: float = 0.025,
+    minimum_mean_improvement: float = 0.002,
+    maximum_fold_regression: float = 0.01,
+) -> dict[str, Any]:
+    """Freeze a deployment guard from target-offline OOF folds only."""
+
+    alpha = float(familywise_alpha)
+    if (
+        not 0.0 < alpha < 1.0
+        or float(minimum_mean_improvement) < 0.0
+        or float(maximum_fold_regression) < 0.0
+    ):
+        raise ValueError("invalid family-wise target-offline guard thresholds")
+    normalized = []
+    for row in rows:
+        normalized.append(
+            {
+                "fold_index": int(row["fold_index"]),
+                "profile_key": str(row["profile_key"]),
+                "risk_multiplier": float(row["risk_multiplier"]),
+                "max_relative_rule_gap": float(row["max_relative_rule_gap"]),
+                "min_context_trust": float(row["min_context_trust"]),
+                "margin": float(row["margin"]),
+                "delta": float(
+                    row["equal_scenario_mean_normalized_delta_vs_rule"]
+                ),
+                "accepted_override_count": int(row["accepted_override_count"]),
+            }
+        )
+    folds = tuple(sorted({row["fold_index"] for row in normalized}))
+    profiles = tuple(sorted({row["profile_key"] for row in normalized}))
+    identities = {
+        (row["fold_index"], row["profile_key"]): row for row in normalized
+    }
+    if (
+        len(folds) < 2
+        or not profiles
+        or len(identities) != len(normalized)
+        or set(identities)
+        != {(fold, profile) for fold in folds for profile in profiles}
+    ):
+        raise ValueError("target-offline guard fold matrix is incomplete")
+    critical = float(NormalDist().inv_cdf(1.0 - alpha / len(profiles)))
+    grid = {}
+    eligible = []
+    for profile in profiles:
+        profile_rows = [identities[(fold, profile)] for fold in folds]
+        specs = {
+            (
+                row["risk_multiplier"],
+                row["max_relative_rule_gap"],
+                row["min_context_trust"],
+                row["margin"],
+            )
+            for row in profile_rows
+        }
+        if len(specs) != 1:
+            raise ValueError("target-offline guard profile changed across folds")
+        risk, gap, trust, margin = specs.pop()
+        values = np.asarray([row["delta"] for row in profile_rows], dtype=float)
+        if not np.all(np.isfinite(values)):
+            raise ValueError("target-offline guard deltas must be finite")
+        standard_error = float(np.std(values, ddof=1) / np.sqrt(values.size))
+        mean_delta = float(np.mean(values))
+        upper = mean_delta + critical * standard_error
+        worst = float(np.max(values))
+        accepted = int(
+            sum(row["accepted_override_count"] for row in profile_rows)
+        )
+        is_eligible = bool(
+            accepted > 0
+            and upper <= -float(minimum_mean_improvement)
+            and worst <= float(maximum_fold_regression)
+        )
+        summary = {
+            "profile_key": profile,
+            "risk_multiplier": risk,
+            "max_relative_rule_gap": gap,
+            "min_context_trust": trust,
+            "margin": margin,
+            "fold_normalized_deltas_vs_rule": values.tolist(),
+            "mean_normalized_delta_vs_rule": mean_delta,
+            "standard_error": standard_error,
+            "simultaneous_upper_confidence_delta": upper,
+            "worst_fold_delta": worst,
+            "accepted_override_count": accepted,
+            "eligible": is_eligible,
+        }
+        grid[profile] = summary
+        if is_eligible:
+            eligible.append(summary)
+    if eligible:
+        selected = min(
+            eligible,
+            key=lambda row: (
+                float(row["mean_normalized_delta_vs_rule"]),
+                float(row["simultaneous_upper_confidence_delta"]),
+                float(row["max_relative_rule_gap"]),
+                -float(row["risk_multiplier"]),
+            ),
+        )
+        guard_config = {
+            "enabled": True,
+            "risk_multiplier": selected["risk_multiplier"],
+            "min_context_trust": selected["min_context_trust"],
+            "margin": selected["margin"],
+            "max_relative_rule_gap": selected["max_relative_rule_gap"],
+        }
+        reason = "familywise_target_offline_improvement"
+    else:
+        selected = None
+        guard_config = {
+            "enabled": False,
+            "risk_multiplier": 1.0,
+            "min_context_trust": 0.1,
+            "margin": 0.0,
+            "max_relative_rule_gap": 1.0,
+        }
+        reason = "pressure_prior_fallback"
+    return {
+        "protocol": OFFLINE_GUARD_SELECTION_PROTOCOL,
+        "folds": list(folds),
+        "profile_count": len(profiles),
+        "familywise_alpha": alpha,
+        "multiple_comparison_correction": "bonferroni_one_sided_normal",
+        "simultaneous_confidence_multiplier": critical,
+        "minimum_mean_improvement": float(minimum_mean_improvement),
+        "maximum_fold_regression": float(maximum_fold_regression),
+        "selection_reason": reason,
+        "selected_profile_key": (
+            selected["profile_key"] if selected is not None else None
+        ),
+        "guard_config": guard_config,
+        "grid": grid,
+        "target_closed_loop_rollouts_used_for_selection": False,
+    }
 
 
 def evaluate_source_weight_grid_from_offline_groups(

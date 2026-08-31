@@ -1,0 +1,44 @@
+{
+  "protocol": "tsc-v93-source-city-guard-profile-grid-v1",
+  "scientific_status": "development-only-after-source-and-weight-freeze",
+  "profiles": [
+    {
+      "key": "raw",
+      "guard_config": null
+    },
+    {
+      "key": "mean_only",
+      "guard_config": {
+        "risk_multiplier": 0.0,
+        "min_context_trust": 0.0,
+        "margin": 0.0,
+        "max_relative_rule_gap": 1.0
+      }
+    },
+    {
+      "key": "uncertainty_0p25",
+      "guard_config": {
+        "risk_multiplier": 0.25,
+        "min_context_trust": 0.0,
+        "margin": 0.0,
+        "max_relative_rule_gap": 1.0
+      }
+    },
+    {
+      "key": "uncertainty_0p5",
+      "guard_config": {
+        "risk_multiplier": 0.5,
+        "min_context_trust": 0.0,
+        "margin": 0.0,
+        "max_relative_rule_gap": 1.0
+      }
+    }
+  ],
+  "selection_rule": {
+    "maximum_worst_seed_waiting_regression": 0.01,
+    "minimum_mean_waiting_improvement_without_safety_gain": 0.005,
+    "maximum_added_collision_incidents": 0,
+    "maximum_added_teleport_incidents": 0,
+    "prefer_raw_when_eligible_guard_has_no_safety_or_performance_gain": true
+  }
+}

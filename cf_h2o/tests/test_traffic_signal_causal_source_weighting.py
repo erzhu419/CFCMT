@@ -1,15 +1,20 @@
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 import numpy as np
 import pytest
 
 from cf_h2o.eval.traffic_signal_causal_source_weighting import (
     FrozenCausalSourceMixtureModel,
+    evaluate_target_offline_guard_grid,
     evaluate_source_weight_grid_from_offline_groups,
+    offline_guard_profile_key,
     select_source_city_candidate_from_closed_loop,
     select_source_city_weight_from_offline_folds,
     select_source_city_weight_with_familywise_control,
     select_source_weight_from_closed_loop,
+    select_target_offline_guard_with_familywise_control,
 )
 from cf_h2o.traffic_signal.mechanism_world_model import MechanismDataset
 
@@ -108,12 +113,13 @@ def test_source_city_mixture_is_convex_and_uses_conservative_trust(
         source_objective_modes={"a": "control_only", "b": "control_only"},
         target_only_objective_mode="control_only",
         source_city_weights={"a": 0.25, "b": 0.5},
+        uncertainty_scale=2.0,
     )
 
     prediction = model.predict(Dataset())["control_cost"]
 
     assert np.allclose(prediction["mean"], [10.5, 9.0])
-    assert np.allclose(prediction["uncertainty"], [2.25, 5.75])
+    assert np.allclose(prediction["uncertainty"], [4.5, 11.5])
     assert np.allclose(prediction["context_trust"], [0.8, 0.5])
     assert model.audit.to_dict() == {"prediction_calls": 1, "prediction_rows": 2}
 
@@ -127,6 +133,128 @@ def test_source_city_mixture_rejects_mass_above_one() -> None:
             target_only_objective_mode="x",
             source_city_weights={"a": 0.6, "b": 0.5},
         )
+
+
+def test_source_city_mixture_rejects_invalid_uncertainty_scale() -> None:
+    with pytest.raises(ValueError, match="uncertainty_scale"):
+        FrozenCausalSourceMixtureModel(
+            source_models={"a": object()},
+            target_only_model=object(),
+            source_objective_modes={"a": "x"},
+            target_only_objective_mode="x",
+            source_city_weights={"a": 1.0},
+            uncertainty_scale=0.0,
+        )
+
+
+def _offline_guard_rows(deltas_by_profile):
+    specs = {
+        "safe": (0.5, 0.25),
+        "unstable": (0.0, 1.0),
+    }
+    return [
+        {
+            "fold_index": fold,
+            "profile_key": offline_guard_profile_key(*specs[profile]),
+            "risk_multiplier": specs[profile][0],
+            "max_relative_rule_gap": specs[profile][1],
+            "min_context_trust": 0.1,
+            "margin": 0.0,
+            "equal_scenario_mean_normalized_delta_vs_rule": delta,
+            "accepted_override_count": 3,
+        }
+        for profile, deltas in deltas_by_profile.items()
+        for fold, delta in enumerate(deltas)
+    ]
+
+
+def test_target_offline_guard_selector_accepts_simultaneous_improvement() -> None:
+    result = select_target_offline_guard_with_familywise_control(
+        _offline_guard_rows(
+            {
+                "safe": [-0.02] * 5,
+                "unstable": [-0.08, 0.02, -0.08, 0.02, -0.08],
+            }
+        )
+    )
+
+    assert result["guard_config"]["enabled"] is True
+    assert result["selected_profile_key"] == offline_guard_profile_key(0.5, 0.25)
+    assert result["simultaneous_confidence_multiplier"] > 2.0
+
+
+def test_target_offline_guard_selector_falls_back_without_certified_gain() -> None:
+    result = select_target_offline_guard_with_familywise_control(
+        _offline_guard_rows(
+            {
+                "safe": [-0.01, 0.01, -0.01, 0.01, -0.01],
+                "unstable": [-0.02, 0.02, -0.02, 0.02, -0.02],
+            }
+        )
+    )
+
+    assert result["guard_config"]["enabled"] is False
+    assert result["selection_reason"] == "pressure_prior_fallback"
+
+
+def test_target_offline_guard_grid_uses_heldout_action_outcomes(
+    monkeypatch,
+) -> None:
+    contrast = SimpleNamespace(
+        size=4,
+        targets={"interval_cost": np.asarray([0.0, -1.0, 0.0, -0.5])},
+        metadata={
+            "action_group_ids": ["a:g1", "a:g1", "a:g2", "a:g2"],
+            "is_reference": [True, False, True, False],
+        },
+    )
+
+    class Model:
+        def __init__(self, score):
+            self.score = np.asarray(score, dtype=float)
+
+        def predict(self, unused):
+            assert unused is contrast
+            return self.score
+
+    def adjusted(unused, prediction, *, objective_mode):
+        assert unused is contrast
+        assert objective_mode == "control_only"
+        return (
+            prediction,
+            np.zeros(4),
+            np.ones(4),
+            np.asarray([0, 0, 2, 2]),
+        )
+
+    monkeypatch.setattr(
+        "cf_h2o.eval.traffic_signal_causal_source_weighting.build_action_contrast_dataset",
+        lambda *args, **kwargs: contrast,
+    )
+    monkeypatch.setattr(
+        "cf_h2o.eval.traffic_signal_causal_source_weighting._group_adjusted_scores",
+        adjusted,
+    )
+    monkeypatch.setattr(
+        "cf_h2o.eval.traffic_signal_causal_source_weighting._relative_contrast_rule_gap",
+        lambda unused: np.asarray([0.0, 0.1, 0.0, 0.1]),
+    )
+    result = evaluate_target_offline_guard_grid(
+        object(),
+        reference_policy=object(),
+        source_model=Model([0.0, -0.5, 0.0, -0.25]),
+        target_only_model=Model([0.0, 0.0, 0.0, 0.0]),
+        source_objective_mode="control_only",
+        target_only_objective_mode="control_only",
+        source_weight=1.0,
+        scenarios=("a",),
+        risk_multipliers=(0.0,),
+        max_relative_rule_gaps=(0.25,),
+    )
+
+    row = result["grid"][offline_guard_profile_key(0.0, 0.25)]
+    assert row["accepted_override_count"] == 2
+    assert row["equal_scenario_mean_normalized_delta_vs_rule"] < 0.0
 
 
 def test_source_city_selector_equal_weights_scenarios_and_selects_robust_gain() -> None:

@@ -1,0 +1,144 @@
+{
+  "analysis_contract": {
+    "city": "jinan",
+    "city_aggregation": "equal_scenario_within_seed",
+    "pairing_unit": "seed",
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "safety_metrics": [
+      "collision_incidents",
+      "starting_teleports",
+      "ending_teleports"
+    ],
+    "uncertainty": "paired_seed_bootstrap_and_wilcoxon"
+  },
+  "candidate_semantics": {
+    "offline_selector": "B100 five-fold target-offline selector: Hangzhou source mass 1.0 over a strict target-only anchor",
+    "target_only": "strict causal_target_only_v2 fitted only on the complete Jinan target adaptation pool"
+  },
+  "candidates": [
+    {
+      "guard_by_city": {
+        "jinan": {
+          "margin": 0.0,
+          "max_relative_rule_gap": 1.0,
+          "min_context_trust": 0.0,
+          "risk_multiplier": 0.5
+        },
+        "los_angeles": null
+      },
+      "key": "target_only",
+      "weights_by_city": {
+        "jinan": {},
+        "los_angeles": {}
+      }
+    },
+    {
+      "guard_by_city": {
+        "jinan": {
+          "margin": 0.0,
+          "max_relative_rule_gap": 1.0,
+          "min_context_trust": 0.0,
+          "risk_multiplier": 0.5
+        },
+        "los_angeles": null
+      },
+      "key": "offline_selector",
+      "weights_by_city": {
+        "jinan": {
+          "hangzhou": 1.0
+        },
+        "los_angeles": {}
+      }
+    }
+  ],
+  "confirmation_seed_generation": {
+    "draw_protocol": "sorted_unique_uniform_integers_excluding_v93_and_v98_v1_development_and_confirmation_v1",
+    "high_exclusive": 10000000,
+    "low_inclusive": 1000000,
+    "numpy_generator": "PCG64",
+    "seed": 980032
+  },
+  "confirmation_seeds": [
+    1142840,
+    1502193,
+    1521166,
+    1551207,
+    1857644,
+    1916104,
+    2292265,
+    2328827,
+    2518217,
+    2545129,
+    2679268,
+    2702838,
+    2978812,
+    3197241,
+    3255938,
+    3372366,
+    3379402,
+    3434406,
+    3563755,
+    3782698,
+    3812908,
+    3847837,
+    4005210,
+    4284589,
+    4349025,
+    4423270,
+    4511042,
+    4761910,
+    4815279,
+    4988293,
+    5208176,
+    5437052,
+    5487702,
+    5493172,
+    6071998,
+    6092310,
+    6162929,
+    6613848,
+    6682966,
+    6706575,
+    6805705,
+    6953251,
+    7513766,
+    8033134,
+    8301986,
+    8408672,
+    8426630,
+    8547474,
+    8623270,
+    8796936,
+    8975104,
+    9188377,
+    9341450,
+    9461052,
+    9748019,
+    9762747
+  ],
+  "offline_selector_contract": {
+    "jinan_result_sha256": "ac68f93d2f80a1d64d297bae300356d2b570dbdc5c750ba8e363135b5196f4d2",
+    "los_angeles_result_sha256": "44dfe154bedca2b2cb329e0359ee13c53c62eaf4c100150c103bdf49fc47d0cf",
+    "selected_source_city_group": "hangzhou",
+    "selected_source_weight": 1.0,
+    "target_closed_loop_rollouts_used_for_selection": false
+  },
+  "protocol": "tsc-v93-source-city-candidate-grid-v1",
+  "scientific_status": "frozen-before-strict-target-fresh-seed-closed-loop-confirmation",
+  "source_groups": [
+    "atlanta",
+    "cologne",
+    "hangzhou",
+    "ingolstadt",
+    "new_york",
+    "resco_synthetic",
+    "salt_lake_city"
+  ],
+  "strict_target_only_contract": {
+    "family": "causal_target_only_v2",
+    "jinan_model_sha256": "3424307a5399c4fbed63bc3158001adaf53eaa8ef04d53daf56c5eef744fdd13",
+    "los_angeles_model_sha256": "82aef6b8b95528f0ff6c63b4ed9b5f4f51fd8b36aa0773c0b6d75289a9300f73",
+    "model_protocol": "cfcmt-strict-target-only-action-model-v1",
+    "source_rows_consumed": 0
+  }
+}

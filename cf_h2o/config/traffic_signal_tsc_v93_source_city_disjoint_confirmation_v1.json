@@ -1,0 +1,185 @@
+{
+  "analysis_contract": {
+    "city_aggregation": "equal_scenario_within_city_then_equal_city_macro",
+    "no_post_confirmation_retuning": true,
+    "pairing_unit": "scenario_seed",
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "safety_metrics": [
+      "collision_incidents",
+      "starting_teleports",
+      "ending_teleports"
+    ],
+    "uncertainty": "paired_seed_bootstrap_and_wilcoxon_holm"
+  },
+  "candidate_semantics": {
+    "equal_all_sources": "untuned equal mixture over all screened source cities",
+    "frozen_selector": "development-frozen source identity, mass, and city guard",
+    "target_only": "fixed target anchor with the same city guard"
+  },
+  "candidates": [
+    {
+      "guard_by_city": {
+        "jinan": {
+          "margin": 0.0,
+          "max_relative_rule_gap": 1.0,
+          "min_context_trust": 0.0,
+          "risk_multiplier": 0.5
+        },
+        "los_angeles": null
+      },
+      "key": "target_only",
+      "weights_by_city": {
+        "jinan": {},
+        "los_angeles": {}
+      }
+    },
+    {
+      "guard_by_city": {
+        "jinan": {
+          "margin": 0.0,
+          "max_relative_rule_gap": 1.0,
+          "min_context_trust": 0.0,
+          "risk_multiplier": 0.5
+        },
+        "los_angeles": null
+      },
+      "key": "equal_all_sources",
+      "weights_by_city": {
+        "jinan": {
+          "atlanta": 0.14285714285714285,
+          "cologne": 0.14285714285714285,
+          "hangzhou": 0.14285714285714285,
+          "ingolstadt": 0.14285714285714285,
+          "new_york": 0.14285714285714285,
+          "resco_synthetic": 0.14285714285714285,
+          "salt_lake_city": 0.14285714285714285
+        },
+        "los_angeles": {
+          "atlanta": 0.14285714285714285,
+          "cologne": 0.14285714285714285,
+          "hangzhou": 0.14285714285714285,
+          "ingolstadt": 0.14285714285714285,
+          "new_york": 0.14285714285714285,
+          "resco_synthetic": 0.14285714285714285,
+          "salt_lake_city": 0.14285714285714285
+        }
+      }
+    },
+    {
+      "guard_by_city": {
+        "jinan": {
+          "margin": 0.0,
+          "max_relative_rule_gap": 1.0,
+          "min_context_trust": 0.0,
+          "risk_multiplier": 0.5
+        },
+        "los_angeles": null
+      },
+      "key": "frozen_selector",
+      "weights_by_city": {
+        "jinan": {
+          "atlanta": 1.0
+        },
+        "los_angeles": {}
+      }
+    }
+  ],
+  "confirmation_seeds": [
+    1020485,
+    1056390,
+    1125783,
+    1355629,
+    2232111,
+    2268002,
+    2310956,
+    2422696,
+    2624850,
+    2654295,
+    2780289,
+    2835024,
+    3306428,
+    3348668,
+    3575982,
+    4287970,
+    4521097,
+    4527726,
+    4811153,
+    5226558,
+    5274960,
+    5369261,
+    5382391,
+    5454662,
+    5489994,
+    5622039,
+    5730204,
+    5761895,
+    5837574,
+    5854838,
+    5946142,
+    6597627,
+    6719256,
+    6746317,
+    6781004,
+    7102085,
+    7250759,
+    7370082,
+    7395062,
+    7417817,
+    7484857,
+    7602964,
+    7705665,
+    7949351,
+    7964610,
+    8104182,
+    8229658,
+    8326174,
+    8361482,
+    8513269,
+    8516600,
+    8627953,
+    8649120,
+    8946784,
+    9490277,
+    9599129
+  ],
+  "development_seeds": [
+    1349594,
+    3900758,
+    5883745,
+    6180752,
+    6345095,
+    7677617,
+    8729267,
+    9488138
+  ],
+  "freeze_protocol": "tsc-v93-causal-source-selector-disjoint-confirmation-freeze-v1",
+  "parent_guard_audit_sha256": "d9b05048e6d2c1755a01c114011f00062809cf831a984e87f2af0d91f4e6f2ce",
+  "parent_identity_audit_sha256": "67820aaebc59f359ed88a37aa98dfa3e4bac2c22e481bb678c4714a2779e778e",
+  "parent_weight_audit_sha256": "6e74eee33327aa06ba4cf5d480852f7187b6447b5f391f2efc9aa118e1d6c15c",
+  "protocol": "tsc-v93-source-city-candidate-grid-v1",
+  "scientific_status": "frozen-before-disjoint-seed-confirmation",
+  "selected_guard_by_city": {
+    "jinan": {
+      "margin": 0.0,
+      "max_relative_rule_gap": 1.0,
+      "min_context_trust": 0.0,
+      "risk_multiplier": 0.5
+    },
+    "los_angeles": null
+  },
+  "selected_weights_by_city": {
+    "jinan": {
+      "atlanta": 1.0
+    },
+    "los_angeles": {}
+  },
+  "source_groups": [
+    "atlanta",
+    "cologne",
+    "hangzhou",
+    "ingolstadt",
+    "new_york",
+    "resco_synthetic",
+    "salt_lake_city"
+  ]
+}
