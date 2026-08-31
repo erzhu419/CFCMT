@@ -12,6 +12,10 @@ import sys
 from typing import Any, Mapping, Sequence
 from urllib.request import Request, urlopen
 
+REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+
 from scripts.data.acquire_toronto_ptc_unseen import (
     USER_AGENT,
     _check_remote,
