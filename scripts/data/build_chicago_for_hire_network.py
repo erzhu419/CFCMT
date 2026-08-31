@@ -13,14 +13,16 @@ import math
 import os
 from pathlib import Path
 import shutil
+import site
 import subprocess
+import sys
 import time
 import traceback
 from typing import Any, Iterable, Mapping, Sequence
 import xml.etree.ElementTree as ET
 
 
-PROTOCOL = "cfcmt-chicago-osm-sumo122-network-and-anchor-v1"
+PROTOCOL = "cfcmt-chicago-osm-sumo122-network-and-anchor-v2"
 ACQUISITION_PROTOCOL = "cfcmt-chicago-full-week-for-hire-acquisition-v1"
 EXPECTED_TNP_ROWS = 1_599_557
 EXPECTED_TAXI_ROWS = 118_756
@@ -33,6 +35,15 @@ EXPECTED_BOUNDARY_SHA256 = "3468ac30bd813fa17d755b12a911a43c44f251465604bbe8e1ca
 ANCHORS_PER_AREA = 32
 MIN_EDGE_LENGTH_M = 15.0
 EXPECTED_SUMO_VERSION = "1.22.0"
+BUILD_DEPENDENCY_PROTOCOL = "cfcmt-brunswick-build-pyproj-wheel-v1"
+PYPROJ_VERSION = "3.7.1"
+PYPROJ_WHEEL_SHA256 = (
+    "1e47c4e93b88d99dd118875ee3ca0171932444cdc0b52d493371b5d98d0f30ee"
+)
+REUSABLE_NETWORK_SHA256 = (
+    "45250772dcff2cd79bd4472e0657d09c20eb32be280a1099d5ba93b831ac42ae"
+)
+REUSABLE_NETWORK_SIZE = 362_471_296
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
@@ -115,6 +126,75 @@ def _acquisition_manifest(acquisition_root: Path) -> dict[str, Any]:
     return payload
 
 
+def _activate_pyproj(root: Path) -> dict[str, Any]:
+    manifest_path = root / "dependency_manifest.json"
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    expected = {
+        "protocol": BUILD_DEPENDENCY_PROTOCOL,
+        "package": "pyproj",
+        "version": PYPROJ_VERSION,
+        "wheel_sha256": PYPROJ_WHEEL_SHA256,
+        "import_verified": True,
+    }
+    observed = {key: payload.get(key) for key in expected}
+    if observed != expected:
+        raise ValueError(f"Chicago pyproj dependency changed: {observed}")
+    site_packages = root / "site-packages"
+    if not site_packages.is_dir():
+        raise FileNotFoundError(site_packages)
+    site.addsitedir(str(site_packages.resolve()))
+    import pyproj
+
+    if pyproj.__version__ != PYPROJ_VERSION:
+        raise ValueError(f"Chicago pyproj version changed: {pyproj.__version__}")
+    return {
+        "protocol": payload["protocol"],
+        "package": "pyproj",
+        "version": pyproj.__version__,
+        "wheel": payload["wheel"],
+        "wheel_sha256": payload["wheel_sha256"],
+        "site_packages": str(site_packages.resolve()),
+    }
+
+
+def _adopt_reusable_network(
+    *, source_root: Path, staging: Path, log_root: Path
+) -> tuple[Path, dict[str, Any]]:
+    failure_path = source_root / "build_failure.json"
+    failure = json.loads(failure_path.read_text(encoding="utf-8"))
+    expected_failure = {
+        "protocol": "cfcmt-chicago-osm-sumo122-network-and-anchor-v1",
+        "status": "REJECT",
+        "error_type": "ModuleNotFoundError",
+        "error": "No module named 'pyproj'",
+    }
+    observed = {key: failure.get(key) for key in expected_failure}
+    if observed != expected_failure:
+        raise ValueError(f"Chicago reusable network parent changed: {observed}")
+    source_network = source_root / "chicago_full.net.xml.gz"
+    _validate_file(
+        source_network,
+        size=REUSABLE_NETWORK_SIZE,
+        sha256=REUSABLE_NETWORK_SHA256,
+    )
+    if (source_root / "logs/netconvert.stdout.log").read_text(
+        encoding="utf-8"
+    ) != "Success.\n":
+        raise ValueError("Chicago parent netconvert did not report success")
+    destination = staging / "chicago_full.net.xml.gz"
+    shutil.copy2(source_network, destination)
+    shutil.copy2(source_root / "logs/netconvert.stdout.log", log_root)
+    shutil.copy2(source_root / "logs/netconvert.stderr.log", log_root)
+    return destination, {
+        "mode": "adopted_from_dependency_only_rejected_static_build",
+        "source_root": str(source_root.resolve()),
+        "source_failure_sha256": _file_sha256(failure_path),
+        "source_network_sha256": REUSABLE_NETWORK_SHA256,
+        "source_network_size_bytes": REUSABLE_NETWORK_SIZE,
+        "source_netconvert_stdout": "Success.",
+    }
+
+
 def netconvert_command(
     *, netconvert: Path, osm: Path, output: Path, typemap: Path
 ) -> list[str]:
@@ -188,7 +268,27 @@ def _sumo_version(executable: Path) -> str:
     return version
 
 
-def _network_xml_inventory(path: Path) -> dict[str, Any]:
+def lane_allows_passenger(attributes: Mapping[str, str]) -> bool:
+    allowed = set(str(attributes.get("allow", "")).split())
+    disallowed = set(str(attributes.get("disallow", "")).split())
+    if allowed:
+        return "passenger" in allowed or "all" in allowed
+    return "passenger" not in disallowed and "all" not in disallowed
+
+
+def _shape_points(text: str) -> list[tuple[float, float]]:
+    points: list[tuple[float, float]] = []
+    for token in text.split():
+        values = token.split(",")
+        if len(values) < 2:
+            raise ValueError(f"invalid SUMO shape point: {token}")
+        points.append((float(values[0]), float(values[1])))
+    return points
+
+
+def _stream_network_graph(
+    path: Path,
+) -> tuple[dict[str, Any], dict[str, dict[str, Any]], dict[str, tuple[str, ...]]]:
     counts: Counter[str] = Counter()
     edge_ids: set[str] = set()
     lane_ids: set[str] = set()
@@ -196,6 +296,8 @@ def _network_xml_inventory(path: Path) -> dict[str, Any]:
     tls_ids: set[str] = set()
     tls_programs: set[tuple[str, str]] = set()
     location: dict[str, str] | None = None
+    eligible_edges: dict[str, dict[str, Any]] = {}
+    adjacency_sets: dict[str, set[str]] = {}
     with gzip.open(path, "rb") as handle:
         for _, element in ET.iterparse(handle, events=("end",)):
             counts[element.tag] += 1
@@ -204,6 +306,36 @@ def _network_xml_inventory(path: Path) -> dict[str, Any]:
                 if identity in edge_ids:
                     raise ValueError(f"duplicate network edge: {identity}")
                 edge_ids.add(identity)
+                if not identity.startswith(":"):
+                    passenger_lanes = [
+                        lane
+                        for lane in element.findall("lane")
+                        if lane_allows_passenger(lane.attrib)
+                    ]
+                    if passenger_lanes:
+                        lengths = [float(lane.attrib["length"]) for lane in passenger_lanes]
+                        speeds = [float(lane.attrib["speed"]) for lane in passenger_lanes]
+                        shape_text = next(
+                            (
+                                str(lane.attrib.get("shape", ""))
+                                for lane in passenger_lanes
+                                if lane.attrib.get("shape")
+                            ),
+                            str(element.attrib.get("shape", "")),
+                        )
+                        shape = _shape_points(shape_text)
+                        if max(lengths) >= MIN_EDGE_LENGTH_M and max(speeds) > 0 and shape:
+                            x, y = _polyline_midpoint(shape)
+                            eligible_edges[identity] = {
+                                "edge_id": identity,
+                                "x": x,
+                                "y": y,
+                                "lane_count": len(passenger_lanes),
+                                "speed_mps": max(speeds),
+                                "length_m": max(lengths),
+                                "capacity_score": len(passenger_lanes) * max(speeds),
+                            }
+                            adjacency_sets[identity] = set()
             elif element.tag == "lane" and identity:
                 if identity in lane_ids:
                     raise ValueError(f"duplicate network lane: {identity}")
@@ -220,7 +352,13 @@ def _network_xml_inventory(path: Path) -> dict[str, Any]:
                 tls_programs.add(key)
             elif element.tag == "location":
                 location = dict(element.attrib)
-            element.clear()
+            elif element.tag == "connection":
+                source = str(element.attrib.get("from", ""))
+                destination = str(element.attrib.get("to", ""))
+                if source in adjacency_sets and destination in adjacency_sets:
+                    adjacency_sets[source].add(destination)
+            if element.tag != "lane":
+                element.clear()
     inventory = {
         "edge_count": len(edge_ids),
         "noninternal_edge_count": sum(not value.startswith(":") for value in edge_ids),
@@ -234,7 +372,13 @@ def _network_xml_inventory(path: Path) -> dict[str, Any]:
     }
     if not edge_ids or not lane_ids or not junction_ids or not tls_ids or location is None:
         raise ValueError(f"Chicago network inventory is incomplete: {inventory}")
-    return inventory
+    if not eligible_edges or not any(adjacency_sets.values()):
+        raise ValueError("Chicago passenger edge graph is empty")
+    adjacency = {
+        identity: tuple(sorted(neighbors))
+        for identity, neighbors in adjacency_sets.items()
+    }
+    return inventory, eligible_edges, adjacency
 
 
 def largest_strongly_connected_component(
@@ -417,25 +561,31 @@ def select_anchor_rows(
     )[0]
     selected = [first]
     del remaining[str(first["edge_id"])]
+    minimum_distances = {
+        identity: (float(row["x"]) - float(first["x"])) ** 2
+        + (float(row["y"]) - float(first["y"])) ** 2
+        for identity, row in remaining.items()
+    }
     while len(selected) < count:
-        ranked: list[tuple[float, float, str, dict[str, Any]]] = []
-        for row in remaining.values():
-            distance = min(
-                (float(row["x"]) - float(chosen["x"])) ** 2
-                + (float(row["y"]) - float(chosen["y"])) ** 2
-                for chosen in selected
-            )
-            ranked.append(
-                (
-                    -distance,
-                    -float(row["capacity_score"]),
-                    str(row["edge_id"]),
-                    row,
-                )
-            )
-        chosen = min(ranked)[3]
+        chosen = min(
+            remaining.values(),
+            key=lambda row: (
+                -minimum_distances[str(row["edge_id"])],
+                -float(row["capacity_score"]),
+                str(row["edge_id"]),
+            ),
+        )
+        chosen_id = str(chosen["edge_id"])
         selected.append(chosen)
-        del remaining[str(chosen["edge_id"])]
+        del remaining[chosen_id]
+        del minimum_distances[chosen_id]
+        for identity, row in remaining.items():
+            distance = (float(row["x"]) - float(chosen["x"])) ** 2 + (
+                float(row["y"]) - float(chosen["y"])
+            ) ** 2
+            minimum_distances[identity] = min(
+                minimum_distances[identity], distance
+            )
     return selected
 
 
@@ -450,53 +600,49 @@ def _area_for_lonlat(
     return None
 
 
-def _build_anchors(net_path: Path, boundary_path: Path) -> dict[str, Any]:
-    import sumolib
+def _build_anchors(
+    *,
+    eligible: Mapping[str, Mapping[str, Any]],
+    adjacency: Mapping[str, Sequence[str]],
+    location: Mapping[str, str],
+    boundary_path: Path,
+) -> dict[str, Any]:
+    import pyproj
 
-    net = sumolib.net.readNet(str(net_path), withInternal=True)
-    eligible: dict[str, Any] = {}
-    for edge in net.getEdges(withInternal=False):
-        if (
-            edge.allows("passenger")
-            and float(edge.getLength()) >= MIN_EDGE_LENGTH_M
-            and float(edge.getSpeed()) > 0.0
-        ):
-            eligible[edge.getID()] = edge
-    adjacency = {
-        identity: [
-            outgoing.getID()
-            for outgoing in edge.getOutgoing()
-            if outgoing.getID() in eligible
-        ]
-        for identity, edge in eligible.items()
-    }
     component = largest_strongly_connected_component(adjacency)
     if not component:
         raise ValueError("Chicago passenger graph has no strongly connected component")
     areas = _community_areas(boundary_path)
     candidates: dict[int, list[dict[str, Any]]] = {area: [] for area in range(1, 78)}
     unassigned = 0
-    for identity in sorted(component):
-        edge = eligible[identity]
-        x, y = _polyline_midpoint(edge.getShape())
-        lon, lat = net.convertXY2LonLat(x, y)
+    identities = sorted(component)
+    x_offset, y_offset = (float(value) for value in location["netOffset"].split(","))
+    projection = pyproj.Proj(projparams=location["projParameter"])
+    longitudes, latitudes = projection(
+        [float(eligible[identity]["x"]) - x_offset for identity in identities],
+        [float(eligible[identity]["y"]) - y_offset for identity in identities],
+        inverse=True,
+    )
+    for identity, longitude, latitude in zip(
+        identities, longitudes, latitudes, strict=True
+    ):
+        edge = dict(eligible[identity])
+        x = float(edge["x"])
+        y = float(edge["y"])
+        lon = float(longitude)
+        lat = float(latitude)
         area = _area_for_lonlat(float(lon), float(lat), areas)
         if area is None:
             unassigned += 1
             continue
-        lane_count = int(edge.getLaneNumber())
-        speed = float(edge.getSpeed())
         candidates[area].append(
             {
+                **edge,
                 "edge_id": identity,
-                "x": float(x),
-                "y": float(y),
-                "lon": float(lon),
-                "lat": float(lat),
-                "lane_count": lane_count,
-                "speed_mps": speed,
-                "length_m": float(edge.getLength()),
-                "capacity_score": lane_count * speed,
+                "x": x,
+                "y": y,
+                "lon": lon,
+                "lat": lat,
             }
         )
     anchor_rows: dict[str, Any] = {}
@@ -508,7 +654,7 @@ def _build_anchors(net_path: Path, boundary_path: Path) -> dict[str, Any]:
             "anchors": selected,
         }
     return {
-        "protocol": "cfcmt-chicago-capacity-farthest-passenger-scc-anchors-v1",
+        "protocol": "cfcmt-chicago-capacity-farthest-passenger-scc-anchors-v2",
         "eligible_passenger_edge_count": len(eligible),
         "largest_strong_component_edge_count": len(component),
         "component_fraction_of_eligible": len(component) / len(eligible),
@@ -522,7 +668,12 @@ def _build_anchors(net_path: Path, boundary_path: Path) -> dict[str, Any]:
 
 
 def build_network(
-    *, acquisition_root: Path, output_root: Path, netconvert: Path
+    *,
+    acquisition_root: Path,
+    output_root: Path,
+    netconvert: Path,
+    build_dependency_root: Path,
+    reusable_network_root: Path | None = None,
 ) -> dict[str, Any]:
     existing_manifest = output_root / "network_manifest.json"
     if existing_manifest.is_file():
@@ -532,7 +683,7 @@ def build_network(
         return payload
     if output_root.exists():
         raise FileExistsError(output_root)
-    staging = output_root.parent / f".{output_root.name}.staging-v1"
+    staging = output_root.parent / f".{output_root.name}.staging-v2"
     rejected = output_root.parent / f"{output_root.name}.rejected"
     if staging.exists() or rejected.exists():
         raise FileExistsError(staging if staging.exists() else rejected)
@@ -541,26 +692,50 @@ def build_network(
     logs.mkdir()
     try:
         acquisition = _acquisition_manifest(acquisition_root)
+        dependency = _activate_pyproj(build_dependency_root)
         resolved_netconvert = netconvert.resolve()
         version = _sumo_version(resolved_netconvert)
         sumo_home = Path(os.environ["SUMO_HOME"]).resolve()
         typemap = sumo_home / "data/typemap/osmNetconvert.typ.xml"
         if not typemap.is_file():
             raise FileNotFoundError(typemap)
-        net_path = staging / "chicago_full.net.xml.gz"
         command = netconvert_command(
             netconvert=resolved_netconvert,
             osm=acquisition_root / "Chicago.osm.gz",
-            output=net_path,
+            output=staging / "chicago_full.net.xml.gz",
             typemap=typemap,
         )
-        netconvert_result = _run_command(
-            name="netconvert", command=command, cwd=staging, log_root=logs
-        )
-        inventory = _network_xml_inventory(net_path)
+        if reusable_network_root is None:
+            net_path = staging / "chicago_full.net.xml.gz"
+            netconvert_result = _run_command(
+                name="netconvert", command=command, cwd=staging, log_root=logs
+            )
+            network_reuse: dict[str, Any] | None = None
+        else:
+            net_path, network_reuse = _adopt_reusable_network(
+                source_root=reusable_network_root.resolve(),
+                staging=staging,
+                log_root=logs,
+            )
+            netconvert_result = {
+                "command": command,
+                "returncode": 0,
+                "duration_sec": 0.0,
+                "stdout_log": "logs/netconvert.stdout.log",
+                "stderr_log": "logs/netconvert.stderr.log",
+                "stdout_tail": "Success.\n",
+                "stderr_tail": "see adopted parent log",
+                "execution": "adopted byte-identical successful v1 output",
+            }
+        scan_started = time.monotonic()
+        inventory, eligible, adjacency = _stream_network_graph(net_path)
         anchors = _build_anchors(
-            net_path, acquisition_root / "community_areas.geojson"
+            eligible=eligible,
+            adjacency=adjacency,
+            location=inventory["location"],
+            boundary_path=acquisition_root / "community_areas.geojson",
         )
+        static_scan_duration_sec = time.monotonic() - scan_started
         _write_json(staging / "anchors.json", anchors)
         payload = {
             "protocol": PROTOCOL,
@@ -571,7 +746,10 @@ def build_network(
                 acquisition_root / "acquisition_manifest.json"
             ),
             "sumo_version": version,
+            "build_dependency": dependency,
             "netconvert": netconvert_result,
+            "network_reuse": network_reuse,
+            "static_scan_duration_sec": static_scan_duration_sec,
             "network_file": net_path.name,
             "network_size_bytes": net_path.stat().st_size,
             "network_sha256": _file_sha256(net_path),
@@ -613,11 +791,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--acquisition-root", type=Path, required=True)
     parser.add_argument("--output-root", type=Path, required=True)
     parser.add_argument("--netconvert", type=Path, required=True)
+    parser.add_argument("--build-dependency-root", type=Path, required=True)
+    parser.add_argument("--reusable-network-root", type=Path)
     args = parser.parse_args(argv)
     payload = build_network(
         acquisition_root=args.acquisition_root,
         output_root=args.output_root,
         netconvert=args.netconvert,
+        build_dependency_root=args.build_dependency_root,
+        reusable_network_root=args.reusable_network_root,
     )
     print(
         json.dumps(
