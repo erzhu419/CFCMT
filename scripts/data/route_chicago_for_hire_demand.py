@@ -28,7 +28,7 @@ from scripts.data.prepare_chicago_for_hire_demand import (
 )
 
 
-PROTOCOL = "cfcmt-chicago-full-week-duarouter-ch-package-v1"
+PROTOCOL = "cfcmt-chicago-full-week-duarouter-ch-package-v2"
 EXPECTED_DEMAND_MANIFEST_SHA256 = (
     "835fa16ccc50395505c95fa2c894321b80069f2829348952e9fb3e4b0e87cff1"
 )
@@ -95,7 +95,6 @@ def duarouter_command(
         str(output_file),
         "--routing-algorithm",
         ROUTING_ALGORITHM,
-        "--bulk-routing",
         "--routing-threads",
         str(ROUTING_THREADS),
         "--seed",
@@ -453,7 +452,7 @@ def route_demand(
             "network_protocol": network["protocol"],
             "network_sha256": EXPECTED_NETWORK_SHA256,
             "routing_algorithm": ROUTING_ALGORITHM,
-            "bulk_routing": True,
+            "bulk_routing": False,
             "routing_threads": ROUTING_THREADS,
             "routing_seed": ROUTING_SEED,
             "repair": False,

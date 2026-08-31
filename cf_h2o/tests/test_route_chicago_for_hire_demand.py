@@ -17,7 +17,7 @@ from scripts.data.route_chicago_for_hire_demand import (
 )
 
 
-def test_duarouter_command_is_parallel_bulk_ch_without_repair() -> None:
+def test_duarouter_command_is_parallel_ch_without_unsupported_bulk_or_repair() -> None:
     command = duarouter_command(
         duarouter=Path("/sumo/duarouter"),
         network_file=Path("/data/chicago.net.xml.gz"),
@@ -26,7 +26,7 @@ def test_duarouter_command_is_parallel_bulk_ch_without_repair() -> None:
     )
 
     assert command[command.index("--routing-algorithm") + 1] == ROUTING_ALGORITHM
-    assert "--bulk-routing" in command
+    assert "--bulk-routing" not in command
     assert command[command.index("--routing-threads") + 1] == str(ROUTING_THREADS)
     assert command[command.index("--seed") + 1] == str(ROUTING_SEED)
     assert "--repair" not in command
