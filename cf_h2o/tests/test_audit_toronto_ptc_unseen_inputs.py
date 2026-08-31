@@ -30,6 +30,7 @@ def test_frozen_ptc_date_inventory_excludes_only_documented_dates() -> None:
         date(2025, 5, 28),
     }
     assert EXPECTED_PTC_DATES.isdisjoint(EXPECTED_MISSING_DATES)
+    assert len({value.weekday() for value in EXPECTED_PTC_DATES}) == 7
 
 
 def test_ptc_hour_parser_accepts_toronto_standard_and_daylight_offsets() -> None:

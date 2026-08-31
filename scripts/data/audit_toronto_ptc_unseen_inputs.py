@@ -209,8 +209,13 @@ def audit_network_geographies(root: str) -> dict[str, Any]:
 
     signal_node_ids: set[int] = set()
     duplicate_signal_nodes = 0
+    missing_signal_nodes = 0
     for row in _feature_properties(signals):
-        node_id = int(row["NODE_ID"])
+        raw_node_id = row.get("NODE_ID")
+        if raw_node_id is None:
+            missing_signal_nodes += 1
+            continue
+        node_id = int(raw_node_id)
         if node_id in signal_node_ids:
             duplicate_signal_nodes += 1
         signal_node_ids.add(node_id)
@@ -260,8 +265,12 @@ def audit_network_geographies(root: str) -> dict[str, Any]:
         "community_council_names": sorted(council_names),
         "signal_feature_count": len(signals),
         "signal_node_count": len(signal_node_ids),
+        "signal_without_node_id_count": missing_signal_nodes,
         "matched_signal_node_count": len(matched_signal_nodes),
         "unmatched_signal_node_count": len(signal_node_ids - intersection_ids),
+        "total_unmatched_source_signal_count": (
+            missing_signal_nodes + len(signal_node_ids - intersection_ids)
+        ),
     }
 
 
@@ -407,11 +416,17 @@ def audit_ptc_trips(root: str) -> dict[str, Any]:
                                 unresolved_examples.append(
                                     {
                                         "dt": row["dt"],
+                                        "pickup_municipality": row[
+                                            "pickup_municipality"
+                                        ],
                                         "pickup_ward": row["pickup_ward"],
                                         "pickup_community_council": row[
                                             "pickup_community_council"
                                         ],
                                         "dropoff_ward": row["dropoff_ward"],
+                                        "dropoff_municipality": row[
+                                            "dropoff_municipality"
+                                        ],
                                         "dropoff_community_council": row[
                                             "dropoff_community_council"
                                         ],
@@ -514,13 +529,23 @@ def audit_ptc_summary(root: str) -> dict[str, Any]:
     failures = []
     if missing_columns:
         failures.append(f"missing_columns={missing_columns}")
-    if len(dates_2025) != 365:
-        failures.append(f"summary_2025_date_count={len(dates_2025)} expected=365")
+    additional_missing_dates = sorted(EXPECTED_PTC_DATES - dates_2025)
+    unexpected_dates = sorted(dates_2025 - EXPECTED_PTC_DATES)
+    if dates_2025 != EXPECTED_PTC_DATES:
+        failures.append(
+            f"summary 2025 date inventory mismatch: "
+            f"missing={len(additional_missing_dates)} "
+            f"unexpected={len(unexpected_dates)}"
+        )
     return {
         "status": "PASS" if not failures else "FAIL",
         "failures": failures,
         "row_count": row_count,
         "date_count_2025": len(dates_2025),
+        "additional_missing_dates_2025": [
+            value.isoformat() for value in additional_missing_dates
+        ],
+        "unexpected_dates_2025": [value.isoformat() for value in unexpected_dates],
         "reported_trips_started_2025": reported_trips_2025,
     }
 
