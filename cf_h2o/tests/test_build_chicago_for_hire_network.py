@@ -91,6 +91,7 @@ def test_streaming_network_graph_preserves_passenger_connections(tmp_path: Path)
     <location netOffset="-1,-2" convBoundary="0,0,10,10" origBoundary="0,0,1,1" projParameter="+proj=longlat +datum=WGS84 +no_defs"/>
     <edge id="a" from="n0" to="n1"><lane id="a_0" speed="10" length="20" shape="0,0 10,0"/></edge>
     <edge id="b" from="n1" to="n0"><lane id="b_0" speed="10" length="20" shape="10,0 0,0"/></edge>
+    <edge id="short"><lane id="short_0" speed="10" length="5" shape="0,2 5,2"/></edge>
     <edge id="bus"><lane id="bus_0" allow="bus" speed="10" length="20" shape="0,1 10,1"/></edge>
     <junction id="n0" type="traffic_light" x="0" y="0" incLanes="b_0" intLanes=""/>
     <junction id="n1" type="priority" x="10" y="0" incLanes="a_0" intLanes=""/>
@@ -105,8 +106,9 @@ def test_streaming_network_graph_preserves_passenger_connections(tmp_path: Path)
 
     assert inventory["traffic_light_count"] == 1
     assert inventory["connection_count"] == 2
-    assert set(eligible) == {"a", "b"}
-    assert adjacency == {"a": ("b",), "b": ("a",)}
+    assert set(eligible) == {"a", "b", "short"}
+    assert adjacency == {"a": ("b",), "b": ("a",), "short": ()}
     assert eligible["a"]["x"] == 5.0
+    assert not eligible["short"]["anchor_eligible"]
     assert lane_allows_passenger({})
     assert not lane_allows_passenger({"allow": "bus"})

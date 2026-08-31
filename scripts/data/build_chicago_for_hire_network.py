@@ -22,7 +22,7 @@ from typing import Any, Iterable, Mapping, Sequence
 import xml.etree.ElementTree as ET
 
 
-PROTOCOL = "cfcmt-chicago-osm-sumo122-network-and-anchor-v2"
+PROTOCOL = "cfcmt-chicago-osm-sumo122-network-and-anchor-v3"
 ACQUISITION_PROTOCOL = "cfcmt-chicago-full-week-for-hire-acquisition-v1"
 EXPECTED_TNP_ROWS = 1_599_557
 EXPECTED_TAXI_ROWS = 118_756
@@ -324,7 +324,7 @@ def _stream_network_graph(
                             str(element.attrib.get("shape", "")),
                         )
                         shape = _shape_points(shape_text)
-                        if max(lengths) >= MIN_EDGE_LENGTH_M and max(speeds) > 0 and shape:
+                        if max(speeds) > 0 and shape:
                             x, y = _polyline_midpoint(shape)
                             eligible_edges[identity] = {
                                 "edge_id": identity,
@@ -334,6 +334,7 @@ def _stream_network_graph(
                                 "speed_mps": max(speeds),
                                 "length_m": max(lengths),
                                 "capacity_score": len(passenger_lanes) * max(speeds),
+                                "anchor_eligible": max(lengths) >= MIN_EDGE_LENGTH_M,
                             }
                             adjacency_sets[identity] = set()
             elif element.tag == "lane" and identity:
@@ -627,6 +628,8 @@ def _build_anchors(
         identities, longitudes, latitudes, strict=True
     ):
         edge = dict(eligible[identity])
+        if not bool(edge["anchor_eligible"]):
+            continue
         x = float(edge["x"])
         y = float(edge["y"])
         lon = float(longitude)
@@ -647,6 +650,12 @@ def _build_anchors(
         )
     anchor_rows: dict[str, Any] = {}
     for area in range(1, 78):
+        if len(candidates[area]) < ANCHORS_PER_AREA:
+            counts = {str(key): len(value) for key, value in candidates.items()}
+            raise ValueError(
+                f"Chicago area {area} has {len(candidates[area])} anchor "
+                f"candidates; all_area_counts={json.dumps(counts, sort_keys=True)}"
+            )
         selected = select_anchor_rows(candidates[area], ANCHORS_PER_AREA)
         anchor_rows[str(area)] = {
             "community": areas[area - 1]["name"],
@@ -654,8 +663,11 @@ def _build_anchors(
             "anchors": selected,
         }
     return {
-        "protocol": "cfcmt-chicago-capacity-farthest-passenger-scc-anchors-v2",
+        "protocol": "cfcmt-chicago-capacity-farthest-passenger-scc-anchors-v3",
         "eligible_passenger_edge_count": len(eligible),
+        "anchor_eligible_passenger_edge_count": sum(
+            bool(row["anchor_eligible"]) for row in eligible.values()
+        ),
         "largest_strong_component_edge_count": len(component),
         "component_fraction_of_eligible": len(component) / len(eligible),
         "component_edge_id_min": min(component),
@@ -683,7 +695,7 @@ def build_network(
         return payload
     if output_root.exists():
         raise FileExistsError(output_root)
-    staging = output_root.parent / f".{output_root.name}.staging-v2"
+    staging = output_root.parent / f".{output_root.name}.staging-v3"
     rejected = output_root.parent / f"{output_root.name}.rejected"
     if staging.exists() or rejected.exists():
         raise FileExistsError(staging if staging.exists() else rejected)
@@ -760,6 +772,7 @@ def build_network(
                 key: anchors[key]
                 for key in (
                     "eligible_passenger_edge_count",
+                    "anchor_eligible_passenger_edge_count",
                     "largest_strong_component_edge_count",
                     "component_fraction_of_eligible",
                     "component_unassigned_to_chicago_area_count",
