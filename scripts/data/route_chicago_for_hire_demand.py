@@ -28,7 +28,7 @@ from scripts.data.prepare_chicago_for_hire_demand import (
 )
 
 
-PROTOCOL = "cfcmt-chicago-full-week-duarouter-ch-package-v2"
+PROTOCOL = "cfcmt-chicago-full-week-duarouter-ch-package-v3"
 EXPECTED_DEMAND_MANIFEST_SHA256 = (
     "835fa16ccc50395505c95fa2c894321b80069f2829348952e9fb3e4b0e87cff1"
 )
@@ -39,6 +39,7 @@ EXPECTED_SUMO_VERSION = "1.22.0"
 ROUTING_ALGORITHM = "CH"
 ROUTING_THREADS = 8
 ROUTING_SEED = 5307
+DUAROUTER_DEPARTURE_TOLERANCE_SEC = 0.006
 SAFETY_SEEDS = tuple(range(5201, 5208))
 END_SEC = 108_000
 STEP_LENGTH_SEC = 1.0
@@ -228,6 +229,12 @@ def route_matches_endpoints(
     return bool(edges) and edges[0] == source_edge and edges[-1] == target_edge
 
 
+def departure_matches_input(observed: float, expected: float) -> bool:
+    return abs(float(observed) - float(expected)) <= (
+        DUAROUTER_DEPARTURE_TOLERANCE_SEC + 1e-12
+    )
+
+
 def parse_day_source(identity: str) -> tuple[int, str]:
     parts = identity.split("_", 2)
     if len(parts) != 3 or not parts[0].startswith("d"):
@@ -259,6 +266,7 @@ def _split_and_audit(
     route_edge_counts = [0] * len(DATES)
     minimum_route_edges: list[int | None] = [None] * len(DATES)
     maximum_route_edges = [0] * len(DATES)
+    maximum_departure_delta_sec = [0.0] * len(DATES)
     previous_depart: list[float | None] = [None] * len(DATES)
     seen: set[str] = set()
     try:
@@ -280,8 +288,12 @@ def _split_and_audit(
                 if (parsed_day, parsed_source) != (day_index, source):
                     raise ValueError(f"Chicago routed identity changed: {identity}")
                 global_depart = float(element.attrib["depart"])
-                if abs(global_depart - expected_depart) > 1e-5:
+                departure_delta = abs(global_depart - expected_depart)
+                if not departure_matches_input(global_depart, expected_depart):
                     raise ValueError(f"Chicago routed departure changed: {identity}")
+                maximum_departure_delta_sec[day_index] = max(
+                    maximum_departure_delta_sec[day_index], departure_delta
+                )
                 local_depart = global_depart - day_index * 86_400.0
                 if not 0 <= local_depart < 86_400:
                     raise ValueError(f"Chicago routed departure left day: {identity}")
@@ -338,6 +350,9 @@ def _split_and_audit(
                 "route_edge_reference_count": route_edge_counts[day_index],
                 "minimum_route_edge_count": minimum_route_edges[day_index],
                 "maximum_route_edge_count": maximum_route_edges[day_index],
+                "maximum_departure_delta_sec": maximum_departure_delta_sec[
+                    day_index
+                ],
                 "route_file": path.name,
                 "route_size_bytes": path.stat().st_size,
                 "route_sha256": _file_sha256(path),
@@ -455,6 +470,9 @@ def route_demand(
             "bulk_routing": False,
             "routing_threads": ROUTING_THREADS,
             "routing_seed": ROUTING_SEED,
+            "duarouter_departure_tolerance_sec": (
+                DUAROUTER_DEPARTURE_TOLERANCE_SEC
+            ),
             "repair": False,
             "ignore_errors": False,
             "duarouter": routing,
