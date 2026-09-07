@@ -1,0 +1,904 @@
+{
+  "protocol": "tsc-v68r64-external-v9-proposal-conditional-closed-loop-development-v1",
+  "frozen_at_utc": "2026-08-10T06:04:23.401183+00:00",
+  "stage": "post_oof_pre_closed_loop_outcome_development_freeze",
+  "parent_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v49_external_v9_proposal_conditional_veto_successor.json",
+    "sha256": "d95710ec53a0da423f901690ba3506815d5c80dc900b149bd10cf740906bf95a"
+  },
+  "collection_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v47_external_v9_long_horizon_target_veto.json",
+    "sha256": "6e0816d7f4cc3a74e622db08f97b088a154c9fae2e21b818fcd591e4f0652856"
+  },
+  "proposal_parent_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v46_external_v9_hierarchical_closed_loop_development.json",
+    "sha256": "cbdd465fa0d5583d7937742afc5f5188901c3708742ed4156d6a78c567586b70"
+  },
+  "hierarchical_freeze_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/joint_freeze_audit_v1.json",
+    "sha256": "b113215b8fba6cf322d367b7f007d40e3f6ebd9264fa4422da6a7e00fb549c2b"
+  },
+  "successor_training_result": {
+    "path": "cf_h2o/results/cluster/tsc_v67r63_external_v9_proposal_conditional_veto_successor_20260810/training_result_v1.json",
+    "sha256": "4f5d54886ce8bec9920d8b68dc736f4ae28e6d65019b53b70f41ee7f5911b04b"
+  },
+  "target_veto_joint_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v67r63_external_v9_proposal_conditional_veto_successor_20260810/joint_audit_v2.json",
+    "sha256": "14c70761f8eedbd0f9fc0978c926bdcea853d1f0312c1105c8ccf9f2e4ba3c1c",
+    "decision": "authorize_frozen_proposal_conditional_closed_loop_development_only"
+  },
+  "v64_integrity_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/development_selection_audit_v1.json",
+    "sha256": "377b18947e81a0e4cfce52f6ffd74ce2f0f236b6843a53d0dff20d52be225643",
+    "decision": "reject_hierarchical_development_and_preserve_validation_and_prospective_seeds",
+    "reuse_scope": "phase_pressure_rows_only"
+  },
+  "environment": {
+    "protocol": {
+      "path": "cf_h2o/config/traffic_signal_tsc_v41_external_v9_full_budget_refit.json",
+      "sha256": "472985aa515aab31849d2072c118b562183beaea9f6bf8f5920f69614ff35548"
+    },
+    "network_parent_protocol": {
+      "path": "cf_h2o/config/traffic_signal_tsc_v40_external_v9_network_repair_confirmation.json",
+      "sha256": "9d35605ea736c5b3938190bd9ce456ac741b26c76e0ede343ea39d65eb26419c"
+    },
+    "external_manifest": {
+      "path": "cf_h2o/config/traffic_signal_tsc_v39_external_la_jinan_v9_manifest.json",
+      "sha256": "636e09d8e2f47d5fefaa26b33b0552373b01f185e77e18896c97751c267c356c"
+    },
+    "conversion_root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v53r49_external_network_repair_20260810/conversion_v9_authoritative/full_networks_v9",
+    "conversion_manifest": {
+      "path": "cf_h2o/results/cluster/tsc_v53r49_external_network_repair_20260810/conversion_v9_authoritative/full_networks_v9/conversion_manifest.json",
+      "sha256": "b140f2deea63653efd225c53ad306bf910ecf1ee149fb894c202227d7d454f56"
+    },
+    "conversion_tree_sha256": "9aa639a6fde43c4008bc6b4c24e2171ae3135858a437e10bfc65440a002015de",
+    "sumo_version": "1.22.0",
+    "duration_sec": 3600,
+    "control_interval_sec": 10,
+    "warmup_sec": 60,
+    "prediction_horizon_sec": 60
+  },
+  "proposal": {
+    "method": "frozen_v60_hierarchical_cfcmt",
+    "target_labels_used_by_proposal": false,
+    "city_artifacts": {
+      "los_angeles": {
+        "certificate": {
+          "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/los_angeles/freeze.json",
+          "sha256": "264e4d6821efd305b0a91953fc7eb06730aede63d302700045afce1713ff61c1"
+        },
+        "model": {
+          "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/los_angeles/model.pkl",
+          "sha256": "dbeb80b1796dbe8b7910ba77bbe3ce587898da78cb7de3e47408806c878198df"
+        },
+        "selected_candidate": "constant_alpha_0p8",
+        "deployment": {
+          "conformal_guard": {
+            "enabled": true,
+            "margin": 0.0,
+            "max_relative_rule_gap": 0.0,
+            "min_context_trust": 0.5,
+            "risk_multiplier": 0.0
+          },
+          "coordination_mode_before_closed_loop_selection": "direct",
+          "fallback_policy": "phase_pressure",
+          "policy": "cfcmt_hierarchical_guard_mpc",
+          "regularizer": {
+            "blend_weight": 2.0,
+            "enabled": true,
+            "min_context_trust": 0.5,
+            "risk_multiplier": 0.0
+          },
+          "runtime_policy_suffix": "_hierarchical_guard",
+          "target_support": {
+            "combination": "minimum_component_support",
+            "conformal_guard_enabled": true,
+            "conformal_support": {
+              "distance": "nearest_standardized_rms",
+              "feature_count": 16,
+              "feature_names": [
+                "total_q",
+                "total_veh",
+                "mean_speed",
+                "mean_occ",
+                "green_q",
+                "red_q",
+                "green_down_q",
+                "green_down_occ",
+                "delta_green_q",
+                "delta_red_q",
+                "delta_green_down_q",
+                "delta_green_down_occ",
+                "delta_service_pressure",
+                "delta_switch_indicator",
+                "delta_clearance_fraction",
+                "delta_current_phase_overlap"
+              ],
+              "label_free": false,
+              "minimum_total_vehicles": 1.0,
+              "prototype_count": 4,
+              "support": "exp(-distance)",
+              "support_protocol": "oof-safe-action-nearest-prototype-v1"
+            },
+            "pressure_support": {
+              "distance": "nearest_standardized_rms",
+              "feature_count": 16,
+              "feature_names": [
+                "total_q",
+                "total_veh",
+                "mean_speed",
+                "mean_occ",
+                "green_q",
+                "red_q",
+                "green_down_q",
+                "green_down_occ",
+                "delta_green_q",
+                "delta_red_q",
+                "delta_green_down_q",
+                "delta_green_down_occ",
+                "delta_service_pressure",
+                "delta_switch_indicator",
+                "delta_clearance_fraction",
+                "delta_current_phase_overlap"
+              ],
+              "label_free": true,
+              "minimum_total_vehicles": 0.0,
+              "prototype_count": 746,
+              "support": "exp(-distance)",
+              "support_protocol": "target-action-coverage-nearest-prototype-v1"
+            },
+            "support_protocol": "pressure-and-oof-safe-intersection-v1"
+          }
+        }
+      },
+      "jinan": {
+        "certificate": {
+          "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/jinan/freeze.json",
+          "sha256": "a617c6312fa6e95877a44235b0caa5204cbe3053c1738baf839031255eb8dc2d"
+        },
+        "model": {
+          "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/jinan/model.pkl",
+          "sha256": "f2685b558733fe7bd7f2170ebe7306fbbe799f4c28ce6bf91f5c5776b0afbb8a"
+        },
+        "selected_candidate": "constant_alpha_0p8",
+        "deployment": {
+          "conformal_guard": {
+            "enabled": false,
+            "margin": 0.0,
+            "max_relative_rule_gap": 1.0,
+            "min_context_trust": 0.0,
+            "risk_multiplier": 1.0
+          },
+          "coordination_mode_before_closed_loop_selection": "direct",
+          "fallback_policy": "phase_pressure",
+          "policy": "cfcmt_hierarchical_guard_mpc",
+          "regularizer": {
+            "blend_weight": 8.0,
+            "enabled": true,
+            "min_context_trust": 0.5,
+            "risk_multiplier": 0.5
+          },
+          "runtime_policy_suffix": "_hierarchical_guard",
+          "target_support": {
+            "combination": "pressure_support_only",
+            "conformal_guard_enabled": false,
+            "conformal_support": {
+              "distance": "nearest_standardized_rms",
+              "feature_count": 16,
+              "feature_names": [
+                "total_q",
+                "total_veh",
+                "mean_speed",
+                "mean_occ",
+                "green_q",
+                "red_q",
+                "green_down_q",
+                "green_down_occ",
+                "delta_green_q",
+                "delta_red_q",
+                "delta_green_down_q",
+                "delta_green_down_occ",
+                "delta_service_pressure",
+                "delta_switch_indicator",
+                "delta_clearance_fraction",
+                "delta_current_phase_overlap"
+              ],
+              "label_free": true,
+              "minimum_total_vehicles": 0.0,
+              "prototype_count": 7288,
+              "support": "exp(-distance)",
+              "support_protocol": "target-action-coverage-nearest-prototype-v1"
+            },
+            "pressure_support": {
+              "distance": "nearest_standardized_rms",
+              "feature_count": 16,
+              "feature_names": [
+                "total_q",
+                "total_veh",
+                "mean_speed",
+                "mean_occ",
+                "green_q",
+                "red_q",
+                "green_down_q",
+                "green_down_occ",
+                "delta_green_q",
+                "delta_red_q",
+                "delta_green_down_q",
+                "delta_green_down_occ",
+                "delta_service_pressure",
+                "delta_switch_indicator",
+                "delta_clearance_fraction",
+                "delta_current_phase_overlap"
+              ],
+              "label_free": true,
+              "minimum_total_vehicles": 0.0,
+              "prototype_count": 7288,
+              "support": "exp(-distance)",
+              "support_protocol": "target-action-coverage-nearest-prototype-v1"
+            },
+            "support_protocol": "pressure-and-oof-safe-intersection-v1"
+          }
+        }
+      }
+    },
+    "prediction_horizon_sec": 60,
+    "immutability": "Model, target-support objects, regularizer, conformal guard, and hierarchical layer order are loaded byte-for-byte from v60."
+  },
+  "runtime_executable_sources": {
+    "cf_h2o/eval/traffic_signal_external_target_veto_closed_loop_development.py": "cb15898bbd69d841b1c15fe740e14fe19e3ee7ef8e8355fca24fb272f4b7a371",
+    "cf_h2o/traffic_signal/proposal_conditional_target_veto.py": "e6ef3ac33af3ea1159df677ded34760bee415d9af09e62854544e09accad016d",
+    "cf_h2o/eval/traffic_signal_resco_cfcmt_v3.py": "498c854a9e3b9e8ce42e54d9e99cb3759eb5bfbe58a662e2ccab8bfbd65670e2",
+    "scripts/cluster/run_tsc_external_target_veto_closed_loop_development_shard.py": "3f005c6db6d7e6adf1e20e413ecf13ff8b4b3d21168530ef4faa12531e82c709"
+  },
+  "city_target_veto_artifacts": {
+    "jinan": {
+      "model": {
+        "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v67r63_external_v9_proposal_conditional_veto_successor_20260810/freeze_v1/jinan/model.pkl",
+        "sha256": "34682b50ea9ea86eae31e28d9d323ed8a29453d21059202e8990178d61ea2e8c"
+      },
+      "certificate": {
+        "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v67r63_external_v9_proposal_conditional_veto_successor_20260810/freeze_v1/jinan/freeze.json",
+        "sha256": "713bcc60b459277d999d7f3ba77b3b432d797594313b006c2793c776cd9d69f0"
+      },
+      "active": true,
+      "selected_gate": {
+        "acceptance_quantile": 0.125,
+        "bootstrap": {
+          "ci95": [
+            -0.0033627704510348078,
+            -0.0009041281635168563
+          ],
+          "observed": -0.002193541572909056,
+          "probability_nonnegative": 0.0,
+          "replicates": 10000,
+          "seed": 20260819,
+          "unit": "simulator_seed_equal_scenario_mean"
+        },
+        "feasible": true,
+        "gates": {
+          "bootstrap_upper": true,
+          "harmful_fraction": true,
+          "mean_delta": true,
+          "minimum_retained_groups": true,
+          "minimum_retained_seed_fraction": true,
+          "passed": true,
+          "worst_seed": true
+        },
+        "harmful_group_fraction": 0.44040697674418605,
+        "key": "q0p125",
+        "mean_delta": -0.0021935415729090555,
+        "retained_group_count": 688,
+        "retained_seed_count": 6,
+        "retained_seed_fraction": 1.0,
+        "robust_score": -0.0014105376717628536,
+        "seed_delta_std": 0.001566007802292404,
+        "seed_mean_delta": {
+          "27178": -0.004000703286890788,
+          "50945": -0.003802476936936481,
+          "63775": -1.8255401295115417e-06,
+          "77524": -0.0010472564521126024,
+          "80314": -0.0033247794564873977,
+          "88625": -0.0009842077648975526
+        },
+        "stratum_mean_delta": {
+          "seed27178::jinan_3x4_real": -0.004970504378065115,
+          "seed27178::jinan_3x4_real_2000": -0.005752133581645394,
+          "seed27178::jinan_3x4_real_2500": -0.0012794719009618545,
+          "seed50945::jinan_3x4_real": -0.007647733641945484,
+          "seed50945::jinan_3x4_real_2000": 2.6563329316341076e-05,
+          "seed50945::jinan_3x4_real_2500": -0.0037862604981803005,
+          "seed63775::jinan_3x4_real": 0.0012022571581179048,
+          "seed63775::jinan_3x4_real_2000": -0.0004183841138950207,
+          "seed63775::jinan_3x4_real_2500": -0.0007893496646114187,
+          "seed77524::jinan_3x4_real": -0.002640128851717329,
+          "seed77524::jinan_3x4_real_2000": 0.0016098345715254165,
+          "seed77524::jinan_3x4_real_2500": -0.002111475076145895,
+          "seed80314::jinan_3x4_real": -0.0034210995937637234,
+          "seed80314::jinan_3x4_real_2000": -0.003281350285580374,
+          "seed80314::jinan_3x4_real_2500": -0.0032718884901180943,
+          "seed88625::jinan_3x4_real": -0.0024908738546549174,
+          "seed88625::jinan_3x4_real_2000": 0.0030437883892543674,
+          "seed88625::jinan_3x4_real_2500": -0.003505537829292108
+        },
+        "worst_seed_delta": -1.8255401295115417e-06
+      }
+    },
+    "los_angeles": {
+      "model": {
+        "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v67r63_external_v9_proposal_conditional_veto_successor_20260810/freeze_v1/los_angeles/model.pkl",
+        "sha256": "767fe5b4f3d4ff3306a5b818545983daf1db800a71a631c04a3a10ed83c358c9"
+      },
+      "certificate": {
+        "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v67r63_external_v9_proposal_conditional_veto_successor_20260810/freeze_v1/los_angeles/freeze.json",
+        "sha256": "cd1163ae04f2a8472f976d1498ae4e78f5380432aa4ad214ca2c299a5b94b7ad"
+      },
+      "active": false,
+      "selected_gate": null
+    }
+  },
+  "development": {
+    "seeds": [
+      52282,
+      41242,
+      63792,
+      80722,
+      75638,
+      61337,
+      73385,
+      81189
+    ],
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "active_cities": [
+      "jinan"
+    ],
+    "fallback_cities": [
+      "los_angeles"
+    ],
+    "duration_sec": 3600,
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "phase_policy": "phase_pressure",
+    "method_candidates": [
+      {
+        "key": "cfcmt_target_veto_cd120",
+        "runtime_policy": "causal_group_normalized_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 11,
+        "max_simultaneous_overrides": 1
+      },
+      {
+        "key": "cfcmt_target_veto_cd300",
+        "runtime_policy": "causal_group_normalized_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 29,
+        "max_simultaneous_overrides": 1
+      },
+      {
+        "key": "cfcmt_target_veto_cd450",
+        "runtime_policy": "causal_group_normalized_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 44,
+        "max_simultaneous_overrides": 1
+      }
+    ],
+    "candidate_count": 3,
+    "method_only_matrix_size": 96,
+    "reused_phase_matrix_size": 32,
+    "total_paired_matrix_size": 128,
+    "phase_references": [
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real",
+        "seed": 52282,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_52282/phase_pressure/result.json",
+          "sha256": "9d32fa1257e55c54386f2f43f553e2d0c056a2c98c46f6d43c290a4e634a80b6"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_52282/phase_pressure/tripinfo.xml",
+          "sha256": "3a6b738e5b233c79f03afa23f2485b4b4559b234ddd604a2b350e05fc9a7e66b"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real",
+        "seed": 41242,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_41242/phase_pressure/result.json",
+          "sha256": "9cef155fb150dc288b98bc6055c1e2166e08b054b2b7e1089159fd85d923599a"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_41242/phase_pressure/tripinfo.xml",
+          "sha256": "a3cccb21edb53cf170c1cd86ba9da022b991d863c7965fc11451f3158c1fe1b6"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real",
+        "seed": 63792,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_63792/phase_pressure/result.json",
+          "sha256": "fdbff6bca8c354dfbcc8488f39a29566f0e0712b688b7f21718deebfcefac512"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_63792/phase_pressure/tripinfo.xml",
+          "sha256": "783816c6e41dd5d9ebdb91b5983f6486749ed919e8708867bc3b7c8a924a608d"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real",
+        "seed": 80722,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_80722/phase_pressure/result.json",
+          "sha256": "944d04b6bec6b11242812e669ecb28ad1fc78f8c9d97647c33d4173e8914b72d"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_80722/phase_pressure/tripinfo.xml",
+          "sha256": "5ac82c5d89a6423a5bca48fcc418b34c9049511dcb3d7f29bed57cc6b44ded10"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real",
+        "seed": 75638,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_75638/phase_pressure/result.json",
+          "sha256": "89bcdc8cd9c480da5b9292faff047e0a00e3b16744087ebe902582642770cf82"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_75638/phase_pressure/tripinfo.xml",
+          "sha256": "223acbf1673e2a056e08bef994e0dc5bb4dbc2750b604262d1f0901ed2cb279b"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real",
+        "seed": 61337,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_61337/phase_pressure/result.json",
+          "sha256": "9089ae32b1b613e95502628b1f7beb254057598357dda0be61da09e177fbf10a"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_61337/phase_pressure/tripinfo.xml",
+          "sha256": "0fa0e88fa952691179120bffc8a79cf76c0ac185cc1cc65a1a00cc94eb640c62"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real",
+        "seed": 73385,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_73385/phase_pressure/result.json",
+          "sha256": "f365084281cd6c14450f4ae60ab31eda2a93e0ff96508cb72bfbbcaa6c8abcd5"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_73385/phase_pressure/tripinfo.xml",
+          "sha256": "a6750579b75c6ac375ce583b824a5eb730fe6dd4e0b9438bb0ae04da7c6e7f9c"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real",
+        "seed": 81189,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_81189/phase_pressure/result.json",
+          "sha256": "c416b5530eef9607d72b94845ade2089f23b84c984346f0004ad946d49850820"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real/seed_81189/phase_pressure/tripinfo.xml",
+          "sha256": "8dd036b31c44064282160c260ae1285732e2d3586140e9ac64599729c60abf9c"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2000",
+        "seed": 52282,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_52282/phase_pressure/result.json",
+          "sha256": "e2f2a4b08bfcb0a30647ed67dfaa19409999004f2118aa0901e1e4540b4c1aa6"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_52282/phase_pressure/tripinfo.xml",
+          "sha256": "458fc69b6da6c7c0d0294c35baf894a430c5b0a5e3800cbdea6be8483f203f0c"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2000",
+        "seed": 41242,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_41242/phase_pressure/result.json",
+          "sha256": "b837be17203fa22ca5c1addd7e3efe08e499f7fac3dca8c49d6515864015478d"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_41242/phase_pressure/tripinfo.xml",
+          "sha256": "bc5073f08d4877622bd6978a37cbad75af7e59b9ef5f52bcdefd1602ca1c06c0"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2000",
+        "seed": 63792,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_63792/phase_pressure/result.json",
+          "sha256": "8796b2024d3d3ad4a8f82d23edc240f994ae61d8788a08f816b58f93148a78fa"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_63792/phase_pressure/tripinfo.xml",
+          "sha256": "adb01f5c1003fe9fdbfe5247a71c059285dd87857bd25b01c0785f6597892e1e"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2000",
+        "seed": 80722,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_80722/phase_pressure/result.json",
+          "sha256": "5f23fefe264b6fe0385a0044fe6f98d4701713a7e8c1f0c0c52e88c74a8722fb"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_80722/phase_pressure/tripinfo.xml",
+          "sha256": "3db72282976b7cb06e7868bcc2dcfe9b6e9cb9612bf0570b4368c0a8e304505b"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2000",
+        "seed": 75638,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_75638/phase_pressure/result.json",
+          "sha256": "2f9448da29ab77d745ad3cb41b01d5ae1d58ea9e0200251d9f3d2959bcf4801c"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_75638/phase_pressure/tripinfo.xml",
+          "sha256": "eb386684c3190aa9982ea847cb3a4562cd3a2abfd1e3152347c0730dc1703c27"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2000",
+        "seed": 61337,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_61337/phase_pressure/result.json",
+          "sha256": "3ee53c58d7af98f23f72e1e450026abeb2e449dd2dbb8b044b45108bfe169ea1"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_61337/phase_pressure/tripinfo.xml",
+          "sha256": "720a7f1a424a4b02ba6343c79a6b870b0cb3e62495b2090dfb83a3937427b138"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2000",
+        "seed": 73385,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_73385/phase_pressure/result.json",
+          "sha256": "7f67c0025d52347c85fcc1681ce20cd48eabf3206ce497a0321ca8ba8d79c021"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_73385/phase_pressure/tripinfo.xml",
+          "sha256": "1feed0d638df084a34b3ed09f8448e3d8da8354fd012324a28b6207861778f29"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2000",
+        "seed": 81189,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_81189/phase_pressure/result.json",
+          "sha256": "43b65dc4c3657b01a4538bbe41758512dd2043dae9a9f18819b758c1a5b05cb0"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2000/seed_81189/phase_pressure/tripinfo.xml",
+          "sha256": "6d992e248c9e2aabe36974be6815bc97ac8564e060ae44d9d57c19ee43f7a48c"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2500",
+        "seed": 52282,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_52282/phase_pressure/result.json",
+          "sha256": "d914f8cf9748d0fe10bad1d88edad1b46c10b0b29e528b2f75864c619b85c2fa"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_52282/phase_pressure/tripinfo.xml",
+          "sha256": "525e7b01b4b5e621f7996b788a728225bf11c3a5bc7fb16376c03dfe1d5a0c07"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2500",
+        "seed": 41242,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_41242/phase_pressure/result.json",
+          "sha256": "19ed2b6df9aad03a77bd373925d7735194f81731d04fd7683fb03150ac8c2701"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_41242/phase_pressure/tripinfo.xml",
+          "sha256": "3caccc94c837b3417fd300aa2d1f4fb50324d6c54009087d5c13dd24922e73b6"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2500",
+        "seed": 63792,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_63792/phase_pressure/result.json",
+          "sha256": "d41f305e4fea865b69989b88e05a8e7152848bfe7565285a90c6f0567c69024e"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_63792/phase_pressure/tripinfo.xml",
+          "sha256": "993d4ee407b911df2156aded3e154c4ba2830d9c24cc97a7d0ce62017d4dddb8"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2500",
+        "seed": 80722,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_80722/phase_pressure/result.json",
+          "sha256": "1318b03731b5ed5c2a2f64ac12d4a5a0f7d73b297f921e4cff93df3cc63926c4"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_80722/phase_pressure/tripinfo.xml",
+          "sha256": "00ec6dbc90ad2a6e8ec476210ec62f06fab133894caa5b8dffd334cd6e8bd442"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2500",
+        "seed": 75638,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_75638/phase_pressure/result.json",
+          "sha256": "bb71b2d05dc3c27c04b4a8d64650f51860a46cbd07c923fa135a5d29eb0a409c"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_75638/phase_pressure/tripinfo.xml",
+          "sha256": "34c71df8ad28d98a1ec4f03ddd70619c004bac3ae730e65697526debf0c4f9e9"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2500",
+        "seed": 61337,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_61337/phase_pressure/result.json",
+          "sha256": "cef4092a3650a58936afe56e8ef902f0b6c2eb4f20641dbd3a0954e8bfcd08f1"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_61337/phase_pressure/tripinfo.xml",
+          "sha256": "f0edad5f0a17ca7183746383aad80b0636557c07b116253f24babda64f978948"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2500",
+        "seed": 73385,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_73385/phase_pressure/result.json",
+          "sha256": "05811d901cba1920522a0d284cc634de927bf4c229fcdb3e40036e66af9c1f25"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_73385/phase_pressure/tripinfo.xml",
+          "sha256": "e462f986fb0c79fe5ccdfb99ef33b869d6e08e5377810c5240688f1edf8eb8d8"
+        }
+      },
+      {
+        "city": "jinan",
+        "scenario": "jinan_3x4_real_2500",
+        "seed": 81189,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_81189/phase_pressure/result.json",
+          "sha256": "634b6dc3247f592d2710cc865aa8529cb3412a012f765d5500fbf9e334ee5b0d"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/jinan/jinan_3x4_real_2500/seed_81189/phase_pressure/tripinfo.xml",
+          "sha256": "a9e9f7f462a470b8956c6acb6b3b0cd28984ff3e542ca9a0183c3086eb55fb68"
+        }
+      },
+      {
+        "city": "los_angeles",
+        "scenario": "la_1x4",
+        "seed": 52282,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_52282/phase_pressure/result.json",
+          "sha256": "843fa04e4fdf3e1f621820449febbb27780aa3ec368309656a15f20e521bb5a2"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_52282/phase_pressure/tripinfo.xml",
+          "sha256": "9d7256489cdc217b758910ba1e21962fa406669840c6d05ff02779106f07ff21"
+        }
+      },
+      {
+        "city": "los_angeles",
+        "scenario": "la_1x4",
+        "seed": 41242,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_41242/phase_pressure/result.json",
+          "sha256": "0ae4b359e4cbb14ae33d2e626fef172e7eec6972e6a71e10a946d5637310af0a"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_41242/phase_pressure/tripinfo.xml",
+          "sha256": "ad396533663e3013b04c2b4ec064353efc5e60ed2973150458d5016d62420578"
+        }
+      },
+      {
+        "city": "los_angeles",
+        "scenario": "la_1x4",
+        "seed": 63792,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_63792/phase_pressure/result.json",
+          "sha256": "c62abe59f6e17b3ab6b5ccd4067e3addbf59ca4721983f80ff8a2a69d8b303d7"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_63792/phase_pressure/tripinfo.xml",
+          "sha256": "219780f037c49b5bd9e75369eb92807db54e555170e23c4a2356f66a458f6c50"
+        }
+      },
+      {
+        "city": "los_angeles",
+        "scenario": "la_1x4",
+        "seed": 80722,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_80722/phase_pressure/result.json",
+          "sha256": "039369c65833d251778929c5c83f2cc6e054bad0251186dadf0e001aaeab9be9"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_80722/phase_pressure/tripinfo.xml",
+          "sha256": "48ddde57d8f7e4ad71e39891c655938b7842a0a57c1bbf3df04448871e050c6f"
+        }
+      },
+      {
+        "city": "los_angeles",
+        "scenario": "la_1x4",
+        "seed": 75638,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_75638/phase_pressure/result.json",
+          "sha256": "cc616eff9ccd835a01e2ad4d76486004f25c45282b9456e4730249a115f348ba"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_75638/phase_pressure/tripinfo.xml",
+          "sha256": "eb1df8614b17baf7991a2c66e7809bba9fc445c519311deac5bd773928538c17"
+        }
+      },
+      {
+        "city": "los_angeles",
+        "scenario": "la_1x4",
+        "seed": 61337,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_61337/phase_pressure/result.json",
+          "sha256": "5ca10be4f72065b3d427a9639fe6c22b0eeae9ef5559de2cd42313ce7ea7ab3a"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_61337/phase_pressure/tripinfo.xml",
+          "sha256": "826fa3dcbc38c20432ecb7dc0e17b14a0c308e5dd3a5552958baf16bd922da22"
+        }
+      },
+      {
+        "city": "los_angeles",
+        "scenario": "la_1x4",
+        "seed": 73385,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_73385/phase_pressure/result.json",
+          "sha256": "ee13a5ef9a6631fe7fd1a890bcf79354489248427e9efaf4a27bd3cb542bc6bf"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_73385/phase_pressure/tripinfo.xml",
+          "sha256": "36aea7bc1125ba64749b0ea78ddfe64911651e88337aaf0e0c6dce0cf8398957"
+        }
+      },
+      {
+        "city": "los_angeles",
+        "scenario": "la_1x4",
+        "seed": 81189,
+        "result": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_81189/phase_pressure/result.json",
+          "sha256": "10c4d769a7b2913305d9dc4a36ab74261dfeff57921241c2afa9cd287e4b2e5a"
+        },
+        "tripinfo": {
+          "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/formal_v1/los_angeles/la_1x4/seed_81189/phase_pressure/tripinfo.xml",
+          "sha256": "3e1e9fd85f659eeb5b9be9b91256839ed366085eed85cf82029cd54c421e25dd"
+        }
+      }
+    ],
+    "selection_rule": {
+      "active_city": {
+        "minimum_city_mean_relative_improvement": 0.005,
+        "maximum_bootstrap_95pct_upper_mean_relative_delta": 0.01,
+        "maximum_seed_level_city_mean_relative_regression": 0.01,
+        "minimum_improved_seed_fraction": 0.5,
+        "minimum_executed_interventions_per_scenario_seed": 1
+      },
+      "fallback_city": {
+        "executed_interventions_must_equal": 0,
+        "mean_waiting_time_must_equal_phase_atol": 1e-12,
+        "mean_travel_time_must_equal_phase_atol": 1e-12,
+        "safety_counts_must_equal_phase": true
+      },
+      "all_cities_must_satisfy_declared_active_or_fallback_contract": true,
+      "method_teleports_must_not_exceed_paired_phase_pressure": true,
+      "method_collision_incidents_must_not_exceed_paired_phase_pressure": true,
+      "global_selector": "lowest equal-active-city robust score among candidates satisfying every active and fallback city contract",
+      "robust_score": "city_mean_relative_delta + 0.5 * seed_delta_std + max(worst_seed_delta, 0)",
+      "tie_break": "lower active-city robust score, lower active-city mean delta, fewer interventions, longer cooldown, lexical key",
+      "fallback": "phase_pressure_if_no_candidate_is_feasible"
+    },
+    "bootstrap": {
+      "replicates": 10000,
+      "seed": 20260818,
+      "unit": "paired simulator seed with equal scenarios within active city"
+    },
+    "future_result_file_count_at_freeze": 0
+  },
+  "validation": {
+    "closed_loop_seeds": [
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ],
+    "must_not_run_until_development_selector_and_analysis_hash_are_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "method_and_execution_candidate_must_be_hash_frozen_before_launch": true
+  },
+  "prospective_confirmation": {
+    "closed_loop_seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "must_not_run_until_validation_passes_and_prospective_analysis_is_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "candidate_policies_for_later_freeze": [
+      "cfcmt_oof_validated_mpc",
+      "phase_pressure",
+      "max_pressure",
+      "fixed_time",
+      "rigid_anchor_mpc",
+      "simulator_only_mpc",
+      "h2oplus_style_dense_residual_mpc"
+    ],
+    "release_condition": "validation_gate_passed_and_analysis_hash_frozen"
+  },
+  "claim_boundary": "Outcome-informed proposal-conditional target veto evaluated on disclosed development seeds. Active cities test improvement; OOF fallback cities test exact safe abstention. Validation and prospective seeds remain sealed."
+}

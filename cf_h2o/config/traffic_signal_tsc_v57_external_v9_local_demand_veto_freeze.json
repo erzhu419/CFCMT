@@ -1,0 +1,256 @@
+{
+  "cache_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v69r65_external_v9_estimand_aligned_450s_target_veto_20260810/cache_audit_v1.json",
+    "sha256": "56a9556553737e779b32dc70936315e20cfe7989b15209d470d3e2eaeedaec2e"
+  },
+  "cache_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v51_external_v9_estimand_aligned_450s_target_veto_cache.json",
+    "sha256": "e36b86166a52841f7edf615b76af390f5736ec7603d7dd3265afd67312cb874e"
+  },
+  "claim_boundary": "The selected Jinan veto is fit on all disclosed adaptation seeds. Los Angeles is frozen disabled. Closed-loop and sealed seeds remain untouched.",
+  "frozen_at_utc": "2026-08-10T08:54:13.246199+00:00",
+  "future_file_counts_at_freeze": {
+    "artifact_root": 0,
+    "freeze_result": 0,
+    "future_closed_loop_root": 0,
+    "future_validation_root": 0
+  },
+  "hierarchical_freeze_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/joint_freeze_audit_v1.json",
+    "sha256": "b113215b8fba6cf322d367b7f007d40e3f6ebd9264fa4422da6a7e00fb549c2b"
+  },
+  "model": {
+    "city_decisions": {
+      "jinan": {
+        "decision": "freeze_active_veto",
+        "feasible_candidate_count": 2,
+        "oof_prediction_sha256": "1b2753108ee61ed362ffb56f7502516f7e861848c414beca735f1a158d6739f5",
+        "proposal_count": 5644,
+        "selected_candidate": {
+          "acceptance_quantile": 0.075,
+          "bootstrap": {
+            "ci95": [
+              -0.002030487412719988,
+              -0.0007664319987282248
+            ],
+            "observed": -0.0013495414952120362,
+            "probability_nonnegative": 0.0,
+            "replicates": 10000,
+            "seed": 20260820,
+            "unit": "simulator_seed_equal_scenario_mean"
+          },
+          "feasible": true,
+          "gates": {
+            "bootstrap_upper": true,
+            "harmful_fraction": true,
+            "mean_delta": true,
+            "minimum_retained_groups": true,
+            "minimum_retained_seed_fraction": true,
+            "passed": true,
+            "worst_seed": true
+          },
+          "harmful_group_fraction": 0.446524064171123,
+          "key": "q0p075",
+          "mean_delta": -0.0013495414952120362,
+          "retained_group_count": 374,
+          "retained_seed_count": 6,
+          "retained_seed_fraction": 1.0,
+          "robust_score": -0.0009450366733245706,
+          "seed_delta_std": 0.0008090096437749313,
+          "seed_mean_delta": {
+            "27178": -0.0009316005621792666,
+            "50945": -0.002683202355040609,
+            "63775": -0.0007581509947129466,
+            "77524": -0.0007578819840429562,
+            "80314": -0.0022700093469358216,
+            "88625": -0.0006964037283606166
+          },
+          "stratum_mean_delta": {
+            "seed27178::jinan_3x4_real": -0.0016719021744837313,
+            "seed27178::jinan_3x4_real_2000": -0.0031592166748421278,
+            "seed27178::jinan_3x4_real_2500": 0.0020363171627880597,
+            "seed50945::jinan_3x4_real": -0.005432352677406509,
+            "seed50945::jinan_3x4_real_2000": -0.002016029338266737,
+            "seed50945::jinan_3x4_real_2500": -0.0006012250494485808,
+            "seed63775::jinan_3x4_real": -0.0019297114044747143,
+            "seed63775::jinan_3x4_real_2000": 0.0005251787681512022,
+            "seed63775::jinan_3x4_real_2500": -0.0008699203478153278,
+            "seed77524::jinan_3x4_real": -0.0032099152819136845,
+            "seed77524::jinan_3x4_real_2000": -0.0010874418937798379,
+            "seed77524::jinan_3x4_real_2500": 0.0020237112235646534,
+            "seed80314::jinan_3x4_real": -0.005597943487029115,
+            "seed80314::jinan_3x4_real_2000": -0.00276389053717506,
+            "seed80314::jinan_3x4_real_2500": 0.001551805983396711,
+            "seed88625::jinan_3x4_real": -0.0017685137506124344,
+            "seed88625::jinan_3x4_real_2000": 0.0014588793635645463,
+            "seed88625::jinan_3x4_real_2500": -0.0017795767980339613
+          },
+          "worst_seed_delta": -0.0006964037283606166
+        },
+        "variant": "topology_local_squared_raw_scaled"
+      },
+      "los_angeles": {
+        "decision": "force_phase_pressure_fallback",
+        "feasible_candidate_count": 0,
+        "oof_prediction_sha256": "63a7b037c4114892037900a73b357abdc3b8c1c83def35ac172b1513d10af166",
+        "proposal_count": 6,
+        "selected_candidate": null,
+        "variant": "topology_local_squared_raw_scaled"
+      }
+    },
+    "config": {
+      "l2_regularization": 24.0,
+      "learning_rate": 0.05,
+      "max_iter": 120,
+      "max_leaf_nodes": 7,
+      "min_samples_leaf": 12,
+      "random_state": 20260803,
+      "uncertainty_quantile": 0.9
+    },
+    "fit": "all_six_adaptation_seeds_after_seed_loo_selection",
+    "local_demand_context_is_label_free": true,
+    "scenario_id_is_not_a_feature": true,
+    "variant": "topology_local_squared_raw_scaled",
+    "variant_spec": {
+      "feature_count": 45,
+      "feature_names": [
+        "total_q",
+        "total_veh",
+        "mean_speed",
+        "mean_occ",
+        "green_q",
+        "red_q",
+        "green_down_q",
+        "green_down_occ",
+        "delta_green_q",
+        "delta_red_q",
+        "delta_green_down_q",
+        "delta_green_down_occ",
+        "delta_service_pressure",
+        "delta_switch_indicator",
+        "delta_clearance_fraction",
+        "delta_current_phase_overlap",
+        "log_scheduled_vehicle_count",
+        "scheduled_departures_per_hour_per_tls",
+        "departure_300s_cv",
+        "departure_600s_cv",
+        "departure_900s_cv",
+        "departure_600s_trough_ratio",
+        "departure_600s_peak_ratio",
+        "origin_hhi",
+        "mean_route_edge_count_norm",
+        "tls_incoming_edge_count_norm",
+        "tls_outgoing_edge_count_norm",
+        "tls_controlled_link_count_norm",
+        "tls_incoming_lane_count_norm",
+        "tls_incoming_speed_norm",
+        "tls_incoming_length_norm",
+        "tls_graph_degree_norm",
+        "tls_graph_closeness",
+        "tls_phase_count_norm",
+        "tls_mean_green_fraction",
+        "local_arrivals_prev_300_per_in_lane",
+        "local_arrivals_next_300_per_in_lane",
+        "local_arrivals_next_450_per_in_lane",
+        "local_arrivals_next_900_per_in_lane",
+        "local_arrivals_next_prev_300_balance",
+        "local_arrivals_next_450_to_tls_mean_ratio",
+        "local_arrivals_next_900_300bin_cv",
+        "local_arrivals_share_network_next_450",
+        "neighbor_arrivals_next_450_ratio",
+        "local_arrivals_remaining_fraction"
+      ],
+      "local_demand": true,
+      "model": "squared_regressor",
+      "target": "raw_scenario_robust_scaled"
+    }
+  },
+  "proposal_parent_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v46_external_v9_hierarchical_closed_loop_development.json",
+    "sha256": "cbdd465fa0d5583d7937742afc5f5188901c3708742ed4156d6a78c567586b70"
+  },
+  "prospective_confirmation": {
+    "candidate_policies_for_later_freeze": [
+      "cfcmt_oof_validated_mpc",
+      "phase_pressure",
+      "max_pressure",
+      "fixed_time",
+      "rigid_anchor_mpc",
+      "simulator_only_mpc",
+      "h2oplus_style_dense_residual_mpc"
+    ],
+    "city_scenarios": {
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ],
+      "los_angeles": [
+        "la_1x4"
+      ]
+    },
+    "closed_loop_seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "must_not_run_until_validation_passes_and_prospective_analysis_is_frozen": true,
+    "release_condition": "validation_gate_passed_and_analysis_hash_frozen"
+  },
+  "protocol": "tsc-v74r70-external-v9-local-demand-veto-freeze-v1",
+  "runtime_executable_sources": {
+    "cf_h2o/eval/traffic_signal_external_local_demand_model_diagnostic.py": "c69a8b3b61bd0ed1b48be13ed4a1ab7bf5be505295c4ee17dc89c958edc02fcc",
+    "cf_h2o/eval/traffic_signal_external_local_demand_veto_freeze.py": "f7c5e02a38bd6991f18c6e30eb0decfb0ca76406d00bf1d162e4c0624fe20592",
+    "cf_h2o/eval/traffic_signal_resco_cfcmt_v3.py": "1a42ca1c411db5481804f8f002897d7311a04a80ddf22ab717d9815bb1448d38",
+    "cf_h2o/traffic_signal/demand_timeline_context.py": "741592aab37e12ba76dc802797ef5076f29a0c14d2b3e6f3c3c174933042a29d",
+    "cf_h2o/traffic_signal/local_demand_target_veto.py": "48a274330ef4875d4673ff769352668d558715060f2f23f92fb9a5c3a684f982",
+    "cf_h2o/traffic_signal/local_demand_timeline_context.py": "334e0a07f409c493a511074bebaae5aa6f29659a83e643ab1b8996eb77ba8dc0",
+    "scripts/cluster/run_tsc_external_local_demand_veto_freeze.py": "8e36555caaff5aab3776f52dd2b18927b2e4f8118b6155a9bd385a751cf16e33"
+  },
+  "stage": "post_v73_oof_audit_pre_full_adaptation_model_fit",
+  "v73_diagnostic_audit": {
+    "decision": "authorize_oof_qualified_city_successor_freeze_only",
+    "path": "cf_h2o/results/cluster/tsc_v73r69_external_v9_local_demand_model_diagnostic_20260810/audit_v1.json",
+    "sha256": "616884af2d7940013f55c5f9f335b019c5fe2281fee46fced1710a2e67662345"
+  },
+  "v73_diagnostic_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v56_external_v9_local_demand_model_diagnostic.json",
+    "sha256": "1275842a6d9062825be444e1c26318bbb32b9a19212187b5d6485e220bb86bc5"
+  },
+  "v73_diagnostic_result": {
+    "path": "cf_h2o/results/cluster/tsc_v73r69_external_v9_local_demand_model_diagnostic_20260810/diagnostic_v1.json",
+    "sha256": "5dcf83e9da51b835be974a4cdb654a44fcd5f7d0791033ce6c8ffaab323bc82f"
+  },
+  "validation": {
+    "city_scenarios": {
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ],
+      "los_angeles": [
+        "la_1x4"
+      ]
+    },
+    "closed_loop_seeds": [
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ],
+    "method_and_execution_candidate_must_be_hash_frozen_before_launch": true,
+    "must_not_run_until_development_selector_and_analysis_hash_are_frozen": true
+  }
+}

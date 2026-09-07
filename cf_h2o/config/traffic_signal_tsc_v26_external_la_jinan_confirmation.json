@@ -1,0 +1,279 @@
+{
+  "protocol": "tsc-v42r38-external-la-jinan-tls-safe-confirmation-v3",
+  "frozen_at_utc": "2026-08-09T04:07:06Z",
+  "claim_boundary": "external simulator-network confirmation with target offline adaptation; not real-world counterfactual or zero-shot validation",
+  "pre_efficacy_amendment": {
+    "efficacy_metrics_inspected": false,
+    "reason": "the v6 safety admission exposed netconvert TLS linkIndex reordering that left every audited CityFlow phase attached to the wrong SUMO movement set",
+    "v6_rejected_artifact": {
+      "task_id": "t77233",
+      "snapshot_sha256": "4347ac5e06f364e9375f4f177771dac9f5d435c94267c76366641beaf4f14a28",
+      "manifest_sha256": "34b8317db46c6352da728dd17288cc51f82fec4b0dbd1168b03048e55443c9c5",
+      "tree_sha256": "2bfb1680eae341d68ac5b685fbabf5a9d7477defc9bc7595212b82fe08064239",
+      "la_mismatched_phases": "14/14",
+      "jinan_mismatched_phases": "96/96",
+      "jinan_real_seed_6067_collision_time_sec": 815,
+      "jinan_real_seed_6067_unique_collision_incidents": 1,
+      "jinan_real_seed_6067_admission_sha256": "2eed99d2ebd7d9dfe2dff4109aa15617f6fd8aa3d1a905f93fe2abb6c3aca14b"
+    },
+    "required_correction": "remap every source roadLink phase through the final SUMO connection identity after netconvert, use phase-0 links as permissive green, and use a physical yellow intergreen",
+    "all_v6_offline_and_closed_loop_results_prohibited": true
+  },
+  "pre_efficacy_merge_yield_amendment": {
+    "efficacy_metrics_inspected": false,
+    "reason": "v7 corrected phase identity but the LA source laneLink graph still promoted multiple connections merging into one target lane to protected green",
+    "v7_rejected_artifact": {
+      "task_ids": ["t77647", "t77648", "t77649", "t77650", "t77651", "t77652", "t77653", "t77654"],
+      "manifest_sha256": "f8438f14135dff710f197516cf934a2f07dc48842229137f5340113e6f1997a8",
+      "tree_sha256": "1990ea83c813fb869dfab5ea211e2d7a013e9f92356b17f05cc5807c713ccfdb",
+      "passed_scenario_seed_pairs": 7,
+      "rejected_scenario_seed_pair": "la_1x4/6067",
+      "unique_collision_incidents": 2,
+      "rejected_admission_sha256": "f799604269b0a376144bb5fe1c566493dcf6a31768352acd416581f476fcf2fb"
+    },
+    "required_correction": "for active links merging into one target lane, retain at most one netconvert O-priority connection as protected G and encode every remaining connection as yielding g",
+    "required_maximum_protected_green_links_per_target_lane": 1,
+    "all_v7_offline_and_closed_loop_results_prohibited": true
+  },
+  "supersedes": {
+    "protocol": "tsc-v42r38-external-la-nanchang-confirmation-v5",
+    "config": "cf_h2o/config/traffic_signal_tsc_v25_external_la_nanchang_confirmation.json",
+    "reason": "pre-efficacy safety screening rejected the converted Nanchang network under strict SUMO junction-collision monitoring"
+  },
+  "pre_efficacy_target_replacement": {
+    "selection_information": "network integrity, route loading, collisions, teleports, controllable signal count, and demand conservation only",
+    "efficacy_metrics_inspected": false,
+    "required_safety_rule": "zero unique collision incidents and zero teleports in every admitted seed",
+    "excluded_candidates": {
+      "nanchang": {
+        "reason": "converted CBEngine approach semantics conflict with physical SUMO junction geometry",
+        "full_horizon_seed_5057_unique_collision_incidents": 886,
+        "full_horizon_seed_6067_unique_collision_incidents": 870,
+        "seed_5057_result_sha256": "88ce4d8b5c8c687e0d4ddb50df133eecf370c29b5e576a133fac675beeb7ec7d",
+        "seed_6067_result_sha256": "5bece33ab7ba83597cda70907a2e6063870b25222e47401ffa9aadf526b42442",
+        "diagnostic_600s_unique_collision_incidents": 23,
+        "diagnostic_600s_sha256": "42c220ad3d83119eaa715599bc6099d80c66dacc6743742bfeff76aef404c6fe"
+      },
+      "monaco_most": {
+        "repository_commit": "b29b2f65f1096a9c69a601ec62a724815cb4a43f",
+        "local_sumo_version": "1.27.1",
+        "probe_begin_sec": 18000,
+        "probe_duration_sec": 600,
+        "unique_collision_incidents": 13,
+        "teleports": 0
+      },
+      "bologna_small": {
+        "repository_commit": "00f6eb479a9dc0fbaeb731495c11d48d7a9661d3",
+        "local_sumo_version": "1.27.1",
+        "probe_duration_sec": 600,
+        "unique_collision_incidents": {
+          "acosta": 1,
+          "joined": 14,
+          "pasubio": 6
+        },
+        "teleports": 0
+      }
+    },
+    "replacement_candidate": {
+      "city": "jinan",
+      "repository": "https://github.com/wingsweihua/colight.git",
+      "repository_commit": "04440b722e7f36d7043a3f2ad8e40c3df301fad3",
+      "local_sumo_version": "1.27.1",
+      "probe_scenario": "jinan_3x4_real",
+      "probe_duration_sec": 600,
+      "unique_collision_incidents": 0,
+      "teleports": 0,
+      "formal_admission_required_under_sumo_1_22": true
+    }
+  },
+  "development_gate": {
+    "required_status": "PASS",
+    "v41_audit_sha256": "5bcae9467cdb4cc157676e94078d204702ebdca6d51007ffca4bc85d13951066",
+    "frozen_selector": {
+      "key": "scope_all_tau_0_rho_0p1_lambda_0",
+      "scope": "all",
+      "standard_error_multiplier": 0.0,
+      "minimum_improvement": 0.0,
+      "maximum_fold_regression": 0.1
+    }
+  },
+  "source_evidence": {
+    "manifest": "cf_h2o/config/traffic_signal_cross_city_v2_saltlake18.json",
+    "manifest_sha256": "8c5259597a24e7558a698f38219780f5f8a0ae246daa682282263adfd8e24ec1",
+    "counterfactual_cache_sha256": "14c6dfad87999e55fa86fa942ac0ca2334129f4d1662b3c31a6e4fc7aa74c242",
+    "source_rule_baseline_sha256": "f9223a7001078d9a6df0e1a2ad4bfe1d2bc59fc2547621f092e8be702596dbfa",
+    "source_simulator_seeds": [2027, 3037, 4047],
+    "external_targets_must_not_source_each_other": true
+  },
+  "conversion": {
+    "script": "scripts/data/convert_cityflow_external_confirmation_to_sumo.py",
+    "script_sha256": "872f226016fff938edb14519c4380a36cf8e092c9d980d28e185616948845141",
+    "base_converter": "scripts/data/convert_libsignal_external_to_sumo.py",
+    "base_converter_sha256": "4f95c20c481be98606fe54e78e0ac53bb366ef7b9c5d2b3bbc89fad4948881e7",
+    "required_protocol": "cfcmt-cityflow-full-external-sumo-conversion-v8",
+    "required_tls_semantic_protocol": "cityflow-roadlink-to-netconvert-linkindex-remap-permissive-intergreen-merge-yield-v3",
+    "required_post_remap_phase_link_symmetric_difference": 0,
+    "required_maximum_protected_green_links_per_target_lane": 1,
+    "required_netconvert_version": "1.22.0",
+    "full_network_only": true,
+    "all_published_jinan_real_flow_variants": true,
+    "generated_artifact_paths": "relative_to_conversion_root",
+    "output_root": "cf_h2o/results/cluster/tsc_v42r38_external_la_jinan_20260809/conversion/full_networks_v8",
+    "canonical_artifact": {
+      "status": "passed_pre_efficacy_execution",
+      "populated_post_execution_at_utc": "2026-08-09T04:12:00Z",
+      "task_id": "t77659",
+      "snapshot_sha256": "21d1dd3fe24f1d0e42a01290458e13e0eff226d181b598d432acb69b12205f75",
+      "manifest_sha256": "12cdcacd3756e51fbd52c5801bc421bf0813319d339c6dea24f8d3b702e54fee",
+      "tree_sha256": "4a2e17618c2ac584fc767562f3a7096c95d8f904f03ef6baa9cd5d34d282eadd"
+    },
+    "sources": {
+      "la_flow": {
+        "path": "H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/LA_1x4/LA.json",
+        "sha256": "60d00b06111d63530302f2b401cd753686d73f8c44e0c30434bfc14295520180"
+      },
+      "la_roadnet": {
+        "path": "H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/LA_1x4/roadnet_LA.json",
+        "sha256": "7ec7b5b8a1855c454d56a13112b0435a5a178194b3029525f331402a607f8c24"
+      },
+      "jinan_roadnet": {
+        "path": "H2Oplus/downloads/traffic_signal_external/colight/data/Jinan/3_4/roadnet_3_4.json",
+        "sha256": "55abc036ac4ac48705301f4cf46ea80d8d88a82abb9ed68404bedb96eb3cf81d"
+      },
+      "jinan_3x4_real_flow": {
+        "path": "H2Oplus/downloads/traffic_signal_external/colight/data/Jinan/3_4/anon_3_4_jinan_real.json",
+        "sha256": "233739633ef0b637125cb304dfffff9488503bac6e6861ca39243cc8ffdcebd5"
+      },
+      "jinan_3x4_real_2000_flow": {
+        "path": "H2Oplus/downloads/traffic_signal_external/colight/data/Jinan/3_4/anon_3_4_jinan_real_2000.json",
+        "sha256": "d0931c1b759479f9e748d69c16414020bfba03d555dcc6cdf7223a0c18cb9e69"
+      },
+      "jinan_3x4_real_2500_flow": {
+        "path": "H2Oplus/downloads/traffic_signal_external/colight/data/Jinan/3_4/anon_3_4_jinan_real_2500.json",
+        "sha256": "4245107cc7ce91b9699519f2c1258be4397e83291080a43cb0b93479557739cd"
+      }
+    }
+  },
+  "network_admission": {
+    "script": "cf_h2o/eval/traffic_signal_external_network_admission.py",
+    "script_sha256": "087e3dd2496470a069d3ecda73c40bad984c1601103eafb5129ace0b762a9b3f",
+    "launcher": "scripts/cluster/launch_tsc_external_network_admission.py",
+    "launcher_sha256": "10ad17bea1dfaea466ecf280c3879f9951474336cd5efc24710ac534fa79edec",
+    "launcher_implementation": "scripts/cluster/launch_tsc_external_network_admission_v6.py",
+    "launcher_implementation_sha256": "bd54d544962fd6572869020d99a8c530dad41352978198b6753da4e7d5d71556",
+    "backend": "libsumo",
+    "simulation_horizon_sec": 3600,
+    "minimum_controllable_tls": 1,
+    "maximum_collision_count": 0,
+    "maximum_teleport_fraction": 0.0,
+    "require_exact_source_hashes": true,
+    "require_netconvert_success": true,
+    "require_all_routes_topologically_contiguous": true,
+    "require_sumo_route_load_success": true,
+    "require_sumo_summary_demand_conservation": true,
+    "require_exact_conversion_manifest_and_tree_hashes": true,
+    "require_tls_semantic_audit": true,
+    "require_every_scenario_seed_pair": true,
+    "canonical_execution": {
+      "status": "PASS",
+      "task_ids": ["t77660", "t77661", "t77662", "t77663", "t77664", "t77665", "t77666", "t77667"],
+      "passed_scenario_seed_pairs": 8,
+      "required_scenario_seed_pairs": 8,
+      "total_unique_collision_incidents": 0,
+      "total_teleports": 0
+    }
+  },
+  "counterfactual_cache": {
+    "manifest": "cf_h2o/config/traffic_signal_tsc_v28_external_la_jinan_v8_manifest.json",
+    "manifest_sha256": "7ac95e2310f520409fc641de923d8b927ce0e3b7d71aff69ee3734e0a4f7be53",
+    "manifest_loader": "cf_h2o/traffic_signal/benchmark_manifest.py",
+    "manifest_loader_sha256": "4792184d12aa4db1266225fd508d7e5e630b4ad3b90ea7e7358cbf3ffaa2e99b",
+    "collector": "cf_h2o/eval/traffic_signal_counterfactual_cache.py",
+    "collector_sha256": "7596a90b92145bac4d02df10b3c13a1439e7c54c8e4b35a331370572e374f9af",
+    "launcher": "scripts/cluster/launch_tsc_external_counterfactual_cache.py",
+    "launcher_sha256": "a8fc90e7ab1441b03f295b33bcb3fbfb2d3c95a52c9530c69fc9f150a1fdfe95",
+    "duration_sec": 600,
+    "control_interval_sec": 10,
+    "warmup_sec": 60,
+    "max_focal_tls": 4,
+    "counterfactual_horizon_intervals": 6,
+    "behavior_policy": "phase_pressure",
+    "collection_shards_per_scenario_seed": 16,
+    "workers_per_scenario_seed": 16,
+    "require_tls_coverage_fraction": 1.0,
+    "require_exact_conversion_manifest_and_tree_hashes": true,
+    "adaptation_cache_status": "PASS",
+    "adaptation_cache_execution": {
+      "task_ids": ["t77670", "t77671", "t77672", "t77673", "t77674", "t77675", "t77676", "t77677"],
+      "scenario_seed_pairs": 8,
+      "cache_file_count": 128,
+      "cache_aggregate_sha256": "beb6a968c43dd58ceac4df6d9da8dfca47fc1f0869dfda0dc151a3e9cae58d77",
+      "cache_tree_sha256": "07b2ff949d1923696e8dfa1e734c7ca67bc77b39b468652b3847b3bdf62a099d",
+      "behavior_collision_count": 0,
+      "behavior_teleport_count": 0,
+      "deterministic_replay_passed": true,
+      "complete_tls_coverage_passed": true
+    }
+  },
+  "target_protocol": {
+    "external_city_scenarios": {
+      "los_angeles": ["la_1x4"],
+      "jinan": ["jinan_3x4_real", "jinan_3x4_real_2000", "jinan_3x4_real_2500"]
+    },
+    "city_is_the_transfer_and_reporting_unit": true,
+    "equal_scenario_weight_within_city": true,
+    "adaptation_seeds": [5057, 6067],
+    "evaluation_seeds": [7079],
+    "closed_loop_seeds": [8081, 9091],
+    "counterfactual_collection_shards_per_scenario_seed": 16,
+    "target_group_budget_per_city": 100,
+    "coverage_first_sampling_across_city_scenarios": true,
+    "scenario_balanced_target_group_quotas": true,
+    "adaptation_seed_balanced_target_group_quotas": true,
+    "cross_fit_folds": 5,
+    "groups_per_fold": 20,
+    "model_training_groups_per_fold": 80,
+    "model_ensemble_size": 5,
+    "selection_seed": 20260803,
+    "base_families": [
+      "causal_group_normalized_rigid_advantage",
+      "causal_antisymmetric_pairwise_advantage"
+    ],
+    "same_information_baseline_families": [
+      "simulator",
+      "dense",
+      "dense_advantage",
+      "causal_rigid_advantage",
+      "cfcmt_mechanism",
+      "causal_target_only"
+    ],
+    "same_information_baselines_frozen_before_evaluation_cache": true,
+    "evaluation_cache_must_be_collected_after_model_freeze": true
+  },
+  "offline_confirmation_gate": {
+    "minimum_macro_relative_improvement": 0.02,
+    "minimum_improved_external_cities": 2,
+    "maximum_absolute_city_regression": 0.01,
+    "minimum_non_anchor_targets": 1
+  },
+  "closed_loop": {
+    "enabled_only_after_offline_gate": true,
+    "horizon_sec": 3600,
+    "primary_metric": "mean_waiting_time_sec",
+    "secondary_metrics": [
+      "mean_travel_time_sec",
+      "mean_queue_vehicles",
+      "throughput",
+      "teleports",
+      "collisions"
+    ],
+    "baselines": [
+      "fixed_time",
+      "phase_pressure",
+      "max_pressure",
+      "rigid_anchor_mpc",
+      "simulator_only_mpc",
+      "h2oplus_style_dense_residual_mpc"
+    ]
+  }
+}

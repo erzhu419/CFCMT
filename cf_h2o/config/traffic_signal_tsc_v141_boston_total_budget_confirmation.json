@@ -1,0 +1,64 @@
+{
+  "protocol": "tsc-v141-boston-total-budget-causal-source-confirmation-v1",
+  "scientific_status": "target-city-and-analysis-frozen-before-v140-outcome",
+  "predecessor": "tsc-v140-total-budget-causal-source-weighting-v1",
+  "advance_condition": "v140_primary_B25_passes_all_target_and_placebo_gates",
+  "target_city": "boston",
+  "target_package_protocol": "cfcmt-eth-boston-complete-published-package-v9",
+  "target_package_manifest_sha256": "d2b3918188a14ad68552d7f10204076d9f7cf1a3cd27c444ea745c2eade90a3f",
+  "admission_required": {
+    "complete_demand_route_admission": true,
+    "trigger_window_crosses_seconds": [9518, 11304, 11504, 12279],
+    "complete_day_exact_demand_conservation": true,
+    "zero_collisions": true,
+    "zero_teleports": true,
+    "controllable_tls_count": 4203
+  },
+  "information_budget": {
+    "target_action_group_budget": 25,
+    "adaptation_partition_count": 5,
+    "groups_per_adaptation_partition": 5,
+    "evaluation_partition_count": 17,
+    "target_labels_outside_the_25_group_union_used_for_fit_weighting_or_selection": false
+  },
+  "data_construction": {
+    "complete_published_city_day_and_routes": true,
+    "backend": "libsumo",
+    "baseline_trajectory_policy": "phase_pressure",
+    "group_inventory_selected_before_counterfactual_outcomes": true,
+    "selection_covariates": [
+      "time_block",
+      "tls_static_topology",
+      "incoming_lane_count",
+      "outgoing_lane_count",
+      "candidate_action_count"
+    ],
+    "outcome_or_model_score_used_for_group_selection": false,
+    "evaluation_reporting_unit": "predeclared_spatiotemporal_block"
+  },
+  "frozen_method": {
+    "source_group_order_inherited_from_v140": true,
+    "target_model_architecture_inherited_from_v140": true,
+    "source_weight_ridge_l2": 0.05,
+    "source_weights": "nonnegative_sum_at_most_one_with_explicit_source_null",
+    "source_placebo": "whole_action_group_permutation_within_spatiotemporal_stratum",
+    "source_or_budget_reselection_in_boston": false
+  },
+  "primary_comparisons": [
+    "causal_source_weighted_minus_architecture_matched_target_only",
+    "causal_source_weighted_minus_matched_source_placebo"
+  ],
+  "separate_absolute_comparisons": [
+    "target_only_minus_phase_pressure",
+    "causal_source_weighted_minus_phase_pressure"
+  ],
+  "confirmation_gate": {
+    "minimum_mean_gain_vs_target_only": 0.0005,
+    "minimum_mean_gain_vs_placebo": 0.0005,
+    "one_sided_upper_95_must_be_negative": true,
+    "minimum_improving_evaluation_partition_fraction": 0.8,
+    "zero_collision_and_teleport_regression": true
+  },
+  "no_substitution_rule": "If Boston admission or V140 B25 fails, V141 stops and no replacement city is chosen from observed outcomes.",
+  "claim_boundary": "V141 is a frozen new-target-city confirmation of relative causal source value under B25. It is not an independent multi-city population estimate and does not imply absolute superiority over PhasePressure unless the separately reported absolute comparison passes."
+}

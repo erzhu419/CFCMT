@@ -1,0 +1,104 @@
+{
+  "protocol": "tsc-v48r44-external-policy-horizon-adaptation-v1",
+  "frozen_at_utc": "2026-08-09T12:42:38Z",
+  "claim_boundary": "Target-offline adaptation with an uncalibrated target-network simulator. Architecture choices were motivated by contaminated seeds 8081/9091, but candidate selection may read only full-horizon adaptation seeds 5057/6067. This is neither zero-shot nor prospective confirmation.",
+  "parent_pressure_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v33_external_pressure_regularized_development.json",
+    "sha256": "4b973bdaa24492b198a4a416ca5a221a581a1727e9e78d213ddbf69f98446ef4"
+  },
+  "failed_v47_falsification_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v47r43_pressure_regularized_20260809/contaminated_falsification_audit_v1.json",
+    "sha256": "d762bef2ca10ee3c2a6e69d05ac6d876518834ea49454283ed09b6f920acff3d",
+    "required_decision": "reject_v47_and_preserve_robustness_and_prospective_seeds_for_successor_method"
+  },
+  "model_artifacts": {
+    "pressure_joint_audit_sha256": "e6b883c0ad3fcc4c1447185145472ee8e7b94e2cd5b5aacb886f98e1a95857de",
+    "freeze_root": "cf_h2o/results/cluster/tsc_v47r43_pressure_regularized_20260809/freeze_v1",
+    "reuse_contract": "reuse the frozen v47 CFCMT world model and label-free support; do not refit from long-horizon outcomes"
+  },
+  "city_scenarios": {
+    "los_angeles": [
+      "la_1x4"
+    ],
+    "jinan": [
+      "jinan_3x4_real",
+      "jinan_3x4_real_2000",
+      "jinan_3x4_real_2500"
+    ]
+  },
+  "policy_horizon_adaptation": {
+    "seeds": [
+      5057,
+      6067
+    ],
+    "horizon_sec": 3600,
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "reporting_unit": "city",
+    "scenario_weighting_within_city": "equal",
+    "seed_weighting": "equal",
+    "candidate_families": [
+      "phase_pressure",
+      "cfcmt_raw_direct",
+      "cfcmt_pressure_regularized_direct"
+    ],
+    "blend_weights": [
+      0.1,
+      0.25,
+      0.5,
+      1.0,
+      2.0,
+      4.0,
+      6.0,
+      8.0
+    ],
+    "cooldown_intervals": [
+      0,
+      3,
+      6
+    ],
+    "city_fixed_oof_parameters": {
+      "los_angeles": {
+        "risk_multiplier": 0.0,
+        "min_context_trust": 0.25
+      },
+      "jinan": {
+        "risk_multiplier": 0.5,
+        "min_context_trust": 0.5
+      }
+    },
+    "candidate_count_per_city": 28,
+    "matrix_size": 224,
+    "selection_rule": {
+      "minimum_city_mean_relative_improvement": 0.005,
+      "maximum_seed_level_city_mean_relative_regression": 0.01,
+      "method_teleports_must_not_exceed_paired_phase_pressure": true,
+      "method_collision_incidents_must_not_exceed_paired_phase_pressure": true,
+      "minimum_executed_interventions_per_scenario_seed": 1,
+      "robust_score": "city_mean_relative_delta + 0.5 * seed_delta_std + max(worst_seed_delta, 0)",
+      "tie_break": "lower robust score, lower mean delta, fewer interventions, lower blend weight, longer cooldown",
+      "fallback": "phase_pressure when no active candidate is feasible"
+    }
+  },
+  "untouched_robustness_development": {
+    "seeds": [
+      52282,
+      41242,
+      63792,
+      80722,
+      75638,
+      61337,
+      73385,
+      81189
+    ],
+    "must_not_run_until_policy_horizon_selection_is_hash_frozen": true,
+    "selected_policy_and_thresholds_must_not_change": true
+  },
+  "prospective_confirmation_reservation": {
+    "seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "must_not_run_until_untouched_robustness_gate_passes": true
+  }
+}

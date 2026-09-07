@@ -1,0 +1,103 @@
+{
+  "protocol": "tsc-v43r39-external-full-budget-seed-blocked-refit-confirmation-v1",
+  "frozen_at_utc": "2026-08-09T05:49:04Z",
+  "claim_boundary": "external simulator-network confirmation with target offline adaptation; not real-world counterfactual or zero-shot validation",
+  "parent_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v26_external_la_jinan_confirmation.json",
+    "sha256": "e7480d54fa80c60adadbd1ae050c668efe83adc073bc449724c8f99712c07182"
+  },
+  "v42_diagnostic_failure": {
+    "result": "cf_h2o/results/cluster/tsc_v42r38_external_la_jinan_20260809/heldout_seed7079_evaluation_v1/result.json",
+    "sha256": "c4682c900f20c75060bc71e3b148fbfb894ac4f1de555dd0119c1f5fbac8c6ce",
+    "decision": "retain_offline_failure_and_prohibit_closed_loop_claim",
+    "seed": 7079,
+    "permanently_excluded_from_v43_selection_and_confirmation": true,
+    "permitted_use": "protocol-diagnostic evidence only"
+  },
+  "methodological_correction": {
+    "uses_all_available_adaptation_groups": true,
+    "removes_arbitrary_b100_cap": true,
+    "cross_validation_unit": "entire adaptation simulator seed",
+    "cross_validation_protocol": "two-fold leave-one-adaptation-seed-out",
+    "deployment_refit": "fit once on the union of every adaptation group after selector freeze",
+    "oof_models_must_not_be_used_as_deployment_models": true,
+    "method_and_baselines_share_exact_group_ids_and_refit_model_call": true,
+    "seed_7079_metrics_must_not_change_any_v43_choice": true
+  },
+  "target_protocol": {
+    "external_city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "city_is_the_transfer_and_reporting_unit": true,
+    "equal_scenario_weight_within_city": true,
+    "adaptation_seeds": [
+      5057,
+      6067
+    ],
+    "diagnostic_only_seeds": [
+      7079
+    ],
+    "evaluation_seeds": [
+      8171
+    ],
+    "closed_loop_seeds": [
+      8081,
+      9091
+    ],
+    "counterfactual_collection_shards_per_scenario_seed": 16,
+    "target_group_budget_per_city": "all_available",
+    "target_group_selection": "all_valid_groups_no_subsampling",
+    "cross_fit_folds": 2,
+    "cross_fit_strategy": "leave_one_adaptation_seed_out",
+    "deployment_refit_uses_all_adaptation_groups": true,
+    "deployment_model_ensemble_size": 1,
+    "selection_seed": 20260803,
+    "base_families": [
+      "causal_group_normalized_rigid_advantage",
+      "causal_antisymmetric_pairwise_advantage"
+    ],
+    "same_information_baseline_families": [
+      "simulator",
+      "dense",
+      "dense_advantage",
+      "causal_rigid_advantage",
+      "cfcmt_mechanism",
+      "causal_target_only"
+    ],
+    "same_information_baselines_frozen_before_evaluation_cache": true,
+    "evaluation_cache_must_be_collected_after_joint_freeze": true
+  },
+  "offline_confirmation_gate": {
+    "minimum_macro_relative_improvement": 0.02,
+    "minimum_improved_external_cities": 2,
+    "maximum_absolute_city_regression": 0.01,
+    "minimum_non_anchor_targets": 1
+  },
+  "closed_loop": {
+    "enabled_only_after_offline_gate": true,
+    "horizon_sec": 3600,
+    "primary_metric": "mean_waiting_time_sec",
+    "secondary_metrics": [
+      "mean_travel_time_sec",
+      "mean_queue_vehicles",
+      "throughput",
+      "teleports",
+      "collisions"
+    ],
+    "baselines": [
+      "fixed_time",
+      "phase_pressure",
+      "max_pressure",
+      "rigid_anchor_mpc",
+      "simulator_only_mpc",
+      "h2oplus_style_dense_residual_mpc"
+    ]
+  }
+}

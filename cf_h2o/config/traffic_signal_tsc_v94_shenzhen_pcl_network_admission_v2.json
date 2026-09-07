@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "protocol": "tsc-v94-roadnetsz-shenzhen-pcl-pre-efficacy-network-admission-v2",
+  "source": {
+    "repository": "https://github.com/zhuliwen/RoadnetSZ",
+    "commit": "80a2785961b9439b6b92637e5cecd42ab5733052",
+    "city": "shenzhen",
+    "network": "pcl_native_sumo"
+  },
+  "conversion": {
+    "protocol": "cfcmt-roadnetsz-native-sumo122-window-package-v3",
+    "root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v94_shenzhen_unseen_20260831/pcl_package_v4_sumo122_turnspeed55_full",
+    "manifest_sha256": "157b080bad6f2342b1f3edf7d230ceadc2195e460e0d15ad8cad108527eda8c7",
+    "tree_sha256": "3194d3940f7e464306fc32e5e7da0d764d6ab7da27701df7ea2c04cb1f4ed9dc"
+  },
+  "scenarios": [
+    "shenzhen_pcl_hour_00",
+    "shenzhen_pcl_hour_01",
+    "shenzhen_pcl_hour_02",
+    "shenzhen_pcl_hour_03",
+    "shenzhen_pcl_hour_04",
+    "shenzhen_pcl_hour_05",
+    "shenzhen_pcl_hour_06",
+    "shenzhen_pcl_hour_07",
+    "shenzhen_pcl_hour_08",
+    "shenzhen_pcl_hour_09",
+    "shenzhen_pcl_hour_10",
+    "shenzhen_pcl_hour_11",
+    "shenzhen_pcl_hour_12",
+    "shenzhen_pcl_hour_13",
+    "shenzhen_pcl_hour_14",
+    "shenzhen_pcl_hour_15",
+    "shenzhen_pcl_hour_16",
+    "shenzhen_pcl_hour_17",
+    "shenzhen_pcl_hour_18",
+    "shenzhen_pcl_hour_19",
+    "shenzhen_pcl_hour_20",
+    "shenzhen_pcl_hour_21",
+    "shenzhen_pcl_hour_22",
+    "shenzhen_pcl_hour_23",
+    "shenzhen_pcl_hour_24",
+    "shenzhen_pcl_hour_25",
+    "shenzhen_pcl_hour_26",
+    "shenzhen_pcl_hour_27"
+  ],
+  "seeds": [5057, 6067, 7103, 8171, 9277, 12001, 13007, 14009],
+  "runtime": {
+    "backend": "libsumo",
+    "sumo_version": "1.22.0",
+    "horizon_sec": 3600,
+    "minimum_controllable_tls": 140
+  },
+  "admission": {
+    "maximum_collision_count": 0,
+    "maximum_teleport_fraction": 0,
+    "minimum_routing_retention": 0.9,
+    "scenario_rule": "eligible only if every fixed seed passes every admission check",
+    "minimum_eligible_scenarios": 20,
+    "timing": "frozen after safety-only network diagnostics and before any CFCMT, H2O+, source-selector, or policy efficacy rollout on Shenzhen PCL",
+    "amendment": "SUMO 1.22 source-component rebuild with the established 5.5 m/s junction turn-speed limit; efficacy outcomes were unavailable"
+  }
+}

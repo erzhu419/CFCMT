@@ -4,27 +4,68 @@
 The dense residual baseline has enough capacity to fit cross terms in source data, but the same flexibility can mix city-specific demand, speed, and headway effects.
 \ours restricts each output to a smaller mechanism-specific parent set.
 This constraint appears helpful in the strict cross-city setting: it reduces total MSE on all four targets and makes source weighting more effective.
+The formal risk decomposition in the method section explains this as a bias-control tradeoff: mechanism-wise models reduce cross-mechanism mixing when transfer shifts are localized, while dense residuals may still be competitive when the selected sparse features are the main source of gain.
+These experiments support mechanism-factored transfer as a useful inductive bias; they do not establish formal causal identification or invariance under intervention.
 
-\paragraph{What the source weighting does and does not show.}
+\paragraph{What the source weighting and source selection do and do not show.}
 Similarity weighting improves the mean strict leave-one-out ratio from $0.759$ to $0.578$ and wins over unweighted \ours on three of four targets.
 The Singapore target is the exception, where weighting is slightly worse than unweighted \ours.
-This suggests that static similarity is useful but imperfect; city descriptors built from open data may miss route-level operational differences that matter for transfer.
+The full-module feature analysis makes the boundary sharper: a source-only feature-set selector chooses simulator-output summaries for most splits, observation summaries for the duplicated Singapore target, and never selects local-only or uniform weighting.
+Thus the useful signal in this diagnostic is not the weak static local graph itself, but the target's unlabeled transition-summary statistics.
+An expanded NYC/SEPTA/MBTA GTFS-RT occupancy snapshot check gives the same warning: static local features have cross-city mean ratio $1.011$ against no-local features and the selector falls back to no-local, while within-city temporal prediction is essentially tied with mean ratio $0.997$.
+The guarded full-module ensemble makes this boundary more explicit.
+It helps when the unlabeled target summary identifies a dominant nearby source, as in MBTA and Austin, but the guard falls back to rigid \ours when source similarity is diffuse, as in Halifax.
+The same-information dense \Htwo source ensemble also improves substantially, so the target-summary signal is genuinely useful; the remaining gap favors mechanism-factored residuals over dense residual mixing.
+This is not target-label calibration: the target labels remain unseen, but the method is not a pure source-only setting because it uses unlabeled target summaries for source selection.
+
+\paragraph{Zero-shot is a lower bound, not the intended deployment endpoint.}
+The single-source transfer matrix is useful precisely because it is uneven.
+It shows that a mechanism model trained on one city can transfer in some directions, but it also exposes source-target pairs where one-city history is not enough.
+The stronger and more realistic claim is a target-information ladder: multi-source target-label-free transfer gives the main zero-target-label result, and few-shot target offline adaptation uses a small amount of passive target history to tune mechanism trust without claiming online deployment.
+This framing matches practical transit deployment better than a pure zero-shot claim, because agencies normally have at least some archived schedules, counts, AVL traces, or APC samples before changing a control policy.
+The Austin APC time-budget sweep makes this concrete: one hour is too little to trust, six hours is enough for the residual gate to reach parity or better in both slices, and one day to one week gives a clearer target-adaptation benefit.
+The target-route baseline comparison also changes the preferred few-shot implementation.
+Full mechanism refitting is not the safest way to use a small target budget; a low-dimensional target context-bias adapter is consistently stronger on average.
+This is consistent with the causal-mechanism view: passive target history should first update mechanism state or trust, not overwrite all transferred mechanism parameters.
 
 \paragraph{Policy evidence remains secondary.}
-The one-step policy validation and sampled BusSimEnv rollout are useful checks, but they do not replace a closed-loop operational benchmark.
-The rollout result reaches reward parity with \Htwo only after aligning BusSimEnv observations to the static feature schema and using identical line-level random seeds across policies.
-That correction is necessary for a fair comparison, but the resulting rollout margin is small.
-The strongest claim should therefore remain dynamics transfer plus policy-proxy improvement, not full policy dominance.
+The one-step policy proxy and sampled BusSimEnv rollout are useful checks, but they do not replace a closed-loop operational benchmark.
+The expanded sampled rollout is especially important because it weakens the earlier parity story: the raw aggregate favors \Htwo, while city-normalized headway and bunching metrics favor or nearly tie weighted \ours.
+That correction is useful rather than damaging; it keeps the policy claim bounded and prevents the paper from overstating a dynamics-transfer result as operational dominance.
+The full-line libsumo diagnostic strengthens the control story only after adding a safe target-summary prior.
+Unconstrained learned residual MPC improves over dense learned MPC but remains far weaker than classical holding rules in severe bunching states.
+By contrast, a target-summary gated Daganzo prior, which uses static route and schedule summaries to choose the holding gain, slightly improves over the best fixed Daganzo gain in the four-city diagnostic.
+This suggests that the next controller should not be a free-form residual action selector.
+It should instantiate a target mechanism state from route, schedule, demand, and AVL/APC summaries, use that state to gate a physically meaningful holding prior, and allow learned residual actions only behind a trust gate.
+The strongest claim should therefore remain dynamics transfer plus bounded policy improvement, not field-ready policy dominance.
+
+\paragraph{What the RESCO stress test changes.}
+The RESCO result gives a cleaner counterfactual-control test than passive bus logs because each candidate signal phase can be rolled out in SUMO.
+It also imposes a harder baseline: MaxPressure is close to optimal in several regular network regimes.
+The pressure-guarded CFCMT controller should therefore be interpreted as a safe transfer design, not as a universal replacement for pressure control.
+On the extended RESCO subset it reaches MaxPressure-level mean queue, is close to phase pressure with a non-significant mean advantage, and significantly improves over dense residual transfer, simulator-only MPC, spillback pressure, and fixed programs.
+The 3600-second check is even more conservative: phase pressure becomes clearly best, while guarded CFCMT remains closer to MaxPressure and still better than dense residual transfer and fixed programs.
+The non-significant short-horizon gaps against MaxPressure and phase pressure, together with the long-horizon phase-pressure win, are scientifically useful: they show that the method must preserve physically meaningful priors when a classical rule is already near the ceiling.
+This is also the most defensible direction for future policy work in bus holding, where a gated Daganzo or threshold prior is currently stronger than unconstrained learned residual MPC.
+
+\paragraph{Why the RL leaderboard tables are separated.}
+The official RESCO and LibSignal full-budget runs are included to address a common traffic-control review question: whether the proposed controller was compared against standard RL baselines rather than only hand-coded rules.
+They also expose a practical point.
+On these benchmarks, full-budget RL training is expensive and implementation-specific; for example, LibSignal \texttt{FRAP} on \texttt{sumo4x4} is orders of magnitude slower than small-grid runs even after cProfile-driven simulator and parallelization fixes.
+More importantly, these libraries do not use the same observation representation, reward, control interval, or metric aggregation as the \ours phase-MPC stress test.
+Putting all rows into one ranked table would therefore create a false sense of protocol equivalence.
+The correct use is as a native-protocol leaderboard cross-check in the appendix, while the main causal-transfer comparison remains the same-protocol phase-MPC table.
 
 \paragraph{Static-derived validation is not operational validation.}
 The central limitation is target construction.
 The experiments use full-route open static data and deterministic transition rules to create paired simulator/target transitions.
 This is valuable for reproducibility and reviewer scrutiny, but it is not the same as evaluating counterfactual holding actions on AVL/APC trajectories or a calibrated live SUMO rollout.
 The Austin raw APC/AVL slice partially addresses the trajectory-ground-truth concern for passive action-$0$ dynamics, but it still cannot identify how unobserved holding actions would have changed passenger and headway outcomes.
+True counterfactual holding labels would require an intervention design: randomized or rule-threshold hold/no-hold variation in the field, a natural experiment that changes holding behavior while leaving comparable states, or a simulator calibrated and validated well enough to serve as the counterfactual environment.
 The paper should therefore avoid claims such as ``CFCMT is better on real bus systems''.
-A precise claim is: under open static-data-derived cross-city validation with little or no target-city calibration, and under passive real APC validation with few-shot adaptation, mechanism-factored residual transfer is more robust than dense residual correction.
+A precise claim is: under open static-data-derived cross-city validation with no or few target labels, and under passive real APC validation with few-shot adaptation, mechanism-factored residual transfer with unlabeled target-summary source selection is more robust than dense residual correction.
 
 \paragraph{How to strengthen the next version.}
 The most valuable addition would be counterfactual or interventional validation on one city with vehicle-level AVL/APC trajectories, even if only for a subset of routes.
-The second priority is to expand executable line environments so sampled rollout can move from auxiliary sanity check to a stronger policy benchmark.
+The second priority is a calibrated or independently validated closed-loop simulator, so the target-summary-gated prior and any learned residual override can be tested against real or validated counterfactual outcomes.
 The third priority is to add more cities, because city-level generalization is ultimately limited by the number of held-out cities.

@@ -1,0 +1,172 @@
+{
+  "version": 7,
+  "matrix_protocol_tag": "v25",
+  "protocol": "policy-consistent-one-step-local-mechanisms-plus-pressure-rollout-value-v25",
+  "expected_sumo_version": "1.22.0",
+  "counterfactual_cache_version": "v19-policy-consistent-one-step-mechanisms-two-pass-20260809",
+  "source_rule_cache_version": "v5-benchmark-collision-audited-no-teleport-full-input-hash-sumo122-20260808",
+  "cfcmt_hierarchy_protocol": "disjoint-target-calibrated-single-expert-mechanism-target-rigid-pressure-v2",
+  "sumo_execution_protocol": {
+    "version": "no-teleport-write-unfinished-junction-collision-audit-v2",
+    "time_to_teleport_sec": -1,
+    "tripinfo_write_unfinished": true,
+    "eager_insert": false,
+    "collision_action": "warn",
+    "collision_check_junctions": true
+  },
+  "safety": {
+    "raw_junction_collisions": "audit_events_and_unique_incidents",
+    "starting_and_ending_teleports": "hard_failure",
+    "counterfactual_collision_handling": "censor_entire_matched_action_group_on_any_branch_event",
+    "counterfactual_collision_deduplication": "scenario_seed_time_vehicle_pair_type_lane_sha256",
+    "deployment_primary_collision_admission": "paired_total_incidents_no_worse_than_selected_source_prior",
+    "deployment_collision_margin_incidents": 0,
+    "synthetic_extension_admission": "zero_raw_collision_and_zero_teleport"
+  },
+  "manifest": "cf_h2o/config/traffic_signal_cross_city_v1.json",
+  "counterfactual": {
+    "source_seeds": [2027, 3037, 4047],
+    "source_duration_sec": 600.0,
+    "control_interval_sec": 10,
+    "warmup_sec": 60.0,
+    "max_focal_tls": 4,
+    "horizon_intervals": 6,
+    "collection_shards": 16,
+    "behavior_policy": "phase_pressure",
+    "min_tls_coverage": 1.0
+  },
+  "estimand_development": {
+    "reference_family": "causal_rigid_advantage",
+    "target_group_budget": 0,
+    "development_targets": [
+      "grid4x4",
+      "cologne1",
+      "ingolstadt1",
+      "atlanta_1x5",
+      "hangzhou_4x4",
+      "manhattan_28x7"
+    ],
+    "candidate_families": [
+      "cfcmt_one_step_physical_queue_only",
+      "cfcmt_one_step_physical_served_only",
+      "cfcmt_one_step_physical_red_only",
+      "cfcmt_one_step_physical_spillback_only",
+      "cfcmt_one_step_physical_mobility_only",
+      "cfcmt_one_step_physical_mobility_queue",
+      "cfcmt_one_step_physical_mobility_red",
+      "cfcmt_one_step_physical_mobility_spillback",
+      "cfcmt_one_step_physical_mobility_served",
+      "cfcmt_one_step_physical_mechanism"
+    ],
+    "stage_a_gate": {
+      "minimum_macro_relative_improvement": 0.10,
+      "minimum_improved_city_count": 4,
+      "maximum_absolute_city_regression": 0.05
+    },
+    "selection_tie_absolute_macro_regret": 0.005,
+    "confirmatory_manifest": "cf_h2o/config/traffic_signal_cross_city_v2_saltlake18.json",
+    "confirmatory_city_group": "salt_lake_city"
+  },
+  "safety_survey": {
+    "seeds": [1709, 2027, 3037],
+    "duration_sec": 600.0,
+    "policies": [
+      "fixed_program",
+      "max_pressure",
+      "phase_pressure",
+      "spillback_pressure"
+    ]
+  },
+  "cache_assignments": {
+    "node001": ["manhattan_28x7"],
+    "node002": ["grid4x4", "arterial4x4", "atlanta_1x5"],
+    "node003": ["cologne1", "cologne3", "cologne8"],
+    "node004": ["ingolstadt1", "ingolstadt7", "ingolstadt21"],
+    "node005": ["hangzhou_4x4", "hangzhou_4x4_hetero"],
+    "node006": [
+      "hangzhou_bc_tyc",
+      "hangzhou_kn_hz",
+      "hangzhou_qc_yn",
+      "hangzhou_sb_sx"
+    ]
+  },
+  "development": {
+    "evaluation_seeds": [131, 337, 911],
+    "evaluation_duration_sec": 600.0,
+    "source_policy_seeds": [1709, 2027],
+    "source_rule_grid": "generalized",
+    "source_selector_min_context_domains": 5,
+    "target_group_budgets": [0, 8, 16, 32, 60, 120],
+    "target_calibration_seeds": [4047],
+    "target_calibration_fraction": 0.4,
+    "min_target_calibration_groups": 4,
+    "target_guard_selection_mode": "strict_worst_domain",
+    "target_closed_loop_selection_seeds": [],
+    "primary_policy": "cfcmt_fused_contrast_guard",
+    "policies": [
+      "fixed_program",
+      "max_pressure",
+      "phase_pressure",
+      "spillback_pressure",
+      "selected_source_prior",
+      "simulator_contrast_guard",
+      "dense_contrast_guard",
+      "dense_balanced_advantage_contrast_guard",
+      "causal_rigid_advantage_contrast_guard",
+      "cfcmt_mechanism_contrast_guard",
+      "causal_target_only_contrast_mpc",
+      "causal_target_only_contrast_guard",
+      "cfcmt_fused_rigid_contrast_mpc",
+      "cfcmt_fused_rigid_contrast_guard",
+      "cfcmt_fused_contrast_mpc",
+      "cfcmt_fused_contrast_regularized",
+      "cfcmt_fused_contrast_guard"
+    ]
+  },
+  "method_acceptance": {
+    "efficacy_budgets": [60, 120],
+    "contribution_budgets": [8, 16, 32, 60, 120],
+    "primary_policy": "cfcmt_fused_contrast_guard",
+    "selected_source_prior": "selected_source_prior",
+    "target_only_comparator": "causal_target_only_contrast_guard",
+    "exact_mechanism_ablation": "cfcmt_fused_rigid_contrast_guard",
+    "mechanism_primary_policy": "cfcmt_fused_contrast_mpc",
+    "mechanism_target_only_comparator": "causal_target_only_contrast_mpc",
+    "exact_mechanism_model_ablation": "cfcmt_fused_rigid_contrast_mpc",
+    "minimum_mean_relative_gain_vs_each_adaptation_comparator": 0.001,
+    "minimum_positive_source_mechanism_city_groups": 2,
+    "require_joint_non_degenerate_source_target_fusion": true,
+    "minimum_efficacy_city_win_fraction": 0.6666666666666666,
+    "maximum_worst_city_relative_harm": 0.005,
+    "maximum_top_gain_share": 0.9
+  },
+  "cluster": {
+    "nodes": ["node001", "node002", "node003", "node004", "node005", "node006"],
+    "workers_per_job": 128,
+    "safety_survey_workers_per_job": 96,
+    "cache_workers_per_job": 128,
+    "cache_resource_overrides": {
+      "node003": {
+        "workers_per_job": 112,
+        "cpu_overhead": 8
+      },
+      "node004": {
+        "workers_per_job": 112,
+        "cpu_overhead": 8
+      },
+      "node005": {
+        "workers_per_job": 112,
+        "cpu_overhead": 8
+      },
+      "node006": {
+        "workers_per_job": 44,
+        "cpu_overhead": 8
+      }
+    },
+    "source_rule_workers_per_job": 96,
+    "development_workers_per_job": 128,
+    "cpu_cores_per_job": 160,
+    "ram_mb_per_job": 131072,
+    "min_ram_mb_per_job": 32768
+  }
+}

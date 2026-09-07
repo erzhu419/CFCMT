@@ -632,6 +632,9 @@ POLICY_CONSISTENT_ESTIMAND_PROTOCOL_V4 = (
 WAITING_ALIGNED_ESTIMAND_PROTOCOL_V5 = (
     "one-control-interval-local-mechanisms-plus-halted-queue-rollout-value-v1"
 )
+WAITING_ALIGNED_ESTIMAND_PROTOCOL_V6 = (
+    "one-control-interval-local-mechanisms-plus-pure-halted-queue-rollout-value-v2"
+)
 COUNTERFACTUAL_COST_MODES_V5 = (
     "system_vehicle_load",
     "halted_queue",
@@ -645,7 +648,7 @@ def counterfactual_cost_contract_v5(mode: str) -> dict[str, str]:
     if value == "halted_queue":
         return {
             "mode": value,
-            "estimand_protocol": WAITING_ALIGNED_ESTIMAND_PROTOCOL_V5,
+            "estimand_protocol": WAITING_ALIGNED_ESTIMAND_PROTOCOL_V6,
             "scope": "global_halted_vehicles_per_controlled_lane",
             "population": "sumo_last_step_halting_number_on_controlled_lanes",
             "normalization": "controlled_lane_count",
@@ -1159,7 +1162,14 @@ def _advance_with_actions(
             pending = float(len(sumo_api.simulation.getPendingVehicles()))
             costs.append((active + pending) / max(int(system_cost_lane_count), 1))
         elif cost_lanes is not None:
-            costs.append(float(sum(_lane_queue(sumo_api, lane) for lane in cost_lanes)))
+            costs.append(
+                float(
+                    sum(
+                        sumo_api.lane.getLastStepHaltingNumber(lane)
+                        for lane in cost_lanes
+                    )
+                )
+            )
     return costs
 
 
@@ -2886,6 +2896,44 @@ def _fit_family_with_source_loo_v3(
     }
 
 
+def _reference_rows_by_group(
+    groups: np.ndarray,
+    is_reference: np.ndarray,
+    *,
+    label: str,
+) -> np.ndarray:
+    """Map each action row to its group reference in one stable sort."""
+
+    group_values = np.asarray(groups)
+    references = np.asarray(is_reference, dtype=bool)
+    if group_values.ndim != 1 or references.shape != group_values.shape:
+        raise ValueError(f"{label} group/reference rows have incompatible shapes")
+    if group_values.size == 0:
+        return np.empty(0, dtype=int)
+    order = np.argsort(group_values, kind="stable")
+    ordered_groups = group_values[order]
+    starts = np.flatnonzero(
+        np.concatenate(
+            (np.asarray([True]), ordered_groups[1:] != ordered_groups[:-1])
+        )
+    )
+    stops = np.concatenate((starts[1:], np.asarray([group_values.size])))
+    ordered_references = references[order]
+    reference_counts = np.add.reduceat(
+        ordered_references.astype(np.int64), starts
+    )
+    invalid = np.flatnonzero(reference_counts != 1)
+    if invalid.size:
+        group = ordered_groups[starts[int(invalid[0])]]
+        raise ValueError(
+            f"{label} group {group!r} does not have exactly one reference"
+        )
+    reference_indices = order[np.flatnonzero(ordered_references)]
+    reference_rows = np.empty(group_values.size, dtype=int)
+    reference_rows[order] = np.repeat(reference_indices, stops - starts)
+    return reference_rows
+
+
 def _group_adjusted_scores(
     dataset: MechanismDataset,
     prediction: Mapping[str, Mapping[str, np.ndarray]],
@@ -2911,13 +2959,11 @@ def _group_adjusted_scores(
         )
         trust_rows.append(np.asarray(prediction[mechanism]["context_trust"], dtype=float))
     trust = np.minimum.reduce(trust_rows)
-    reference_rows = np.empty(dataset.size, dtype=int)
-    for group in np.unique(groups):
-        rows = np.flatnonzero(groups == group)
-        reference = rows[is_reference[rows]]
-        if reference.size != 1:
-            raise ValueError(f"contrast group {group!r} does not have exactly one reference")
-        reference_rows[rows] = int(reference[0])
+    reference_rows = _reference_rows_by_group(
+        groups,
+        is_reference,
+        label="contrast",
+    )
     score -= score[reference_rows]
     uncertainty += uncertainty[reference_rows]
     score[is_reference] = 0.0
@@ -2935,19 +2981,15 @@ def _relative_contrast_rule_gap(dataset: MechanismDataset) -> np.ndarray:
     )
     groups = action_group_ids(dataset)
     is_reference = np.asarray(dataset.metadata["is_reference"], dtype=bool)
-    relative = np.zeros(dataset.size, dtype=float)
-    for group in np.unique(groups):
-        rows = np.flatnonzero(groups == group)
-        reference = rows[is_reference[rows]]
-        if reference.size != 1:
-            raise ValueError(
-                f"contrast group {group!r} does not have exactly one rule reference"
-            )
-        reference_score = float(raw_score[int(reference[0])])
-        relative[rows] = np.maximum(reference_score - raw_score[rows], 0.0) / max(
-            abs(reference_score), 1.0
-        )
-    return relative
+    reference_rows = _reference_rows_by_group(
+        groups,
+        is_reference,
+        label="contrast rule",
+    )
+    reference_score = raw_score[reference_rows]
+    return np.maximum(reference_score - raw_score, 0.0) / np.maximum(
+        np.abs(reference_score), 1.0
+    )
 
 
 def _source_loo_action_records_v3(

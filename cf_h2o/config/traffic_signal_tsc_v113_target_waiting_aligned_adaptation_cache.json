@@ -1,0 +1,43 @@
+{
+  "protocol": "tsc-v113-target-waiting-aligned-adaptation-cache-v1",
+  "scientific_status": "post-v112_estimand-aligned_few-shot_target_rebuild",
+  "manifest": "cf_h2o/config/traffic_signal_tsc_v39_external_la_jinan_v9_manifest.json",
+  "target_city_groups": ["jinan", "los_angeles"],
+  "collection": {
+    "seeds": [5057, 6067],
+    "duration_sec": 3600,
+    "control_interval_sec": 10,
+    "warmup_sec": 60,
+    "max_focal_tls": 4,
+    "counterfactual_horizon_intervals": 45,
+    "rollout_prefix_horizons_sec": [450],
+    "collection_shards_per_seed": 16,
+    "workers_per_node": 20,
+    "behavior_policy": "phase_pressure",
+    "counterfactual_cost_mode": "halted_queue",
+    "minimum_tls_coverage": 1.0,
+    "sumo_version": "1.22.0"
+  },
+  "node_scenario_assignments": {
+    "node003": ["la_1x4"],
+    "node004": ["jinan_3x4_real"],
+    "node006": ["jinan_3x4_real_2000"],
+    "node001": ["jinan_3x4_real_2500"]
+  },
+  "expected_scenario_count": 4,
+  "expected_cache_file_count": 128,
+  "information_budget": {
+    "cache_role": "passive_target_offline_adaptation_pool",
+    "model_label_budget_per_city": 100,
+    "selection": "city-scenario-and-seed-balanced-coverage-first-b100-v1",
+    "same_selected_group_ids_for_all_comparators": true,
+    "evaluation_seeds_consumed": false
+  },
+  "estimand_contract": {
+    "action": "candidate_phase_for_first_10_seconds",
+    "continuation_policy": "phase_pressure_after_first_control_interval",
+    "target": "prefix_mean_cost_450s",
+    "aggregation": "mean_global_halted_queue_per_controlled_lane"
+  },
+  "claim_boundary": "This cache supplies the disclosed B100 target offline adaptation budget. It is not zero-shot evidence and cannot serve as held-out policy confirmation."
+}

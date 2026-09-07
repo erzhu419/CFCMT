@@ -184,6 +184,142 @@ class FrozenCausalSourceMixtureModel:
         }
 
 
+class FrozenCausalSourceSelectorModel:
+    """Deploy one frozen selector profile without changing its score algebra."""
+
+    ENSEMBLE_AGGREGATIONS = {
+        "all_sources_mean": np.mean,
+        "all_sources_median": np.median,
+        "all_sources_worst": np.max,
+    }
+
+    def __init__(
+        self,
+        *,
+        source_models: Mapping[str, Any],
+        source_objective_modes: Mapping[str, str],
+        source_profile: str,
+        source_weight: float,
+        minimum_source_support: float,
+        target_only_model: Any | None = None,
+        target_only_objective_mode: str = "control_only",
+    ) -> None:
+        names = tuple(sorted(str(value) for value in source_models))
+        if not names or set(source_objective_modes) != set(names):
+            raise ValueError("selector source model/objective keys differ")
+        profile = str(source_profile)
+        if profile not in set(names) | set(self.ENSEMBLE_AGGREGATIONS):
+            raise ValueError(f"unknown selector source profile: {profile}")
+        weight = float(source_weight)
+        support = float(minimum_source_support)
+        if (
+            not np.isfinite(weight)
+            or not 0.0 <= weight <= 1.0
+            or not np.isfinite(support)
+            or not 0.0 <= support <= 1.0
+        ):
+            raise ValueError("selector weight/support must be in [0, 1]")
+        if target_only_model is None and weight != 1.0:
+            raise ValueError("source-only selector profiles require weight one")
+        self.source_models = {
+            name: source_models[name]
+            for name in names
+        }
+        self.source_objective_modes = {
+            name: str(source_objective_modes[name])
+            for name in names
+        }
+        self.source_profile = profile
+        self.source_weight = weight
+        self.minimum_source_support = support
+        self.target_only_model = target_only_model
+        self.target_only_objective_mode = str(target_only_objective_mode)
+        self.audit = SourceWeightAudit()
+        self.support_rejected_rows = 0
+
+    def _source_predictions(
+        self, dataset
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        selected_names = (
+            tuple(self.source_models)
+            if self.source_profile in self.ENSEMBLE_AGGREGATIONS
+            else (self.source_profile,)
+        )
+        rows = [
+            _group_adjusted_scores(
+                dataset,
+                self.source_models[name].predict(dataset),
+                objective_mode=self.source_objective_modes[name],
+            )
+            for name in selected_names
+        ]
+        scores = np.vstack([row[0] for row in rows])
+        uncertainty = np.vstack([row[1] for row in rows])
+        trust = np.vstack([row[2] for row in rows])
+        reference_rows = rows[0][3]
+        if any(not np.array_equal(row[3], reference_rows) for row in rows[1:]):
+            raise ValueError("selector source models changed action references")
+        if self.source_profile in self.ENSEMBLE_AGGREGATIONS:
+            aggregate = self.ENSEMBLE_AGGREGATIONS[self.source_profile]
+            score = aggregate(scores, axis=0)
+            uncertainty_value = aggregate(uncertainty, axis=0)
+            trust_value = np.min(trust, axis=0)
+        else:
+            score = scores[0]
+            uncertainty_value = uncertainty[0]
+            trust_value = trust[0]
+        support = np.mean(
+            scores < scores[:, reference_rows],
+            axis=0,
+        )
+        if self.minimum_source_support > 0.0:
+            rejected = support < self.minimum_source_support
+            trust_value = np.where(rejected, 0.0, trust_value)
+            self.support_rejected_rows += int(np.count_nonzero(rejected))
+        return score, uncertainty_value, trust_value, reference_rows
+
+    def predict(self, dataset):
+        self.audit.prediction_calls += 1
+        self.audit.prediction_rows += int(dataset.size)
+        source_score, source_uncertainty, source_trust, reference_rows = (
+            self._source_predictions(dataset)
+        )
+        if self.target_only_model is None:
+            score = source_score
+            uncertainty = source_uncertainty
+            trust = source_trust
+        else:
+            target_score, target_uncertainty, target_trust, target_reference = (
+                _group_adjusted_scores(
+                    dataset,
+                    self.target_only_model.predict(dataset),
+                    objective_mode=self.target_only_objective_mode,
+                )
+            )
+            if not np.array_equal(reference_rows, target_reference):
+                raise ValueError("selector source/target references differ")
+            weight = self.source_weight
+            score = target_score + weight * (source_score - target_score)
+            uncertainty = (
+                (1.0 - weight) * target_uncertainty
+                + weight * source_uncertainty
+            )
+            if (
+                self.source_profile not in self.ENSEMBLE_AGGREGATIONS
+                and weight == 1.0
+            ):
+                trust = source_trust
+            else:
+                trust = np.minimum(target_trust, source_trust)
+        return {
+            "control_cost": {
+                "mean": score,
+                "uncertainty": uncertainty,
+                "context_trust": trust,
+            }
+        }
+
+
 def offline_guard_profile_key(
     risk_multiplier: float,
     max_relative_rule_gap: float,

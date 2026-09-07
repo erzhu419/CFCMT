@@ -1,8 +1,21 @@
 \section{Conclusion}
 
-We presented \ours, a causal-factored residual transfer approach for bus holding control under cross-city open-transit validation.
+We presented \ours, a mechanism-factored residual transfer approach for bus holding control under cross-city open-transit validation.
 Compared with a dense \Htwo-style residual baseline, \ours improves strict leave-one-city-out dynamics on all four target cities, and source-city similarity weighting further improves the mean MSE ratio.
-One-step policy validation also favors \ours on most reward/regret and headway metrics and on all bunching-rate comparisons.
+The target-information ladder clarifies the deployment regimes: single-source zero-shot transfer is mixed, multi-source target-label-free transfer is the strongest zero-target-label result, and few-shot target offline adaptation is the practical setting when a new city has limited passive history.
+The few-shot comparison against AdaRL/FANsRL-style same-information adapters further shows that small target histories are best used to estimate a low-dimensional mechanism context bias rather than to refit every transferred mechanism parameter.
+The full-module guarded ensemble adds a target-label-free source-selection layer: it uses source-fold validation to choose unlabeled target summaries, then selects source residual experts and improves the configured selector-stress validation while falling back to rigid \ours when no dominant source is identified.
+One-step policy-proxy evaluation also favors \ours on most reward/regret and headway metrics and on all bunching-rate comparisons.
 At the same time, subset robustness shows that the advantage depends on source diversity, and generator robustness shows that not every perturbation preserves all-target wins.
 The Austin raw APC/AVL check adds a sharper boundary condition: source-only transfer is better than dense residual transfer but can still overshoot a strong state-informed passive baseline, while few-shot residual gating closes that gap.
-The resulting paper claim is intentionally bounded: \ours is a promising mechanism-factored alternative to dense residual correction for low-calibration cross-city transfer, but operational deployment claims require counterfactual control or field validation.
+The chronological APC budget curve further shows that this is not merely a route-random artifact: six hours of passive target history is enough for the residual gate to reach parity or better in both Austin slices, and one week gives the best target-only mechanism adaptation.
+
+The traffic-signal stress test gives a separate counterfactual-control check.
+On the short RESCO phase-transfer protocol, pressure-guarded \ours reaches MaxPressure-level mean queue and improves over dense residual transfer, simulator-only MPC, native actuated SUMO, and fixed programs under the same protocol.
+The longer 3600-second check is deliberately more conservative: phase pressure becomes the strongest classical rule, while guarded \ours remains closer to the pressure-rule safety region than dense residual transfer.
+The official RESCO and patched LibSignal full-budget RL tables further show that standard RL runners were connected and executed, but they are reported as native-protocol leaderboard cross-checks rather than as direct same-protocol wins or losses against \ours.
+
+The resulting paper claim is intentionally bounded.
+\ours is a calibration-light causal mechanism transfer layer that improves dense residual correction and simulator-only transfer under cross-network validation, can use passive target history through low-dimensional mechanism trust adaptation, and can reach pressure-rule-level safety when coupled with physically meaningful guards.
+It is not a claim that CFCMT universally dominates classical pressure control or that passive AVL/APC logs identify unobserved holding-action counterfactuals.
+Operational deployment claims still require counterfactual control evidence from a validated simulator, credible intervention design, or field validation.

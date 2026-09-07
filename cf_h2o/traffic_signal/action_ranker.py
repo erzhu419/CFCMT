@@ -814,6 +814,258 @@ class AntisymmetricPairwiseActionRegressor:
         )
 
 
+class CausalReferenceResidualRegressor:
+    """Fit a causal residual directly against each group's rule reference."""
+
+    def __init__(
+        self,
+        *,
+        config: PairwisePreferenceConfig | None = None,
+        state_feature_names: Sequence[str] = PAIRWISE_CAUSAL_STATE_PARENTS,
+        action_feature_names: Sequence[str] = PAIRWISE_CAUSAL_ACTION_PARENTS,
+    ) -> None:
+        self.config = config or PairwisePreferenceConfig()
+        self.requested_state_feature_names = tuple(state_feature_names)
+        self.requested_action_feature_names = tuple(action_feature_names)
+        self.state_feature_names: tuple[str, ...] = ()
+        self.action_feature_names: tuple[str, ...] = ()
+        self.state_feature_indices = np.zeros(0, dtype=int)
+        self.action_feature_indices = np.zeros(0, dtype=int)
+        self.model: HistGradientBoostingRegressor | None = None
+        self.constant_score = 0.0
+        self.calibration_error = 1.0
+        self.source_contexts = np.zeros((0, 0), dtype=float)
+        self.context_mean = np.zeros(0, dtype=float)
+        self.context_scale = np.ones(0, dtype=float)
+
+    def fit(self, dataset: MechanismDataset) -> dict[str, Any]:
+        self._resolve_features(dataset)
+        design, reference = self._design(dataset)
+        target = np.asarray(dataset.targets["interval_cost"], dtype=float)
+        candidate = ~reference
+        if not np.any(candidate):
+            raise ValueError("reference residual model found no candidate actions")
+        weights = self._candidate_weights(dataset, candidate)
+        candidate_target = target[candidate]
+        if float(np.std(candidate_target)) < 1e-8:
+            self.model = None
+            self.constant_score = float(
+                np.average(candidate_target, weights=weights)
+            )
+            fitted = np.full(candidate_target.shape, self.constant_score)
+        else:
+            self.model = HistGradientBoostingRegressor(
+                loss="squared_error",
+                learning_rate=self.config.learning_rate,
+                max_iter=self.config.max_iter,
+                max_leaf_nodes=self.config.max_leaf_nodes,
+                min_samples_leaf=self.config.min_samples_leaf,
+                l2_regularization=self.config.l2_regularization,
+                early_stopping=False,
+                random_state=self.config.random_state,
+            )
+            self.model.fit(
+                design[candidate],
+                candidate_target,
+                sample_weight=weights,
+            )
+            fitted = np.asarray(
+                self.model.predict(design[candidate]), dtype=float
+            )
+        self.calibration_error = max(
+            float(
+                np.quantile(
+                    np.abs(candidate_target - fitted),
+                    self.config.uncertainty_quantile,
+                )
+            ),
+            1e-6,
+        )
+        context_geometry = fit_context_reference_geometry(
+            dataset.context, dataset.domains
+        )
+        self.source_contexts = context_geometry.support_anchors
+        self.context_mean = context_geometry.mean
+        self.context_scale = context_geometry.scale
+        groups = np.asarray(dataset.metadata["action_group_ids"])
+        return {
+            "target_name": "interval_cost",
+            "estimator": (
+                "HistGradientBoostingRegressor"
+                if self.model is not None
+                else "constant"
+            ),
+            "causal": True,
+            "residual_protocol": "causal_reference_contrast_residual_v1",
+            "state_feature_names": list(self.state_feature_names),
+            "action_feature_names": list(self.action_feature_names),
+            "state_feature_count": len(self.state_feature_names),
+            "action_feature_count": len(self.action_feature_names),
+            "uses_context_features": False,
+            "source_domain_count": int(
+                np.unique(np.asarray(dataset.domains, dtype=str)).size
+            ),
+            "action_group_count": int(np.unique(groups).size),
+            "candidate_row_count": int(np.count_nonzero(candidate)),
+            "training_weighted_mae": float(
+                np.average(
+                    np.abs(candidate_target - fitted), weights=weights
+                )
+            ),
+            "calibration_error": float(self.calibration_error),
+            "context_reference": context_geometry.diagnostics(),
+        }
+
+    def predict(self, dataset: MechanismDataset) -> dict[str, dict[str, np.ndarray]]:
+        if not self.state_feature_names or not self.action_feature_names:
+            raise RuntimeError("reference residual model has not been fitted")
+        self._resolve_features(dataset, require_fitted_names=True)
+        design, reference = self._design(dataset)
+        if self.model is None:
+            score = np.full(dataset.size, self.constant_score, dtype=float)
+        else:
+            score = np.asarray(self.model.predict(design), dtype=float)
+        distance = _context_distance(
+            dataset.context,
+            self.source_contexts,
+            self.context_mean,
+            self.context_scale,
+        )
+        support = _context_support(
+            dataset.context,
+            self.source_contexts,
+            self.context_scale,
+        )
+        trust = np.minimum(np.exp(-distance), support)
+        uncertainty = self.calibration_error * (1.0 + 0.25 * distance)
+        score[reference] = 0.0
+        uncertainty[reference] = 0.0
+        return {
+            "control_cost": {
+                "prior": np.zeros(dataset.size, dtype=float),
+                "global_residual": score,
+                "latent_residual": np.zeros(dataset.size, dtype=float),
+                "mean": score,
+                "uncertainty": np.maximum(uncertainty, 0.0),
+                "context_trust": np.clip(trust, 0.0, 1.0),
+                "context_distance": distance,
+                "context_support": support,
+            }
+        }
+
+    def _resolve_features(
+        self,
+        dataset: MechanismDataset,
+        *,
+        require_fitted_names: bool = False,
+    ) -> None:
+        index = {
+            name: position for position, name in enumerate(dataset.feature_names)
+        }
+        if require_fitted_names:
+            missing = [
+                name
+                for name in (*self.state_feature_names, *self.action_feature_names)
+                if name not in index
+            ]
+            if missing:
+                raise KeyError(
+                    f"reference residual prediction missing features: {missing}"
+                )
+        else:
+            self.state_feature_names = tuple(
+                name
+                for name in self.requested_state_feature_names
+                if name in index
+            )
+            self.action_feature_names = tuple(
+                name
+                for name in self.requested_action_feature_names
+                if name in index
+            )
+            if not self.state_feature_names or not self.action_feature_names:
+                raise ValueError(
+                    "reference residual model requires state and action parents"
+                )
+        self.state_feature_indices = np.asarray(
+            [index[name] for name in self.state_feature_names], dtype=int
+        )
+        self.action_feature_indices = np.asarray(
+            [index[name] for name in self.action_feature_names], dtype=int
+        )
+
+    def _design(
+        self, dataset: MechanismDataset
+    ) -> tuple[np.ndarray, np.ndarray]:
+        groups = np.asarray(dataset.metadata.get("action_group_ids", ()))
+        if groups.shape != (dataset.size,):
+            raise ValueError("reference residual model requires row-aligned groups")
+        reference = _reference_mask(dataset)
+        features = np.asarray(dataset.features, dtype=float)
+        design = np.empty(
+            (
+                dataset.size,
+                len(self.state_feature_names) + len(self.action_feature_names),
+            ),
+            dtype=float,
+        )
+        for group in np.unique(groups):
+            rows = np.flatnonzero(groups == group)
+            reference_rows = rows[reference[rows]]
+            if reference_rows.size != 1:
+                raise ValueError(
+                    f"reference residual group {group!r} requires one reference row"
+                )
+            state = features[rows][:, self.state_feature_indices]
+            if not np.allclose(state, state[0], rtol=0.0, atol=1e-10):
+                raise ValueError(
+                    f"causal state parents vary across actions in group {group!r}"
+                )
+            action = features[rows][:, self.action_feature_indices]
+            reference_action = features[
+                int(reference_rows[0]), self.action_feature_indices
+            ]
+            design[rows] = np.column_stack(
+                [
+                    state,
+                    action - reference_action,
+                ]
+            )
+        return design, reference
+
+    @staticmethod
+    def _candidate_weights(
+        dataset: MechanismDataset, candidate: np.ndarray
+    ) -> np.ndarray:
+        groups = np.asarray(dataset.metadata["action_group_ids"])
+        domains = np.asarray(dataset.domains, dtype=str)
+        candidate_rows = np.flatnonzero(candidate)
+        unique_domains = np.unique(domains[candidate_rows])
+        domain_group_counts = {
+            domain: int(np.unique(groups[candidate & (domains == domain)]).size)
+            for domain in unique_domains
+        }
+        group_candidate_counts = {
+            group: int(np.count_nonzero(candidate & (groups == group)))
+            for group in np.unique(groups[candidate])
+        }
+        weights = np.asarray(
+            [
+                1.0
+                / max(
+                    len(unique_domains)
+                    * domain_group_counts[str(domains[row])]
+                    * group_candidate_counts[groups[row]],
+                    1,
+                )
+                for row in candidate_rows
+            ],
+            dtype=float,
+        )
+        weights *= weights.size / max(float(np.sum(weights)), 1e-12)
+        return weights
+
+
 class TargetAdaptedActionAdvantageRegressor:
     """Shrink a source causal advantage prior toward a low-capacity target head."""
 

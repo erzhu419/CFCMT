@@ -33,12 +33,14 @@ def _ratio(metrics: dict[str, Any], method: str, denominator: str = "passive_no_
 def build_summary(paths: list[Path]) -> dict[str, Any]:
     rows = []
     few_shot_rows = []
+    few_shot_time_rows = []
     for path in paths:
         data = _read_json(path)
         dataset = data["dataset"]
         real = data["real_apc_summary"]
         comparisons = data["validation"]["comparisons"]
         few = data.get("few_shot_validation", {})
+        few_time = data.get("few_shot_time_validation", {})
         row = {
             "result_path": str(path),
             "dataset": dataset["label"],
@@ -61,6 +63,7 @@ def build_summary(paths: list[Path]) -> dict[str, Any]:
             "cfcmt_vs_h2oplus_ratio": comparisons["cfcmt_vs_h2oplus_total_mse_ratio"],
             "weighted_cfcmt_vs_h2oplus_ratio": comparisons["cfcmt_similarity_weighted_vs_h2oplus_total_mse_ratio"],
             "few_shot_summary": few.get("summary"),
+            "few_shot_time_summary": few_time.get("summary"),
             "notes": real["notes"],
         }
         rows.append(row)
@@ -71,6 +74,27 @@ def build_summary(paths: list[Path]) -> dict[str, Any]:
                 {
                     "dataset": dataset["label"],
                     "target_line_budget_fraction": shot["target_line_budget_fraction"],
+                    "calibration_lines": shot["calibration_lines"],
+                    "evaluation_lines": shot["evaluation_lines"],
+                    "calibration_transitions": shot["calibration_transitions"],
+                    "evaluation_transitions": shot["evaluation_transitions"],
+                    "weighted_source_only_vs_passive": _ratio(metrics, "cfcmt_weighted_source_only"),
+                    "weighted_source_plus_target_vs_passive": _ratio(
+                        metrics,
+                        "cfcmt_weighted_source_plus_target_budget",
+                    ),
+                    "target_only_vs_passive": _ratio(metrics, "cfcmt_target_only_budget"),
+                    "residual_gate_vs_passive": _ratio(metrics, "cfcmt_weighted_source_residual_gate"),
+                    "bias_adapter_vs_passive": _ratio(metrics, "cfcmt_weighted_source_bias_adapter"),
+                }
+            )
+        for shot in few_time.get("rows", []):
+            metrics = shot["metrics"]
+            few_shot_time_rows.append(
+                {
+                    "dataset": dataset["label"],
+                    "target_time_budget_hours": shot["target_time_budget_hours"],
+                    "calibration_cutoff": shot["calibration_cutoff"],
                     "calibration_lines": shot["calibration_lines"],
                     "evaluation_lines": shot["evaluation_lines"],
                     "calibration_transitions": shot["calibration_transitions"],
@@ -116,12 +140,24 @@ def build_summary(paths: list[Path]) -> dict[str, Any]:
             ),
             "all_positive_budget_gate_beats_passive": all(row["residual_gate_vs_passive"] < 1.0 for row in gate_rows),
         }
+    if few_shot_time_rows:
+        gate_rows = [row for row in few_shot_time_rows if row["target_time_budget_hours"] > 0.0]
+        summary["few_shot_time"] = {
+            "rows": len(few_shot_time_rows),
+            "budgets_hours": sorted({row["target_time_budget_hours"] for row in few_shot_time_rows}),
+            "min_residual_gate_vs_passive": min(row["residual_gate_vs_passive"] for row in gate_rows),
+            "min_target_only_vs_passive": min(
+                row["target_only_vs_passive"] for row in gate_rows if row["target_only_vs_passive"] is not None
+            ),
+            "all_positive_budget_gate_beats_passive": all(row["residual_gate_vs_passive"] < 1.0 for row in gate_rows),
+        }
     return {
         "ok": True,
         "validation_level": "austin_real_apc_external_validation_summary",
         "created_at": dt.datetime.now(dt.timezone.utc).isoformat(),
         "rows": rows,
         "few_shot_rows": few_shot_rows,
+        "few_shot_time_rows": few_shot_time_rows,
         "summary": summary,
     }
 

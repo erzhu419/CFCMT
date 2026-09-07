@@ -22,3 +22,38 @@ experiment_output/
 *.pth
 *.ckpt
 *.npz
+
+# Reproducible experiment caches and local test captures.  Canonical aggregate
+# evidence is kept under paper_tsc/source_data and cf_h2o/results/paper_artifacts.
+cf_h2o/results/cluster/
+.pytest_capture_*/
+most.summary.xml
+
+# Large local model/checkpoint, profiler, tripinfo and native-baseline workdirs.
+# Their compact aggregate JSON/Markdown reports remain versioned.
+cf_h2o/results/cache/
+cf_h2o/results/*_cache/
+cf_h2o/results/*_workdirs/
+cf_h2o/results/*_logs/
+cf_h2o/results/profiles/
+cf_h2o/results/profile_workdirs/
+cf_h2o/results/tripinfo/
+cf_h2o/results/resco_official_rl_*/
+cf_h2o/results/libsignal_*/
+cf_h2o/results/traffic_signal_resco_actuated/
+cf_h2o/results/traffic_signal_resco_cfcmt_v3_cache/
+cf_h2o/results/full_module_graphs*/
+cf_h2o/results/local_graph_progression_graphs*/
+
+# LaTeX build intermediates and local visual-QA exports.  Source figures retain
+# PDF, PNG and SVG variants; TIFF is regenerated for submission packages.
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+paper_tsc/tmp/
+paper_tsc/qa_pages*/
+paper_tsc/figures/*.tiff

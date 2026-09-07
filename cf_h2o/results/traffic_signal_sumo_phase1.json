@@ -1,0 +1,949 @@
+{
+  "aggregate": {
+    "cfcmt_fewshot_bias_mpc": {
+      "mean_cost": 25.92144911504103,
+      "mean_queue": 23.977910927344947,
+      "ns_action_share": 0.4254545454545455,
+      "p90_queue": 36.693467265888,
+      "throughput_ratio": 0.9326456352452877
+    },
+    "cfcmt_fewshot_selector_mpc": {
+      "mean_cost": 25.565060008219284,
+      "mean_queue": 23.822965392399947,
+      "ns_action_share": 0.43999999999999995,
+      "p90_queue": 36.271033730349,
+      "throughput_ratio": 0.9311493822199802
+    },
+    "cfcmt_global_mpc": {
+      "mean_cost": 24.352750598649116,
+      "mean_queue": 22.512066820381296,
+      "ns_action_share": 0.43636363636363634,
+      "p90_queue": 33.829476205751796,
+      "throughput_ratio": 0.9350304037720569
+    },
+    "cfcmt_trust_mpc": {
+      "mean_cost": 24.436319284758774,
+      "mean_queue": 22.708579957380476,
+      "ns_action_share": 0.44727272727272727,
+      "p90_queue": 33.05837886897857,
+      "throughput_ratio": 0.9302756836545101
+    },
+    "fixed_time": {
+      "mean_cost": 34.52441962951873,
+      "mean_queue": 30.59873356108618,
+      "ns_action_share": 0.4909090909090909,
+      "p90_queue": 48.01263489416049,
+      "throughput_ratio": 0.9351815949487552
+    },
+    "h2oplus_dense_mpc": {
+      "mean_cost": 25.49684089284994,
+      "mean_queue": 23.589838149127296,
+      "ns_action_share": 0.4290909090909091,
+      "p90_queue": 34.78544312410848,
+      "throughput_ratio": 0.9310109569023577
+    },
+    "queue_pressure": {
+      "mean_cost": 25.45688456145964,
+      "mean_queue": 23.6112606185383,
+      "ns_action_share": 0.4545454545454546,
+      "p90_queue": 35.779641131800226,
+      "throughput_ratio": 0.9355187071936584
+    },
+    "sim_mpc": {
+      "mean_cost": 23.712037547775623,
+      "mean_queue": 22.06012120296356,
+      "ns_action_share": 0.46909090909090906,
+      "p90_queue": 33.856042882652474,
+      "throughput_ratio": 0.9347054732688889
+    },
+    "spillback_pressure": {
+      "mean_cost": 24.703380673188565,
+      "mean_queue": 22.990891688703563,
+      "ns_action_share": 0.46545454545454545,
+      "p90_queue": 35.12869707943397,
+      "throughput_ratio": 0.9342332594398076
+    }
+  },
+  "experiment": "traffic_signal_sumo_phase1",
+  "scenario_builds": [
+    {
+      "name": "balanced_grid",
+      "scenario_dir": "H2Oplus/downloads/traffic_signal_phase1/balanced_grid",
+      "summary": [
+        2.243622448979589,
+        2.243622448979589,
+        2.1398809523809494,
+        2.1398809523809494,
+        0.0236663433559651,
+        1.0958758503401347,
+        0.0,
+        0.0
+      ],
+      "vehicles": 525
+    },
+    {
+      "name": "ns_arterial_peak",
+      "scenario_dir": "H2Oplus/downloads/traffic_signal_phase1/ns_arterial_peak",
+      "summary": [
+        3.6096938775510217,
+        3.6096938775510217,
+        1.432823129251701,
+        1.432823129251701,
+        0.4317032040472175,
+        1.2606292517006807,
+        0.0,
+        0.0
+      ],
+      "vehicles": 554
+    },
+    {
+      "name": "ew_arterial_peak",
+      "scenario_dir": "H2Oplus/downloads/traffic_signal_phase1/ew_arterial_peak",
+      "summary": [
+        1.5365646258503411,
+        1.5365646258503411,
+        3.6096938775510217,
+        3.6096938775510217,
+        -0.4028420356906806,
+        1.2865646258503407,
+        0.0,
+        0.0
+      ],
+      "vehicles": 632
+    },
+    {
+      "name": "downtown_spillback",
+      "scenario_dir": "H2Oplus/downloads/traffic_signal_phase1/downtown_spillback",
+      "summary": [
+        3.007227891156466,
+        3.007227891156466,
+        3.173044217687077,
+        3.173044217687077,
+        -0.026829939460649193,
+        1.5450680272108857,
+        1.0,
+        0.0
+      ],
+      "vehicles": 709
+    },
+    {
+      "name": "event_reversal",
+      "scenario_dir": "H2Oplus/downloads/traffic_signal_phase1/event_reversal",
+      "summary": [
+        2.8775510204081645,
+        2.8775510204081645,
+        2.8715986394557755,
+        2.8715986394557755,
+        0.0010353498003267832,
+        1.437287414965985,
+        0.0,
+        1.0
+      ],
+      "vehicles": 674
+    }
+  ],
+  "setting": {
+    "collect_duration_sec": 900.0,
+    "control_interval_sec": 15,
+    "controlled_tls": "B1",
+    "dense_l2": 18.0,
+    "duration_sec": 900.0,
+    "fewshot_duration_sec": 450.0,
+    "mechanism_l2": 5.0,
+    "network": "generated_3x3_grid_center_tls",
+    "policies": [
+      "fixed_time",
+      "queue_pressure",
+      "spillback_pressure",
+      "sim_mpc",
+      "h2oplus_dense_mpc",
+      "cfcmt_global_mpc",
+      "cfcmt_trust_mpc",
+      "cfcmt_fewshot_bias_mpc",
+      "cfcmt_fewshot_selector_mpc"
+    ],
+    "seed": 19,
+    "simulator": "SUMO/libsumo",
+    "transfer_split": "leave_one_scenario_out",
+    "warmup_sec": 90.0
+  },
+  "source_transition_counts": {
+    "balanced_grid": 55,
+    "downtown_spillback": 55,
+    "event_reversal": 55,
+    "ew_arterial_peak": 55,
+    "ns_arterial_peak": 55
+  },
+  "targets": [
+    {
+      "fewshot_bias": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fewshot_selector_method": "cfcmt_trust_mpc",
+      "fewshot_selector_scores": {
+        "cfcmt_fewshot_bias_mpc": 1.0781124148103889,
+        "cfcmt_global_mpc": 1.0781124148103889,
+        "cfcmt_trust_mpc": 1.059269120110365,
+        "h2oplus_dense_mpc": 1.1126386115696887,
+        "sim_mpc": 1.3756758666981017
+      },
+      "fewshot_transition_count": 25,
+      "policy_metrics": {
+        "cfcmt_fewshot_bias_mpc": {
+          "arrived": 500,
+          "departed": 523,
+          "intervals": 55,
+          "mean_cost": 11.230447401391787,
+          "mean_queue": 9.982886689845111,
+          "ns_action_share": 0.43636363636363634,
+          "ok": true,
+          "p90_queue": 13.469678294061623,
+          "policy": "cfcmt_fewshot_bias_mpc",
+          "remaining": 23,
+          "selector_method": null,
+          "throughput_ratio": 0.9560229445506692
+        },
+        "cfcmt_fewshot_selector_mpc": {
+          "arrived": 500,
+          "departed": 523,
+          "intervals": 55,
+          "mean_cost": 10.962352927705052,
+          "mean_queue": 9.769194211022976,
+          "ns_action_share": 0.45454545454545453,
+          "ok": true,
+          "p90_queue": 13.851201022900982,
+          "policy": "cfcmt_fewshot_selector_mpc",
+          "remaining": 23,
+          "selector_method": "cfcmt_trust_mpc",
+          "throughput_ratio": 0.9560229445506692
+        },
+        "cfcmt_global_mpc": {
+          "arrived": 497,
+          "departed": 523,
+          "intervals": 55,
+          "mean_cost": 11.482661083435449,
+          "mean_queue": 10.21216065785944,
+          "ns_action_share": 0.43636363636363634,
+          "ok": true,
+          "p90_queue": 13.342048339179728,
+          "policy": "cfcmt_global_mpc",
+          "remaining": 26,
+          "selector_method": null,
+          "throughput_ratio": 0.9502868068833652
+        },
+        "cfcmt_trust_mpc": {
+          "arrived": 499,
+          "departed": 523,
+          "intervals": 55,
+          "mean_cost": 11.105021351463789,
+          "mean_queue": 9.886532998586256,
+          "ns_action_share": 0.45454545454545453,
+          "ok": true,
+          "p90_queue": 13.500585619015741,
+          "policy": "cfcmt_trust_mpc",
+          "remaining": 24,
+          "selector_method": null,
+          "throughput_ratio": 0.9541108986615678
+        },
+        "fixed_time": {
+          "arrived": 493,
+          "departed": 523,
+          "intervals": 55,
+          "mean_cost": 14.35696867677643,
+          "mean_queue": 12.6878885311244,
+          "ns_action_share": 0.4909090909090909,
+          "ok": true,
+          "p90_queue": 18.89269890310372,
+          "policy": "fixed_time",
+          "remaining": 30,
+          "selector_method": null,
+          "throughput_ratio": 0.9426386233269598
+        },
+        "h2oplus_dense_mpc": {
+          "arrived": 498,
+          "departed": 523,
+          "intervals": 55,
+          "mean_cost": 11.354960476586232,
+          "mean_queue": 10.101169201750723,
+          "ns_action_share": 0.43636363636363634,
+          "ok": true,
+          "p90_queue": 14.043567628458634,
+          "policy": "h2oplus_dense_mpc",
+          "remaining": 25,
+          "selector_method": null,
+          "throughput_ratio": 0.9521988527724665
+        },
+        "queue_pressure": {
+          "arrived": 500,
+          "departed": 523,
+          "intervals": 55,
+          "mean_cost": 11.184478430035787,
+          "mean_queue": 9.980285973572226,
+          "ns_action_share": 0.4727272727272727,
+          "ok": true,
+          "p90_queue": 14.65126291371585,
+          "policy": "queue_pressure",
+          "remaining": 23,
+          "selector_method": null,
+          "throughput_ratio": 0.9560229445506692
+        },
+        "sim_mpc": {
+          "arrived": 499,
+          "departed": 523,
+          "intervals": 55,
+          "mean_cost": 11.352366259388502,
+          "mean_queue": 10.112047350272277,
+          "ns_action_share": 0.4909090909090909,
+          "ok": true,
+          "p90_queue": 15.22252431906615,
+          "policy": "sim_mpc",
+          "remaining": 24,
+          "selector_method": null,
+          "throughput_ratio": 0.9541108986615678
+        },
+        "spillback_pressure": {
+          "arrived": 500,
+          "departed": 523,
+          "intervals": 55,
+          "mean_cost": 11.298834223004102,
+          "mean_queue": 10.061039387429808,
+          "ns_action_share": 0.4909090909090909,
+          "ok": true,
+          "p90_queue": 14.401794747081713,
+          "policy": "spillback_pressure",
+          "remaining": 23,
+          "selector_method": null,
+          "throughput_ratio": 0.9560229445506692
+        }
+      },
+      "source_scenarios": [
+        "ns_arterial_peak",
+        "ew_arterial_peak",
+        "downtown_spillback",
+        "event_reversal"
+      ],
+      "source_transition_count": 220,
+      "target": "balanced_grid",
+      "vehicles": 525
+    },
+    {
+      "fewshot_bias": [
+        -0.853618252770294,
+        0.3977624141723828,
+        -0.6352714701229676,
+        0.4535465542009148
+      ],
+      "fewshot_selector_method": "cfcmt_fewshot_bias_mpc",
+      "fewshot_selector_scores": {
+        "cfcmt_fewshot_bias_mpc": 1.3640478589031344,
+        "cfcmt_global_mpc": 1.4205803664988241,
+        "cfcmt_trust_mpc": 1.4417956404496188,
+        "h2oplus_dense_mpc": 1.5319201241604434,
+        "sim_mpc": 1.7462057491220841
+      },
+      "fewshot_transition_count": 25,
+      "policy_metrics": {
+        "cfcmt_fewshot_bias_mpc": {
+          "arrived": 542,
+          "departed": 553,
+          "intervals": 55,
+          "mean_cost": 13.67573974869086,
+          "mean_queue": 12.265655664439068,
+          "ns_action_share": 0.6545454545454545,
+          "ok": true,
+          "p90_queue": 21.367631322957198,
+          "policy": "cfcmt_fewshot_bias_mpc",
+          "remaining": 11,
+          "selector_method": null,
+          "throughput_ratio": 0.9801084990958409
+        },
+        "cfcmt_fewshot_selector_mpc": {
+          "arrived": 541,
+          "departed": 553,
+          "intervals": 55,
+          "mean_cost": 13.791642222646889,
+          "mean_queue": 12.398414414559205,
+          "ns_action_share": 0.6727272727272727,
+          "ok": true,
+          "p90_queue": 19.048194253968344,
+          "policy": "cfcmt_fewshot_selector_mpc",
+          "remaining": 12,
+          "selector_method": "cfcmt_fewshot_bias_mpc",
+          "throughput_ratio": 0.9783001808318263
+        },
+        "cfcmt_global_mpc": {
+          "arrived": 542,
+          "departed": 553,
+          "intervals": 55,
+          "mean_cost": 13.424413959870316,
+          "mean_queue": 12.040873239842234,
+          "ns_action_share": 0.6727272727272727,
+          "ok": true,
+          "p90_queue": 19.154942367989037,
+          "policy": "cfcmt_global_mpc",
+          "remaining": 11,
+          "selector_method": null,
+          "throughput_ratio": 0.9801084990958409
+        },
+        "cfcmt_trust_mpc": {
+          "arrived": 538,
+          "departed": 553,
+          "intervals": 55,
+          "mean_cost": 13.827426522466828,
+          "mean_queue": 12.36392219114386,
+          "ns_action_share": 0.6545454545454545,
+          "ok": true,
+          "p90_queue": 19.817532802424324,
+          "policy": "cfcmt_trust_mpc",
+          "remaining": 15,
+          "selector_method": null,
+          "throughput_ratio": 0.972875226039783
+        },
+        "fixed_time": {
+          "arrived": 540,
+          "departed": 553,
+          "intervals": 55,
+          "mean_cost": 18.57273206954891,
+          "mean_queue": 16.383313974520227,
+          "ns_action_share": 0.4909090909090909,
+          "ok": true,
+          "p90_queue": 26.946901750972767,
+          "policy": "fixed_time",
+          "remaining": 13,
+          "selector_method": null,
+          "throughput_ratio": 0.976491862567812
+        },
+        "h2oplus_dense_mpc": {
+          "arrived": 541,
+          "departed": 553,
+          "intervals": 55,
+          "mean_cost": 14.1958922705684,
+          "mean_queue": 12.730363293302792,
+          "ns_action_share": 0.6727272727272727,
+          "ok": true,
+          "p90_queue": 18.76527463521401,
+          "policy": "h2oplus_dense_mpc",
+          "remaining": 12,
+          "selector_method": null,
+          "throughput_ratio": 0.9783001808318263
+        },
+        "queue_pressure": {
+          "arrived": 541,
+          "departed": 553,
+          "intervals": 55,
+          "mean_cost": 13.718917581716202,
+          "mean_queue": 12.271310084934337,
+          "ns_action_share": 0.5818181818181818,
+          "ok": true,
+          "p90_queue": 20.74697697252258,
+          "policy": "queue_pressure",
+          "remaining": 12,
+          "selector_method": null,
+          "throughput_ratio": 0.9783001808318263
+        },
+        "sim_mpc": {
+          "arrived": 540,
+          "departed": 553,
+          "intervals": 55,
+          "mean_cost": 13.683994169906228,
+          "mean_queue": 12.311939323971858,
+          "ns_action_share": 0.6727272727272727,
+          "ok": true,
+          "p90_queue": 19.97556420233463,
+          "policy": "sim_mpc",
+          "remaining": 13,
+          "selector_method": null,
+          "throughput_ratio": 0.976491862567812
+        },
+        "spillback_pressure": {
+          "arrived": 540,
+          "departed": 553,
+          "intervals": 55,
+          "mean_cost": 13.89292772564099,
+          "mean_queue": 12.425958453354497,
+          "ns_action_share": 0.5818181818181818,
+          "ok": true,
+          "p90_queue": 19.728654407203276,
+          "policy": "spillback_pressure",
+          "remaining": 13,
+          "selector_method": null,
+          "throughput_ratio": 0.976491862567812
+        }
+      },
+      "source_scenarios": [
+        "balanced_grid",
+        "ew_arterial_peak",
+        "downtown_spillback",
+        "event_reversal"
+      ],
+      "source_transition_count": 220,
+      "target": "ns_arterial_peak",
+      "vehicles": 554
+    },
+    {
+      "fewshot_bias": [
+        -0.2821434488149715,
+        0.0753796128322291,
+        -0.9959336550985607,
+        1.6955517223611556
+      ],
+      "fewshot_selector_method": "cfcmt_fewshot_bias_mpc",
+      "fewshot_selector_scores": {
+        "cfcmt_fewshot_bias_mpc": 1.751498745557606,
+        "cfcmt_global_mpc": 1.8521401085373057,
+        "cfcmt_trust_mpc": 1.8590753888949947,
+        "h2oplus_dense_mpc": 2.05970501264111,
+        "sim_mpc": 2.3666173314525594
+      },
+      "fewshot_transition_count": 25,
+      "policy_metrics": {
+        "cfcmt_fewshot_bias_mpc": {
+          "arrived": 607,
+          "departed": 632,
+          "intervals": 55,
+          "mean_cost": 17.44239621362859,
+          "mean_queue": 15.695540949206935,
+          "ns_action_share": 0.2909090909090909,
+          "ok": true,
+          "p90_queue": 25.429870184824903,
+          "policy": "cfcmt_fewshot_bias_mpc",
+          "remaining": 25,
+          "selector_method": null,
+          "throughput_ratio": 0.9604430379746836
+        },
+        "cfcmt_fewshot_selector_mpc": {
+          "arrived": 606,
+          "departed": 632,
+          "intervals": 55,
+          "mean_cost": 18.009323610079242,
+          "mean_queue": 16.248768185164074,
+          "ns_action_share": 0.2727272727272727,
+          "ok": true,
+          "p90_queue": 26.842942041194586,
+          "policy": "cfcmt_fewshot_selector_mpc",
+          "remaining": 26,
+          "selector_method": "cfcmt_fewshot_bias_mpc",
+          "throughput_ratio": 0.9588607594936709
+        },
+        "cfcmt_global_mpc": {
+          "arrived": 609,
+          "departed": 632,
+          "intervals": 55,
+          "mean_cost": 17.934056514873895,
+          "mean_queue": 16.179544164758287,
+          "ns_action_share": 0.2727272727272727,
+          "ok": true,
+          "p90_queue": 28.18285992217899,
+          "policy": "cfcmt_global_mpc",
+          "remaining": 23,
+          "selector_method": null,
+          "throughput_ratio": 0.9636075949367089
+        },
+        "cfcmt_trust_mpc": {
+          "arrived": 606,
+          "departed": 632,
+          "intervals": 55,
+          "mean_cost": 16.74757359664781,
+          "mean_queue": 15.101672268804164,
+          "ns_action_share": 0.2727272727272727,
+          "ok": true,
+          "p90_queue": 22.871604146374512,
+          "policy": "cfcmt_trust_mpc",
+          "remaining": 26,
+          "selector_method": null,
+          "throughput_ratio": 0.9588607594936709
+        },
+        "fixed_time": {
+          "arrived": 525,
+          "departed": 574,
+          "intervals": 55,
+          "mean_cost": 42.68428335119017,
+          "mean_queue": 36.78625068749376,
+          "ns_action_share": 0.4909090909090909,
+          "ok": true,
+          "p90_queue": 62.96392509727627,
+          "policy": "fixed_time",
+          "remaining": 49,
+          "selector_method": null,
+          "throughput_ratio": 0.9146341463414634
+        },
+        "h2oplus_dense_mpc": {
+          "arrived": 608,
+          "departed": 632,
+          "intervals": 55,
+          "mean_cost": 18.049627016790073,
+          "mean_queue": 16.255861985321083,
+          "ns_action_share": 0.2727272727272727,
+          "ok": true,
+          "p90_queue": 28.100006206034937,
+          "policy": "h2oplus_dense_mpc",
+          "remaining": 24,
+          "selector_method": null,
+          "throughput_ratio": 0.9620253164556962
+        },
+        "queue_pressure": {
+          "arrived": 610,
+          "departed": 632,
+          "intervals": 55,
+          "mean_cost": 16.23212849094421,
+          "mean_queue": 14.695572151392383,
+          "ns_action_share": 0.32727272727272727,
+          "ok": true,
+          "p90_queue": 25.211522373540856,
+          "policy": "queue_pressure",
+          "remaining": 22,
+          "selector_method": null,
+          "throughput_ratio": 0.9651898734177216
+        },
+        "sim_mpc": {
+          "arrived": 608,
+          "departed": 632,
+          "intervals": 55,
+          "mean_cost": 17.399706853170265,
+          "mean_queue": 15.841632485063917,
+          "ns_action_share": 0.2909090909090909,
+          "ok": true,
+          "p90_queue": 28.263658692855376,
+          "policy": "sim_mpc",
+          "remaining": 24,
+          "selector_method": null,
+          "throughput_ratio": 0.9620253164556962
+        },
+        "spillback_pressure": {
+          "arrived": 609,
+          "departed": 632,
+          "intervals": 55,
+          "mean_cost": 16.20250660923605,
+          "mean_queue": 14.65891187743999,
+          "ns_action_share": 0.36363636363636365,
+          "ok": true,
+          "p90_queue": 23.642679466640935,
+          "policy": "spillback_pressure",
+          "remaining": 23,
+          "selector_method": null,
+          "throughput_ratio": 0.9636075949367089
+        }
+      },
+      "source_scenarios": [
+        "balanced_grid",
+        "ns_arterial_peak",
+        "downtown_spillback",
+        "event_reversal"
+      ],
+      "source_transition_count": 220,
+      "target": "ew_arterial_peak",
+      "vehicles": 632
+    },
+    {
+      "fewshot_bias": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fewshot_selector_method": "cfcmt_global_mpc",
+      "fewshot_selector_scores": {
+        "cfcmt_fewshot_bias_mpc": 3.3051706154601823,
+        "cfcmt_global_mpc": 3.3051706154601823,
+        "cfcmt_trust_mpc": 3.532260860880146,
+        "h2oplus_dense_mpc": 3.3212471675733144,
+        "sim_mpc": 3.9733762552515595
+      },
+      "fewshot_transition_count": 25,
+      "policy_metrics": {
+        "cfcmt_fewshot_bias_mpc": {
+          "arrived": 493,
+          "departed": 610,
+          "intervals": 55,
+          "mean_cost": 63.01536223787729,
+          "mean_queue": 60.223306861037635,
+          "ns_action_share": 0.36363636363636365,
+          "ok": true,
+          "p90_queue": 91.60693181942506,
+          "policy": "cfcmt_fewshot_bias_mpc",
+          "remaining": 117,
+          "selector_method": null,
+          "throughput_ratio": 0.8081967213114755
+        },
+        "cfcmt_fewshot_selector_mpc": {
+          "arrived": 500,
+          "departed": 615,
+          "intervals": 55,
+          "mean_cost": 61.76867896744204,
+          "mean_queue": 59.42144354660765,
+          "ns_action_share": 0.38181818181818183,
+          "ok": true,
+          "p90_queue": 89.02753950488729,
+          "policy": "cfcmt_fewshot_selector_mpc",
+          "remaining": 115,
+          "selector_method": "cfcmt_global_mpc",
+          "throughput_ratio": 0.8130081300813008
+        },
+        "cfcmt_global_mpc": {
+          "arrived": 525,
+          "departed": 637,
+          "intervals": 55,
+          "mean_cost": 60.0334316830641,
+          "mean_queue": 57.18440749968392,
+          "ns_action_share": 0.38181818181818183,
+          "ok": true,
+          "p90_queue": 82.9650826848249,
+          "policy": "cfcmt_global_mpc",
+          "remaining": 112,
+          "selector_method": null,
+          "throughput_ratio": 0.8241758241758241
+        },
+        "cfcmt_trust_mpc": {
+          "arrived": 515,
+          "departed": 630,
+          "intervals": 55,
+          "mean_cost": 58.84084114320238,
+          "mean_queue": 56.62916377532158,
+          "ns_action_share": 0.43636363636363634,
+          "ok": true,
+          "p90_queue": 80.90309979068577,
+          "policy": "cfcmt_trust_mpc",
+          "remaining": 115,
+          "selector_method": null,
+          "throughput_ratio": 0.8174603174603174
+        },
+        "fixed_time": {
+          "arrived": 540,
+          "departed": 607,
+          "intervals": 55,
+          "mean_cost": 57.4509997408003,
+          "mean_queue": 52.293635320875275,
+          "ns_action_share": 0.4909090909090909,
+          "ok": true,
+          "p90_queue": 72.48779074279601,
+          "policy": "fixed_time",
+          "remaining": 67,
+          "selector_method": null,
+          "throughput_ratio": 0.8896210873146623
+        },
+        "h2oplus_dense_mpc": {
+          "arrived": 511,
+          "departed": 624,
+          "intervals": 55,
+          "mean_cost": 64.53972834771122,
+          "mean_queue": 61.43931820649953,
+          "ns_action_share": 0.34545454545454546,
+          "ok": true,
+          "p90_queue": 88.55745275394767,
+          "policy": "h2oplus_dense_mpc",
+          "remaining": 113,
+          "selector_method": null,
+          "throughput_ratio": 0.8189102564102564
+        },
+        "queue_pressure": {
+          "arrived": 517,
+          "departed": 624,
+          "intervals": 55,
+          "mean_cost": 63.39885383185397,
+          "mean_queue": 60.52574665552953,
+          "ns_action_share": 0.45454545454545453,
+          "ok": true,
+          "p90_queue": 86.17549761684636,
+          "policy": "queue_pressure",
+          "remaining": 107,
+          "selector_method": null,
+          "throughput_ratio": 0.8285256410256411
+        },
+        "sim_mpc": {
+          "arrived": 535,
+          "departed": 647,
+          "intervals": 55,
+          "mean_cost": 56.218908710623055,
+          "mean_queue": 54.11076690842989,
+          "ns_action_share": 0.43636363636363634,
+          "ok": true,
+          "p90_queue": 78.92371554979924,
+          "policy": "sim_mpc",
+          "remaining": 112,
+          "selector_method": null,
+          "throughput_ratio": 0.8268933539412674
+        },
+        "spillback_pressure": {
+          "arrived": 512,
+          "departed": 627,
+          "intervals": 55,
+          "mean_cost": 60.670245177211676,
+          "mean_queue": 58.4367163430641,
+          "ns_action_share": 0.43636363636363634,
+          "ok": true,
+          "p90_queue": 86.9551865427809,
+          "policy": "spillback_pressure",
+          "remaining": 115,
+          "selector_method": null,
+          "throughput_ratio": 0.8165869218500797
+        }
+      },
+      "source_scenarios": [
+        "balanced_grid",
+        "ns_arterial_peak",
+        "ew_arterial_peak",
+        "event_reversal"
+      ],
+      "source_transition_count": 220,
+      "target": "downtown_spillback",
+      "vehicles": 709
+    },
+    {
+      "fewshot_bias": [
+        -1.7013059251609606,
+        -1.5000067396742998,
+        2.670057431718464,
+        1.1317839531683167
+      ],
+      "fewshot_selector_method": "cfcmt_fewshot_bias_mpc",
+      "fewshot_selector_scores": {
+        "cfcmt_fewshot_bias_mpc": 2.4567694408398943,
+        "cfcmt_global_mpc": 2.923904222821642,
+        "cfcmt_trust_mpc": 2.9812279437387663,
+        "h2oplus_dense_mpc": 2.9878438679092962,
+        "sim_mpc": 3.755121150204013
+      },
+      "fewshot_transition_count": 25,
+      "policy_metrics": {
+        "cfcmt_fewshot_bias_mpc": {
+          "arrived": 646,
+          "departed": 674,
+          "intervals": 55,
+          "mean_cost": 24.24329997361662,
+          "mean_queue": 21.722164472196,
+          "ns_action_share": 0.38181818181818183,
+          "ok": true,
+          "p90_queue": 31.59322470817121,
+          "policy": "cfcmt_fewshot_bias_mpc",
+          "remaining": 28,
+          "selector_method": null,
+          "throughput_ratio": 0.9584569732937686
+        },
+        "cfcmt_fewshot_selector_mpc": {
+          "arrived": 640,
+          "departed": 674,
+          "intervals": 55,
+          "mean_cost": 23.29330231322319,
+          "mean_queue": 21.277006604645827,
+          "ns_action_share": 0.41818181818181815,
+          "ok": true,
+          "p90_queue": 32.58529182879377,
+          "policy": "cfcmt_fewshot_selector_mpc",
+          "remaining": 34,
+          "selector_method": "cfcmt_fewshot_bias_mpc",
+          "throughput_ratio": 0.9495548961424333
+        },
+        "cfcmt_global_mpc": {
+          "arrived": 645,
+          "departed": 674,
+          "intervals": 55,
+          "mean_cost": 18.889189752001812,
+          "mean_queue": 16.94334853976258,
+          "ns_action_share": 0.41818181818181815,
+          "ok": true,
+          "p90_queue": 25.50244771458634,
+          "policy": "cfcmt_global_mpc",
+          "remaining": 29,
+          "selector_method": null,
+          "throughput_ratio": 0.956973293768546
+        },
+        "cfcmt_trust_mpc": {
+          "arrived": 639,
+          "departed": 674,
+          "intervals": 55,
+          "mean_cost": 21.660733810013067,
+          "mean_queue": 19.56160855304651,
+          "ns_action_share": 0.41818181818181815,
+          "ok": true,
+          "p90_queue": 28.199071986392525,
+          "policy": "cfcmt_trust_mpc",
+          "remaining": 35,
+          "selector_method": null,
+          "throughput_ratio": 0.9480712166172107
+        },
+        "fixed_time": {
+          "arrived": 642,
+          "departed": 674,
+          "intervals": 55,
+          "mean_cost": 39.55711430927785,
+          "mean_queue": 34.84257929141726,
+          "ns_action_share": 0.4909090909090909,
+          "ok": true,
+          "p90_queue": 58.771857976653706,
+          "policy": "fixed_time",
+          "remaining": 32,
+          "selector_method": null,
+          "throughput_ratio": 0.9525222551928784
+        },
+        "h2oplus_dense_mpc": {
+          "arrived": 636,
+          "departed": 674,
+          "intervals": 55,
+          "mean_cost": 19.34399635259377,
+          "mean_queue": 17.422478058762344,
+          "ns_action_share": 0.41818181818181815,
+          "ok": true,
+          "p90_queue": 24.46091439688716,
+          "policy": "h2oplus_dense_mpc",
+          "remaining": 38,
+          "selector_method": null,
+          "throughput_ratio": 0.9436201780415431
+        },
+        "queue_pressure": {
+          "arrived": 640,
+          "departed": 674,
+          "intervals": 55,
+          "mean_cost": 22.75004447274803,
+          "mean_queue": 20.583388227263015,
+          "ns_action_share": 0.43636363636363634,
+          "ok": true,
+          "p90_queue": 32.11294578237549,
+          "policy": "queue_pressure",
+          "remaining": 34,
+          "selector_method": null,
+          "throughput_ratio": 0.9495548961424333
+        },
+        "sim_mpc": {
+          "arrived": 643,
+          "departed": 674,
+          "intervals": 55,
+          "mean_cost": 19.90521174579007,
+          "mean_queue": 17.92421994707986,
+          "ns_action_share": 0.45454545454545453,
+          "ok": true,
+          "p90_queue": 26.894751649207002,
+          "policy": "sim_mpc",
+          "remaining": 31,
+          "selector_method": null,
+          "throughput_ratio": 0.9540059347181009
+        },
+        "spillback_pressure": {
+          "arrived": 646,
+          "departed": 674,
+          "intervals": 55,
+          "mean_cost": 21.45238963085,
+          "mean_queue": 19.371832382229428,
+          "ns_action_share": 0.45454545454545453,
+          "ok": true,
+          "p90_queue": 30.915170233463034,
+          "policy": "spillback_pressure",
+          "remaining": 28,
+          "selector_method": null,
+          "throughput_ratio": 0.9584569732937686
+        }
+      },
+      "source_scenarios": [
+        "balanced_grid",
+        "ns_arterial_peak",
+        "ew_arterial_peak",
+        "downtown_spillback"
+      ],
+      "source_transition_count": 220,
+      "target": "event_reversal",
+      "vehicles": 674
+    }
+  ]
+}

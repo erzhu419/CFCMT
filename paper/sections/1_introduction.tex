@@ -16,16 +16,32 @@ This paper studies that hypothesis in a deliberately conservative setting.
 We do not claim that the current data are vehicle-level real-world trajectories.
 Instead, we construct full-route open transit city bundles and evaluate models on static-data-derived offline dynamics targets.
 The protocol is meant to answer a narrower question: when only open static data and an uncalibrated simulator-like transition generator are available, does a mechanism-factored residual adapter transfer better across cities than a dense \Htwo-style residual correction?
+We separate three deployment regimes that are often conflated: single-source zero-shot transfer, multi-source target-label-free transfer, and few-shot target offline adaptation with a small amount of passive target-city history.
+This is the bus-holding core of the paper.
+Because passive bus logs cannot reveal what would have happened under unobserved hold actions, we use traffic-signal control as an additional counterfactual stress test where SUMO can roll out alternative actions under a shared benchmark protocol.
+The traffic-signal experiments are not presented as the same task or metric scale as bus holding; they test whether the same transfer principle can remain safe when strong classical control rules and external RL leaderboard baselines are available.
 
 We introduce Causal-Factored Cross-City Model Transfer (\ours).
 \ours fits residual corrections at the level of output mechanisms rather than one dense residual over all outputs.
 For each target quantity, it uses a mechanism-specific sparse parent set: headway and gap outputs depend primarily on neighboring headways, target headway, speed, time, and action; demand and dwell outputs depend on waiting passengers, speed, target headway, time, and action; speed outputs use speed, time, and route-position features; reward uses policy-relevant headway and waiting quantities.
-We also add a city-similarity source weighting rule that uses only static descriptors available before target calibration.
+We also add a target-label-free source-selection layer.
+It first chooses the target-summary feature set by leave-one-source validation, then uses the selected unlabeled target summary to decide when a source-city ensemble is credible; target transition labels are held out for evaluation.
+The theoretical motivation is a mechanism-risk decomposition: squared transition error decomposes over output mechanisms, source ensembles obey a convex risk bound under squared loss, and source-only selector quality depends on how well leave-one-source scores approximate target risk rankings.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=0.98\textwidth]{causal_transfer_comparison.png}
+    \caption{Conceptual comparison of cross-city residual transfer strategies for bus holding. A dense \Htwo-style residual adapter learns one monolithic correction; MC-MC-style latent world-model adaptation represents domain shift implicitly; \ours{} instead transfers auditable headway/gap, demand/dwell, and speed mechanisms through a target-label-free source gate.}
+    \label{fig:causal-transfer}
+\end{figure}
 
 The paper contributes:
 \begin{enumerate}[leftmargin=1.5em]
     \item A cross-city open-transit validation protocol using four full-route city bundles and a strict leave-one-city-out evaluation unit.
-    \item A mechanism-wise residual transfer model and a static descriptor based source weighting rule.
-    \item A set of reviewer-facing diagnostics: source-weight sensitivity, source-subset robustness, generator-bias/noise robustness, and traffic-domain policy metrics.
-    \item An explicit boundary on the claim: the evidence supports static-derived cross-city transfer and not yet operational deployment without vehicle-level validation.
+    \item A mechanism-wise residual transfer model with source-only target-summary feature selection and a guarded source-city ensemble.
+    \item A formal transfer-risk motivation showing how mechanism shift, source weighting, and source-only selector error enter the target risk.
+    \item A target-information ladder spanning single-source zero-shot transfer, multi-source target-label-free transfer, and few-shot target offline adaptation.
+    \item A counterfactual traffic-signal stress test showing that a pressure-guarded mechanism-transfer controller reaches pressure-rule-level safety on short RESCO rollouts, while long-horizon results favor a classical phase-pressure rule.
+    \item Full-budget native-protocol RESCO and LibSignal RL cross-checks, kept separate from the same-protocol \ours phase-MPC comparisons.
+    \item An explicit boundary on the claim: the evidence supports target-label-efficient cross-city residual transfer and safe-prior gating, not field deployment without counterfactual or vehicle-level validation.
 \end{enumerate}

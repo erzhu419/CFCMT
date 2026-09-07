@@ -1,0 +1,47 @@
+{
+  "protocol": "tsc-v115-pure-waiting-mechanism-fit-v3",
+  "scientific_status": "pre-outcome_amendment_with_target-label-free-source-loco-blend-selection_and_architecture-matched-target-only",
+  "target_name": "prefix_mean_cost_450s",
+  "training_target_name": "interval_cost",
+  "required_target_equivalence_tolerance": 1e-12,
+  "required_counterfactual_cost_contract": {
+    "mode": "halted_queue",
+    "estimand_protocol": "one-control-interval-local-mechanisms-plus-pure-halted-queue-rollout-value-v2",
+    "scope": "global_halted_vehicles_per_controlled_lane",
+    "population": "sumo_last_step_halting_number_on_controlled_lanes",
+    "normalization": "controlled_lane_count"
+  },
+  "prior_policy": "phase_pressure",
+  "target_budgets": [0, 100],
+  "source_component_families": [
+    "causal_group_normalized_rigid_advantage",
+    "causal_antisymmetric_pairwise_advantage"
+  ],
+  "same_information_baseline_families": [
+    "dense"
+  ],
+  "same_information_baseline_role": "h2oplus_style_dense_residual_mpc",
+  "blend_candidate_selection": {
+    "protocol": "pure-waiting-target-label-free-source-loco-blend-selection-v1",
+    "target_transition_labels_consumed": 0,
+    "fallback_candidate": "constant_alpha_0"
+  },
+  "target_adaptation": {
+    "seeds": [5057, 6067],
+    "budget_per_city": 100,
+    "selection": "city-scenario-and-seed-balanced-coverage-first-b100-v1",
+    "same_group_ids_for_target_only_and_source_augmented_models": true,
+    "target_only_comparator": "same_anchor_same_correction_same_source_loco_blend_without_source_rows",
+    "legacy_low_capacity_strict_target_only_retained_as_secondary_artifact": true
+  },
+  "source_training": {
+    "seeds": [2027, 3037, 4047],
+    "collection_shards": 16,
+    "scenario_collection_shards": {
+      "manhattan_28x7": 64
+    },
+    "admitted_scenario_count": 17,
+    "source_city_group_count": 7
+  },
+  "claim_boundary": "B0 is target-label-free transfer with target static context; its blend candidate is selected only by source-city LOCO and falls back to the rigid anchor when the source gate fails. B100 is target offline adaptation over the same source-selected blend. The primary target-only comparator uses the identical anchor, correction, blend candidate, hyperparameters and B100 group identifiers while consuming zero source rows; the earlier low-capacity strict target-only model is retained only as a secondary artifact. All models use the audited pure halted-vehicle 450-second target and remain development models until nested source weighting and fresh closed-loop confirmation pass."
+}

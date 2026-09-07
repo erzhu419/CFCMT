@@ -1,0 +1,49 @@
+{
+  "claim_boundary": "This is a disclosed development-only implementation pilot. It cannot support efficacy or confirmatory claims.",
+  "environment": {
+    "conversion_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9",
+    "legacy_cache_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v69r65_external_v9_estimand_aligned_450s_target_veto_20260810/long_horizon_cache",
+    "sumo_version": "1.22.0"
+  },
+  "frozen_at_utc": "2026-08-30T02:17:44.653069+00:00",
+  "frozen_inputs": {
+    "manifest_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v39_external_la_jinan_v9_manifest.json",
+    "manifest_sha256": "636e09d8e2f47d5fefaa26b33b0552373b01f185e77e18896c97751c267c356c",
+    "partition_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v65_external_v9_post_validation_redevelopment_partition.json",
+    "partition_sha256": "0950dc076766bc3a7ea57ff3f887baa608fb333a8770f8c32174cfd2d09d9d11",
+    "source_cache_audit_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v69r65_external_v9_estimand_aligned_450s_target_veto_20260810/cache_audit_v1.json",
+    "source_cache_audit_sha256": "56a9556553737e779b32dc70936315e20cfe7989b15209d470d3e2eaeedaec2e",
+    "source_protocol_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v51_external_v9_estimand_aligned_450s_target_veto_cache.json",
+    "source_protocol_sha256": "e36b86166a52841f7edf615b76af390f5736ec7603d7dd3265afd67312cb874e"
+  },
+  "implementation_gate": {
+    "exact_action_key_set": true,
+    "identical_behavior_trace": true,
+    "minimum_informative_waiting_groups": 1,
+    "replay_and_safety": true,
+    "trajectory_invariance_tolerance": 1e-08,
+    "waiting_label_finite_and_nonnegative": true
+  },
+  "pilot": {
+    "behavior_policy": "phase_pressure",
+    "collection_shard_count": 32,
+    "collection_shard_index": 0,
+    "control_interval_sec": 10,
+    "counterfactual_horizon_intervals": 45,
+    "duration_sec": 3600.0,
+    "legacy_cost_mode": "system_vehicle_load",
+    "max_focal_tls": 4,
+    "scenario": "jinan_3x4_real",
+    "seed": 80314,
+    "seed_classification": "development_only_never_confirmatory_again",
+    "waiting_cost_mode": "halted_queue",
+    "warmup_sec": 60.0
+  },
+  "protocol": "tsc-v83r79-external-v9-waiting-aligned-counterfactual-pilot-v1",
+  "stage": "post_v81_failed_validation_development_only_estimand_repair",
+  "use_boundary": {
+    "mechanism_world_model_refit": false,
+    "reason": "The analytic interval-cost prior remains a vehicle-load prior; the halted-queue label is not used to refit that mechanism.",
+    "waiting_target_used_for": "proposal_conditional_veto_only"
+  }
+}

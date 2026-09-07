@@ -38,6 +38,7 @@ from cf_h2o.eval.cross_city_performance_validation import (
     _uncalibrated_transition,
 )
 from cf_h2o.eval.paper_experiment_suite import (
+    LinearStats,
     ResidualStats,
     build_city_stats,
     _family_sse,
@@ -51,6 +52,7 @@ from cf_h2o.eval.paper_experiment_suite import (
 
 
 DEFAULT_FEW_SHOT_BUDGETS = [0.0, 0.01, 0.05, 0.10, 0.25]
+DEFAULT_FEW_SHOT_TIME_BUDGET_HOURS = [0.0, 1.0, 6.0, 24.0, 168.0]
 
 
 APC_DATASETS: dict[str, dict[str, str]] = {
@@ -436,19 +438,21 @@ def _line_apc_stats_worker(payload: tuple[str, pd.DataFrame]) -> ResidualStats:
     return one
 
 
-def build_real_apc_stats(
-    csv_path: Path,
+def _build_apc_stats_from_prepared_frame(
+    df: pd.DataFrame,
     *,
-    max_rows: int = 0,
-    workers: int = 1,
-) -> tuple[ResidualStats, list[ResidualStats], dict[str, Any]]:
-    t0 = time.time()
-    df = _prepare_apc_rows(csv_path, max_rows)
+    key: str,
+    city: str,
+    workers: int,
+    progress_prefix: str = "apc",
+) -> tuple[ResidualStats, list[ResidualStats]]:
+    aggregate = ResidualStats.zeros(key, city)
+    if df.empty:
+        return aggregate, []
     line_keys = sorted(df["line_key"].unique())
-    aggregate = ResidualStats.zeros("austin_capmetro_real_apc", "Austin / CapMetro real APC")
     line_stats: list[ResidualStats] = []
     groups = ((str(line_key), group.copy()) for line_key, group in df.groupby("line_key", sort=False))
-    if workers <= 1:
+    if workers <= 1 or len(line_keys) <= 1:
         for item in groups:
             one = _line_apc_stats_worker(item)
             aggregate.merge(one)
@@ -471,8 +475,33 @@ def build_real_apc_stats(
                     line_stats.append(one)
                     completed += 1
                     if completed % 25 == 0 or completed == len(line_keys):
-                        print(f"[apc] processed {completed}/{len(line_keys)} line groups", flush=True)
+                        print(f"[{progress_prefix}] processed {completed}/{len(line_keys)} line groups", flush=True)
+    line_stats.sort(key=lambda item: item.line_keys[0] if item.line_keys else item.key)
+    return aggregate, line_stats
 
+
+def build_real_apc_stats(
+    csv_path: Path,
+    *,
+    max_rows: int = 0,
+    workers: int = 1,
+    return_frame: bool = False,
+) -> tuple[ResidualStats, list[ResidualStats], dict[str, Any]] | tuple[
+    ResidualStats,
+    list[ResidualStats],
+    dict[str, Any],
+    pd.DataFrame,
+]:
+    t0 = time.time()
+    df = _prepare_apc_rows(csv_path, max_rows)
+    line_keys = sorted(df["line_key"].unique())
+    aggregate, line_stats = _build_apc_stats_from_prepared_frame(
+        df,
+        key="austin_capmetro_real_apc",
+        city="Austin / CapMetro real APC",
+        workers=workers,
+        progress_prefix="apc",
+    )
     summary = {
         "csv_path": str(csv_path),
         "rows_loaded_after_filters": int(len(df)),
@@ -486,7 +515,8 @@ def build_real_apc_stats(
         "elapsed_sec": time.time() - t0,
         "notes": "Observed APC stop-event validation; action fixed to 0 because no counterfactual holding action is observed. The passive no-correction baseline is a state-informed one-step transition using APC-derived current state, not a schedule-only free-running simulator.",
     }
-    line_stats.sort(key=lambda item: item.line_keys[0] if item.line_keys else item.key)
+    if return_frame:
+        return aggregate, line_stats, summary, df
     return aggregate, line_stats, summary
 
 
@@ -555,6 +585,42 @@ def _split_target_lines(
     calibration = [item for item, selected in zip(ordered, mask) if selected]
     evaluation = [item for item, selected in zip(ordered, mask) if not selected]
     return calibration, evaluation, False
+
+
+def _clean_difference_array(values: np.ndarray) -> np.ndarray:
+    out = np.asarray(values, dtype=np.float64).copy()
+    out[np.abs(out) < 1e-8] = 0.0
+    return out
+
+
+def _linear_stats_difference(total: LinearStats, remove: LinearStats) -> LinearStats:
+    return LinearStats(
+        xtx=_clean_difference_array(total.xtx - remove.xtx),
+        xty=_clean_difference_array(total.xty - remove.xty),
+        yty=np.maximum(_clean_difference_array(total.yty - remove.yty), 0.0),
+        n=max(0, int(total.n) - int(remove.n)),
+    )
+
+
+def _family_difference(
+    total: dict[str, LinearStats],
+    remove: dict[str, LinearStats],
+) -> dict[str, LinearStats]:
+    return {name: _linear_stats_difference(total[name], remove[name]) for name in OUTPUT_NAMES}
+
+
+def _stats_difference(key: str, city: str, total: ResidualStats, remove: ResidualStats) -> ResidualStats:
+    out = ResidualStats.zeros(key, city)
+    out.h2o = _linear_stats_difference(total.h2o, remove.h2o)
+    out.cfcmt = _family_difference(total.cfcmt, remove.cfcmt)
+    out.ablations = {
+        name: _family_difference(total.ablations[name], remove.ablations[name])
+        for name in total.ablations
+    }
+    out.n = max(0, int(total.n) - int(remove.n))
+    out.lines_seen = max(0, int(total.lines_seen) - int(remove.lines_seen))
+    out.line_keys = []
+    return out
 
 
 def _fit_safe_h2o(stats: ResidualStats, ridge: float) -> np.ndarray | None:
@@ -682,6 +748,290 @@ def _evaluate_external(
             "cfcmt_beats_h2oplus": bool(cfcmt < h2o),
             "cfcmt_similarity_weighted_beats_h2oplus": bool(weighted < h2o),
         },
+    }
+
+
+def _source_adaptation_bundle(
+    city_stats: dict[str, ResidualStats],
+    sanity: dict[str, Any],
+    *,
+    ridge: float,
+    temperature: float,
+    floor: float,
+) -> dict[str, Any]:
+    target = "austin_capmetro_all"
+    sources = [key for key in city_stats if key != target]
+    weights = _source_similarity_weights(sanity, target, sources, temperature=temperature, floor=floor)
+    source_stats = _merge_stats("source_unweighted", "source", [city_stats[key] for key in sources])
+    weighted_source_stats = _merge_stats_weighted("source_similarity_weighted", "source", city_stats, weights)
+    return {
+        "sources": sources,
+        "weights": weights,
+        "source_stats": source_stats,
+        "weighted_source_stats": weighted_source_stats,
+        "source_h2o_beta": _fit_h2o(source_stats, ridge),
+        "source_weighted_h2o_beta": _fit_h2o(weighted_source_stats, ridge),
+        "source_cfcmt_beta": _fit_cfcmt(source_stats, ridge),
+        "source_weighted_cfcmt_beta": _fit_cfcmt(weighted_source_stats, ridge),
+    }
+
+
+def _evaluate_adaptation_split(
+    row_base: dict[str, Any],
+    calibration_stats: ResidualStats,
+    evaluation_stats: ResidualStats,
+    source_bundle: dict[str, Any],
+    *,
+    ridge: float,
+) -> dict[str, Any]:
+    source_stats = source_bundle["source_stats"]
+    weighted_source_stats = source_bundle["weighted_source_stats"]
+    source_h2o_beta = source_bundle["source_h2o_beta"]
+    source_weighted_h2o_beta = source_bundle["source_weighted_h2o_beta"]
+    source_cfcmt_beta = source_bundle["source_cfcmt_beta"]
+    source_weighted_cfcmt_beta = source_bundle["source_weighted_cfcmt_beta"]
+
+    source_plus_target = _merge_stats(
+        f"{row_base['split_key']}::source_plus_target",
+        "source + Austin / CapMetro real APC",
+        [source_stats, calibration_stats],
+    )
+    weighted_source_plus_target = _merge_stats(
+        f"{row_base['split_key']}::weighted_source_plus_target",
+        "weighted source + Austin / CapMetro real APC",
+        [weighted_source_stats, calibration_stats],
+    )
+    h2o_source_plus_target = _fit_safe_h2o(source_plus_target, ridge)
+    cfcmt_source_plus_target = _fit_safe_cfcmt(source_plus_target, ridge)
+    h2o_weighted_source_plus_target = _fit_safe_h2o(weighted_source_plus_target, ridge)
+    cfcmt_weighted_source_plus_target = _fit_safe_cfcmt(weighted_source_plus_target, ridge)
+    h2o_target_only = _fit_safe_h2o(calibration_stats, ridge)
+    cfcmt_target_only = _fit_safe_cfcmt(calibration_stats, ridge)
+
+    if calibration_stats.n > 0:
+        gated_h2o_beta, h2o_gate = _gate_h2o_beta(calibration_stats, source_weighted_h2o_beta)
+        gated_cfcmt_beta, cfcmt_gate = _gate_cfcmt_beta(calibration_stats, source_weighted_cfcmt_beta)
+        bias_h2o_beta = _bias_h2o_beta(calibration_stats, source_weighted_h2o_beta)
+        bias_cfcmt_beta = _bias_cfcmt_beta(calibration_stats, source_weighted_cfcmt_beta)
+    else:
+        gated_h2o_beta, h2o_gate = source_weighted_h2o_beta, {name: 1.0 for name in OUTPUT_NAMES}
+        gated_cfcmt_beta, cfcmt_gate = source_weighted_cfcmt_beta, {name: 1.0 for name in OUTPUT_NAMES}
+        bias_h2o_beta = source_weighted_h2o_beta
+        bias_cfcmt_beta = source_weighted_cfcmt_beta
+
+    passive_sse = evaluation_stats.h2o.sse(None)
+    h2o_source_sse = evaluation_stats.h2o.sse(source_h2o_beta)
+    h2o_weighted_source_sse = evaluation_stats.h2o.sse(source_weighted_h2o_beta)
+    cfcmt_source_sse = _family_sse(evaluation_stats.cfcmt, source_cfcmt_beta)
+    cfcmt_weighted_source_sse = _family_sse(evaluation_stats.cfcmt, source_weighted_cfcmt_beta)
+    h2o_source_plus_target_sse = (
+        evaluation_stats.h2o.sse(h2o_source_plus_target) if h2o_source_plus_target is not None else None
+    )
+    cfcmt_source_plus_target_sse = (
+        _family_sse(evaluation_stats.cfcmt, cfcmt_source_plus_target)
+        if cfcmt_source_plus_target is not None
+        else None
+    )
+    h2o_weighted_source_plus_target_sse = (
+        evaluation_stats.h2o.sse(h2o_weighted_source_plus_target)
+        if h2o_weighted_source_plus_target is not None
+        else None
+    )
+    cfcmt_weighted_source_plus_target_sse = (
+        _family_sse(evaluation_stats.cfcmt, cfcmt_weighted_source_plus_target)
+        if cfcmt_weighted_source_plus_target is not None
+        else None
+    )
+    h2o_target_only_sse = evaluation_stats.h2o.sse(h2o_target_only) if h2o_target_only is not None else None
+    cfcmt_target_only_sse = (
+        _family_sse(evaluation_stats.cfcmt, cfcmt_target_only) if cfcmt_target_only is not None else None
+    )
+    h2o_gate_sse = evaluation_stats.h2o.sse(gated_h2o_beta)
+    cfcmt_gate_sse = _family_sse(evaluation_stats.cfcmt, gated_cfcmt_beta)
+    h2o_bias_sse = evaluation_stats.h2o.sse(bias_h2o_beta)
+    cfcmt_bias_sse = _family_sse(evaluation_stats.cfcmt, bias_cfcmt_beta)
+
+    metrics = {
+        "passive_no_correction": _method_metrics_from_sse(passive_sse, evaluation_stats.n),
+        "h2oplus_source_only": _method_metrics_from_sse(h2o_source_sse, evaluation_stats.n),
+        "h2oplus_weighted_source_only": _method_metrics_from_sse(h2o_weighted_source_sse, evaluation_stats.n),
+        "cfcmt_source_only": _method_metrics_from_sse(cfcmt_source_sse, evaluation_stats.n),
+        "cfcmt_weighted_source_only": _method_metrics_from_sse(cfcmt_weighted_source_sse, evaluation_stats.n),
+        "h2oplus_source_plus_target_budget": _metrics_from_optional_sse(
+            h2o_source_plus_target_sse,
+            evaluation_stats.n,
+        ),
+        "cfcmt_source_plus_target_budget": _metrics_from_optional_sse(
+            cfcmt_source_plus_target_sse,
+            evaluation_stats.n,
+        ),
+        "h2oplus_weighted_source_plus_target_budget": _metrics_from_optional_sse(
+            h2o_weighted_source_plus_target_sse,
+            evaluation_stats.n,
+        ),
+        "cfcmt_weighted_source_plus_target_budget": _metrics_from_optional_sse(
+            cfcmt_weighted_source_plus_target_sse,
+            evaluation_stats.n,
+        ),
+        "h2oplus_target_only_budget": _metrics_from_optional_sse(h2o_target_only_sse, evaluation_stats.n),
+        "cfcmt_target_only_budget": _metrics_from_optional_sse(cfcmt_target_only_sse, evaluation_stats.n),
+        "h2oplus_weighted_source_residual_gate": _method_metrics_from_sse(h2o_gate_sse, evaluation_stats.n),
+        "cfcmt_weighted_source_residual_gate": _method_metrics_from_sse(cfcmt_gate_sse, evaluation_stats.n),
+        "h2oplus_weighted_source_bias_adapter": _method_metrics_from_sse(h2o_bias_sse, evaluation_stats.n),
+        "cfcmt_weighted_source_bias_adapter": _method_metrics_from_sse(cfcmt_bias_sse, evaluation_stats.n),
+    }
+    passive = metrics["passive_no_correction"]["total_mse"]
+    h2o_source = metrics["h2oplus_source_only"]["total_mse"]
+    weighted_source = metrics["cfcmt_weighted_source_only"]["total_mse"]
+    weighted_gate = metrics["cfcmt_weighted_source_residual_gate"]["total_mse"]
+    weighted_bias = metrics["cfcmt_weighted_source_bias_adapter"]["total_mse"]
+    weighted_target = metrics["cfcmt_weighted_source_plus_target_budget"]["total_mse"]
+    return {
+        **row_base,
+        "calibration_transitions": calibration_stats.n,
+        "evaluation_transitions": evaluation_stats.n,
+        "metrics": metrics,
+        "adaptation_parameters": {
+            "h2oplus_weighted_source_residual_gate": h2o_gate,
+            "cfcmt_weighted_source_residual_gate": cfcmt_gate,
+        },
+        "comparisons": {
+            "cfcmt_weighted_source_only_vs_h2oplus_source_only_ratio": (
+                weighted_source / h2o_source if h2o_source else None
+            ),
+            "cfcmt_weighted_source_only_vs_passive_ratio": weighted_source / passive if passive else None,
+            "cfcmt_weighted_source_plus_target_vs_passive_ratio": weighted_target / passive if passive else None,
+            "cfcmt_weighted_source_residual_gate_vs_passive_ratio": weighted_gate / passive if passive else None,
+            "cfcmt_weighted_source_bias_adapter_vs_passive_ratio": weighted_bias / passive if passive else None,
+            "cfcmt_weighted_source_plus_target_beats_passive": bool(weighted_target < passive),
+            "cfcmt_weighted_source_residual_gate_beats_passive": bool(weighted_gate < passive),
+            "cfcmt_weighted_source_bias_adapter_beats_passive": bool(weighted_bias < passive),
+        },
+    }
+
+
+def _few_shot_summary(rows: list[dict[str, Any]], budget_key: str) -> dict[str, Any]:
+    best_key = None
+    if not rows:
+        return {"budgets": [], "best_method": best_key}
+    candidate_keys = [
+        "cfcmt_weighted_source_plus_target_budget",
+        "cfcmt_weighted_source_residual_gate",
+        "cfcmt_weighted_source_bias_adapter",
+        "cfcmt_target_only_budget",
+    ]
+    best_by_budget = []
+    for row in rows:
+        available = [
+            (key, row["metrics"][key]["total_mse"])
+            for key in candidate_keys
+            if row["metrics"].get(key) is not None
+        ]
+        method, value = min(available, key=lambda item: item[1])
+        best_by_budget.append({**row, "best_method": method, "best_total_mse": value})
+    best_overall = min(best_by_budget, key=lambda item: item["best_total_mse"])
+    best_key = best_overall["best_method"]
+    passive_values = [row["metrics"]["passive_no_correction"]["total_mse"] for row in rows]
+    return {
+        "budgets": [row[budget_key] for row in rows],
+        "best_budget": best_overall[budget_key],
+        "best_method": best_key,
+        "best_vs_passive_ratio": (
+            best_overall["best_total_mse"] / best_overall["metrics"]["passive_no_correction"]["total_mse"]
+            if best_overall["metrics"]["passive_no_correction"]["total_mse"]
+            else None
+        ),
+        "budgets_where_gate_beats_passive": [
+            row[budget_key]
+            for row in rows
+            if row["comparisons"]["cfcmt_weighted_source_residual_gate_beats_passive"]
+        ],
+        "budgets_where_bias_beats_passive": [
+            row[budget_key]
+            for row in rows
+            if row["comparisons"]["cfcmt_weighted_source_bias_adapter_beats_passive"]
+        ],
+        "mean_passive_total_mse": float(np.mean(passive_values)),
+    }
+
+
+def _evaluate_external_time_few_shot(
+    prepared_df: pd.DataFrame,
+    external_stats: ResidualStats,
+    city_stats: dict[str, ResidualStats],
+    sanity: dict[str, Any],
+    *,
+    ridge: float,
+    budgets_hours: list[float],
+    workers: int,
+    temperature: float,
+    floor: float,
+) -> dict[str, Any]:
+    source_bundle = _source_adaptation_bundle(
+        city_stats,
+        sanity,
+        ridge=ridge,
+        temperature=temperature,
+        floor=floor,
+    )
+    start = prepared_df["apc_ts"].min()
+    end = prepared_df["apc_ts"].max()
+    rows = []
+    for budget in budgets_hours:
+        hours = float(budget)
+        if hours <= 0.0:
+            calibration_stats = ResidualStats.zeros("austin_real_apc::time_calibration_0h", "Austin / CapMetro real APC")
+            evaluation_stats = external_stats
+            calibration_lines = 0
+            evaluation_lines = int(prepared_df["line_key"].nunique())
+            cutoff = start
+        else:
+            cutoff = start + pd.Timedelta(hours=hours)
+            cal_mask = prepared_df["apc_ts"] < cutoff
+            calibration_df = prepared_df.loc[cal_mask].copy()
+            calibration_lines = int(calibration_df["line_key"].nunique())
+            evaluation_lines = int(prepared_df.loc[~cal_mask, "line_key"].nunique())
+            calibration_stats, _ = _build_apc_stats_from_prepared_frame(
+                calibration_df,
+                key=f"austin_real_apc::time_calibration_{hours:g}h",
+                city="Austin / CapMetro real APC",
+                workers=workers,
+                progress_prefix=f"apc-time-{hours:g}h",
+            )
+            evaluation_stats = _stats_difference(
+                f"austin_real_apc::time_evaluation_{hours:g}h",
+                "Austin / CapMetro real APC",
+                external_stats,
+                calibration_stats,
+            )
+        if evaluation_stats.n <= 0:
+            continue
+        row = _evaluate_adaptation_split(
+            {
+                "split_key": f"austin_real_apc::time_budget_{hours:g}h",
+                "target_time_budget_hours": hours,
+                "calibration_start": start.isoformat() if pd.notna(start) else None,
+                "calibration_cutoff": cutoff.isoformat() if pd.notna(cutoff) else None,
+                "target_data_end": end.isoformat() if pd.notna(end) else None,
+                "calibration_lines": calibration_lines,
+                "evaluation_lines": evaluation_lines,
+                "in_sample_oracle": False,
+            },
+            calibration_stats,
+            evaluation_stats,
+            source_bundle,
+            ridge=ridge,
+        )
+        rows.append(row)
+
+    return {
+        "ok": True,
+        "experiment": "austin_real_apc_target_time_budget_sweep",
+        "definition": "Target APC rows are split chronologically. The first N hours of passive APC residual labels are used for lightweight target adaptation, and all later APC transitions are held out for evaluation.",
+        "source_envs": source_bundle["sources"],
+        "source_weights": source_bundle["weights"],
+        "rows": rows,
+        "summary": _few_shot_summary(rows, "target_time_budget_hours"),
     }
 
 
@@ -924,7 +1274,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         force=args.force_download,
         workers=args.workers,
     )
-    external_stats, external_line_stats, external_summary = build_real_apc_stats(csv_path, max_rows=0, workers=args.workers)
+    external_stats, external_line_stats, external_summary, prepared_apc = build_real_apc_stats(
+        csv_path,
+        max_rows=0,
+        workers=args.workers,
+        return_frame=True,
+    )
     city_stats, sanity = _fit_static_sources(config, root, args)
     validation = _evaluate_external(
         external_stats,
@@ -941,6 +1296,17 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         ridge=args.ridge,
         budgets=args.few_shot_budgets,
         seed=args.seed,
+        temperature=args.source_weight_temperature,
+        floor=args.source_weight_floor,
+    )
+    few_shot_time = _evaluate_external_time_few_shot(
+        prepared_apc,
+        external_stats,
+        city_stats,
+        sanity,
+        ridge=args.ridge,
+        budgets_hours=args.few_shot_time_budgets_hours,
+        workers=args.workers,
         temperature=args.source_weight_temperature,
         floor=args.source_weight_floor,
     )
@@ -962,12 +1328,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "real_apc_summary": external_summary,
         "validation": validation,
         "few_shot_validation": few_shot,
+        "few_shot_time_validation": few_shot_time,
     }
     out_path = _resolve_path(root, args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(validation["comparisons"], indent=2), flush=True)
     print(json.dumps(few_shot["summary"], indent=2), flush=True)
+    print(json.dumps(few_shot_time["summary"], indent=2), flush=True)
     print(f"[out] {out_path}", flush=True)
     return result
 
@@ -988,6 +1356,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--ridge", type=float, default=1.0)
     parser.add_argument("--seed", type=int, default=2026)
     parser.add_argument("--few-shot-budgets", type=_parse_float_list, default=DEFAULT_FEW_SHOT_BUDGETS)
+    parser.add_argument(
+        "--few-shot-time-budgets-hours",
+        type=_parse_float_list,
+        default=DEFAULT_FEW_SHOT_TIME_BUDGET_HOURS,
+    )
     parser.add_argument("--source-weight-temperature", type=float, default=1.0)
     parser.add_argument("--source-weight-floor", type=float, default=0.05)
     return parser.parse_args(argv)

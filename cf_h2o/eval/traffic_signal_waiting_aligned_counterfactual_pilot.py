@@ -13,7 +13,7 @@ from typing import Any, Mapping, Sequence
 import numpy as np
 
 from cf_h2o.eval.traffic_signal_resco_cfcmt_v3 import (
-    WAITING_ALIGNED_ESTIMAND_PROTOCOL_V5,
+    WAITING_ALIGNED_ESTIMAND_PROTOCOL_V6,
 )
 from cf_h2o.eval.traffic_signal_resco_cfcmt_v3_suite import (
     _collect_worker,
@@ -336,7 +336,7 @@ def run_pilot(
     behavior = dict(waiting.metadata.get("behavior_safety_audit", {}))
     metadata_gate = bool(
         waiting.metadata.get("counterfactual_estimand")
-        == WAITING_ALIGNED_ESTIMAND_PROTOCOL_V5
+        == WAITING_ALIGNED_ESTIMAND_PROTOCOL_V6
         and waiting.metadata.get("counterfactual_cost_mode") == "halted_queue"
         and waiting.metadata.get("counterfactual_cost_scope")
         == "global_halted_vehicles_per_controlled_lane"

@@ -1,0 +1,217 @@
+\section{Supplementary Methods and Results}
+
+\subsection{Network inventory}
+
+\begin{table}[htbp]
+\caption{Source and external target network inventory parsed from the SUMO
+\texttt{net.xml} files.  Jinan uses one geometry and three demand files.}
+\label{tab:network-scope}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{tables/traffic_signal_transfer_networks.tex}}
+\end{table}
+
+The external CityFlow files were converted to SUMO and revised through a
+semantic admission audit.  Phase identities use final SUMO connection indices,
+permissive links remain distinct from protected movements, all routes are
+contiguous and demand is conserved.  A 3,600-s admission run had no teleports
+or collisions.  The admitted conversion tree has SHA-256
+\texttt{4a2e17618c2ac584fc767562f3a7096c95d8f904f03ef6baa9cd5d34d282eadd}.
+
+\subsection{Sequential development and confirmation}
+
+\begin{table}[htbp]
+\caption{Complete high-level decision trail for the pairwise method.  Positive
+percentages denote lower normalized action regret than the rigid anchor.  Seed
+7079 is diagnostic evidence that informed v43 and is not reused as v43
+confirmation.}
+\label{tab:development-history}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{tables/development_history.tex}}
+\end{table}
+
+The v42 failure is retained because its city-macro improvement alone would have
+looked positive.  It failed the predeclared requirement that both external
+cities improve: Los Angeles regressed by 0.00072 normalized regret.  V43 then
+removed the arbitrary 100-group cap, used every valid adaptation group and
+cross-fitted by complete adaptation seed.  The later seed 8171, rather than
+7079, is the formal external confirmation.
+
+\subsection{City-resolved closed-loop outcomes}
+
+\begin{table}[htbp]
+\caption{External closed-loop outcomes before equal-city aggregation.  Waiting
+is the all-departed 3,600-s metric in seconds.  Incident entries are means over
+the two closed-loop seeds within that city and policy.}
+\label{tab:external-city-results}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{tables/external_closed_loop_city.tex}}
+\end{table}
+
+The CFCMT-versus-dense waiting improvements are 8.46 s in Los Angeles and
+11.50 s in Jinan.  CFCMT-versus-MaxPressure differences are $-12.53$ and
+$-2.33$ s, where negative values indicate that MaxPressure is better.  The
+opposite directions cannot be hidden by equal-city aggregation.
+
+\subsection{Fresh source-contribution diagnostics}
+
+The target-label-only artifacts were created in the v43 baseline freeze, before
+the original closed-loop outcomes.  Their selected target weights were within
+numerical precision of one in both cities.  V90 added these artifacts to the
+eight original scenario--seed cells only after the main comparison and is
+therefore not a confirmation.  V91 froze 64 unique seeds before execution,
+required 512 exact policy identities and completed all of them without seed
+exclusion.
+
+The largest v91 failure occurred at seed 7417817 in Los Angeles.  CFCMT waiting
+was 975.27 s with completion 0.270, compared with 194.74 s and completion 0.919
+for target only; neither policy teleported or recorded a collision in that
+cell.  This record is retained in the primary estimate.  The failure was not
+solely an outlier artifact: across the 64 Los Angeles cells, the median relative
+difference was $+2.75\%$, only 22 favoured CFCMT and 21 regressed by more than
+5\%.  Across 192 Jinan scenario--seed cells, 179 favoured CFCMT.  These
+diagnostics explain the opposite city means but do not change the preregistered
+seed-level analysis.
+
+\subsection{Seven-city source-gate development}
+
+Three later source gates were frozen and evaluated on the seven development
+city groups.  The robust-history gate selected a source for six targets, and
+the action-agreement gate selected a source for all seven; both improved the
+equal-city mean but failed the target-only safety comparison because their
+one-sided upper bounds were positive and their largest city regressions
+exceeded 0.02 normalized regret.  A stricter mechanism-compatibility gate used
+five B20-to-B5 target-label folds to score queue propagation, served movement,
+red accumulation, spillback and mobility.  It admitted no source and returned
+exact target only in all seven cities (\Cref{tab:source-gate-development}).
+
+\begin{table}[htbp]
+\caption{Frozen seven-city source-gate development.  Negative effects favour
+the selected gate.  ``Upper'' is the one-sided 95\% upper bound versus the
+architecture-matched target-only causal arm.  Dense denotes the pooled
+H2O$^+$-style residual.  These are development results, not external
+confirmation.}
+\label{tab:source-gate-development}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{tables/source_gate_development.tex}}
+\end{table}
+
+The progression exposes a safety--usefulness trade-off rather than a successful
+source selector.  v145 and v146 retained source signal but allowed harmful city
+tails.  v148 removed those tails only by abstaining everywhere.  Its 7/7
+advantage over the dense residual is therefore inherited from the rigid
+target-only causal model and cannot be attributed to source-city labels or to a
+full mechanism world model.  No external source-gate confirmation was
+authorized after these failures.
+
+\subsection{Metric population and safety accounting}
+
+SUMO \texttt{tripinfo} was written with unfinished records at the fixed
+3,600-s horizon.  The primary waiting-time population includes all departed
+vehicles, with unfinished waiting accrued to the horizon.  Completed-only
+waiting and completion ratios are secondary outcomes.  System vehicle-hours
+integrate active plus pending vehicles and therefore include demand not yet
+inserted.  Across the complete matrix, 171 raw collision events collapsed to
+13 unique participant--lane--time incidents in six rollouts; CFCMT had zero.
+All starting and ending teleport counters were zero.
+
+\subsection{Discarded pressure-guard development track}
+
+Before the anchored pairwise method was developed, an exploratory controller
+placed a learned mechanism residual behind a MaxPressure fallback.  On eight
+RESCO scenarios and 600-s rollouts its mean queue was 12.918, close to
+MaxPressure at 12.907.  At 3,600 s, phase pressure was materially stronger
+(32.234 versus 43.511).  These experiments motivated treating pressure as a
+hard performance ceiling, but they use a different controller, target set and
+metric from v43 and are excluded from the main confirmation.
+
+\begin{table}[htbp]
+\caption{Exploratory 600-s pressure-guard stress test retained for development
+transparency.  This is not the final anchored CFCMT controller.}
+\label{tab:discarded-guard-600}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/traffic_signal_resco_extended_summary.tex}}
+\end{table}
+
+\begin{table}[htbp]
+\caption{Exploratory 3,600-s pressure-guard boundary check.  Phase pressure is
+the strongest policy in this discarded protocol.}
+\label{tab:discarded-guard-3600}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/traffic_signal_resco_extended_3600s_summary.tex}}
+\end{table}
+
+\subsection{Post-freeze fresh-seed execution-layer stress test}
+
+The v86--v89 successor track uses a target-state-conditioned 120-s action
+originator and global execution cooldown rather than the v43 anchored all-pair
+controller.  Negative deltas favour the learned executor relative to phase
+pressure.  The first three rows reuse the same 54 disclosed adaptive seeds and
+are not independent replications.  Only v89 uses 64 newly generated seeds; its
+joint gate was frozen before those rollouts and failed.  The eight v85
+prospective seeds were not opened.
+
+\begin{table}[htbp]
+\caption{Post-freeze Jinan execution-layer stress test.  Intervals are paired
+simulator-seed bootstrap intervals.  Development rows are shown to expose the
+adaptive-to-confirmatory shrinkage and are not pooled with v89.}
+\label{tab:postfreeze-stress}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{tables/postfreeze_execution_stress_test.tex}}
+\end{table}
+
+\subsection{Native-protocol reinforcement-learning checks}
+
+\begin{table}[htbp]
+\caption{Official RESCO full-budget RL results under the upstream native
+protocol.  Unsupported upstream scenario--algorithm pairs are not silently
+patched into new methods.  These rows are not same-protocol comparisons with
+CFCMT.}
+\label{tab:official-resco-rl}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/official_resco_rl_full_budget_table.tex}}
+\end{table}
+
+\begin{table}[htbp]
+\caption{Patched LibSignal full-budget execution audit under native LibSignal
+states, rewards, timing and metrics.}
+\label{tab:libsignal-rl}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/libsignal_rl_full_budget_table.tex}}
+\end{table}
+
+\subsection{Frozen artifact chain}
+
+\begin{table}[htbp]
+\caption{SHA-256 chain for the final external result.  The paper artifact
+builder verifies all result gates before regenerating this table.}
+\label{tab:artifact-chain}
+\centering
+\tiny
+\resizebox{\textwidth}{!}{\input{tables/external_confirmation_provenance.tex}}
+\end{table}
+
+The publication artifacts are regenerated with
+\begin{verbatim}
+python3 paper_tsc/figures/build_tsc_external_confirmation.py
+python3 paper_tsc/figures/build_tsc_causal_transfer_schematic.py
+python3 paper_tsc/figures/build_tsc_postfreeze_stress_test.py
+python3 paper_tsc/figures/build_tsc_source_gate_development.py
+\end{verbatim}
+These commands form the figure and source-table submission contract.  The
+unreferenced v16-era builder and its outputs are retained only as development
+history and must not be substituted for Figures 1--3.
+The first command refuses to write figures or tables if the development,
+external offline, joint-freeze or closed-loop validity gate is not satisfied.
+The third command separately requires all v86--v89 evidence-integrity audits
+to pass and the preregistered v89 scientific decision to remain rejected.  The
+fourth command requires the v145, v146 and v148 development decisions to remain
+rejected and does not promote them to external confirmation.

@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "protocol": "tsc-v94-roadnetsz-shenzhen-pcl-pre-efficacy-network-admission-v1",
+  "source": {
+    "repository": "https://github.com/zhuliwen/RoadnetSZ",
+    "commit": "80a2785961b9439b6b92637e5cecd42ab5733052",
+    "city": "shenzhen",
+    "network": "pcl_native_sumo"
+  },
+  "conversion": {
+    "protocol": "cfcmt-roadnetsz-native-sumo122-window-package-v2",
+    "root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v94_shenzhen_unseen_20260831/pcl_package_v3_sumo122_full",
+    "manifest_sha256": "be1d21dd8368963480ea6d46cc210c3d0d12bb76d6d6b8b9a0299487c689ae5b",
+    "tree_sha256": "c24b7181cb23d6d3550701a263e4b7704e8d8ea7129fcee090bc1a25db4f85d4"
+  },
+  "scenarios": [
+    "shenzhen_pcl_hour_00",
+    "shenzhen_pcl_hour_01",
+    "shenzhen_pcl_hour_02",
+    "shenzhen_pcl_hour_03",
+    "shenzhen_pcl_hour_04",
+    "shenzhen_pcl_hour_05",
+    "shenzhen_pcl_hour_06",
+    "shenzhen_pcl_hour_07",
+    "shenzhen_pcl_hour_08",
+    "shenzhen_pcl_hour_09",
+    "shenzhen_pcl_hour_10",
+    "shenzhen_pcl_hour_11",
+    "shenzhen_pcl_hour_12",
+    "shenzhen_pcl_hour_13",
+    "shenzhen_pcl_hour_14",
+    "shenzhen_pcl_hour_15",
+    "shenzhen_pcl_hour_16",
+    "shenzhen_pcl_hour_17",
+    "shenzhen_pcl_hour_18",
+    "shenzhen_pcl_hour_19",
+    "shenzhen_pcl_hour_20",
+    "shenzhen_pcl_hour_21",
+    "shenzhen_pcl_hour_22",
+    "shenzhen_pcl_hour_23",
+    "shenzhen_pcl_hour_24",
+    "shenzhen_pcl_hour_25",
+    "shenzhen_pcl_hour_26",
+    "shenzhen_pcl_hour_27"
+  ],
+  "seeds": [5057, 6067, 7103, 8171, 9277, 12001, 13007, 14009],
+  "runtime": {
+    "backend": "libsumo",
+    "sumo_version": "1.22.0",
+    "horizon_sec": 3600,
+    "minimum_controllable_tls": 140
+  },
+  "admission": {
+    "maximum_collision_count": 0,
+    "maximum_teleport_fraction": 0,
+    "minimum_routing_retention": 0.9,
+    "scenario_rule": "eligible only if every fixed seed passes every admission check",
+    "minimum_eligible_scenarios": 20,
+    "timing": "frozen before any CFCMT, H2O+, source-selector, or policy efficacy rollout on Shenzhen PCL"
+  }
+}

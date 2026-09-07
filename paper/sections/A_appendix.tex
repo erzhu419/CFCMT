@@ -10,13 +10,13 @@
 \label{tab:target-audit}
 \end{table}
 
-\subsection{Calibration budget}
+\subsection{Target offline adaptation budget}
 
 \begin{table}[h]
 \centering
 \small
 \resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/calibration_budget_summary_table.tex}}
-\caption{Target-route calibration-budget summary. Budget $1.0$ is an in-sample oracle reference.}
+\caption{Target-route offline-adaptation budget summary. Budget $1.0$ is an in-sample oracle reference.}
 \label{tab:calibration-summary}
 \end{table}
 
@@ -68,6 +68,22 @@
 \label{tab:real-apc-few-shot}
 \end{table}
 
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/real_apc_time_few_shot_table.tex}}
+\caption{Chronological few-shot Austin raw APC/AVL adaptation. The first $N$ hours of target APC history are used for adaptation, and later APC transitions are held out for evaluation. Ratios are total MSE relative to the state-informed passive no-correction baseline.}
+\label{tab:real-apc-time-few-shot}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/gtfsrt_local_snapshot_table.tex}}
+\caption{NYC/SEPTA/MBTA GTFS-RT occupancy snapshot validation. The task is one-step occupancy ordinal prediction from public synchronized vehicle-position snapshots; it is a local-graph feasibility diagnostic, not a control-action validation.}
+\label{tab:gtfsrt-local}
+\end{table}
+
 \subsection{Configured six-split dynamics validation}
 
 \begin{table}[h]
@@ -76,6 +92,96 @@
 \resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/cross_city_dynamics_table.tex}}
 \caption{Configured cross-city dynamics splits. This table includes repeated target cities and is treated as appendix evidence rather than the primary independent-sample result.}
 \label{tab:configured-dynamics}
+\end{table}
+
+\subsection{Guarded source-ensemble diagnostics}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/h2oplus_baseline_fidelity_table.tex}}
+\caption{Baseline-fidelity note for the dense \Htwo-style residual baselines. The implementation is a reproducible dense residual transfer surrogate, not a full reproduction of the original H2O+ policy-learning stack.}
+\label{tab:h2oplus-fidelity}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/target_summary_feature_family_table.tex}}
+\caption{Candidate unlabeled target-summary feature families used by the source-only feature-set selector.}
+\label{tab:target-summary-families}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/guarded_ensemble_same_information_baseline_table.tex}}
+\caption{Same-information baseline for the guarded source-ensemble diagnostic. The dense \Htwo source ensemble receives the same unlabeled target-summary source weights as the guarded mechanism-factored ensemble.}
+\label{tab:guarded-same-info}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/guarded_ensemble_selector_ablation_table.tex}}
+\caption{Guarded source-ensemble selector ablation. The guarded row is the reported full-module diagnostic; unguarded and pooled rows isolate which selector components matter.}
+\label{tab:guarded-selector-ablation}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/guarded_ensemble_strict_loo_table.tex}}
+\caption{Strict four-target subset of the guarded source-ensemble diagnostic. The mean row averages only unique leave-one-city-out targets.}
+\label{tab:guarded-strict-loo}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/guarded_ensemble_threshold_sensitivity_table.tex}}
+\caption{Guarded ensemble threshold sensitivity. The reported default uses ensemble minimum win rate $0.8$ and minimum maximum-source weight $0.5$.}
+\label{tab:guarded-threshold}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/guarded_ensemble_feature_ablation_table.tex}}
+\caption{Similarity-feature ablation for the guarded source ensemble. All rows use the same source-only fitting and selector protocol unless otherwise noted.}
+\label{tab:guarded-feature-ablation}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/guarded_ensemble_source_selected_feature_table.tex}}
+\caption{Source-only feature-set selector for the guarded source ensemble. The feature set is chosen from source-fold scores before target evaluation.}
+\label{tab:guarded-source-feature}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/guarded_ensemble_candidate_family_table.tex}}
+\caption{Target-oracle diagnostic over rigid-first candidate families. This table is diagnostic only because it chooses the best candidate family by target labels after evaluation.}
+\label{tab:guarded-candidate-family}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/guarded_ensemble_oracle_gap_table.tex}}
+\caption{Oracle-gap diagnostic for the guarded selector. The selected model is compared with the best candidate in the evaluated candidate set and with the best non-ensemble candidate.}
+\label{tab:guarded-oracle-gap}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/guarded_ensemble_label_audit_table.tex}}
+\caption{Target-label usage audit for the guarded source-ensemble diagnostic. Target transition labels are used only to report final metrics.}
+\label{tab:guarded-label-audit}
 \end{table}
 
 \subsection{Source-weighting sensitivity}
@@ -88,7 +194,7 @@
 \label{tab:weight-sensitivity}
 \end{table}
 
-\subsection{Source-size sensitivity and single-source transfer}
+\subsection{Source-size sensitivity and single-source zero-shot transfer}
 
 \begin{table}[h]
 \centering
@@ -101,7 +207,7 @@
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.86\textwidth]{pairwise_transfer_matrix.png}
-\caption{Single-source transfer matrix. Cells report CFCMT/H2O total-MSE ratio.}
+\caption{Single-source zero-shot transfer matrix. Cells report CFCMT/H2O total-MSE ratio with no target transition labels before reporting.}
 \label{fig:pairwise}
 \end{figure}
 
@@ -131,6 +237,58 @@
 \centering
 \small
 \resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/sampled_rollout_table.tex}}
-\caption{Auxiliary sampled BusSimEnv rollout. This result is not primary evidence because only a small number of runnable line environments are available.}
+\caption{Expanded auxiliary sampled BusSimEnv rollout over runnable line environments from all four city bundles. City-normalized columns are included because raw rewards have different city scales.}
 \label{tab:sampled-rollout}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/sampled_rollout_paired_table.tex}}
+\caption{City-stratified paired bootstrap for the auxiliary sampled rollout. Each row compares the same city-line episodes against the dense \Htwo-style policy; reward deltas above zero and ratios below one are favorable.}
+\label{tab:sampled-rollout-paired}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/sumo_policy_rollout_table.tex}}
+\caption{Libsumo full-line closed-loop holding diagnostic after adding explicit generated bus-stop dwell points. Learned residual policies use the same $\{0,15,30,45,60\}$ second hold grid; the target-summary Daganzo prior uses only static route/timetable summaries to gate a classical holding gain. First-arrival warm-up events are excluded from metrics. The table validates that policy actions alter executable SUMO stop durations, but it is not a field-calibrated counterfactual experiment.}
+\label{tab:sumo-policy-rollout}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/sumo_policy_rollout_paired_table.tex}}
+\caption{City-stratified paired line bootstrap for the libsumo full-line holding diagnostic. Rows compare city-line policy summaries against dense \Htwo-MPC when the one-step dense selector is absent; reward deltas above zero and ratios below one are favorable.}
+\label{tab:sumo-policy-rollout-paired}
+\end{table}
+
+\subsection{Native-protocol traffic-signal RL baselines}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/official_resco_rl_full_budget_table.tex}}
+\caption{Official RESCO full-budget RL runner results under the upstream native protocol. Rows are not same-protocol comparisons against \ours; they use RESCO's native observation, reward, action, training, and evaluation definitions.}
+\label{tab:official-resco-rl-full}
+\end{table}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/libsignal_rl_full_budget_table.tex}}
+\caption{Patched LibSignal full-budget RL runner results under the native LibSignal protocol. Rows are included as a reviewer-facing RL baseline audit, not as direct phase-MPC wins or losses against \ours.}
+\label{tab:libsignal-rl-full}
+\end{table}
+
+\subsection{Traffic-signal long-horizon check}
+
+\begin{table}[h]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/traffic_signal_resco_extended_3600s_summary.tex}}
+\caption{Extended RESCO 3600-second long-horizon check using the same eight scenarios and three matched seeds as the main traffic-signal stress test. Trip time, trip wait, and time loss are official SUMO \texttt{tripinfo} metrics over completed vehicles and should be read together with throughput; lower queue and higher throughput are primary.}
+\label{tab:resco-traffic-signal-3600s}
 \end{table}

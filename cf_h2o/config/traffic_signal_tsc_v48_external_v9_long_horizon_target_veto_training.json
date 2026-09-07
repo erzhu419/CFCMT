@@ -1,0 +1,448 @@
+{
+  "protocol": "tsc-v66r62-external-v9-long-horizon-target-veto-training-v1",
+  "frozen_at_utc": "2026-08-10T05:03:53.322088+00:00",
+  "stage": "pre_cache_label_and_pre_training_outcome_executable_analysis_freeze",
+  "parent_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v47_external_v9_long_horizon_target_veto.json",
+    "sha256": "6e0816d7f4cc3a74e622db08f97b088a154c9fae2e21b818fcd591e4f0652856"
+  },
+  "collection_authorization": {
+    "path": "cf_h2o/results/cluster/tsc_v65r61_external_v9_long_horizon_target_veto_20260810/cache_authorization_v1.json",
+    "sha256": "a5b68ac22102bdce7f7584820557f816fb25c3f5e8b08d3f62ff646ed965e16c",
+    "decision": "authorize_full_horizon_target_veto_cache_collection"
+  },
+  "outcome_blinding_statement": {
+    "cache_contents_or_labels_read": false,
+    "cache_effect_metrics_read": false,
+    "allowed_operational_observations": [
+      "aggregate shard file count",
+      "process presence",
+      "node load average"
+    ],
+    "future_cache_audit_absent": true,
+    "future_training_file_count": 0,
+    "future_development_file_count": 0
+  },
+  "required_cache_audit": {
+    "future_path": "cf_h2o/results/cluster/tsc_v65r61_external_v9_long_horizon_target_veto_20260810/cache_audit_v1.json",
+    "protocol": "tsc-v65r61-external-v9-long-horizon-target-veto-cache-audit-v1",
+    "decision": "authorize_target_veto_oof_training_only",
+    "must_pass_before_training": true
+  },
+  "executable_sources": {
+    "cf_h2o/eval/traffic_signal_external_long_horizon_target_veto_freeze.py": "866b542ea59679a1f1f08fbd0820454575ecb1611fc9b3218aa8071962d580cf",
+    "cf_h2o/traffic_signal/long_horizon_target_veto.py": "bf2359c867895109a66b17fa5437477138c52031b8d9d85caf4e186b9dc8ab0d",
+    "cf_h2o/eval/traffic_signal_resco_cfcmt_v3.py": "498c854a9e3b9e8ce42e54d9e99cb3759eb5bfbe58a662e2ccab8bfbd65670e2"
+  },
+  "model": {
+    "family": "causal_target_only",
+    "protocol": "cfcmt-long-horizon-target-veto-model-v1",
+    "random_seed": 20260803,
+    "config": {
+      "learning_rate": 0.05,
+      "max_iter": 80,
+      "max_leaf_nodes": 7,
+      "min_samples_leaf": 4,
+      "l2_regularization": 16.0,
+      "target_clip": 5.0,
+      "uncertainty_quantile": 0.9,
+      "random_state": 20260803,
+      "candidate_only": false,
+      "balance_candidate_signs": false,
+      "max_sign_weight_multiplier": 4.0,
+      "target_normalization_protocol": "domain_action_scale_v1"
+    },
+    "causal_features_only": true,
+    "reference_policy": "phase_pressure",
+    "cross_fitting": "leave_one_simulator_seed_out_within_target_city",
+    "all_six_seed_final_refit_after_oof_selection": true
+  },
+  "proposal_veto_contract": {
+    "proposal": {
+      "method": "frozen_v60_hierarchical_cfcmt",
+      "target_labels_used_by_proposal": false,
+      "city_artifacts": {
+        "los_angeles": {
+          "certificate": {
+            "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/los_angeles/freeze.json",
+            "sha256": "264e4d6821efd305b0a91953fc7eb06730aede63d302700045afce1713ff61c1"
+          },
+          "model": {
+            "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/los_angeles/model.pkl",
+            "sha256": "dbeb80b1796dbe8b7910ba77bbe3ce587898da78cb7de3e47408806c878198df"
+          },
+          "selected_candidate": "constant_alpha_0p8",
+          "deployment": {
+            "conformal_guard": {
+              "enabled": true,
+              "margin": 0.0,
+              "max_relative_rule_gap": 0.0,
+              "min_context_trust": 0.5,
+              "risk_multiplier": 0.0
+            },
+            "coordination_mode_before_closed_loop_selection": "direct",
+            "fallback_policy": "phase_pressure",
+            "policy": "cfcmt_hierarchical_guard_mpc",
+            "regularizer": {
+              "blend_weight": 2.0,
+              "enabled": true,
+              "min_context_trust": 0.5,
+              "risk_multiplier": 0.0
+            },
+            "runtime_policy_suffix": "_hierarchical_guard",
+            "target_support": {
+              "combination": "minimum_component_support",
+              "conformal_guard_enabled": true,
+              "conformal_support": {
+                "distance": "nearest_standardized_rms",
+                "feature_count": 16,
+                "feature_names": [
+                  "total_q",
+                  "total_veh",
+                  "mean_speed",
+                  "mean_occ",
+                  "green_q",
+                  "red_q",
+                  "green_down_q",
+                  "green_down_occ",
+                  "delta_green_q",
+                  "delta_red_q",
+                  "delta_green_down_q",
+                  "delta_green_down_occ",
+                  "delta_service_pressure",
+                  "delta_switch_indicator",
+                  "delta_clearance_fraction",
+                  "delta_current_phase_overlap"
+                ],
+                "label_free": false,
+                "minimum_total_vehicles": 1.0,
+                "prototype_count": 4,
+                "support": "exp(-distance)",
+                "support_protocol": "oof-safe-action-nearest-prototype-v1"
+              },
+              "pressure_support": {
+                "distance": "nearest_standardized_rms",
+                "feature_count": 16,
+                "feature_names": [
+                  "total_q",
+                  "total_veh",
+                  "mean_speed",
+                  "mean_occ",
+                  "green_q",
+                  "red_q",
+                  "green_down_q",
+                  "green_down_occ",
+                  "delta_green_q",
+                  "delta_red_q",
+                  "delta_green_down_q",
+                  "delta_green_down_occ",
+                  "delta_service_pressure",
+                  "delta_switch_indicator",
+                  "delta_clearance_fraction",
+                  "delta_current_phase_overlap"
+                ],
+                "label_free": true,
+                "minimum_total_vehicles": 0.0,
+                "prototype_count": 746,
+                "support": "exp(-distance)",
+                "support_protocol": "target-action-coverage-nearest-prototype-v1"
+              },
+              "support_protocol": "pressure-and-oof-safe-intersection-v1"
+            }
+          }
+        },
+        "jinan": {
+          "certificate": {
+            "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/jinan/freeze.json",
+            "sha256": "a617c6312fa6e95877a44235b0caa5204cbe3053c1738baf839031255eb8dc2d"
+          },
+          "model": {
+            "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/jinan/model.pkl",
+            "sha256": "f2685b558733fe7bd7f2170ebe7306fbbe799f4c28ce6bf91f5c5776b0afbb8a"
+          },
+          "selected_candidate": "constant_alpha_0p8",
+          "deployment": {
+            "conformal_guard": {
+              "enabled": false,
+              "margin": 0.0,
+              "max_relative_rule_gap": 1.0,
+              "min_context_trust": 0.0,
+              "risk_multiplier": 1.0
+            },
+            "coordination_mode_before_closed_loop_selection": "direct",
+            "fallback_policy": "phase_pressure",
+            "policy": "cfcmt_hierarchical_guard_mpc",
+            "regularizer": {
+              "blend_weight": 8.0,
+              "enabled": true,
+              "min_context_trust": 0.5,
+              "risk_multiplier": 0.5
+            },
+            "runtime_policy_suffix": "_hierarchical_guard",
+            "target_support": {
+              "combination": "pressure_support_only",
+              "conformal_guard_enabled": false,
+              "conformal_support": {
+                "distance": "nearest_standardized_rms",
+                "feature_count": 16,
+                "feature_names": [
+                  "total_q",
+                  "total_veh",
+                  "mean_speed",
+                  "mean_occ",
+                  "green_q",
+                  "red_q",
+                  "green_down_q",
+                  "green_down_occ",
+                  "delta_green_q",
+                  "delta_red_q",
+                  "delta_green_down_q",
+                  "delta_green_down_occ",
+                  "delta_service_pressure",
+                  "delta_switch_indicator",
+                  "delta_clearance_fraction",
+                  "delta_current_phase_overlap"
+                ],
+                "label_free": true,
+                "minimum_total_vehicles": 0.0,
+                "prototype_count": 7288,
+                "support": "exp(-distance)",
+                "support_protocol": "target-action-coverage-nearest-prototype-v1"
+              },
+              "pressure_support": {
+                "distance": "nearest_standardized_rms",
+                "feature_count": 16,
+                "feature_names": [
+                  "total_q",
+                  "total_veh",
+                  "mean_speed",
+                  "mean_occ",
+                  "green_q",
+                  "red_q",
+                  "green_down_q",
+                  "green_down_occ",
+                  "delta_green_q",
+                  "delta_red_q",
+                  "delta_green_down_q",
+                  "delta_green_down_occ",
+                  "delta_service_pressure",
+                  "delta_switch_indicator",
+                  "delta_clearance_fraction",
+                  "delta_current_phase_overlap"
+                ],
+                "label_free": true,
+                "minimum_total_vehicles": 0.0,
+                "prototype_count": 7288,
+                "support": "exp(-distance)",
+                "support_protocol": "target-action-coverage-nearest-prototype-v1"
+              },
+              "support_protocol": "pressure-and-oof-safe-intersection-v1"
+            }
+          }
+        }
+      },
+      "prediction_horizon_sec": 60,
+      "immutability": "Model, target-support objects, regularizer, conformal guard, and hierarchical layer order are loaded byte-for-byte from v60."
+    },
+    "veto_can_only_retain_or_reject_exact_proposal_action": true,
+    "veto_cannot_rank_or_originate_an_alternative_action": true,
+    "veto_fallback": "phase_pressure",
+    "runtime_order": [
+      "frozen_v60_short_horizon_proposal",
+      "frozen_v60_pressure_and_conformal_gate",
+      "target_300s_oof_selected_veto",
+      "observable_execution_coordination"
+    ]
+  },
+  "selection": {
+    "gate_candidates": [
+      {
+        "key": "r0p0_t0p0",
+        "risk_multiplier": 0.0,
+        "min_context_trust": 0.0
+      },
+      {
+        "key": "r0p0_t0p25",
+        "risk_multiplier": 0.0,
+        "min_context_trust": 0.25
+      },
+      {
+        "key": "r0p0_t0p5",
+        "risk_multiplier": 0.0,
+        "min_context_trust": 0.5
+      },
+      {
+        "key": "r0p0_t0p75",
+        "risk_multiplier": 0.0,
+        "min_context_trust": 0.75
+      },
+      {
+        "key": "r0p25_t0p0",
+        "risk_multiplier": 0.25,
+        "min_context_trust": 0.0
+      },
+      {
+        "key": "r0p25_t0p25",
+        "risk_multiplier": 0.25,
+        "min_context_trust": 0.25
+      },
+      {
+        "key": "r0p25_t0p5",
+        "risk_multiplier": 0.25,
+        "min_context_trust": 0.5
+      },
+      {
+        "key": "r0p25_t0p75",
+        "risk_multiplier": 0.25,
+        "min_context_trust": 0.75
+      },
+      {
+        "key": "r0p5_t0p0",
+        "risk_multiplier": 0.5,
+        "min_context_trust": 0.0
+      },
+      {
+        "key": "r0p5_t0p25",
+        "risk_multiplier": 0.5,
+        "min_context_trust": 0.25
+      },
+      {
+        "key": "r0p5_t0p5",
+        "risk_multiplier": 0.5,
+        "min_context_trust": 0.5
+      },
+      {
+        "key": "r0p5_t0p75",
+        "risk_multiplier": 0.5,
+        "min_context_trust": 0.75
+      },
+      {
+        "key": "r1p0_t0p0",
+        "risk_multiplier": 1.0,
+        "min_context_trust": 0.0
+      },
+      {
+        "key": "r1p0_t0p25",
+        "risk_multiplier": 1.0,
+        "min_context_trust": 0.25
+      },
+      {
+        "key": "r1p0_t0p5",
+        "risk_multiplier": 1.0,
+        "min_context_trust": 0.5
+      },
+      {
+        "key": "r1p0_t0p75",
+        "risk_multiplier": 1.0,
+        "min_context_trust": 0.75
+      },
+      {
+        "key": "r2p0_t0p0",
+        "risk_multiplier": 2.0,
+        "min_context_trust": 0.0
+      },
+      {
+        "key": "r2p0_t0p25",
+        "risk_multiplier": 2.0,
+        "min_context_trust": 0.25
+      },
+      {
+        "key": "r2p0_t0p5",
+        "risk_multiplier": 2.0,
+        "min_context_trust": 0.5
+      },
+      {
+        "key": "r2p0_t0p75",
+        "risk_multiplier": 2.0,
+        "min_context_trust": 0.75
+      }
+    ],
+    "selection_rule": {
+      "minimum_retained_groups_per_city": 12,
+      "minimum_retained_seed_fraction": 0.6666666666666666,
+      "maximum_equal_seed_scenario_mean_delta": -0.001,
+      "maximum_bootstrap_95pct_upper_mean_delta": 0.0,
+      "maximum_worst_seed_mean_delta": 0.01,
+      "maximum_harmful_group_fraction": 0.45,
+      "robust_score": "mean_delta + 0.5 * seed_delta_std + max(worst_seed_delta, 0)",
+      "tie_break": "lower robust score, lower mean delta, lower harmful fraction, more retained seeds, more retained groups, higher trust, higher risk multiplier, lexical key",
+      "fallback": "always_veto_to_phase_pressure_if_no_gate_is_feasible"
+    },
+    "bootstrap": {
+      "replicates": 10000,
+      "seed": 20260817,
+      "unit": "simulator_seed_with_equal_scenario_weighting_within_city"
+    },
+    "city_specific_gate_permitted": true,
+    "selection_source": "leave-one-simulator-seed-out 300-second target labels only",
+    "development_outcomes_used_for_gate_selection": false
+  },
+  "outputs": {
+    "result_protocol": "tsc-v66r62-external-v9-long-horizon-target-veto-freeze-v1",
+    "success_decision": "authorize_target_veto_closed_loop_development",
+    "failure_decision": "retain_phase_pressure_and_prohibit_target_veto_development",
+    "future_training_root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v65r61_external_v9_long_horizon_target_veto_20260810/target_veto_training",
+    "future_development_root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v65r61_external_v9_long_horizon_target_veto_20260810/closed_loop_development"
+  },
+  "validation": {
+    "closed_loop_seeds": [
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ],
+    "must_not_run_until_development_selector_and_analysis_hash_are_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "method_and_execution_candidate_must_be_hash_frozen_before_launch": true
+  },
+  "prospective_confirmation": {
+    "closed_loop_seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "must_not_run_until_validation_passes_and_prospective_analysis_is_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "candidate_policies_for_later_freeze": [
+      "cfcmt_oof_validated_mpc",
+      "phase_pressure",
+      "max_pressure",
+      "fixed_time",
+      "rigid_anchor_mpc",
+      "simulator_only_mpc",
+      "h2oplus_style_dense_residual_mpc"
+    ],
+    "release_condition": "validation_gate_passed_and_analysis_hash_frozen"
+  },
+  "claim_boundary": "The target veto is few-shot because it consumes target-city simulator counterfactual labels. This protocol can authorize cache collection, OOF veto training, and development-seed selection only; validation and prospective claims remain sealed."
+}

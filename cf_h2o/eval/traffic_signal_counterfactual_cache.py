@@ -10,6 +10,9 @@ from pathlib import Path
 from typing import Any, Sequence
 
 from cf_h2o.eval.traffic_signal_resco_cfcmt_v2 import _runtime_metadata
+from cf_h2o.eval.traffic_signal_resco_cfcmt_v3 import (
+    counterfactual_cost_contract_v5,
+)
 from cf_h2o.eval.traffic_signal_resco_phase_benchmark import SUMO_EXECUTION_PROTOCOL
 from cf_h2o.eval.traffic_signal_resco_cfcmt_v3_suite import (
     COUNTERFACTUAL_CACHE_VERSION,
@@ -91,6 +94,7 @@ def precompute_counterfactual_cache(
     expected_authorization_sha256: str | None = None,
     required_authorization_decision: str | None = None,
     rollout_prefix_horizons_sec: Sequence[int] | None = None,
+    allowed_zero_retained_scenarios: Sequence[str] = (),
 ) -> dict[str, Any]:
     authorization_provenance: dict[str, Any] | None = None
     authorization_values = (
@@ -146,6 +150,14 @@ def precompute_counterfactual_cache(
         raise ValueError(f"scenarios are absent from manifest: {sorted(unknown)}")
     if not selected:
         raise ValueError("at least one counterfactual scenario is required")
+    zero_retained_allowed = {
+        str(value) for value in allowed_zero_retained_scenarios
+    }
+    if zero_retained_allowed - set(selected):
+        raise ValueError(
+            "zero-retained exclusions are absent from the selected scenarios: "
+            f"{sorted(zero_retained_allowed - set(selected))}"
+        )
     source_seeds = tuple(int(seed) for seed in seeds)
     if not source_seeds:
         raise ValueError("at least one counterfactual source seed is required")
@@ -193,11 +205,26 @@ def precompute_counterfactual_cache(
     for name, dataset in bank.items():
         coverage = float(dataset.metadata.get("tls_coverage_fraction", 0.0))
         replay = dict(dataset.metadata.get("counterfactual_replay_audit", {}))
+        safety = dict(dataset.metadata.get("counterfactual_safety_audit", {}))
+        behavior_safety = dict(dataset.metadata.get("behavior_safety_audit", {}))
+        zero_retained_complete = bool(
+            name in zero_retained_allowed
+            and dataset.size == 0
+            and int(safety.get("candidate_groups", 0)) > 0
+            and int(safety.get("retained_groups", -1)) == 0
+            and int(safety.get("censored_groups", -1))
+            == int(safety.get("candidate_groups", -2))
+            and int(behavior_safety.get("collision_event_steps", 0)) > 0
+            and bool(safety.get("no_teleport_passed", False))
+            and bool(behavior_safety.get("no_teleport_passed", False))
+            and bool(replay.get("passed", False))
+        )
         if coverage + 1e-12 < float(min_tls_coverage):
-            raise RuntimeError(
-                f"counterfactual TLS coverage below floor for {name}: "
-                f"{coverage:.6f} < {float(min_tls_coverage):.6f}"
-            )
+            if not zero_retained_complete:
+                raise RuntimeError(
+                    f"counterfactual TLS coverage below floor for {name}: "
+                    f"{coverage:.6f} < {float(min_tls_coverage):.6f}"
+                )
         if not replay.get("passed", False):
             raise RuntimeError(f"counterfactual replay audit failed for {name}: {replay}")
         diagnostics[name] = {
@@ -207,6 +234,11 @@ def precompute_counterfactual_cache(
             "controllable_tls_count": int(dataset.metadata.get("controllable_tls_count", 0)),
             "covered_tls_count": int(dataset.metadata.get("covered_tls_count", 0)),
             "tls_coverage_fraction": coverage,
+            "collection_admission_status": (
+                "complete_but_zero_retained_groups"
+                if zero_retained_complete
+                else "complete_with_retained_groups"
+            ),
             "counterfactual_branches": int(dataset.metadata["counterfactual_branches"]),
             "counterfactual_estimand": dataset.metadata.get(
                 "counterfactual_estimand"
@@ -335,10 +367,14 @@ def precompute_counterfactual_cache(
             "sumo_execution_protocol": dict(SUMO_EXECUTION_PROTOCOL),
             "behavior_policy": str(behavior_policy),
             "counterfactual_cost_mode": str(counterfactual_cost_mode),
+            "counterfactual_cost_contract": counterfactual_cost_contract_v5(
+                counterfactual_cost_mode
+            ),
             "rollout_prefix_horizons_sec": [
                 int(value) for value in (rollout_prefix_horizons_sec or ())
             ],
             "min_tls_coverage": float(min_tls_coverage),
+            "allowed_zero_retained_scenarios": sorted(zero_retained_allowed),
             "libsumo_version": actual_sumo_version,
             "input_provenance": input_provenance,
             "authorization_provenance": authorization_provenance,
@@ -380,6 +416,7 @@ def main() -> None:
         default="system_vehicle_load",
     )
     parser.add_argument("--min-tls-coverage", type=float, default=1.0)
+    parser.add_argument("--allow-zero-retained-scenarios", nargs="*", default=())
     parser.add_argument(
         "--rollout-prefix-horizons-sec",
         nargs="+",
@@ -422,6 +459,7 @@ def main() -> None:
         expected_authorization_sha256=args.expected_authorization_sha256,
         required_authorization_decision=args.required_authorization_decision,
         rollout_prefix_horizons_sec=args.rollout_prefix_horizons_sec,
+        allowed_zero_retained_scenarios=args.allow_zero_retained_scenarios,
     )
     atomic_write_json(args.out, result)
     print(

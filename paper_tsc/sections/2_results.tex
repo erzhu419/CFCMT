@@ -1,0 +1,290 @@
+\section{Results}
+
+\subsection{A frozen action-contrast transfer protocol}
+
+The final experiment evaluates target offline adaptation rather than zero-shot
+policy transfer.  Source counterfactuals and target counterfactuals are both
+generated from matched restored SUMO states, but target roles are separated by
+seed (\Cref{fig:method-schematic}).  Seeds 5057 and 6067 are the only target
+adaptation seeds.  Seed 8171 is collected after the joint method freeze and is
+used once for offline action-regret confirmation.  Seeds 8081 and 9091 are used
+only for closed-loop policy rollouts.  Out-of-fold models select the blend but
+are never deployed; after selection, each external city receives one refit on
+the union of all its valid adaptation groups.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{tsc_anchored_transfer_schematic.pdf}
+\caption{Transferred object and frozen evaluation protocol. \textbf{a}, The
+method lineage contrasts absolute dense-residual prediction, factored MC-WM
+dynamics and the final matched-ranking estimand.  The same-protocol dense
+baseline in panel \textbf{b} is deliberately strengthened with the matched
+contrast data and target refit budget used by CFCMT. \textbf{b}, A rigid
+parent-restricted anchor and an antisymmetric all-pair correction are combined
+by a seed-blocked target selector.  The pressure reference defines the contrast
+origin; MaxPressure and phase pressure are independent comparators, not
+fallback actions.  Target counterfactual labels make the final setting target
+offline adaptation rather than zero-shot transfer.}
+\label{fig:method-schematic}
+\end{figure}
+
+The source bank contains 18 networks in seven city groups: Atlanta, Cologne,
+Hangzhou, Ingolstadt, New York, two RESCO synthetic grids and Salt Lake City.
+Together they contain 317 controlled traffic lights and 6,076 non-internal
+lanes.  The external set contains a four-signal Los Angeles corridor and a
+12-signal Jinan grid evaluated under three demand files
+(\Cref{fig:network-plate}; detailed counts in \Cref{tab:network-scope}).
+City groups, rather than network files, are the development transfer unit, so
+another Cologne, Hangzhou or Ingolstadt subnetwork cannot enter the training
+fold when that city is held out.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{traffic_signal_transfer_networks.pdf}
+\caption{Network shift in development and external confirmation.  Lines show
+non-internal SUMO lanes and points show controlled traffic lights.  Blue panels
+are the 18 source networks grouped into seven development cities; green panels
+are external target geometries.  The Jinan geometry is paired with three demand
+files.  The plate documents topology and action-set variation; it does not
+imply that the converted networks are calibrated city-wide digital twins.}
+\label{fig:network-plate}
+\end{figure}
+
+\subsection{Seed-held-out development selected a non-anchor correction}
+
+The method was not accepted because it fit its development seed.  Models and
+the city-level selector were fitted using source seeds 2027 and 3037, then
+evaluated on seed 4047.  In leave-one-city-out evaluation, the rigid anchor had
+city-macro normalized action regret 0.2414 and the selected anchored model had
+regret 0.2177, a 9.84\% reduction (\Cref{tab:development-confirmation}).  Six
+of seven held-out city groups improved.  Hangzhou was the sole regression,
+with an absolute increase of 0.00388, below the frozen 0.01 tolerance.
+
+\begin{table}[t]
+\caption{Seed-held-out development confirmation.  Regret is candidate cost
+minus the matched-group optimum, normalized by the within-group action range;
+lower is better.}
+\label{tab:development-confirmation}
+\centering
+\small
+\input{tables/development_seed_heldout_confirmation.tex}
+\end{table}
+
+Earlier variants failed their gates.  A global pairwise correction regressed
+on the added Salt Lake domain, the first anchored selector exceeded its
+worst-city tolerance, and a cross-fitted selector did not achieve the required
+city-level stability.  These failures were retained and the successful
+seed-held-out protocol was frozen before external labels were generated
+(\Cref{tab:development-history}).
+
+\subsection{External offline scores favoured source-plus-target fitting}
+
+The external selector used every valid adaptation group: 165 in Los Angeles
+and 911 across the three Jinan demands.  Holding out each complete adaptation
+seed produced two selection folds per city.  Los Angeles selected a local
+blend with disagreement cap 1 and confidence multiplier 0.25; Jinan selected a
+constant correction weight of 0.9.  The deployment artifacts were then refit
+once on all adaptation groups and frozen before seed 8171 was collected.
+
+On seed 8171, Los Angeles regret decreased from 0.1482 to 0.1450 (2.18\%) and
+optimal-action accuracy increased from 0.785 to 0.810.  Jinan regret decreased
+from 0.4361 to 0.3921 (10.10\%) and optimal-action accuracy increased from
+0.296 to 0.342 (\Cref{tab:external-offline,fig:external-confirmation}a).
+Equal weighting of the two cities gives a regret reduction from 0.2922 to
+0.2685, or 8.09\%, and both city point estimates improve.
+
+The freeze also contained a target-label-only comparator from the same causal
+action-advantage family.  It used the same feature semantics and target
+adaptation groups, but its target prediction weight was numerically one, so
+source-labelled groups did not contribute to its deployed score.  Its
+seed-8171 regret was 0.2172 in Los Angeles and 0.4036 in Jinan.  CFCMT therefore
+reduced the equal-city point estimate from 0.3104 to 0.2685 (13.48\%).
+The paired action-group improvement was 0.07219 in Los Angeles (95\% interval
+$[0.01671,0.13512]$, two-sided bootstrap probability value 0.011) and 0.01150
+in Jinan (interval $[-0.02250,0.04524]$, probability value 0.5196).  Offline
+source contribution was therefore supported in Los Angeles but inconclusive in
+Jinan, despite both point estimates favouring CFCMT.
+
+\begin{table}[t]
+\caption{External seed-8171 offline confirmation after city-specific method
+freeze.  Target only uses the same causal action-ranking family and target
+groups but zero deployed source weight.  Adaptation groups are target
+counterfactuals from seeds 5057 and 6067; held-out groups are never used for
+fitting or selection.  Gains in the table compare CFCMT with target only.}
+\label{tab:external-offline}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{tables/external_offline_confirmation.tex}}
+\end{table}
+
+The uncertainty differs sharply by city.  A 10,000-replicate paired group
+bootstrap gives a Los Angeles improvement interval of
+$[-0.0675,0.0729]$ with a two-sided bootstrap probability value of 0.9396,
+whereas Jinan gives $[0.00469,0.08293]$ and 0.0274.  The Los Angeles result is
+therefore directional, not independently conclusive.  The external gate is a
+predeclared engineering confirmation (at least 2\% city-macro improvement,
+both cities improving and no city regression), not a population-level test
+over cities.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{tsc_external_confirmation.pdf}
+\caption{Independent offline and closed-loop confirmation. \textbf{a},
+seed-held-out normalized action regret for development and external targets.
+Green points show the selected CFCMT score and grey points the rigid anchor.
+\textbf{b}, all-departed waiting time by policy in Los Angeles (circles) and
+Jinan (diamonds); bars show the equal-city macro. \textbf{c}, paired CFCMT
+waiting-time gains relative to the non-fixed comparators; fixed time remains
+visible in panel \textbf{b} and \Cref{tab:external-closed-loop}.  Positive values
+favour CFCMT.  Intervals are descriptive paired hierarchical bootstrap
+intervals because there are only two independent target cities.}
+\label{fig:external-confirmation}
+\end{figure}
+
+\subsection{Closed-loop transfer improved dense residual control}
+
+The formal closed-loop matrix contains four target scenarios, two seeds and
+seven policies, yielding 56 completed 3,600-s rollouts.  The primary metric is
+mean waiting over every departed vehicle.  SUMO \texttt{write-unfinished}
+records accrue waiting to the fixed horizon, so unfinished vehicles remain in
+the population.  Completed-only waiting, system vehicle-hours and completion
+are reported beside it to expose censoring and throughput trade-offs.
+
+Anchored CFCMT achieved 149.17 s all-departed waiting, compared with 159.15 s
+for the H2O$^+$-style dense residual, 156.71 s for simulator-only control and
+152.91 s for the rigid anchor (\Cref{tab:external-closed-loop}).  Relative to
+the dense residual, the reduction was 9.98 s or 6.27\%; both Los Angeles
+(8.46 s) and Jinan (11.50 s) improved.  The descriptive paired hierarchical
+bootstrap interval was $[2.01,17.19]$ s and 98.43\% of replicates favoured
+CFCMT.  Completed-only waiting was also lower (133.06 versus 147.47 s), system
+vehicle-hours decreased from 618.15 to 594.14, and completion increased from
+0.870 to 0.889.
+
+\begin{table}[t]
+\caption{External 3,600-s closed-loop city-macro results.  Scenarios are
+weighted equally within each city and the two cities are weighted equally.
+Waiting times are seconds; system burden is vehicle-hours.  ``Incidents'' is
+the equal-city mean of unique SUMO junction-collision incidents.}
+\label{tab:external-closed-loop}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{tables/external_closed_loop_macro.tex}}
+\end{table}
+
+The point-estimate gains over simulator-only and rigid-anchor control were
+7.54 s (4.81\%) and 3.75 s (2.45\%), respectively, but their intervals crossed
+zero (\Cref{tab:external-comparisons}).  Thus the closed-loop evidence is
+strongest against dense residual transfer.  Improvement over the anchor is
+supported clearly by offline action regret and only directionally by these two
+closed-loop cities; the result does not justify attributing every policy gain
+to the pairwise correction.
+
+\begin{table}[t]
+\caption{Paired CFCMT policy contrasts for all-departed waiting.  Positive
+gains favour CFCMT.  Intervals are descriptive, not population-level city
+inference.}
+\label{tab:external-comparisons}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{tables/external_closed_loop_comparisons.tex}}
+\end{table}
+
+\subsection{Fresh target-only comparison exposed network-dependent negative transfer}
+
+The seven-policy v43 matrix did not deploy its frozen target-label-only
+baseline.  We first added that comparator to the same eight scenario--seed
+cells after seeing the main outcomes.  This post-hoc v90 ablation left both
+models unchanged: CFCMT had 149.17 s city-macro waiting and target only had
+149.04 s, a 0.12-s disadvantage.  Los Angeles favoured target only by 2.45 s,
+whereas Jinan favoured CFCMT by 2.20 s.  Because the comparator was added after
+the original result, this matrix is descriptive rather than confirmatory.
+
+We then froze a v91 protocol before generating 64 further simulator seeds,
+disjoint from all v43, v89 and v90 roles.  Each seed paired CFCMT and target
+only on the Los Angeles scenario and all three Jinan demands, giving 256 paired
+cells and 512 completed rollouts.  The primary relative difference averaged
+scenarios within city, weighted Los Angeles and Jinan equally within seed and
+then averaged seeds; negative values favour CFCMT.
+
+Target only achieved 149.09 s and CFCMT 155.14 s.  The equal-seed relative
+difference was $+4.254\%$ (paired 95\% interval $[-0.775,13.211]\%$), and only
+29/64 seeds improved (one-sided exact sign-test probability 0.809).  The city
+effects had opposite signs: CFCMT improved Jinan by 3.045\% but regressed Los
+Angeles by 7.865\%.  The worst seed regressed by 267.56\%, collision incidents
+were 25 for CFCMT and 15 for target only, and both had zero teleports.  The
+predeclared mean, interval, both-city, worst-seed, improved-fraction, sign-test
+and collision gates therefore did not jointly pass, and the fresh source-
+contribution confirmation was rejected (\Cref{tab:source-contribution}).
+
+\begin{table}[t]
+\caption{Closed-loop source-contribution ablation.  Both policies use identical
+target adaptation groups, features, action executor and target scenarios;
+target only removes source-labelled samples from deployed prediction.  Positive
+$\Delta$ denotes higher waiting for CFCMT.  V90 is post-hoc; only V91 is a
+fresh-seed preregistered confirmation.  Incident entries are CFCMT/target only.}
+\label{tab:source-contribution}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{tables/external_source_contribution_closed_loop.tex}}
+\end{table}
+\FloatBarrier
+
+\subsection{Classical pressure remained the performance ceiling}
+
+MaxPressure and phase pressure achieved 141.74 and 143.62 s waiting,
+respectively, outperforming CFCMT by 7.43 and 5.55 s.  The direction was the
+same in both external cities and the descriptive intervals excluded zero.
+Their system vehicle-hours and completion ratios were also better than
+CFCMT.  This is a substantive boundary, not an implementation detail: the
+final CFCMT controller does not fall back to either rule.  The pressure action
+used to construct a contrast is merely the zero point of a learned ranking,
+and any feasible phase can be selected at deployment.
+
+All 56 rollouts completed with zero teleports.  Across all policies there were
+171 raw collision events consolidated into 13 unique junction incidents in
+six rollouts.  CFCMT had zero incidents and never recorded more incidents than
+its paired comparator.  Because incidents are simulator events and the
+matrix contains only eight CFCMT rollouts, this audit is a validity and failure
+report rather than a safety-certification claim.
+
+\subsection{A fresh-seed successor stress test did not close the pressure gap}
+
+After v43 was frozen, we separately tested whether a longer-horizon latent
+originator and a globally rate-limited executor could turn the pointwise
+ranking model into a controller that exceeded phase pressure.  This successor
+track is not the anchored all-pair v43 controller and is not pooled with its
+two-city result.  It uses a target-state-conditioned 120-s action originator,
+one permitted network-wide override at a time and a 120-s global switch
+cooldown on the Jinan target.
+
+The legacy global executor appeared favourable on 54 disclosed adaptive seeds
+($-0.429\%$ mean relative waiting difference; paired 95\% interval
+$[-0.818,-0.033]\%$).  Allowing unlimited cooldown stays instead regressed by
+$0.104\%$, and a one-stay budget produced an inconclusive $-0.242\%$ point
+estimate; both variants were rejected.  We therefore froze the unchanged
+legacy executor before generating 64 new seeds disjoint from all adaptive
+seeds and from eight still-sealed prospective seeds.
+
+On those 64 fresh seeds, the method--phase-pressure difference shrank to
+$-0.043\%$ (paired 95\% interval $[-0.449,0.370]\%$).  The method improved
+34/64 seeds, the one-sided exact sign-test probability was 0.354 and the worst
+seed regressed by 5.21\%, just beyond the preregistered 5\% limit.  Teleports
+were 0/0 and collision incidents 1/1, but the bootstrap, sign-test and
+worst-seed gates failed.  The joint confirmation was therefore rejected
+(\Cref{tab:postfreeze-stress}).  This untouched-seed result supports neither
+same-network superiority over phase pressure nor a cross-network claim for the
+successor executor.
+
+\subsection{Native reinforcement-learning results are protocol checks}
+
+Official RESCO and patched LibSignal experiments confirm that standard RL
+baselines can be executed in the project.  The RESCO adapter completed 42
+supported full-budget runs, and the LibSignal adapter completed 36 runs across
+DQN, PressLight, FRAP and MPLight.  They use their native observations,
+rewards, action intervals, training loops and metrics, and therefore cannot be
+inserted into the 56-rollout table as if they were paired policy rows.  Their
+results and upstream exclusions are reported in
+\Cref{tab:official-resco-rl,tab:libsignal-rl}; the same-protocol conclusion is
+based only on the external CFCMT matrix above.
+
+\FloatBarrier

@@ -1,0 +1,25 @@
+{
+  "protocol": "tsc-v134-local-mechanism-surrogate-oracle-v1",
+  "scientific_status": "heldout-local-mechanism-surrogate-oracle-screen",
+  "predecessor": "tsc-v133-historical-action-identifiability-v1",
+  "reference_policy": "phase_pressure",
+  "target_city": "jinan",
+  "source_predictions_used": false,
+  "surrogate_count": 8,
+  "retention_fractions": [0.005, 0.01, 0.025, 0.05, 0.1, 0.2],
+  "action_constraint": "nondecreasing_instantaneous_service_pressure",
+  "selection_control": {
+    "method": "gaussian_multiplier_one_sided_max_t_across_48_profiles",
+    "familywise_alpha": 0.05,
+    "multiplier_draws": 10000,
+    "minimum_interventions": 40,
+    "minimum_mean_effect": 0.0005,
+    "minimum_improving_seed_fraction": 0.8
+  },
+  "development_gate": {
+    "mean_vs_phase_pressure_must_be_at_most": -0.0005,
+    "simultaneous_upper_95_must_be_negative": true,
+    "successor": "fit_only_the_selected_local_mechanism_proxy"
+  },
+  "claim_boundary": "V134 selects actions with same-seed one-step counterfactual mechanism labels and scores them with 450-second waiting. It is an oracle surrogate-validity test, not a learned or deployable policy."
+}

@@ -8,6 +8,16 @@ Austin/CapMetro uses GTFS schedules with demand proxied from scheduled headways.
 Halifax Transit uses route-level APC summaries apportioned over GTFS route-direction patterns.
 MBTA uses Fall 2025 stop-level boardings and alightings apportioned over GTFS route-direction patterns.
 \Cref{tab:dataset} summarizes the bundles and their evidence levels.
+Because these sources are heterogeneous, \Cref{tab:target-audit-main} reports the target-construction audit in the main text.
+The table separates observed evidence from schedule-derived proxies and reports route-level target residual quantiles, making explicit that the primary target is static-derived rather than direct counterfactual operational ground truth.
+\Cref{fig:validation-protocol} summarizes the data-construction and validation boundary: source residual labels are used for fitting, while target transition labels are blocked until the final reporting step.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=\textwidth]{validation_protocol_schematic.png}
+    \caption{Validation protocol and data-construction boundary. Open agency data are converted into full-route city bundles, paired simulator outputs $f_0(s,a)$ and static-derived targets $f_c(s,a)$, and source-city residual labels. In strict leave-one-city-out validation, target covariates and unlabeled summaries may be used for source weighting and feature-set selection, but held-out target transition labels are used only after selection is frozen for final reporting.}
+    \label{fig:validation-protocol}
+\end{figure}
 
 \begin{table}[t]
 \centering
@@ -15,6 +25,14 @@ MBTA uses Fall 2025 stop-level boardings and alightings apportioned over GTFS ro
 \resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/dataset_table.tex}}
 \caption{Open transit city bundles. Evidence levels distinguish observed passenger/traffic data from schedule-derived proxies.}
 \label{tab:dataset}
+\end{table}
+
+\begin{table}[t]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/target_construction_audit_table.tex}}
+\caption{Target-construction audit. The evidence columns identify observed, apportioned, and schedule-derived components; route-level residual quantiles show that simulator-target gaps are heterogeneous rather than a single constant correction.}
+\label{tab:target-audit-main}
 \end{table}
 
 \subsection{Validation protocols}
@@ -25,7 +43,22 @@ Each city is held out once as the target, and all remaining cities are used as s
 The metric is total MSE averaged over the nine transition outputs.
 Ratios below 1 indicate improvement over the dense \Htwo-style residual baseline.
 
-\paragraph{Policy validation.}
+\paragraph{Single-source zero-shot diagnostic.}
+We also run every ordered one-source-to-one-target city pair.
+Only the source city provides residual labels; the target city provides the same network and static summary inputs used by the target-label-free selector, but no target transition labels before reporting.
+This diagnostic is intentionally harder and is not expected to be uniformly positive.
+Its role is to establish the minimum-information baseline before adding source diversity or target passive history.
+
+\paragraph{Target offline adaptation / few-shot curve.}
+The target-route budget sweep is interpreted as offline adaptation, not zero-shot transfer.
+For each held-out target city, $0\%$, $1\%$, $5\%$, $10\%$, $25\%$, or $100\%$ of target route groups are added to the source sufficient statistics, and evaluation is performed on the remaining target route groups except at the $100\%$ in-sample oracle reference.
+This approximates the practical deployment setting in which a new city has a small amount of passive AVL/APC or schedule-derived historical labels before control deployment.
+We additionally run same-information few-shot adaptation baselines motivated by AdaRL and FANsRL.
+The AdaRL-style baseline uses the target budget to select which mechanism groups should be adapted and then refits only those groups.
+The FANsRL-style baseline keeps the transferred mechanism parameters fixed and estimates a low-dimensional per-output target context bias.
+These are not direct executions of the original CartPole/Atari or MuJoCo codebases; they are bus-residual evaluators that use the same target labels and the same source-city statistics as \ours.
+
+\paragraph{One-step policy proxy.}
 The one-step policy experiment uses the same source-target splits and evaluates action selection under headway-stress states.
 We report reward/regret and traffic-domain metrics.
 Bunching rate is the fraction of decisions in which either adjacent headway is below $0.5$ times the target headway.
@@ -34,11 +67,19 @@ Large-gap rate is the fraction in which either adjacent headway exceeds $1.5$ ti
 \paragraph{Reviewer-facing robustness checks.}
 We include diagnostics targeted at common review objections.
 First, a target-construction audit separates observed, apportioned, schedule-proxy, and deterministic target components.
-Second, a target-route calibration-budget sweep adds $0\%$, $1\%$, $5\%$, $10\%$, $25\%$, or $100\%$ of held-out target-city routes to the source sufficient statistics and evaluates on the remaining target routes; the $100\%$ point is an in-sample oracle reference.
+Second, the target-route offline-adaptation sweep adds $0\%$, $1\%$, $5\%$, $10\%$, $25\%$, or $100\%$ of held-out target-city routes to the source sufficient statistics and evaluates on the remaining target routes; the $100\%$ point is an in-sample oracle reference.
 Third, per-mechanism errors decompose total MSE into headway/gap, demand/dwell/reward, and speed groups.
 Fourth, mechanism ablations compare the proposed parent sets against wrong mechanism groupings, action/time-only features, and dense matched-capacity variants.
 Fifth, source-weight sensitivity varies $T \in \{0.5,1.0,2.0\}$ and $\lambda \in \{0,0.05,0.1\}$, while source-subset and pairwise-source checks remove major source families.
 Sixth, generator robustness perturbs output groups or adds measurement-noise terms to the evaluation sufficient statistics.
+
+\paragraph{Full-module guarded-ensemble validation.}
+The main paper-suite tables use deterministic sufficient-statistics variants for reproducibility.
+We additionally report a full-module diagnostic that adds rigid-first residual deltas, deterministic static-local features, source-city leave-one validation, and the guarded source-city ensemble.
+For the ensemble weights, a source-only feature-set selector chooses among simulator-output-only, observation-only, observation-plus-simulator, local-only, full-summary, and uniform-weight alternatives before target evaluation.
+We also add a same-information dense \Htwo baseline that uses the same unlabeled target summary to weight source-city dense residual experts.
+This diagnostic uses six configured cross-city splits: the four strict leave-one-city-out targets plus two source-family transfer splits used to stress the source selector.
+Because this diagnostic contains repeated target cities, it is interpreted as a selector stress test rather than as six independent city-level targets.
 
 \paragraph{External real APC/AVL validation.}
 To partially address the static-derived target limitation, we add an external Austin/CapMetro validation slice from public raw APC stop-event data.
@@ -46,19 +87,34 @@ The July--December 2021 and August 2016 files contain observed stop events with 
 We filter records with valid stop, trip, GPS, and import-quality flags, reconstruct stop-level headways by route-direction-stop event times, and evaluate passive action-$0$ one-step dynamics against the observed next stop event.
 The no-correction baseline in this experiment is a state-informed passive transition using the APC-derived current state, not a schedule-only free-running simulator.
 This is real historical APC/AVL validation, but it is still offline passive validation rather than a field control deployment because counterfactual hold actions are not observed.
+In observational AVL/APC logs, a counterfactual hold outcome would require knowing what would have happened in the same state under a hold action that was not actually taken; such labels require randomized or quasi-randomized field interventions, an experimentally validated simulator, or another credible causal design.
 We also run a few-shot APC adaptation sweep at $0\%$, $1\%$, $5\%$, $10\%$, and $25\%$ of Austin line groups.
 This sweep compares source-only transfer, source-plus-target residual refitting, target-only residual fitting, a residual gate that learns how much of the source correction to trust, and a target residual-bias adapter.
 The gate and bias-adapter variants are lightweight AdaRL/FANsRL-style checks of what changes should be adapted; they are not full reimplementations of those neural RL systems.
+Because route-random budgets are not the most natural deployment unit, we also add a chronological target-history sweep using the first $0$, $1$, $6$, $24$, or $168$ hours of Austin APC history for adaptation and all later APC transitions for evaluation.
 
 \paragraph{Auxiliary executable rollout.}
-Sampled BusSimEnv rollout is reported only as an auxiliary sanity check because only Austin and Halifax have runnable generated line environments.
+Sampled BusSimEnv rollout is reported as an auxiliary sanity check on runnable line-level environments generated from each city bundle.
 For this rollout, each policy is evaluated on the same line-level random seed, including Python signal-delay randomness, and live observations are mapped back to the static-transition feature schema before model scoring.
 The policy score uses the BusSimEnv linear headway reward rather than the static one-step reward.
+
+\paragraph{Full-line libsumo holding diagnostic.}
+We also generate executable SUMO scenarios with explicit bus-stop dwell points for every validated line in each city bundle.
+The diagnostic uses a four-hour window with at most eight departures per line and evaluates no-hold, dense \Htwo-MPC, weighted \ours-MPC, threshold equalization, retuned Daganzo, and a target-summary gated Daganzo prior.
+The target-summary prior uses only static target route and schedule summaries to choose whether a conservative or aggressive Daganzo gain is appropriate; it does not use target transition labels or the held-out closed-loop result for fitting.
+This rollout is a counterfactual simulator diagnostic, not field-calibrated evidence, but it tests whether the proposed mechanism-state idea should control a safe prior or a free-form residual action.
+
+\paragraph{Native-protocol RL cross-checks.}
+Finally, we run official RESCO and patched LibSignal RL baselines under each library's native state, reward, action, and logging definitions.
+The official RESCO table trains \texttt{IDQN} and upstream-supported \texttt{MPLight} profiles for 100 episodes and evaluates five test episodes on the extended RESCO scenario set.
+The LibSignal table trains \texttt{DQN}, \texttt{PressLight}, \texttt{FRAP}, and \texttt{MPLight} for 100 episodes on \texttt{sumo1x1}, \texttt{sumo1x3}, and \texttt{sumo4x4}, with a final 3600-step test.
+These rows answer a reviewer-facing reproducibility question: standard RL runners are connected and run at full budget.
+They are not same-protocol comparisons against \ours, because their observation spaces, rewards, action timing, and reported metrics differ from the phase-MPC stress-test protocol.
 
 \begin{table}[t]
 \centering
 \small
 \resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/experiment_scope_table.tex}}
-\caption{Experimental scope and paper role. The primary evidence is strict city-level leave-one-out dynamics and one-step policy validation.}
+\caption{Experimental scope and paper role. The primary evidence is strict city-level leave-one-out dynamics; one-step policy and sampled rollout results are secondary control-facing diagnostics.}
 \label{tab:scope}
 \end{table}

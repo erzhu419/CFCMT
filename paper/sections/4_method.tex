@@ -12,6 +12,7 @@ At evaluation time the corrected prediction is
     \hat \y_{\Htwomath}(s,a) = f_0(s,a) + \hat \Delta_{\mathrm{dense}}(s,a).
 \]
 The baseline is intentionally strong: it can use many cross terms and is fit on all source-city transitions.
+It is nevertheless an \Htwo-style dense residual transfer surrogate rather than a full reproduction of the original H2O+ policy-learning stack; \Cref{tab:h2oplus-fidelity} documents the implementation differences.
 
 \subsection{Causal-factored residual transfer}
 
@@ -32,7 +33,100 @@ The corrected prediction is
 \]
 All reported models use ridge-regularized sufficient statistics, so the experiment can be reproduced without stochastic neural training.
 
-\subsection{Source-city similarity weighting}
+\subsection{Theoretical motivation}
+
+The theory we need is not a proof of causal identification.
+Instead, it explains why a mechanism-factored residual and a guarded source ensemble are natural for cross-city transfer when target transition labels are unavailable.
+Let $x=(s,a)$ and let
+\[
+    \delta_c(x)=f_c(x)-f_0(x)
+\]
+denote the simulator residual for city $c$.
+For a residual predictor $g$, define the target risk
+\[
+    R_t(g)=\E_{x\sim P_t}\left[\|\delta_t(x)-g(x)\|_2^2\right],
+\]
+where $P_t$ is the target-city decision-state distribution induced by the offline validation set.
+Partition the nine outputs into mechanism groups $\mathcal{M}_1,\ldots,\mathcal{M}_K$, such as headway/gap, demand/dwell/reward, and speed.
+For $g=(g_1,\ldots,g_K)$ and $\delta_c=(\delta_{c,1},\ldots,\delta_{c,K})$, squared-error risk decomposes exactly:
+\[
+    R_t(g)=\sum_{k=1}^{K}
+    \E_{x\sim P_t}\left[
+        \|\delta_{t,k}(x)-g_k(x)\|_2^2
+    \right].
+\]
+Thus each mechanism contributes an auditable term to total error.
+This does not imply that the groups are causally identified, but it gives a formal reason to fit, validate, and report mechanism-wise residual errors rather than only a dense total error.
+
+\paragraph{Parent-set invariance assumption.}
+The operative assumption is weaker than full causal identification.
+For each output mechanism $k$, there exists a small parent set $Pa_k(x)$ such that the residual map $\delta_{c,k}$ varies across cities mainly through mechanism-specific coefficients, context bias, or source weights, while irrelevant city-specific nuisance features do not improve target risk after source validation.
+The sparse parent sets in \ours encode this assumption for headway/gap, demand/dwell/reward, and speed outputs.
+The assumption can fail: if the target generator or real operation shifts an omitted parent, the factored model can underfit.
+This is why the experiments include wrong-grouping, action/time-only, dense matched-feature, source-subset, and generator-bias diagnostics, and why the paper avoids claiming causal identification from observational static data alone.
+
+\paragraph{Mechanism-shift bound.}
+Let $\bar\delta_{w,k}=\sum_{c\in\mathcal{C}_{\mathrm{src}}} w_c \delta_{c,k}$ be the weighted source residual for mechanism $k$.
+Suppose the fitted mechanism predictor satisfies
+\[
+    \left\|\hat g_k-\bar\delta_{w,k}\right\|_{L_2(P_t)}\le \epsilon_k,
+    \qquad
+    \left\|\bar\delta_{w,k}-\delta_{t,k}\right\|_{L_2(P_t)}\le \Delta_k(w),
+\]
+where $\epsilon_k$ is estimation/approximation error and $\Delta_k(w)$ is the cross-city mechanism shift left after source weighting.
+By the triangle inequality,
+\[
+    \sqrt{R_t(\hat g)}
+    \le
+    \left(
+        \sum_{k=1}^{K}
+        \left[\epsilon_k+\Delta_k(w)\right]^2
+    \right)^{1/2}.
+\]
+The bound clarifies the intended advantage: if only some mechanisms shift strongly across cities, a factored model can localize transfer error to those mechanisms.
+A dense residual can still perform well, but its error is harder to attribute and may mix source-specific headway, demand, dwell, and speed shifts in a single parameter block.
+
+\paragraph{Source-ensemble risk bound.}
+For source-city experts $g_c$, the ensemble predictor $g_w=\sum_c w_c g_c$ has a convexity bound under squared loss:
+\[
+    R_t(g_w)
+    =
+    \E_{P_t}\left[
+        \left\|
+        \sum_c w_c(\delta_t-g_c)
+        \right\|_2^2
+    \right]
+    \le
+    \sum_c w_c R_t(g_c),
+    \qquad
+    w_c\ge0,\ \sum_c w_c=1.
+\]
+The unavailable quantity is $R_t(g_c)$.
+The target-label-free source-weighting rule therefore uses unlabeled target summaries as a proxy for which source-city expert is likely to have low target risk.
+The dominance guard $\max_c w_c(t)\ge0.5$ is a conservative negative-transfer control: an ensemble is allowed to override the rigid factored residual only when the unlabeled target summary identifies at least one clearly close source; otherwise the method falls back to the rigid source-pooled model.
+
+\paragraph{Source-only selector bound.}
+Let $q$ index a candidate target-summary feature family, and let $S(q)$ be its leave-one-source validation score.
+Let $R_t(q)$ denote the target risk of the full guarded procedure using feature family $q$.
+If the source-fold score approximates the target ranking up to
+\[
+    |R_t(q)-S(q)|\le \gamma + \varepsilon
+    \quad\text{for all candidate families }q,
+\]
+where $\gamma$ is the source-to-target representativeness gap and $\varepsilon$ is finite-sample validation error, then the selected family
+\[
+    \hat q=\arg\min_q S(q)
+\]
+satisfies
+\[
+    R_t(\hat q)
+    \le
+    \min_q R_t(q)+2(\gamma+\varepsilon).
+\]
+The condition is not guaranteed by the data; it is the assumption being tested by source-subset and feature-family diagnostics.
+It is nevertheless important methodologically: feature-family selection can be done without target transition labels, and any failure mode is visible as a source-representativeness problem rather than target-label tuning.
+
+\subsection{Unlabeled target source selection}
 
 For each city we compute a static descriptor $z_c$ from speed quantiles, headway quantiles, route-distance quantiles, peak-demand hour, and the 24-hour demand-share vector.
 For a target city $t$ and source city $c$, the distance is computed after feature-wise standardization over the source-plus-target set:
@@ -53,7 +147,78 @@ The source weight is
 The default values are $T=1.0$ and $\lambda=0.05$.
 The source sufficient statistics are rescaled so that these weights control the effective number of source transitions rather than simply reflecting raw city size.
 
-\subsection{One-step policy validation}
+\subsection{Rigid-first source-city ensemble}
+
+The full-module variant starts from the causal-factored ridge prediction rather than from the uncorrected simulator:
+\[
+    \hat \y_{\mathrm{rigid}}(s,a)
+    = f_0(s,a) + \hat \Delta_{\oursmath}(s,a).
+\]
+It then fits a second residual on the remaining source error,
+\[
+    e_c(s,a)=\y_c^{\mathrm{target}}-\hat \y_{\mathrm{rigid}}(s,a),
+\]
+using dense features, deterministic local-graph features, or their concatenation.
+A candidate correction has the form
+\[
+    \hat \y_k(s,a)
+    =
+    \hat \y_{\mathrm{rigid}}(s,a)
+    + \alpha \eta_k(s,a),
+    \qquad
+    \alpha \in \{0.25,0.50,0.75,1.00\}.
+\]
+For the source-city ensemble candidate, the second residual is fit separately on each source city and mixed by target similarity:
+\[
+    \eta^{\mathrm{ens}}_k(s,a;t)
+    =
+    \sum_{c\in\mathcal{C}_{\mathrm{src}}} w_c(t)\eta_{k,c}(s,a).
+\]
+The source-summary feature set is not chosen by target performance.
+For each candidate summary family (simulator-output only, observation only, observation plus simulator output, local-only, and full summary), the same leave-one-source folds below are used to score the selected residual candidate.
+The summary family with the best source-fold score is then used to compute $w_c(t)$ for the held-out target.
+None of these variants uses target transition labels.
+
+\paragraph{Source-summary feature-set selector.}
+The guarded ensemble uses the following target-label-free selection procedure.
+\begin{enumerate}[leftmargin=1.5em]
+    \item Define the candidate summary families listed in \Cref{tab:target-summary-families}.
+    \item For each candidate family, run the same leave-one-source folds used for residual-candidate selection.
+    \item Within each fold, select the residual candidate by source-fold total-MSE ratio to rigid \ours, subject to the ensemble dominance guard.
+    \item Score the summary family by the selected candidate's mean source-fold ratio; lower is better.
+    \item Break ties by preferring simulator-output summaries, then observation-plus-simulator, observation-only, full, local-only, and uniform weighting.
+    \item Freeze the selected summary family before target evaluation and compute target source weights from unlabeled target summaries only.
+\end{enumerate}
+
+Candidate selection uses leave-one-source validation.
+For each held-out source city $h$, we train on $\mathcal{C}_{\mathrm{src}}\setminus\{h\}$, evaluate on $h$, and record each candidate's total-MSE ratio to rigid \ours.
+The selected candidate must have stable source-fold gains.
+Ensemble candidates are additionally guarded: they may override the conservative rigid/global candidate only when the target similarity weights have a dominant source, $\max_c w_c(t)\ge 0.5$.
+This guard prevents a diffuse source mixture from overriding rigid \ours when the unlabeled target summary does not identify a close source city.
+
+\subsection{Traffic-signal phase-transfer stress test}
+
+For the RESCO stress test, the same transfer principle is applied to phase-local traffic-signal models.
+For each traffic light and candidate green phase, a generic simulator prior predicts the next local queue cost.
+The dense baseline fits one pooled residual over all phase-local features, while the CFCMT variant decomposes the residual into queue-propagation, downstream-spillback, and phase-pressure feature groups.
+At each decision time, model-based policies evaluate the feasible SUMO-defined green phases and select
+\[
+    a^\star_t
+    =
+    \arg\min_{a\in\mathcal{A}(i)}
+    \hat c(x_{i,t},a),
+\]
+where $\hat c$ is the corrected next-interval local queue cost.
+
+Classical pressure control is a hard baseline in this setting.
+We therefore report both a phase-pressure rule and a MaxPressure-style rule that chooses the feasible phase with the largest upstream-minus-downstream queue relief.
+The reported guarded CFCMT controller treats MaxPressure as a safety prior.
+It first computes the CFCMT phase-MPC action and the MaxPressure action, evaluates both under the CFCMT cost model, and permits the CFCMT action only when its predicted cost is lower by a fixed margin.
+The guard also falls back to MaxPressure for pre-specified target-static regimes where source transfer was unstable in source-only diagnostics: large regular networks, very high-demand single-intersection cases, and sparse low-demand targets.
+These guard inputs are target descriptors and current queues; they do not use target closed-loop rollout labels.
+This is the control analogue of the bus-holding conclusion: a transferred mechanism model is used to instantiate and gate a physically meaningful prior, not to replace that prior with an unconstrained residual action rule.
+
+\subsection{One-step policy proxy}
 
 For policy-level validation, each method evaluates a discrete hold set
 $\{0,15,30,45,60\}$ seconds under a set of headway-stress states.

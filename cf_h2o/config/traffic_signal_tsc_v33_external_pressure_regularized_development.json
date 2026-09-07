@@ -1,0 +1,123 @@
+{
+  "protocol": "tsc-v47r43-external-oof-pressure-regularized-development-v1",
+  "frozen_at_utc": "2026-08-09T12:26:00Z",
+  "claim_boundary": "The v47 artifact is selected only from adaptation OOF records. Previously inspected seeds 8081/9091 are falsification-only; the hash-derived robustness seeds and the inherited prospective seeds are untouched at this freeze.",
+  "parent_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v32_external_oof_validated_support_development.json",
+    "sha256": "7993269b6737a8ba987e9a512ba48dff396d3392a241294138caebf37ed8bf55"
+  },
+  "pressure_regularized_joint_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v47r43_pressure_regularized_20260809/pressure_regularized_joint_audit_v1.json",
+    "sha256": "e6b883c0ad3fcc4c1447185145472ee8e7b94e2cd5b5aacb886f98e1a95857de",
+    "decision": "authorize_pressure_regularized_contaminated_development_only"
+  },
+  "city_artifacts": {
+    "los_angeles": {
+      "certificate": {
+        "path": "cf_h2o/results/cluster/tsc_v47r43_pressure_regularized_20260809/freeze_v1/los_angeles/freeze.json",
+        "sha256": "eba0f7eaac483c8c1443b35c3f6936b4e3e2f55bffa0398a93b3cf239e322d44"
+      },
+      "model": {
+        "path": "cf_h2o/results/cluster/tsc_v47r43_pressure_regularized_20260809/freeze_v1/los_angeles/model.pkl",
+        "sha256": "f70f2686aaa4b55973dafb7f7a0a40a775cb82c3481dbf5bfefd3a24f6946479"
+      },
+      "regularizer": {
+        "blend_weight": 6.0,
+        "risk_multiplier": 0.0,
+        "min_context_trust": 0.25
+      }
+    },
+    "jinan": {
+      "certificate": {
+        "path": "cf_h2o/results/cluster/tsc_v47r43_pressure_regularized_20260809/freeze_v1/jinan/freeze.json",
+        "sha256": "8c070b6c74c4d29fcd5bd8867d03aa4a3eda14d760eb8b169113d73d704268ab"
+      },
+      "model": {
+        "path": "cf_h2o/results/cluster/tsc_v47r43_pressure_regularized_20260809/freeze_v1/jinan/model.pkl",
+        "sha256": "dbf9ec0a23dba7870960e04195cb0fc218e185c32b29fbfeae454071cea50caa"
+      },
+      "regularizer": {
+        "blend_weight": 8.0,
+        "risk_multiplier": 0.5,
+        "min_context_trust": 0.5
+      }
+    }
+  },
+  "deployment_contract": {
+    "policy": "cfcmt_oof_pressure_regularized_direct_mpc",
+    "fallback_policy": "phase_pressure",
+    "coordination_mode": "direct",
+    "action_gate": "relative_pressure_gap + blend_weight * predicted_advantage + risk_multiplier * uncertainty < 0",
+    "minimum_operational_total_vehicles": 1.0,
+    "coverage_support": "label-free nearest-neighbor support over all adaptation states",
+    "hyperparameter_selection": "two-fold leave-one-adaptation-seed-out action outcomes",
+    "activation": "after the same 60-second warm-up used by counterfactual collection"
+  },
+  "contaminated_falsification": {
+    "closed_loop_seeds": [
+      8081,
+      9091
+    ],
+    "status": "contaminated_by_v43_through_v46_closed_loop_diagnostics",
+    "permitted_use": "reject v47 before spending untouched robustness seeds; never confirm efficacy",
+    "policies": [
+      "cfcmt_oof_pressure_regularized_direct_mpc",
+      "phase_pressure"
+    ],
+    "advance_gate": {
+      "each_city_mean_relative_regression_vs_phase_pressure_maximum": 0.0,
+      "worst_scenario_seed_relative_regression_vs_phase_pressure_maximum": 0.02,
+      "minimum_executed_interventions_per_active_city_seed": 1,
+      "method_teleports_must_not_exceed_paired_phase_pressure": true,
+      "method_collision_incidents_must_not_exceed_paired_phase_pressure": true,
+      "all_result_and_tripinfo_hashes_must_verify": true
+    }
+  },
+  "untouched_robustness_development": {
+    "seed_derivation": "first eight values in SHA256(joint_audit_sha256 + ':robustness:' + integer) mapped to [13000,82999] that were absent from the repository at protocol freeze",
+    "closed_loop_seeds": [
+      52282,
+      41242,
+      63792,
+      80722,
+      75638,
+      61337,
+      73385,
+      81189
+    ],
+    "must_not_run_until_contaminated_falsification_gate_passes": true,
+    "method_and_thresholds_must_remain_unchanged": true,
+    "policies": [
+      "cfcmt_oof_pressure_regularized_direct_mpc",
+      "phase_pressure"
+    ],
+    "advance_gate": {
+      "each_city_mean_relative_regression_vs_phase_pressure_maximum": 0.0,
+      "each_city_bootstrap_95pct_upper_mean_relative_delta_maximum": 0.02,
+      "worst_scenario_seed_relative_regression_vs_phase_pressure_maximum": 0.05,
+      "minimum_fraction_of_active_city_seeds_with_interventions": 0.75,
+      "method_teleports_must_not_exceed_paired_phase_pressure": true,
+      "method_collision_incidents_must_not_exceed_paired_phase_pressure": true,
+      "all_result_and_tripinfo_hashes_must_verify": true
+    }
+  },
+  "prospective_confirmation_reservation": {
+    "closed_loop_seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "reservation_inherited_from_v30_before_any_v45_v46_or_v47_model_fit": true,
+    "must_not_run_until_both_development_gates_pass_and_confirmation_analysis_is_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    }
+  }
+}

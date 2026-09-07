@@ -1,0 +1,4200 @@
+{
+  "ok": true,
+  "validation_level": "full_module_cross_city_pipeline",
+  "config": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/cross_city_open_transit.json",
+  "elapsed_sec": 6.250517129898071,
+  "args": {
+    "config": "cf_h2o/config/cross_city_open_transit.json",
+    "out": "cf_h2o/results/rigid_first_ensemble_smoke.json",
+    "graph_artifact_dir": "cf_h2o/results/full_module_graphs",
+    "device": "cpu",
+    "seed": 97,
+    "workers": 4,
+    "actions": [
+      0.0,
+      30.0
+    ],
+    "chunk_rows": 200000,
+    "ridge_chunk_rows": 100000,
+    "city_tensor_cache_dir": "cf_h2o/results/cache/city_tensors",
+    "no_city_tensor_cache": false,
+    "no_write_city_tensor_cache": false,
+    "refresh_city_tensor_cache": false,
+    "city_tensor_cache_tag": "",
+    "max_lines_per_city": 10,
+    "max_train_rows_per_city": 1000,
+    "max_eval_rows_per_city": 2000,
+    "max_graph_rows": 0,
+    "max_splits": 1,
+    "split_names": "",
+    "ridge": 1.0,
+    "hidden_dim": 48,
+    "neural_batch_size": 1024,
+    "eval_batch_size": 8192,
+    "sim_epochs": 3,
+    "residual_epochs": 4,
+    "lr": 0.002,
+    "residual_lr": 0.002,
+    "weight_decay": 1e-05,
+    "history_len": 2,
+    "local_embedding_dim": 16,
+    "skip_neural_full": true,
+    "dag_bootstrap_runs": 3,
+    "dag_ridge_l2": 0.001,
+    "dag_score_threshold": 0.04,
+    "dag_score_temperature": 0.04,
+    "dag_max_parents": 8,
+    "parent_threshold": 0.25,
+    "parent_top_k": 8,
+    "no_aux_features": true,
+    "allow_id_parents": true,
+    "trust_residual_scale": 0.0,
+    "trust_uncertainty_scale": 0.15,
+    "trust_graph_uncertainty_scale": 0.25,
+    "run_source_selector": true,
+    "selector_max_train_rows_per_city": 500,
+    "selector_max_eval_rows_per_city": 500,
+    "selector_max_graph_rows": 5000,
+    "selector_sim_epochs": 1,
+    "selector_residual_epochs": 1,
+    "selector_dag_bootstrap_runs": 1,
+    "selector_batch_size": 512,
+    "selector_eval_batch_size": 4096,
+    "selector_min_win_rate": 0.6666666666666666,
+    "selector_min_improvement": 0.0,
+    "selector_include_proxy": false,
+    "rigid_guard_min_win_rate": 1.0,
+    "rigid_guard_min_improvement": 0.0,
+    "rigid_first_delta_modes": [
+      "dense_delta",
+      "static_local_delta",
+      "dense_static_local_delta"
+    ],
+    "rigid_first_alpha_grid": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "run_rigid_first_selector": true,
+    "run_rigid_first_ensemble_selector": true,
+    "run_rigid_first_mechanism_selector": true,
+    "rigid_first_selector_weighting": "similarity",
+    "rigid_first_similarity_temperature": 1.0,
+    "selector_similarity_max_rows": 100000,
+    "rigid_first_min_win_rate": 1.0,
+    "rigid_first_min_unweighted_win_rate": 1.0,
+    "rigid_first_min_improvement": 0.005,
+    "rigid_first_mechanism_min_win_rate": 1.0,
+    "rigid_first_mechanism_min_unweighted_win_rate": 1.0,
+    "rigid_first_mechanism_min_improvement": 0.005,
+    "apc_summary": "cf_h2o/results/austin_real_apc_validation_summary.json"
+  },
+  "city_rows": {
+    "mbta_all": 14832,
+    "halifax_transit_all": 13392,
+    "singapore_lta_all": 17616,
+    "austin_capmetro_all": 20016
+  },
+  "splits": [
+    {
+      "name": "source_open_na_to_singapore",
+      "source_envs": [
+        "austin_capmetro_all",
+        "halifax_transit_all",
+        "mbta_all"
+      ],
+      "target_env": "singapore_lta_all",
+      "train_rows": 3000,
+      "eval_rows": 2000,
+      "graph_rows": 0,
+      "methods": {
+        "uncalibrated": {
+          "total_mse": 278.95067622155824,
+          "dynamic_mse": 313.81926980210073,
+          "reward_mse": 0.0019275772182321025,
+          "per_output_mse": {
+            "next_forward_headway": 426.8485846862183,
+            "next_backward_headway": 225.39087831329462,
+            "next_waiting_passengers": 571.2761063557115,
+            "next_base_stop_duration": 2.3685272815571428,
+            "next_gap": 1255.1887646639457,
+            "next_co_line_forward_headway": 10.484182087347378,
+            "next_co_line_backward_headway": 4.3108722654338925,
+            "next_segment_mean_speed": 14.686242763297342,
+            "reward": 0.0019275772182321025
+          }
+        },
+        "h2oplus_dense_ridge": {
+          "total_mse": 199.8457437392694,
+          "dynamic_mse": 224.82628111079393,
+          "reward_mse": 0.0014447670733024691,
+          "per_output_mse": {
+            "next_forward_headway": 308.7972445252803,
+            "next_backward_headway": 107.28648673066623,
+            "next_waiting_passengers": 568.1193431501077,
+            "next_base_stop_duration": 0.6614949193534796,
+            "next_gap": 779.4902181534801,
+            "next_co_line_forward_headway": 9.956636234122431,
+            "next_co_line_backward_headway": 3.5256490271783854,
+            "next_segment_mean_speed": 20.7731761461627,
+            "reward": 0.0014447670733024691
+          }
+        },
+        "cfcmt_ridge_template": {
+          "total_mse": 211.60778529102993,
+          "dynamic_mse": 238.05860002218378,
+          "reward_mse": 0.0012674417991550043,
+          "per_output_mse": {
+            "next_forward_headway": 332.875037471869,
+            "next_backward_headway": 117.53128205263522,
+            "next_waiting_passengers": 573.3187333871565,
+            "next_base_stop_duration": 0.7380524985799016,
+            "next_gap": 845.8612785613402,
+            "next_co_line_forward_headway": 10.341058251884318,
+            "next_co_line_backward_headway": 3.6920134584350803,
+            "next_segment_mean_speed": 20.111344495570222,
+            "reward": 0.0012674417991550043
+          }
+        },
+        "rigid_first_dense_delta_alpha_0p25": {
+          "total_mse": 210.19875027297246,
+          "dynamic_mse": 236.473448768835,
+          "reward_mse": 0.0011623060722576674,
+          "per_output_mse": {
+            "next_forward_headway": 330.4924563613707,
+            "next_backward_headway": 116.6959061784416,
+            "next_waiting_passengers": 570.0064997994828,
+            "next_base_stop_duration": 0.7034818241476035,
+            "next_gap": 839.8475561404404,
+            "next_co_line_forward_headway": 10.2975530112073,
+            "next_co_line_backward_headway": 3.6773282876220956,
+            "next_segment_mean_speed": 20.06680854796742,
+            "reward": 0.0011623060722576674
+          }
+        },
+        "rigid_first_dense_delta_alpha_0p50": {
+          "total_mse": 209.03639988753173,
+          "dynamic_mse": 235.16580886216678,
+          "reward_mse": 0.0011280904514181576,
+          "per_output_mse": {
+            "next_forward_headway": 328.41480512660837,
+            "next_backward_headway": 115.96350070546204,
+            "next_waiting_passengers": 567.7408348002355,
+            "next_base_stop_duration": 0.6787833044913869,
+            "next_gap": 834.5360065527051,
+            "next_co_line_forward_headway": 10.26417614839602,
+            "next_co_line_backward_headway": 3.6664760949564985,
+            "next_segment_mean_speed": 20.061888164479328,
+            "reward": 0.0011280904514181576
+          }
+        },
+        "rigid_first_dense_delta_alpha_0p75": {
+          "total_mse": 208.12073413470637,
+          "dynamic_mse": 234.13568030217758,
+          "reward_mse": 0.00116479493663648,
+          "per_output_mse": {
+            "next_forward_headway": 326.6420837675824,
+            "next_backward_headway": 115.33406563369667,
+            "next_waiting_passengers": 566.5217383894013,
+            "next_base_stop_duration": 0.6639569396112533,
+            "next_gap": 829.9266297981343,
+            "next_co_line_forward_headway": 10.24092766345042,
+            "next_co_line_backward_headway": 3.659456880438277,
+            "next_segment_mean_speed": 20.096583345105998,
+            "reward": 0.00116479493663648
+          }
+        },
+        "rigid_first_dense_delta_alpha_1p00": {
+          "total_mse": 207.4517530144974,
+          "dynamic_mse": 233.3830630888686,
+          "reward_mse": 0.0012724195279126397,
+          "per_output_mse": {
+            "next_forward_headway": 325.17429228429256,
+            "next_backward_headway": 114.8076009631455,
+            "next_waiting_passengers": 566.3492105669899,
+            "next_base_stop_duration": 0.6590027295071998,
+            "next_gap": 826.0194258767281,
+            "next_co_line_forward_headway": 10.22780755637048,
+            "next_co_line_backward_headway": 3.656270644067434,
+            "next_segment_mean_speed": 20.170894089847526,
+            "reward": 0.0012724195279126397
+          }
+        },
+        "rigid_first_ensemble_dense_delta_alpha_0p25": {
+          "total_mse": 211.49569309199043,
+          "dynamic_mse": 237.93250319263396,
+          "reward_mse": 0.001212286842345156,
+          "per_output_mse": {
+            "next_forward_headway": 332.9071711929344,
+            "next_backward_headway": 117.46028847861986,
+            "next_waiting_passengers": 573.2988209451439,
+            "next_base_stop_duration": 0.7262232484783776,
+            "next_gap": 845.7372171972237,
+            "next_co_line_forward_headway": 10.339511820374627,
+            "next_co_line_backward_headway": 3.6907232701001327,
+            "next_segment_mean_speed": 19.300069388196647,
+            "reward": 0.001212286842345156
+          }
+        },
+        "rigid_first_ensemble_dense_delta_alpha_0p50": {
+          "total_mse": 211.62153251597974,
+          "dynamic_mse": 238.07407755498582,
+          "reward_mse": 0.0011722039310332884,
+          "per_output_mse": {
+            "next_forward_headway": 333.30957239831986,
+            "next_backward_headway": 117.5575477451715,
+            "next_waiting_passengers": 573.418432685212,
+            "next_base_stop_duration": 0.716221132920116,
+            "next_gap": 846.6469669408625,
+            "next_co_line_forward_headway": 10.34702524330768,
+            "next_co_line_backward_headway": 3.6931245007814937,
+            "next_segment_mean_speed": 18.90372979331146,
+            "reward": 0.0011722039310332884
+          }
+        },
+        "rigid_first_ensemble_dense_delta_alpha_0p75": {
+          "total_mse": 211.98530356299736,
+          "dynamic_mse": 238.48332310923888,
+          "reward_mse": 0.001147193065219412,
+          "per_output_mse": {
+            "next_forward_headway": 334.0822410880242,
+            "next_backward_headway": 117.82305985228986,
+            "next_waiting_passengers": 573.6775686073639,
+            "next_base_stop_duration": 0.7080461519051235,
+            "next_gap": 848.5905277922507,
+            "next_co_line_forward_headway": 10.363598520683421,
+            "next_co_line_backward_headway": 3.6992171504791678,
+            "next_segment_mean_speed": 18.92232571091459,
+            "reward": 0.001147193065219412
+          }
+        },
+        "rigid_first_ensemble_dense_delta_alpha_1p00": {
+          "total_mse": 212.587006233044,
+          "dynamic_mse": 239.1602398553939,
+          "reward_mse": 0.001137254244903516,
+          "per_output_mse": {
+            "next_forward_headway": 335.2251772620478,
+            "next_backward_headway": 118.25682479997478,
+            "next_waiting_passengers": 574.0762287115974,
+            "next_base_stop_duration": 0.7016983054333944,
+            "next_gap": 851.5678997513967,
+            "next_co_line_forward_headway": 10.3892316525019,
+            "next_co_line_backward_headway": 3.709001219193156,
+            "next_segment_mean_speed": 19.355857141006197,
+            "reward": 0.001137254244903516
+          }
+        },
+        "rigid_first_static_local_delta_alpha_0p25": {
+          "total_mse": 210.00278598837656,
+          "dynamic_mse": 236.25300455073935,
+          "reward_mse": 0.0010374894743478437,
+          "per_output_mse": {
+            "next_forward_headway": 329.2736033675884,
+            "next_backward_headway": 117.12729064284343,
+            "next_waiting_passengers": 569.7452290474395,
+            "next_base_stop_duration": 0.7242255586749842,
+            "next_gap": 839.0419498281378,
+            "next_co_line_forward_headway": 10.34234457287907,
+            "next_co_line_backward_headway": 3.704649383328231,
+            "next_segment_mean_speed": 20.06474400502337,
+            "reward": 0.0010374894743478437
+          }
+        },
+        "rigid_first_static_local_delta_alpha_0p50": {
+          "total_mse": 208.57916927346284,
+          "dynamic_mse": 234.65145357432434,
+          "reward_mse": 0.0008948665708571773,
+          "per_output_mse": {
+            "next_forward_headway": 326.07871683761863,
+            "next_backward_headway": 116.85472320195582,
+            "next_waiting_passengers": 566.2816374488873,
+            "next_base_stop_duration": 0.7122018961916229,
+            "next_gap": 833.1977818190885,
+            "next_co_line_forward_headway": 10.34661559541262,
+            "next_co_line_backward_headway": 3.718375497080558,
+            "next_segment_mean_speed": 20.021576298359815,
+            "reward": 0.0008948665708571773
+          }
+        },
+        "rigid_first_static_local_delta_alpha_0p75": {
+          "total_mse": 207.3369351462878,
+          "dynamic_mse": 233.2539470929377,
+          "reward_mse": 0.0008395730886830169,
+          "per_output_mse": {
+            "next_forward_headway": 323.2903778819585,
+            "next_backward_headway": 116.71357972997232,
+            "next_waiting_passengers": 562.9279585914986,
+            "next_base_stop_duration": 0.7019815111298248,
+            "next_gap": 828.328774534186,
+            "next_co_line_forward_headway": 10.353871319484872,
+            "next_co_line_backward_headway": 3.733191799692059,
+            "next_segment_mean_speed": 19.981841375579446,
+            "reward": 0.0008395730886830169
+          }
+        },
+        "rigid_first_static_local_delta_alpha_1p00": {
+          "total_mse": 206.27608360685227,
+          "dynamic_mse": 232.06048510658033,
+          "reward_mse": 0.0008716090278253494,
+          "per_output_mse": {
+            "next_forward_headway": 320.9085865006069,
+            "next_backward_headway": 116.70386022689291,
+            "next_waiting_passengers": 559.6841924752723,
+            "next_base_stop_duration": 0.6935644034895841,
+            "next_gap": 824.4349279734399,
+            "next_co_line_forward_headway": 10.364111745095931,
+            "next_co_line_backward_headway": 3.7490982911627384,
+            "next_segment_mean_speed": 19.945539236682322,
+            "reward": 0.0008716090278253494
+          }
+        },
+        "rigid_first_ensemble_static_local_delta_alpha_0p25": {
+          "total_mse": 207.3645329069736,
+          "dynamic_mse": 233.28496620711996,
+          "reward_mse": 0.0010665058027795908,
+          "per_output_mse": {
+            "next_forward_headway": 327.3749007965201,
+            "next_backward_headway": 116.08103698801298,
+            "next_waiting_passengers": 554.7952481334222,
+            "next_base_stop_duration": 0.689820302348359,
+            "next_gap": 833.1484416888409,
+            "next_co_line_forward_headway": 10.309948923536654,
+            "next_co_line_backward_headway": 3.6871929789186138,
+            "next_segment_mean_speed": 20.19313984535978,
+            "reward": 0.0010665058027795908
+          }
+        },
+        "rigid_first_ensemble_static_local_delta_alpha_0p50": {
+          "total_mse": 204.6877209717896,
+          "dynamic_mse": 230.27356223727242,
+          "reward_mse": 0.0009908479268717133,
+          "per_output_mse": {
+            "next_forward_headway": 324.3506569434227,
+            "next_backward_headway": 115.75156467185366,
+            "next_waiting_passengers": 539.5664535508325,
+            "next_base_stop_duration": 0.6563156916674517,
+            "next_gap": 827.2882373493778,
+            "next_co_line_forward_headway": 10.330094088153299,
+            "next_co_line_backward_headway": 3.7026739623171037,
+            "next_segment_mean_speed": 20.54250164055476,
+            "reward": 0.0009908479268717133
+          }
+        },
+        "rigid_first_ensemble_static_local_delta_alpha_0p75": {
+          "total_mse": 203.5773494854776,
+          "dynamic_mse": 229.02438811264088,
+          "reward_mse": 0.0010404681714313733,
+          "per_output_mse": {
+            "next_forward_headway": 323.80230591257606,
+            "next_backward_headway": 116.54286510415726,
+            "next_waiting_passengers": 527.6323496393815,
+            "next_base_stop_duration": 0.6375386665371805,
+            "next_gap": 828.2806655429549,
+            "next_co_line_forward_headway": 10.40149374573425,
+            "next_co_line_backward_headway": 3.7384564086305603,
+            "next_segment_mean_speed": 21.159429881155464,
+            "reward": 0.0010404681714313733
+          }
+        },
+        "rigid_first_ensemble_static_local_delta_alpha_1p00": {
+          "total_mse": 204.03341844803793,
+          "dynamic_mse": 229.53744383322564,
+          "reward_mse": 0.0012153665364585703,
+          "per_output_mse": {
+            "next_forward_headway": 325.729847703982,
+            "next_backward_headway": 118.45493828492425,
+            "next_waiting_passengers": 518.9929363990747,
+            "next_base_stop_duration": 0.6334892269575458,
+            "next_gap": 836.1257262695665,
+            "next_co_line_forward_headway": 10.52414789627951,
+            "next_co_line_backward_headway": 3.794540317858988,
+            "next_segment_mean_speed": 22.043924567161724,
+            "reward": 0.0012153665364585703
+          }
+        },
+        "rigid_first_dense_static_local_delta_alpha_0p25": {
+          "total_mse": 207.15591607557818,
+          "dynamic_mse": 233.05028216069377,
+          "reward_mse": 0.0009873946536101547,
+          "per_output_mse": {
+            "next_forward_headway": 324.79871249972615,
+            "next_backward_headway": 115.15257191234718,
+            "next_waiting_passengers": 562.7239281374425,
+            "next_base_stop_duration": 0.6932757333818991,
+            "next_gap": 826.6515246892138,
+            "next_co_line_forward_headway": 10.243174926396708,
+            "next_co_line_backward_headway": 3.6641896011274797,
+            "next_segment_mean_speed": 20.474879785914332,
+            "reward": 0.0009873946536101547
+          }
+        },
+        "rigid_first_dense_static_local_delta_alpha_0p50": {
+          "total_mse": 203.18944589524637,
+          "dynamic_mse": 228.5880261690707,
+          "reward_mse": 0.0008037046515281202,
+          "per_output_mse": {
+            "next_forward_headway": 317.4281006999119,
+            "next_backward_headway": 112.97712216567656,
+            "next_waiting_passengers": 553.7774433620186,
+            "next_base_stop_duration": 0.66361404028431,
+            "next_gap": 809.0495251992202,
+            "next_co_line_forward_headway": 10.163664895530706,
+            "next_co_line_backward_headway": 3.642292344446365,
+            "next_segment_mean_speed": 21.002446645477036,
+            "reward": 0.0008037046515281202
+          }
+        },
+        "rigid_first_dense_static_local_delta_alpha_0p75": {
+          "total_mse": 199.70837475003444,
+          "dynamic_mse": 224.67183204731464,
+          "reward_mse": 0.0007163717929089019,
+          "per_output_mse": {
+            "next_forward_headway": 310.7632020724216,
+            "next_backward_headway": 111.00493281262398,
+            "next_waiting_passengers": 546.4792790608911,
+            "next_base_stop_duration": 0.6490674192871357,
+            "next_gap": 793.0552800913568,
+            "next_co_line_forward_headway": 10.10252815928629,
+            "next_co_line_backward_headway": 3.626321688391763,
+            "next_segment_mean_speed": 21.69404507425837,
+            "reward": 0.0007163717929089019
+          }
+        },
+        "rigid_first_dense_static_local_delta_alpha_1p00": {
+          "total_mse": 196.71270263994185,
+          "dynamic_mse": 221.30169979542487,
+          "reward_mse": 0.0007253960777524956,
+          "per_output_mse": {
+            "next_forward_headway": 304.8040166172585,
+            "next_backward_headway": 109.2360038531892,
+            "next_waiting_passengers": 540.829435234054,
+            "next_base_stop_duration": 0.6496358703903774,
+            "next_gap": 778.6687893656214,
+            "next_co_line_forward_headway": 10.059764717663526,
+            "next_co_line_backward_headway": 3.6162776329636412,
+            "next_segment_mean_speed": 22.5496750722583,
+            "reward": 0.0007253960777524956
+          }
+        },
+        "rigid_first_ensemble_dense_static_local_delta_alpha_0p25": {
+          "total_mse": 205.60314516530423,
+          "dynamic_mse": 231.3034209059084,
+          "reward_mse": 0.0009392404708518449,
+          "per_output_mse": {
+            "next_forward_headway": 325.53220498562104,
+            "next_backward_headway": 115.23530857622744,
+            "next_waiting_passengers": 547.6289110572329,
+            "next_base_stop_duration": 0.6493275628532982,
+            "next_gap": 827.9990214882122,
+            "next_co_line_forward_headway": 10.212390113403712,
+            "next_co_line_backward_headway": 3.650633197059478,
+            "next_segment_mean_speed": 19.51957026665744,
+            "reward": 0.0009392404708518449
+          }
+        },
+        "rigid_first_ensemble_dense_static_local_delta_alpha_0p50": {
+          "total_mse": 201.50741501195705,
+          "dynamic_mse": 226.6957461278808,
+          "reward_mse": 0.0007660845672623944,
+          "per_output_mse": {
+            "next_forward_headway": 320.27090182090575,
+            "next_backward_headway": 113.61319532395814,
+            "next_waiting_passengers": 530.8715731118467,
+            "next_base_stop_duration": 0.6047275593901538,
+            "next_gap": 815.2417443851649,
+            "next_co_line_forward_headway": 10.124669285914488,
+            "next_co_line_backward_headway": 3.623649286755037,
+            "next_segment_mean_speed": 19.215508249111046,
+            "reward": 0.0007660845672623944
+          }
+        },
+        "rigid_first_ensemble_dense_static_local_delta_alpha_0p75": {
+          "total_mse": 199.3205948309894,
+          "dynamic_mse": 224.23557568810202,
+          "reward_mse": 0.0007479740883866644,
+          "per_output_mse": {
+            "next_forward_headway": 317.0911279777231,
+            "next_backward_headway": 112.6649422958278,
+            "next_waiting_passengers": 523.0467195510018,
+            "next_base_stop_duration": 0.6042524881904727,
+            "next_gap": 807.5894472522037,
+            "next_co_line_forward_headway": 10.077895769416665,
+            "next_co_line_backward_headway": 3.6110617275217645,
+            "next_segment_mean_speed": 19.199158442930855,
+            "reward": 0.0007479740883866644
+          }
+        },
+        "rigid_first_ensemble_dense_static_local_delta_alpha_1p00": {
+          "total_mse": 199.04268462239997,
+          "dynamic_mse": 223.92290958657068,
+          "reward_mse": 0.0008849090342246523,
+          "per_output_mse": {
+            "next_forward_headway": 315.99288345607346,
+            "next_backward_headway": 112.39054949183647,
+            "next_waiting_passengers": 524.1543503746934,
+            "next_base_stop_duration": 0.6479023492542528,
+            "next_gap": 805.042130089321,
+            "next_co_line_forward_headway": 10.072069563910281,
+            "next_co_line_backward_headway": 3.612870519359658,
+            "next_segment_mean_speed": 19.47052084811691,
+            "reward": 0.0008849090342246523
+          }
+        },
+        "rigid_first_source_gated_delta": {
+          "total_mse": 199.70837475003444,
+          "dynamic_mse": 224.67183204731464,
+          "reward_mse": 0.0007163717929089019,
+          "per_output_mse": {
+            "next_forward_headway": 310.7632020724216,
+            "next_backward_headway": 111.00493281262398,
+            "next_waiting_passengers": 546.4792790608911,
+            "next_base_stop_duration": 0.6490674192871357,
+            "next_gap": 793.0552800913568,
+            "next_co_line_forward_headway": 10.10252815928629,
+            "next_co_line_backward_headway": 3.626321688391763,
+            "next_segment_mean_speed": 21.69404507425837,
+            "reward": 0.0007163717929089019
+          }
+        },
+        "rigid_first_mechanism_source_gated_delta": {
+          "total_mse": 199.29753437891142,
+          "dynamic_mse": 224.20961722514687,
+          "reward_mse": 0.0008716090278253494,
+          "per_output_mse": {
+            "next_forward_headway": 304.8040166172585,
+            "next_backward_headway": 109.2360038531892,
+            "next_waiting_passengers": 566.5217383894013,
+            "next_base_stop_duration": 0.6590027295071998,
+            "next_gap": 778.6687893656214,
+            "next_co_line_forward_headway": 10.059764717663526,
+            "next_co_line_backward_headway": 3.6162776329636412,
+            "next_segment_mean_speed": 20.111344495570222,
+            "reward": 0.0008716090278253494
+          }
+        }
+      },
+      "ratios": {
+        "uncalibrated": {
+          "total_mse": 278.95067622155824,
+          "vs_h2oplus_dense_ridge": 1.3958299586579828,
+          "vs_uncalibrated": 1.0
+        },
+        "h2oplus_dense_ridge": {
+          "total_mse": 199.8457437392694,
+          "vs_h2oplus_dense_ridge": 1.0,
+          "vs_uncalibrated": 0.7164196425196716
+        },
+        "cfcmt_ridge_template": {
+          "total_mse": 211.60778529102993,
+          "vs_h2oplus_dense_ridge": 1.0588556019842283,
+          "vs_uncalibrated": 0.7585849518534925
+        },
+        "rigid_first_dense_delta_alpha_0p25": {
+          "total_mse": 210.19875027297246,
+          "vs_h2oplus_dense_ridge": 1.0518049888878804,
+          "vs_uncalibrated": 0.7535337541394624
+        },
+        "rigid_first_dense_delta_alpha_0p50": {
+          "total_mse": 209.03639988753173,
+          "vs_h2oplus_dense_ridge": 1.0459887510051402,
+          "vs_uncalibrated": 0.7493668870747003
+        },
+        "rigid_first_dense_delta_alpha_0p75": {
+          "total_mse": 208.12073413470637,
+          "vs_h2oplus_dense_ridge": 1.0414068883360008,
+          "vs_uncalibrated": 0.7460843506592012
+        },
+        "rigid_first_dense_delta_alpha_1p00": {
+          "total_mse": 207.4517530144974,
+          "vs_h2oplus_dense_ridge": 1.0380594008804673,
+          "vs_uncalibrated": 0.7436861448929688
+        },
+        "rigid_first_ensemble_dense_delta_alpha_0p25": {
+          "total_mse": 211.49569309199043,
+          "vs_h2oplus_dense_ridge": 1.0582947083822822,
+          "vs_uncalibrated": 0.7581831166596947
+        },
+        "rigid_first_ensemble_dense_delta_alpha_0p50": {
+          "total_mse": 211.62153251597974,
+          "vs_h2oplus_dense_ridge": 1.058924391164786,
+          "vs_uncalibrated": 0.758634233773637
+        },
+        "rigid_first_ensemble_dense_delta_alpha_0p75": {
+          "total_mse": 211.98530356299736,
+          "vs_h2oplus_dense_ridge": 1.0607446503317375,
+          "vs_uncalibrated": 0.7599383031953174
+        },
+        "rigid_first_ensemble_dense_delta_alpha_1p00": {
+          "total_mse": 212.587006233044,
+          "vs_h2oplus_dense_ridge": 1.06375548588314,
+          "vs_uncalibrated": 0.7620953249247387
+        },
+        "rigid_first_static_local_delta_alpha_0p25": {
+          "total_mse": 210.00278598837656,
+          "vs_h2oplus_dense_ridge": 1.0508244111636353,
+          "vs_uncalibrated": 0.7528312489967961
+        },
+        "rigid_first_static_local_delta_alpha_0p50": {
+          "total_mse": 208.57916927346284,
+          "vs_h2oplus_dense_ridge": 1.0437008333066506,
+          "vs_uncalibrated": 0.747727777895034
+        },
+        "rigid_first_static_local_delta_alpha_0p75": {
+          "total_mse": 207.3369351462878,
+          "vs_h2oplus_dense_ridge": 1.037484868413269,
+          "vs_uncalibrated": 0.7432745385482027
+        },
+        "rigid_first_static_local_delta_alpha_1p00": {
+          "total_mse": 206.27608360685227,
+          "vs_h2oplus_dense_ridge": 1.0321765164834946,
+          "vs_uncalibrated": 0.7394715309563051
+        },
+        "rigid_first_ensemble_static_local_delta_alpha_0p25": {
+          "total_mse": 207.3645329069736,
+          "vs_h2oplus_dense_ridge": 1.0376229637270318,
+          "vs_uncalibrated": 0.7433734727435222
+        },
+        "rigid_first_ensemble_static_local_delta_alpha_0p50": {
+          "total_mse": 204.6877209717896,
+          "vs_h2oplus_dense_ridge": 1.0242285732081304,
+          "vs_uncalibrated": 0.7337774682762022
+        },
+        "rigid_first_ensemble_static_local_delta_alpha_0p75": {
+          "total_mse": 203.5773494854776,
+          "vs_h2oplus_dense_ridge": 1.0186724304275234,
+          "vs_uncalibrated": 0.7297969384515315
+        },
+        "rigid_first_ensemble_static_local_delta_alpha_1p00": {
+          "total_mse": 204.03341844803793,
+          "vs_h2oplus_dense_ridge": 1.020954535385212,
+          "vs_uncalibrated": 0.7314318832695109
+        },
+        "rigid_first_dense_static_local_delta_alpha_0p25": {
+          "total_mse": 207.15591607557818,
+          "vs_h2oplus_dense_ridge": 1.0365790744377625,
+          "vs_uncalibrated": 0.7426256099520739
+        },
+        "rigid_first_dense_static_local_delta_alpha_0p50": {
+          "total_mse": 203.18944589524637,
+          "vs_h2oplus_dense_ridge": 1.0167314154077725,
+          "vs_uncalibrated": 0.728406357164956
+        },
+        "rigid_first_dense_static_local_delta_alpha_0p75": {
+          "total_mse": 199.70837475003444,
+          "vs_h2oplus_dense_ridge": 0.9993126248942575,
+          "vs_uncalibrated": 0.7159271934921386
+        },
+        "rigid_first_dense_static_local_delta_alpha_1p00": {
+          "total_mse": 196.71270263994185,
+          "vs_h2oplus_dense_ridge": 0.984322702897215,
+          "vs_uncalibrated": 0.7051881189336197
+        },
+        "rigid_first_ensemble_dense_static_local_delta_alpha_0p25": {
+          "total_mse": 205.60314516530423,
+          "vs_h2oplus_dense_ridge": 1.0288092271484464,
+          "vs_uncalibrated": 0.7370591387346296
+        },
+        "rigid_first_ensemble_dense_static_local_delta_alpha_0p50": {
+          "total_mse": 201.50741501195705,
+          "vs_h2oplus_dense_ridge": 1.0083147693896126,
+          "vs_uncalibrated": 0.7223765066334114
+        },
+        "rigid_first_ensemble_dense_static_local_delta_alpha_0p75": {
+          "total_mse": 199.3205948309894,
+          "vs_h2oplus_dense_ridge": 0.9973722287077319,
+          "vs_uncalibrated": 0.7145370555498415
+        },
+        "rigid_first_ensemble_dense_static_local_delta_alpha_1p00": {
+          "total_mse": 199.04268462239997,
+          "vs_h2oplus_dense_ridge": 0.9959816051027979,
+          "vs_uncalibrated": 0.7135407854839152
+        },
+        "rigid_first_source_gated_delta": {
+          "total_mse": 199.70837475003444,
+          "vs_h2oplus_dense_ridge": 0.9993126248942575,
+          "vs_uncalibrated": 0.7159271934921386
+        },
+        "rigid_first_mechanism_source_gated_delta": {
+          "total_mse": 199.29753437891142,
+          "vs_h2oplus_dense_ridge": 0.997256837448221,
+          "vs_uncalibrated": 0.7144543869849528
+        }
+      },
+      "module_diagnostics": {
+        "neural_full_skipped": true,
+        "rigid_first_delta": {
+          "dense_delta": {
+            "feature_dims": {
+              "next_forward_headway": 115,
+              "next_backward_headway": 115,
+              "next_waiting_passengers": 115,
+              "next_base_stop_duration": 115,
+              "next_gap": 115,
+              "next_co_line_forward_headway": 115,
+              "next_co_line_backward_headway": 115,
+              "next_segment_mean_speed": 115,
+              "reward": 115
+            },
+            "alpha_grid": [
+              0.0,
+              0.25,
+              0.5,
+              0.75,
+              1.0
+            ]
+          },
+          "static_local_delta": {
+            "feature_dims": {
+              "next_forward_headway": 31,
+              "next_backward_headway": 31,
+              "next_waiting_passengers": 31,
+              "next_base_stop_duration": 31,
+              "next_gap": 31,
+              "next_co_line_forward_headway": 31,
+              "next_co_line_backward_headway": 31,
+              "next_segment_mean_speed": 31,
+              "reward": 31
+            },
+            "alpha_grid": [
+              0.0,
+              0.25,
+              0.5,
+              0.75,
+              1.0
+            ]
+          },
+          "dense_static_local_delta": {
+            "feature_dims": {
+              "next_forward_headway": 146,
+              "next_backward_headway": 146,
+              "next_waiting_passengers": 146,
+              "next_base_stop_duration": 146,
+              "next_gap": 146,
+              "next_co_line_forward_headway": 146,
+              "next_co_line_backward_headway": 146,
+              "next_segment_mean_speed": 146,
+              "reward": 146
+            },
+            "alpha_grid": [
+              0.0,
+              0.25,
+              0.5,
+              0.75,
+              1.0
+            ]
+          }
+        },
+        "rigid_first_similarity_ensemble_delta": {
+          "dense_delta": {
+            "feature_dims": {
+              "next_forward_headway": 115,
+              "next_backward_headway": 115,
+              "next_waiting_passengers": 115,
+              "next_base_stop_duration": 115,
+              "next_gap": 115,
+              "next_co_line_forward_headway": 115,
+              "next_co_line_backward_headway": 115,
+              "next_segment_mean_speed": 115,
+              "reward": 115
+            },
+            "alpha_grid": [
+              0.0,
+              0.25,
+              0.5,
+              0.75,
+              1.0
+            ],
+            "weights": {
+              "austin_capmetro_all": 0.08233952636860549,
+              "halifax_transit_all": 0.4634761894723729,
+              "mbta_all": 0.4541842841590216
+            },
+            "weight_diagnostics": {
+              "weighting": "similarity",
+              "temperature": 1.0,
+              "max_rows": 100000,
+              "source_distances": {
+                "austin_capmetro_all": 0.8123810505220694,
+                "halifax_transit_all": 0.2939553500366128,
+                "mbta_all": 0.30003158508060673
+              },
+              "source_weights": {
+                "austin_capmetro_all": 0.08233952636860548,
+                "halifax_transit_all": 0.46347618947237285,
+                "mbta_all": 0.45418428415902157
+              }
+            }
+          },
+          "static_local_delta": {
+            "feature_dims": {
+              "next_forward_headway": 31,
+              "next_backward_headway": 31,
+              "next_waiting_passengers": 31,
+              "next_base_stop_duration": 31,
+              "next_gap": 31,
+              "next_co_line_forward_headway": 31,
+              "next_co_line_backward_headway": 31,
+              "next_segment_mean_speed": 31,
+              "reward": 31
+            },
+            "alpha_grid": [
+              0.0,
+              0.25,
+              0.5,
+              0.75,
+              1.0
+            ],
+            "weights": {
+              "austin_capmetro_all": 0.08233952636860549,
+              "halifax_transit_all": 0.4634761894723729,
+              "mbta_all": 0.4541842841590216
+            },
+            "weight_diagnostics": {
+              "weighting": "similarity",
+              "temperature": 1.0,
+              "max_rows": 100000,
+              "source_distances": {
+                "austin_capmetro_all": 0.8123810505220694,
+                "halifax_transit_all": 0.2939553500366128,
+                "mbta_all": 0.30003158508060673
+              },
+              "source_weights": {
+                "austin_capmetro_all": 0.08233952636860548,
+                "halifax_transit_all": 0.46347618947237285,
+                "mbta_all": 0.45418428415902157
+              }
+            }
+          },
+          "dense_static_local_delta": {
+            "feature_dims": {
+              "next_forward_headway": 146,
+              "next_backward_headway": 146,
+              "next_waiting_passengers": 146,
+              "next_base_stop_duration": 146,
+              "next_gap": 146,
+              "next_co_line_forward_headway": 146,
+              "next_co_line_backward_headway": 146,
+              "next_segment_mean_speed": 146,
+              "reward": 146
+            },
+            "alpha_grid": [
+              0.0,
+              0.25,
+              0.5,
+              0.75,
+              1.0
+            ],
+            "weights": {
+              "austin_capmetro_all": 0.08233952636860549,
+              "halifax_transit_all": 0.4634761894723729,
+              "mbta_all": 0.4541842841590216
+            },
+            "weight_diagnostics": {
+              "weighting": "similarity",
+              "temperature": 1.0,
+              "max_rows": 100000,
+              "source_distances": {
+                "austin_capmetro_all": 0.8123810505220694,
+                "halifax_transit_all": 0.2939553500366128,
+                "mbta_all": 0.30003158508060673
+              },
+              "source_weights": {
+                "austin_capmetro_all": 0.08233952636860548,
+                "halifax_transit_all": 0.46347618947237285,
+                "mbta_all": 0.45418428415902157
+              }
+            }
+          }
+        },
+        "source_leave_one_selector": {
+          "enabled": true,
+          "definition": "Source-city leave-one validation selector; deterministic local graph is enabled only when it stably improves held-out source-city CFCMT-fallback trust MSE.",
+          "candidate_scope": "deterministic_static_local_vs_no_local",
+          "rigid_guard_definition": "Full neural candidates must also beat rigid CFCMT on held-out source cities; otherwise target evaluation falls back to rigid CFCMT.",
+          "folds": [
+            {
+              "heldout_source_env": "austin_capmetro_all",
+              "train_source_envs": [
+                "halifax_transit_all",
+                "mbta_all"
+              ],
+              "train_rows": 1000,
+              "eval_rows": 500,
+              "graph_rows": 0,
+              "candidates": {
+                "rigid_cfcmt": {
+                  "total_mse": 183.87961833283424,
+                  "local_mode": "none",
+                  "vs_rigid_cfcmt": 1.0,
+                  "vs_no_local": 1.0
+                }
+              },
+              "rigid_first_candidates": {
+                "rigid_cfcmt": {
+                  "total_mse": 183.87961833283424,
+                  "mode": null,
+                  "alpha": 0.0,
+                  "vs_rigid_cfcmt": 1.0,
+                  "per_mechanism_mse": {
+                    "headway": 327.45086605568713,
+                    "demand": 17.030395645371822,
+                    "dwell": 0.038834267786212996,
+                    "speed": 0.5916514437385761,
+                    "reward": 0.001353360175913752
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 1.0,
+                    "demand": 1.0,
+                    "dwell": 1.0,
+                    "speed": 1.0,
+                    "reward": 1.0
+                  }
+                },
+                "dense_delta_alpha_0p25": {
+                  "total_mse": 62.916551945398574,
+                  "mode": "dense_delta",
+                  "alpha": 0.25,
+                  "vs_rigid_cfcmt": 0.34216164094660817,
+                  "per_mechanism_mse": {
+                    "headway": 110.03555276308393,
+                    "demand": 15.037601313641598,
+                    "dwell": 0.030063608433463777,
+                    "speed": 1.0021029638250103,
+                    "reward": 0.0014358072674445557
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.3360368353534023,
+                    "demand": 0.8829860225665523,
+                    "dwell": 0.7741515457164615,
+                    "speed": 1.693738728148518,
+                    "reward": 1.06092028788651
+                  }
+                },
+                "dense_delta_alpha_0p50": {
+                  "total_mse": 14.25769169553445,
+                  "mode": "dense_delta",
+                  "alpha": 0.5,
+                  "vs_rigid_cfcmt": 0.07753818408371442,
+                  "per_mechanism_mse": {
+                    "headway": 22.41552664972103,
+                    "demand": 13.67594472923972,
+                    "dwell": 0.025349298776004062,
+                    "speed": 2.5386269887233057,
+                    "reward": 0.0016709944658412398
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.06845462624584718,
+                    "demand": 0.8030315333840347,
+                    "dwell": 0.6527559349272348,
+                    "speed": 4.290747560222314,
+                    "reward": 1.2347004851927388
+                  }
+                },
+                "dense_delta_alpha_0p75": {
+                  "total_mse": 37.90303758324179,
+                  "mode": "dense_delta",
+                  "alpha": 0.75,
+                  "vs_rigid_cfcmt": 0.2061296294113184,
+                  "per_mechanism_mse": {
+                    "headway": 64.5907877155983,
+                    "demand": 12.945425892166211,
+                    "dwell": 0.024691338813833858,
+                    "speed": 5.2012235184334585,
+                    "reward": 0.0020589217711038037
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.1972533726773342,
+                    "demand": 0.7601365324524483,
+                    "dwell": 0.6358131676323202,
+                    "speed": 8.791026496221384,
+                    "reward": 1.5213405919186855
+                  }
+                },
+                "dense_delta_alpha_1p00": {
+                  "total_mse": 133.85258960852056,
+                  "mode": "dense_delta",
+                  "alpha": 1.0,
+                  "vs_rigid_cfcmt": 0.7279359769294199,
+                  "per_mechanism_mse": {
+                    "headway": 236.56133596071564,
+                    "demand": 12.846044802421073,
+                    "dwell": 0.028089728546953175,
+                    "speed": 8.989892552955466,
+                    "reward": 0.0025995891832322543
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.7224330746478631,
+                    "demand": 0.7543010197717933,
+                    "dwell": 0.723323243831718,
+                    "speed": 15.194575536145722,
+                    "reward": 1.9208406080643554
+                  }
+                },
+                "static_local_delta_alpha_0p25": {
+                  "total_mse": 170.13592151230995,
+                  "mode": "static_local_delta",
+                  "alpha": 0.25,
+                  "vs_rigid_cfcmt": 0.925257095130319,
+                  "per_mechanism_mse": {
+                    "headway": 302.9194711190276,
+                    "demand": 15.955816609333235,
+                    "dwell": 0.031692173404920816,
+                    "speed": 0.6375888707089985,
+                    "reward": 0.0008403622047869411
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.9250837378072848,
+                    "demand": 0.9369022858649432,
+                    "dwell": 0.8160878319990424,
+                    "speed": 1.0776427193013325,
+                    "reward": 0.6209449780946534
+                  }
+                },
+                "static_local_delta_alpha_0p50": {
+                  "total_mse": 157.79738903664548,
+                  "mode": "static_local_delta",
+                  "alpha": 0.5,
+                  "vs_rigid_cfcmt": 0.8581559526136376,
+                  "per_mechanism_mse": {
+                    "headway": 280.87372379355986,
+                    "demand": 15.077548559085178,
+                    "dwell": 0.026106850927379473,
+                    "speed": 0.7036039156696041,
+                    "reward": 0.0006230363273945015
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8577583781555604,
+                    "demand": 0.8853316665712726,
+                    "dwell": 0.6722632462417115,
+                    "speed": 1.1892203139463557,
+                    "reward": 0.4603625394650351
+                  }
+                },
+                "static_local_delta_alpha_0p75": {
+                  "total_mse": 146.86402090584104,
+                  "mode": "static_local_delta",
+                  "alpha": 0.75,
+                  "vs_rigid_cfcmt": 0.7986965724499573,
+                  "per_mechanism_mse": {
+                    "headway": 261.31362407928486,
+                    "demand": 14.39559149462767,
+                    "dwell": 0.022078300353589056,
+                    "speed": 0.7896965786203961,
+                    "reward": 0.0007013825437364306
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.79802392104483,
+                    "demand": 0.8452881421189891,
+                    "dwell": 0.5685262427280097,
+                    "speed": 1.3347327839350749,
+                    "reward": 0.518252684111143
+                  }
+                },
+                "static_local_delta_alpha_1p00": {
+                  "total_mse": 137.3358171198966,
+                  "mode": "static_local_delta",
+                  "alpha": 1.0,
+                  "vs_rigid_cfcmt": 0.7468789546392777,
+                  "per_mechanism_mse": {
+                    "headway": 244.23917197620204,
+                    "demand": 13.909945415960724,
+                    "dwell": 0.019606521683549448,
+                    "speed": 0.8958668595613736,
+                    "reward": 0.0010754008538127263
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.7458803664750916,
+                    "demand": 0.8167717125080937,
+                    "dwell": 0.5048768214579338,
+                    "speed": 1.5141801292674888,
+                    "reward": 0.7946154120329756
+                  }
+                },
+                "dense_static_local_delta_alpha_0p25": {
+                  "total_mse": 75.11170456903741,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.25,
+                  "vs_rigid_cfcmt": 0.40848303498803373,
+                  "per_mechanism_mse": {
+                    "headway": 132.2941069918346,
+                    "demand": 13.519256652219994,
+                    "dwell": 0.02646231115225294,
+                    "speed": 0.987912653104582,
+                    "reward": 0.0011745456869174575
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.40401208457740445,
+                    "demand": 0.7938310379708639,
+                    "dwell": 0.6814165081708489,
+                    "speed": 1.6697544873077257,
+                    "reward": 0.8678736878927564
+                  }
+                },
+                "dense_static_local_delta_alpha_0p50": {
+                  "total_mse": 20.732481956838722,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.5,
+                  "vs_rigid_cfcmt": 0.11275029905332717,
+                  "per_mechanism_mse": {
+                    "headway": 34.46809134777555,
+                    "demand": 11.694662888173065,
+                    "dwell": 0.019204785216793266,
+                    "speed": 2.536585839921243,
+                    "reward": 0.0014273593596322758
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.10526187260690835,
+                    "demand": 0.6866935526158022,
+                    "dwell": 0.4945319253221862,
+                    "speed": 4.287297642498519,
+                    "reward": 1.0546781152833624
+                  }
+                },
+                "dense_static_local_delta_alpha_0p75": {
+                  "total_mse": 20.741950496238005,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.75,
+                  "vs_rigid_cfcmt": 0.1128017921958795,
+                  "per_mechanism_mse": {
+                    "headway": 33.97281912350972,
+                    "demand": 11.55661435323103,
+                    "dwell": 0.017061689979834035,
+                    "speed": 5.237671004188555,
+                    "reward": 0.002111801194058209
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.10374936408851097,
+                    "demand": 0.6785875439348148,
+                    "dwell": 0.43934625145401357,
+                    "speed": 8.852629465572374,
+                    "reward": 1.5604132821718197
+                  }
+                },
+                "dense_static_local_delta_alpha_1p00": {
+                  "total_mse": 75.14011018723544,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 1.0,
+                  "vs_rigid_cfcmt": 0.4086375144156917,
+                  "per_mechanism_mse": {
+                    "headway": 130.80829031903738,
+                    "demand": 13.105111047393853,
+                    "dwell": 0.020033025441375207,
+                    "speed": 9.091168145906535,
+                    "reward": 0.003227871190195263
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.39947455902221307,
+                    "demand": 0.7695130119278994,
+                    "dwell": 0.5158594865663301,
+                    "speed": 15.365749956529317,
+                    "reward": 2.3850791885581324
+                  }
+                },
+                "ensemble_dense_delta_alpha_0p25": {
+                  "total_mse": 73.98870539873339,
+                  "mode": "dense_delta",
+                  "alpha": 0.25,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "halifax_transit_all": 0.4965685093263011,
+                    "mbta_all": 0.5034314906736989
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "halifax_transit_all": 0.5487071773747604,
+                      "mbta_all": 0.5412268629424785
+                    },
+                    "source_weights": {
+                      "halifax_transit_all": 0.4965685093263011,
+                      "mbta_all": 0.5034314906736989
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.40237578296909965,
+                  "per_mechanism_mse": {
+                    "headway": 130.21613331027544,
+                    "demand": 14.034439812686385,
+                    "dwell": 0.03164756133601719,
+                    "speed": 0.7502382574963287,
+                    "reward": 0.001356405704488149
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.39766617471132465,
+                    "demand": 0.8240818419565245,
+                    "dwell": 0.8149390510010532,
+                    "speed": 1.2680409478182983,
+                    "reward": 1.0022503459379102
+                  }
+                },
+                "ensemble_dense_delta_alpha_0p50": {
+                  "total_mse": 18.595600896276352,
+                  "mode": "dense_delta",
+                  "alpha": 0.5,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "halifax_transit_all": 0.4965685093263011,
+                    "mbta_all": 0.5034314906736989
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "halifax_transit_all": 0.5487071773747604,
+                      "mbta_all": 0.5412268629424785
+                    },
+                    "source_weights": {
+                      "halifax_transit_all": 0.4965685093263011,
+                      "mbta_all": 0.5034314906736989
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.10112921195331767,
+                  "per_mechanism_mse": {
+                    "headway": 30.547008044464626,
+                    "demand": 13.570887770654869,
+                    "dwell": 0.03421670109090085,
+                    "speed": 1.018639076962087,
+                    "reward": 0.0016242954561727523
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.09328730264915447,
+                    "demand": 0.7968627419611881,
+                    "dwell": 0.8810955643419783,
+                    "speed": 1.7216878074790556,
+                    "reward": 1.2001945122081579
+                  }
+                },
+                "ensemble_dense_delta_alpha_0p75": {
+                  "total_mse": 17.700304825463178,
+                  "mode": "dense_delta",
+                  "alpha": 0.75,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "halifax_transit_all": 0.4965685093263011,
+                    "mbta_all": 0.5034314906736989
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "halifax_transit_all": 0.5487071773747604,
+                      "mbta_all": 0.5412268629424785
+                    },
+                    "source_weights": {
+                      "halifax_transit_all": 0.4965685093263011,
+                      "mbta_all": 0.5034314906736989
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.0962602869526543,
+                  "per_mechanism_mse": {
+                    "headway": 28.443490258254723,
+                    "demand": 15.639739519277294,
+                    "dwell": 0.04654168705086393,
+                    "speed": 1.3968539021358541,
+                    "reward": 0.0021570294309675568
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.0868633838134896,
+                    "demand": 0.9183427000139922,
+                    "dwell": 1.1984695400227743,
+                    "speed": 2.360940578982277,
+                    "reward": 1.593832498810739
+                  }
+                },
+                "ensemble_dense_delta_alpha_1p00": {
+                  "total_mse": 71.30281718629404,
+                  "mode": "dense_delta",
+                  "alpha": 1.0,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "halifax_transit_all": 0.4965685093263011,
+                    "mbta_all": 0.5034314906736989
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "halifax_transit_all": 0.5487071773747604,
+                      "mbta_all": 0.5412268629424785
+                    },
+                    "source_weights": {
+                      "halifax_transit_all": 0.4965685093263011,
+                      "mbta_all": 0.5034314906736989
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.3877690079671105,
+                  "per_mechanism_mse": {
+                    "headway": 123.90557995164605,
+                    "demand": 20.240995058553647,
+                    "dwell": 0.0686225192159065,
+                    "speed": 1.8848827330176328,
+                    "reward": 0.002954607628872572
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.378394418204331,
+                    "demand": 1.1885217161149357,
+                    "dwell": 1.7670609780434425,
+                    "speed": 3.185799262327967,
+                    "reward": 2.183164305745661
+                  }
+                },
+                "ensemble_static_local_delta_alpha_0p25": {
+                  "total_mse": 170.48968385954885,
+                  "mode": "static_local_delta",
+                  "alpha": 0.25,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "halifax_transit_all": 0.4965685093263011,
+                    "mbta_all": 0.5034314906736989
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "halifax_transit_all": 0.5487071773747604,
+                      "mbta_all": 0.5412268629424785
+                    },
+                    "source_weights": {
+                      "halifax_transit_all": 0.4965685093263011,
+                      "mbta_all": 0.5034314906736989
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.9271809752778106,
+                  "per_mechanism_mse": {
+                    "headway": 303.843401635573,
+                    "demand": 14.455046049736227,
+                    "dwell": 0.024392788125240882,
+                    "speed": 0.7098360470463674,
+                    "reward": 0.0008716731667084023
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.9279053230047057,
+                    "demand": 0.848779226903312,
+                    "dwell": 0.6281253520608633,
+                    "speed": 1.1997537647520922,
+                    "reward": 0.6440806979707914
+                  }
+                },
+                "ensemble_static_local_delta_alpha_0p50": {
+                  "total_mse": 158.7983419272897,
+                  "mode": "static_local_delta",
+                  "alpha": 0.5,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "halifax_transit_all": 0.4965685093263011,
+                    "mbta_all": 0.5034314906736989
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "halifax_transit_all": 0.5487071773747604,
+                      "mbta_all": 0.5412268629424785
+                    },
+                    "source_weights": {
+                      "halifax_transit_all": 0.4965685093263011,
+                      "mbta_all": 0.5034314906736989
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.8635994753907648,
+                  "per_mechanism_mse": {
+                    "headway": 283.0259630701956,
+                    "demand": 13.169083036967072,
+                    "dwell": 0.016874790792205403,
+                    "speed": 0.8686533306298136,
+                    "reward": 0.0006508362399975889
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8643310872235209,
+                    "demand": 0.7732693538770428,
+                    "dwell": 0.4345335126466918,
+                    "speed": 1.468184249058694,
+                    "reward": 0.48090393938048454
+                  }
+                },
+                "ensemble_static_local_delta_alpha_0p75": {
+                  "total_mse": 148.80559253605722,
+                  "mode": "static_local_delta",
+                  "alpha": 0.75,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "halifax_transit_all": 0.4965685093263011,
+                    "mbta_all": 0.5034314906736989
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "halifax_transit_all": 0.5487071773747604,
+                      "mbta_all": 0.5412268629424785
+                    },
+                    "source_weights": {
+                      "halifax_transit_all": 0.4965685093263011,
+                      "mbta_all": 0.5034314906736989
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.8092555003388645,
+                  "per_mechanism_mse": {
+                    "headway": 264.99855035955574,
+                    "demand": 13.172506607064372,
+                    "dwell": 0.01628027578710657,
+                    "speed": 1.068103294488919,
+                    "reward": 0.0006908493957813095
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8092772926564482,
+                    "demand": 0.7734703809211931,
+                    "dwell": 0.4192244817574859,
+                    "speed": 1.805291452919813,
+                    "reward": 0.5104697242290781
+                  }
+                },
+                "ensemble_static_local_delta_alpha_1p00": {
+                  "total_mse": 140.51143568585096,
+                  "mode": "static_local_delta",
+                  "alpha": 1.0,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "halifax_transit_all": 0.4965685093263011,
+                    "mbta_all": 0.5034314906736989
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "halifax_transit_all": 0.5487071773747604,
+                      "mbta_all": 0.5412268629424785
+                    },
+                    "source_weights": {
+                      "halifax_transit_all": 0.4965685093263011,
+                      "mbta_all": 0.5034314906736989
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.7641490501221075,
+                  "per_mechanism_mse": {
+                    "headway": 249.76116350365265,
+                    "demand": 14.465316760028113,
+                    "dwell": 0.022609243109944395,
+                    "speed": 1.308185938623678,
+                    "reward": 0.000991712634059567
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.762743939303485,
+                    "demand": 0.8493823080357622,
+                    "dwell": 0.5821982593932455,
+                    "speed": 2.211075376335439,
+                    "reward": 0.7327780525165739
+                  }
+                },
+                "ensemble_dense_static_local_delta_alpha_0p25": {
+                  "total_mse": 88.34319719838564,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.25,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "halifax_transit_all": 0.4965685093263011,
+                    "mbta_all": 0.5034314906736989
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "halifax_transit_all": 0.5487071773747604,
+                      "mbta_all": 0.5412268629424785
+                    },
+                    "source_weights": {
+                      "halifax_transit_all": 0.4965685093263011,
+                      "mbta_all": 0.5034314906736989
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.4804403989923376,
+                  "per_mechanism_mse": {
+                    "headway": 156.15858402210955,
+                    "demand": 13.542983126769867,
+                    "dwell": 0.02379127408465357,
+                    "speed": 0.7278836723388216,
+                    "reward": 0.0011966017296568064
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.47689165065623257,
+                    "demand": 0.7952242219604749,
+                    "dwell": 0.6126360928349983,
+                    "speed": 1.2302575782447347,
+                    "reward": 0.884170933172977
+                  }
+                },
+                "ensemble_dense_static_local_delta_alpha_0p50": {
+                  "total_mse": 30.86841320129748,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.5,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "halifax_transit_all": 0.4965685093263011,
+                    "mbta_all": 0.5034314906736989
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "halifax_transit_all": 0.5487071773747604,
+                      "mbta_all": 0.5412268629424785
+                    },
+                    "source_weights": {
+                      "halifax_transit_all": 0.4965685093263011,
+                      "mbta_all": 0.5034314906736989
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.16787294579556727,
+                  "per_mechanism_mse": {
+                    "headway": 52.98966379535996,
+                    "demand": 11.858874774118547,
+                    "dwell": 0.015721243741619057,
+                    "speed": 0.9913788259547469,
+                    "reward": 0.0014249910625895206
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.16182477827482186,
+                    "demand": 0.6963358351185055,
+                    "dwell": 0.40482915316354795,
+                    "speed": 1.6756129583498356,
+                    "reward": 1.0529281768080736
+                  }
+                },
+                "ensemble_dense_static_local_delta_alpha_0p75": {
+                  "total_mse": 11.45526634156983,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.75,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "halifax_transit_all": 0.4965685093263011,
+                    "mbta_all": 0.5034314906736989
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "halifax_transit_all": 0.5487071773747604,
+                      "mbta_all": 0.5412268629424785
+                    },
+                    "source_weights": {
+                      "halifax_transit_all": 0.4965685093263011,
+                      "mbta_all": 0.5034314906736989
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.06229764040968935,
+                  "per_mechanism_mse": {
+                    "headway": 17.944105375438486,
+                    "demand": 11.978070587417877,
+                    "dwell": 0.014624176757109574,
+                    "speed": 1.3821369045863552,
+                    "reward": 0.002038528174711897
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.05479938285576825,
+                    "demand": 0.7033348394740926,
+                    "dwell": 0.37657918098565185,
+                    "speed": 2.336066140315308,
+                    "reward": 1.5062717309052913
+                  }
+                },
+                "ensemble_dense_static_local_delta_alpha_1p00": {
+                  "total_mse": 30.103756619202656,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 1.0,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "halifax_transit_all": 0.4965685093263011,
+                    "mbta_all": 0.5034314906736989
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "halifax_transit_all": 0.5487071773747604,
+                      "mbta_all": 0.5412268629424785
+                    },
+                    "source_weights": {
+                      "halifax_transit_all": 0.4965685093263011,
+                      "mbta_all": 0.5034314906736989
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.1637144828347037,
+                  "per_mechanism_mse": {
+                    "headway": 51.02190876234506,
+                    "demand": 13.900570566667795,
+                    "dwell": 0.020500073131125066,
+                    "speed": 1.9001579082336433,
+                    "reward": 0.0030372130660239255
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.15581546439907154,
+                    "demand": 0.8162212350272328,
+                    "dwell": 0.5278861763013087,
+                    "speed": 3.2116171241411466,
+                    "reward": 2.2442015954646233
+                  }
+                }
+              },
+              "target_similarity_distance": 0.8123810505220694,
+              "target_similarity_weight": 0.24701857910581645
+            },
+            {
+              "heldout_source_env": "halifax_transit_all",
+              "train_source_envs": [
+                "austin_capmetro_all",
+                "mbta_all"
+              ],
+              "train_rows": 1000,
+              "eval_rows": 500,
+              "graph_rows": 0,
+              "candidates": {
+                "rigid_cfcmt": {
+                  "total_mse": 5.867902457880855,
+                  "local_mode": "none",
+                  "vs_rigid_cfcmt": 1.0,
+                  "vs_no_local": 1.0
+                }
+              },
+              "rigid_first_candidates": {
+                "rigid_cfcmt": {
+                  "total_mse": 5.867902457880855,
+                  "mode": null,
+                  "alpha": 0.0,
+                  "vs_rigid_cfcmt": 1.0,
+                  "per_mechanism_mse": {
+                    "headway": 9.654498449567575,
+                    "demand": 3.5221777888159456,
+                    "dwell": 0.01076651412739975,
+                    "speed": 1.0046626444212021,
+                    "reward": 0.0010229257252665326
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 1.0,
+                    "demand": 1.0,
+                    "dwell": 1.0,
+                    "speed": 1.0,
+                    "reward": 1.0
+                  }
+                },
+                "dense_delta_alpha_0p25": {
+                  "total_mse": 5.280873542000894,
+                  "mode": "dense_delta",
+                  "alpha": 0.25,
+                  "vs_rigid_cfcmt": 0.8999593261657656,
+                  "per_mechanism_mse": {
+                    "headway": 8.77132734399861,
+                    "demand": 2.622390192358957,
+                    "dwell": 0.006922542624967295,
+                    "speed": 1.0409077973464007,
+                    "reward": 0.0010046256846652014
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.9085223214667851,
+                    "demand": 0.7445365764005141,
+                    "dwell": 0.6429697247459217,
+                    "speed": 1.0360769389868973,
+                    "reward": 0.9821100983685174
+                  }
+                },
+                "dense_delta_alpha_0p50": {
+                  "total_mse": 4.857890215413097,
+                  "mode": "dense_delta",
+                  "alpha": 0.5,
+                  "vs_rigid_cfcmt": 0.8278750797721142,
+                  "per_mechanism_mse": {
+                    "headway": 8.131378677516736,
+                    "demand": 1.95207541837784,
+                    "dwell": 0.004108836522984404,
+                    "speed": 1.1069306268667165,
+                    "reward": 0.0010036693666634511
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8422372969443007,
+                    "demand": 0.5542239873797147,
+                    "dwell": 0.3816310900970081,
+                    "speed": 1.101793356221015,
+                    "reward": 0.9811752132853399
+                  }
+                },
+                "dense_delta_alpha_0p75": {
+                  "total_mse": 4.5989524781174795,
+                  "mode": "dense_delta",
+                  "alpha": 0.75,
+                  "vs_rigid_cfcmt": 0.783747260819048,
+                  "per_mechanism_mse": {
+                    "headway": 7.734652450121975,
+                    "demand": 1.5112334668725902,
+                    "dwell": 0.0023253958214510704,
+                    "speed": 1.2027311329821493,
+                    "reward": 0.0010200567712612847
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8011449264325492,
+                    "demand": 0.4290622329376006,
+                    "dwell": 0.21598409605325833,
+                    "speed": 1.197149251702353,
+                    "reward": 0.9971953447504701
+                  }
+                },
+                "dense_delta_alpha_1p00": {
+                  "total_mse": 4.504060330114029,
+                  "mode": "dense_delta",
+                  "alpha": 1.0,
+                  "vs_rigid_cfcmt": 0.7675758693065655,
+                  "per_mechanism_mse": {
+                    "headway": 7.581148661814306,
+                    "demand": 1.2998643378432064,
+                    "dwell": 0.0015722205203673094,
+                    "speed": 1.3283093156926997,
+                    "reward": 0.0010537878984586955
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.7852452099315285,
+                    "demand": 0.36905131307417144,
+                    "dwell": 0.146028742614674,
+                    "speed": 1.322144625430912,
+                    "reward": 1.0301704927639017
+                  }
+                },
+                "static_local_delta_alpha_0p25": {
+                  "total_mse": 4.96511248846296,
+                  "mode": "static_local_delta",
+                  "alpha": 0.25,
+                  "vs_rigid_cfcmt": 0.8461477545173902,
+                  "per_mechanism_mse": {
+                    "headway": 8.09230219525834,
+                    "demand": 3.201423750041226,
+                    "dwell": 0.009070438328765952,
+                    "speed": 1.0132902250482654,
+                    "reward": 0.0007170064566740999
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8381898073245632,
+                    "demand": 0.9089330357504334,
+                    "dwell": 0.8424675081865682,
+                    "speed": 1.008587539981676,
+                    "reward": 0.7009369683094804
+                  }
+                },
+                "static_local_delta_alpha_0p50": {
+                  "total_mse": 4.495209254387121,
+                  "mode": "static_local_delta",
+                  "alpha": 0.5,
+                  "vs_rigid_cfcmt": 0.7660674809530711,
+                  "per_mechanism_mse": {
+                    "headway": 7.292144801039477,
+                    "demand": 2.961627624039145,
+                    "dwell": 0.007716618474421385,
+                    "speed": 1.0263069369395723,
+                    "reward": 0.000508104833576805
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.7553105776681845,
+                    "demand": 0.8408512578335117,
+                    "dwell": 0.7167239445479692,
+                    "speed": 1.0215438412471678,
+                    "reward": 0.4967172308081446
+                  }
+                },
+                "static_local_delta_alpha_0p75": {
+                  "total_mse": 4.4581927556533305,
+                  "mode": "static_local_delta",
+                  "alpha": 0.75,
+                  "vs_rigid_cfcmt": 0.7597591793070416,
+                  "per_mechanism_mse": {
+                    "headway": 7.2540262669109605,
+                    "demand": 2.8027894108097007,
+                    "dwell": 0.006705054564365966,
+                    "speed": 1.043712780095123,
+                    "reward": 0.0003962208559746494
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.7513623110308614,
+                    "demand": 0.7957546662492349,
+                    "dwell": 0.6227693090841949,
+                    "speed": 1.038868903796476,
+                    "reward": 0.3873407874959939
+                  }
+                },
+                "static_local_delta_alpha_1p00": {
+                  "total_mse": 4.854062992261594,
+                  "mode": "static_local_delta",
+                  "alpha": 1.0,
+                  "vs_rigid_cfcmt": 0.8272228495793025,
+                  "per_mechanism_mse": {
+                    "headway": 7.977946592872813,
+                    "demand": 2.7249091103528955,
+                    "dwell": 0.006035746598599758,
+                    "speed": 1.0655077545149176,
+                    "reward": 0.00038135452386763366
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.826345007412596,
+                    "demand": 0.7736432609976032,
+                    "dwell": 0.5606036017952514,
+                    "speed": 1.0605627276296006,
+                    "reward": 0.37280763837302877
+                  }
+                },
+                "dense_static_local_delta_alpha_0p25": {
+                  "total_mse": 4.772082716458044,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.25,
+                  "vs_rigid_cfcmt": 0.8132518818626449,
+                  "per_mechanism_mse": {
+                    "headway": 7.8717943415353915,
+                    "demand": 2.5305776673949714,
+                    "dwell": 0.006680239647607282,
+                    "speed": 1.0518560865994961,
+                    "reward": 0.0006587468033647895
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8153498995991831,
+                    "demand": 0.718469600095252,
+                    "dwell": 0.6204644853998482,
+                    "speed": 1.046974417174118,
+                    "reward": 0.6439830254470793
+                  }
+                },
+                "dense_static_local_delta_alpha_0p50": {
+                  "total_mse": 3.978093551005445,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.5,
+                  "vs_rigid_cfcmt": 0.6779413222288124,
+                  "per_mechanism_mse": {
+                    "headway": 6.565725608801673,
+                    "demand": 1.8350138548741406,
+                    "dwell": 0.003787642239294751,
+                    "speed": 1.1350007628816954,
+                    "reward": 0.00041165504551392057
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.6800690520692716,
+                    "demand": 0.5209884238952683,
+                    "dwell": 0.3517983810243246,
+                    "speed": 1.129733218592578,
+                    "reward": 0.4024290672782328
+                  }
+                },
+                "dense_static_local_delta_alpha_0p75": {
+                  "total_mse": 3.4859349615230566,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.75,
+                  "vs_rigid_cfcmt": 0.5940683210985026,
+                  "per_mechanism_mse": {
+                    "headway": 5.7362922513664145,
+                    "demand": 1.4354863512534588,
+                    "dwell": 0.00208872190246217,
+                    "speed": 1.254096673267805,
+                    "reward": 0.00028165045171392694
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.5941574574102649,
+                    "demand": 0.4075564714000504,
+                    "dwell": 0.1940016868734303,
+                    "speed": 1.2482764042553853,
+                    "reward": 0.27533812549346176
+                  }
+                },
+                "dense_static_local_delta_alpha_1p00": {
+                  "total_mse": 3.295606948010881,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 1.0,
+                  "vs_rigid_cfcmt": 0.5616328784717158,
+                  "per_mechanism_mse": {
+                    "headway": 5.383494269229622,
+                    "demand": 1.331995156532924,
+                    "dwell": 0.0015834786371095348,
+                    "speed": 1.4091438177578202,
+                    "reward": 0.00026873302196480823
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.5576151156221636,
+                    "demand": 0.3781737426095979,
+                    "dwell": 0.14707440294716495,
+                    "speed": 1.4026039741625353,
+                    "reward": 0.2627102000927657
+                  }
+                },
+                "ensemble_dense_delta_alpha_0p25": {
+                  "total_mse": 5.76914191492505,
+                  "mode": "dense_delta",
+                  "alpha": 0.25,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.2332795584156714,
+                    "mbta_all": 0.7667204415843286
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5487071773747604,
+                      "mbta_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.2332795584156714,
+                      "mbta_all": 0.7667204415843286
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.9831693618520932,
+                  "per_mechanism_mse": {
+                    "headway": 9.551084969715921,
+                    "demand": 2.7385536075736563,
+                    "dwell": 0.007283919208290997,
+                    "speed": 1.4200262977608273,
+                    "reward": 0.0009885612030590615
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.989288570463618,
+                    "demand": 0.7775171418857533,
+                    "dwell": 0.6765345888279771,
+                    "speed": 1.4134359485207306,
+                    "reward": 0.9664056525721678
+                  }
+                },
+                "ensemble_dense_delta_alpha_0p50": {
+                  "total_mse": 6.007806025557558,
+                  "mode": "dense_delta",
+                  "alpha": 0.5,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.2332795584156714,
+                    "mbta_all": 0.7667204415843286
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5487071773747604,
+                      "mbta_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.2332795584156714,
+                      "mbta_all": 0.7667204415843286
+                    }
+                  },
+                  "vs_rigid_cfcmt": 1.0238421767711572,
+                  "per_mechanism_mse": {
+                    "headway": 9.937257040619226,
+                    "demand": 2.2937771216364107,
+                    "dwell": 0.005354877442798435,
+                    "speed": 2.0838618744789006,
+                    "reward": 0.0009751533637795367
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 1.0292877556020859,
+                    "demand": 0.6512383131027331,
+                    "dwell": 0.4973640845527508,
+                    "speed": 2.0741906609650425,
+                    "reward": 0.9532983086581889
+                  }
+                },
+                "ensemble_dense_delta_alpha_0p75": {
+                  "total_mse": 6.5838947897783875,
+                  "mode": "dense_delta",
+                  "alpha": 0.75,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.2332795584156714,
+                    "mbta_all": 0.7667204415843286
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5487071773747604,
+                      "mbta_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.2332795584156714,
+                      "mbta_all": 0.7667204415843286
+                    }
+                  },
+                  "vs_rigid_cfcmt": 1.122018444757193,
+                  "per_mechanism_mse": {
+                    "headway": 10.813014662277503,
+                    "demand": 2.1878483310042025,
+                    "dwell": 0.004979388830922076,
+                    "speed": 2.9961693745754188,
+                    "reward": 0.0009827022074279596
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 1.1199975554154051,
+                    "demand": 0.6211635136509375,
+                    "dwell": 0.46248848717432206,
+                    "speed": 2.9822641373329324,
+                    "reward": 0.9606779682580644
+                  }
+                },
+                "ensemble_dense_delta_alpha_1p00": {
+                  "total_mse": 7.49740820758752,
+                  "mode": "dense_delta",
+                  "alpha": 1.0,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.2332795584156714,
+                    "mbta_all": 0.7667204415843286
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5487071773747604,
+                      "mbta_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.2332795584156714,
+                      "mbta_all": 0.7667204415843286
+                    }
+                  },
+                  "vs_rigid_cfcmt": 1.2776981658101978,
+                  "per_mechanism_mse": {
+                    "headway": 12.178357834690717,
+                    "demand": 2.4207672356770362,
+                    "dwell": 0.006157453372661917,
+                    "speed": 4.156948798050384,
+                    "reward": 0.0010112077340043268
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 1.2614179699035724,
+                    "demand": 0.687292743530368,
+                    "dwell": 0.5719077966926905,
+                    "speed": 4.137656377624402,
+                    "reward": 0.9885446313717913
+                  }
+                },
+                "ensemble_static_local_delta_alpha_0p25": {
+                  "total_mse": 4.938761158781759,
+                  "mode": "static_local_delta",
+                  "alpha": 0.25,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.2332795584156714,
+                    "mbta_all": 0.7667204415843286
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5487071773747604,
+                      "mbta_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.2332795584156714,
+                      "mbta_all": 0.7667204415843286
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.8416569965556913,
+                  "per_mechanism_mse": {
+                    "headway": 8.048476187433218,
+                    "demand": 2.927069191612842,
+                    "dwell": 0.008357402311137439,
+                    "speed": 1.2703355931371316,
+                    "reward": 0.0007073048086314116
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8336503682170782,
+                    "demand": 0.8310395917285135,
+                    "dwell": 0.776240314390026,
+                    "speed": 1.2644399592153512,
+                    "reward": 0.6914527527862464
+                  }
+                },
+                "ensemble_static_local_delta_alpha_0p50": {
+                  "total_mse": 4.46831570961139,
+                  "mode": "static_local_delta",
+                  "alpha": 0.5,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.2332795584156714,
+                    "mbta_all": 0.7667204415843286
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5487071773747604,
+                      "mbta_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.2332795584156714,
+                      "mbta_all": 0.7667204415843286
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.7614843194283576,
+                  "per_mechanism_mse": {
+                    "headway": 7.209482776866407,
+                    "demand": 2.509290669996587,
+                    "dwell": 0.006665593618036052,
+                    "speed": 1.6509856729831067,
+                    "reward": 0.00048556557273779104
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.7467485560774335,
+                    "demand": 0.712425896831329,
+                    "dwell": 0.6191041537829549,
+                    "speed": 1.643323440112834,
+                    "reward": 0.4746831179861788
+                  }
+                },
+                "ensemble_static_local_delta_alpha_0p75": {
+                  "total_mse": 4.456566110369743,
+                  "mode": "static_local_delta",
+                  "alpha": 0.75,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.2332795584156714,
+                    "mbta_all": 0.7667204415843286
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5487071773747604,
+                      "mbta_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.2332795584156714,
+                      "mbta_all": 0.7667204415843286
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.7594819686179984,
+                  "per_mechanism_mse": {
+                    "headway": 7.137518217867141,
+                    "demand": 2.2688422239671686,
+                    "dwell": 0.00569108804809558,
+                    "speed": 2.1466128839591265,
+                    "reward": 0.000357708017585672
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.7392945635810663,
+                    "demand": 0.6441589153084427,
+                    "dwell": 0.5285915181787859,
+                    "speed": 2.1366504426924475,
+                    "reward": 0.3496910955997982
+                  }
+                },
+                "ensemble_static_local_delta_alpha_1p00": {
+                  "total_mse": 4.903512361056823,
+                  "mode": "static_local_delta",
+                  "alpha": 1.0,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.2332795584156714,
+                    "mbta_all": 0.7667204415843286
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5487071773747604,
+                      "mbta_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.2332795584156714,
+                      "mbta_all": 0.7667204415843286
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.8356499441246142,
+                  "per_mechanism_mse": {
+                    "headway": 7.832582510435428,
+                    "demand": 2.205723853524592,
+                    "dwell": 0.005433885601316011,
+                    "speed": 2.7572172260651917,
+                    "reward": 0.00032373214317505284
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8112883907279771,
+                    "demand": 0.6262386471598564,
+                    "dwell": 0.5047024075775177,
+                    "speed": 2.7444209669541926,
+                    "reward": 0.31647668562710307
+                  }
+                },
+                "ensemble_dense_static_local_delta_alpha_0p25": {
+                  "total_mse": 4.650115407872051,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.25,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.2332795584156714,
+                    "mbta_all": 0.7667204415843286
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5487071773747604,
+                      "mbta_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.2332795584156714,
+                      "mbta_all": 0.7667204415843286
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.7924663781053038,
+                  "per_mechanism_mse": {
+                    "headway": 7.553457090522284,
+                    "demand": 2.733495950134202,
+                    "dwell": 0.007353855254048768,
+                    "speed": 1.342233987351389,
+                    "reward": 0.0006694254973977806
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.7823769541193104,
+                    "demand": 0.7760811957914039,
+                    "dwell": 0.6830302888224434,
+                    "speed": 1.3360046726179073,
+                    "reward": 0.6544223894881084
+                  }
+                },
+                "ensemble_dense_static_local_delta_alpha_0p50": {
+                  "total_mse": 3.965232802789429,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.5,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.2332795584156714,
+                    "mbta_all": 0.7667204415843286
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5487071773747604,
+                      "mbta_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.2332795584156714,
+                      "mbta_all": 0.7667204415843286
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.6757496109131712,
+                  "per_mechanism_mse": {
+                    "headway": 6.318152096419894,
+                    "demand": 2.2102148472588405,
+                    "dwell": 0.00514536020928594,
+                    "speed": 1.8805475788462327,
+                    "reward": 0.00042695669103783344
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.654425719722694,
+                    "demand": 0.6275137087846582,
+                    "dwell": 0.47790400387730786,
+                    "speed": 1.8718199480081577,
+                    "reward": 0.417387773610431
+                  }
+                },
+                "ensemble_dense_static_local_delta_alpha_0p75": {
+                  "total_mse": 3.813254642632982,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.75,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.2332795584156714,
+                    "mbta_all": 0.7667204415843286
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5487071773747604,
+                      "mbta_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.2332795584156714,
+                      "mbta_all": 0.7667204415843286
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.6498496984236013,
+                  "per_mechanism_mse": {
+                    "headway": 5.948583467260391,
+                    "demand": 1.952334480189861,
+                    "dwell": 0.004141028993111263,
+                    "speed": 2.6196034189057293,
+                    "reward": 0.0002955193061866923
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.6161462968101494,
+                    "demand": 0.5542975389797627,
+                    "dwell": 0.3846211451645932,
+                    "speed": 2.6074458261707476,
+                    "reward": 0.28889615236696886
+                  }
+                },
+                "ensemble_dense_static_local_delta_alpha_1p00": {
+                  "total_mse": 4.194180927402723,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 1.0,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.2332795584156714,
+                    "mbta_all": 0.7667204415843286
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5487071773747604,
+                      "mbta_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.2332795584156714,
+                      "mbta_all": 0.7667204415843286
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.7147666406365959,
+                  "per_mechanism_mse": {
+                    "headway": 6.444751203043796,
+                    "demand": 1.9598548489272634,
+                    "dwell": 0.004340861605524707,
+                    "speed": 3.559401507529885,
+                    "reward": 0.00027511334284435686
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.6675386853816789,
+                    "demand": 0.5564326863767175,
+                    "dwell": 0.4031817126842967,
+                    "speed": 3.542882307105683,
+                    "reward": 0.26894752575772163
+                  }
+                }
+              },
+              "target_similarity_distance": 0.2939553500366128,
+              "target_similarity_weight": 1.3904285684171187
+            },
+            {
+              "heldout_source_env": "mbta_all",
+              "train_source_envs": [
+                "austin_capmetro_all",
+                "halifax_transit_all"
+              ],
+              "train_rows": 1000,
+              "eval_rows": 500,
+              "graph_rows": 0,
+              "candidates": {
+                "rigid_cfcmt": {
+                  "total_mse": 11.901344618288576,
+                  "local_mode": "none",
+                  "vs_rigid_cfcmt": 1.0,
+                  "vs_no_local": 1.0
+                }
+              },
+              "rigid_first_candidates": {
+                "rigid_cfcmt": {
+                  "total_mse": 11.901344618288576,
+                  "mode": null,
+                  "alpha": 0.0,
+                  "vs_rigid_cfcmt": 1.0,
+                  "per_mechanism_mse": {
+                    "headway": 19.681455799147,
+                    "demand": 5.058219886833398,
+                    "dwell": 0.01906382791405568,
+                    "speed": 3.626378760367474,
+                    "reward": 0.0011600937472536932
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 1.0,
+                    "demand": 1.0,
+                    "dwell": 1.0,
+                    "speed": 1.0,
+                    "reward": 1.0
+                  }
+                },
+                "dense_delta_alpha_0p25": {
+                  "total_mse": 11.203639719448587,
+                  "mode": "dense_delta",
+                  "alpha": 0.25,
+                  "vs_rigid_cfcmt": 0.9413759603458722,
+                  "per_mechanism_mse": {
+                    "headway": 18.588480261853963,
+                    "demand": 4.269271764856152,
+                    "dwell": 0.014719775836492513,
+                    "speed": 3.6052272484137955,
+                    "reward": 0.001137376661018848
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.944466733129548,
+                    "demand": 0.8440265271917325,
+                    "dwell": 0.7721311744342638,
+                    "speed": 0.9941673185975931,
+                    "reward": 0.9804178875296727
+                  }
+                },
+                "dense_delta_alpha_0p50": {
+                  "total_mse": 10.694361869913866,
+                  "mode": "dense_delta",
+                  "alpha": 0.5,
+                  "vs_rigid_cfcmt": 0.8985843375613238,
+                  "per_mechanism_mse": {
+                    "headway": 17.745239443510215,
+                    "demand": 3.9225465243136286,
+                    "dwell": 0.011932183447955172,
+                    "speed": 3.5874531046309577,
+                    "reward": 0.0011277992811500705
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.9016222999255624,
+                    "demand": 0.7754796375151781,
+                    "dwell": 0.6259070057570979,
+                    "speed": 0.9892659707358941,
+                    "reward": 0.9721621927709947
+                  }
+                },
+                "dense_delta_alpha_0p75": {
+                  "total_mse": 10.373511069684415,
+                  "mode": "dense_delta",
+                  "alpha": 0.75,
+                  "vs_rigid_cfcmt": 0.8716251316463547,
+                  "per_mechanism_mse": {
+                    "headway": 17.151733344115762,
+                    "demand": 4.018044165205845,
+                    "dwell": 0.010701050748443701,
+                    "speed": 3.5730563290189687,
+                    "reward": 0.0011313616076473645
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8714667003880436,
+                    "demand": 0.7943593309703396,
+                    "dwell": 0.5613274939685047,
+                    "speed": 0.9852959564149052,
+                    "reward": 0.9752329157239691
+                  }
+                },
+                "dense_delta_alpha_1p00": {
+                  "total_mse": 10.2410873187602,
+                  "mode": "dense_delta",
+                  "alpha": 1.0,
+                  "vs_rigid_cfcmt": 0.8604983426009623,
+                  "per_mechanism_mse": {
+                    "headway": 16.807961963670543,
+                    "demand": 4.555764687532793,
+                    "dwell": 0.01102637773795807,
+                    "speed": 3.5620369215778194,
+                    "reward": 0.0011480636405107225
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8539999345169886,
+                    "demand": 0.9006656075572157,
+                    "dwell": 0.5783926390684826,
+                    "speed": 0.9822572756346237,
+                    "reward": 0.9896300563885895
+                  }
+                },
+                "static_local_delta_alpha_0p25": {
+                  "total_mse": 11.18646873962896,
+                  "mode": "static_local_delta",
+                  "alpha": 0.25,
+                  "vs_rigid_cfcmt": 0.9399331838890642,
+                  "per_mechanism_mse": {
+                    "headway": 18.348097844314104,
+                    "demand": 5.2729946749341225,
+                    "dwell": 0.017395576572092276,
+                    "speed": 3.646410059055091,
+                    "reward": 0.000929124528818022
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.9322530828796373,
+                    "demand": 1.0424605479607136,
+                    "dwell": 0.9124912714548052,
+                    "speed": 1.0055237745451573,
+                    "reward": 0.8009046950020651
+                  }
+                },
+                "static_local_delta_alpha_0p50": {
+                  "total_mse": 10.920205942599926,
+                  "mode": "static_local_delta",
+                  "alpha": 0.5,
+                  "vs_rigid_cfcmt": 0.9175606868671837,
+                  "per_mechanism_mse": {
+                    "headway": 17.704494798866925,
+                    "demand": 6.071553003077848,
+                    "dwell": 0.018406725352277442,
+                    "speed": 3.668662864738473,
+                    "reward": 0.000756895896096262
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.899552095106412,
+                    "demand": 1.2003339393928223,
+                    "dwell": 0.9655314470556168,
+                    "speed": 1.0116601456067194,
+                    "reward": 0.6524437338689849
+                  }
+                },
+                "static_local_delta_alpha_0p75": {
+                  "total_mse": 11.102556227201486,
+                  "mode": "static_local_delta",
+                  "alpha": 0.75,
+                  "vs_rigid_cfcmt": 0.9328825089343596,
+                  "per_mechanism_mse": {
+                    "headway": 17.7506466628055,
+                    "demand": 7.453894871264583,
+                    "dwell": 0.022097274254611218,
+                    "speed": 3.6931371774176336,
+                    "reward": 0.0006434078490884073
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.9018970366803263,
+                    "demand": 1.4736201742963277,
+                    "dwell": 1.1591205268024367,
+                    "speed": 1.0184091131846897,
+                    "reward": 0.5546171166007541
+                  }
+                },
+                "static_local_delta_alpha_1p00": {
+                  "total_mse": 11.733519593433645,
+                  "mode": "static_local_delta",
+                  "alpha": 1.0,
+                  "vs_rigid_cfcmt": 0.9858986500905925,
+                  "per_mechanism_mse": {
+                    "headway": 18.486553436129807,
+                    "demand": 9.42002027949433,
+                    "dwell": 0.02846722327909358,
+                    "speed": 3.719832997092565,
+                    "reward": 0.0005886603877944613
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.9392879076013788,
+                    "demand": 1.8623192526712307,
+                    "dwell": 1.4932585106952638,
+                    "speed": 1.0257706772790665,
+                    "reward": 0.5074248431973757
+                  }
+                },
+                "dense_static_local_delta_alpha_0p25": {
+                  "total_mse": 10.822684743477659,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.25,
+                  "vs_rigid_cfcmt": 0.9093665539981625,
+                  "per_mechanism_mse": {
+                    "headway": 17.887766165712833,
+                    "demand": 4.333021080428682,
+                    "dwell": 0.013771579862373316,
+                    "speed": 3.6176821664404923,
+                    "reward": 0.000857036003207456
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.9088639757272475,
+                    "demand": 0.8566296399465716,
+                    "dwell": 0.7223932110832572,
+                    "speed": 0.9976018517364963,
+                    "reward": 0.7387644362676118
+                  }
+                },
+                "dense_static_local_delta_alpha_0p50": {
+                  "total_mse": 10.054578164615682,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.5,
+                  "vs_rigid_cfcmt": 0.8448270751831687,
+                  "per_mechanism_mse": {
+                    "headway": 16.489331392026724,
+                    "demand": 4.418649218364933,
+                    "dwell": 0.011541004403638158,
+                    "speed": 3.6137154595311016,
+                    "reward": 0.0006408391078304369
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8378105542752268,
+                    "demand": 0.8735581523189068,
+                    "dwell": 0.6053875672644434,
+                    "speed": 0.9965080038040237,
+                    "reward": 0.5524028634302225
+                  }
+                },
+                "dense_static_local_delta_alpha_0p75": {
+                  "total_mse": 9.59702488170263,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.75,
+                  "vs_rigid_cfcmt": 0.8063815635550171,
+                  "per_mechanism_mse": {
+                    "headway": 15.486151478088647,
+                    "demand": 5.315104300642159,
+                    "dwell": 0.012372101537850165,
+                    "speed": 3.614478639639303,
+                    "reward": 0.0005115030611226356
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.7868397356439366,
+                    "demand": 1.0507855371170072,
+                    "dwell": 0.6489830685435566,
+                    "speed": 0.9967184562025823,
+                    "reward": 0.44091528148783166
+                  }
+                },
+                "dense_static_local_delta_alpha_1p00": {
+                  "total_mse": 9.450024894738524,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 1.0,
+                  "vs_rigid_cfcmt": 0.7940300191137097,
+                  "per_mechanism_mse": {
+                    "headway": 14.87822642389863,
+                    "demand": 7.022386327260365,
+                    "dwell": 0.016264871265009365,
+                    "speed": 3.6199717067651056,
+                    "reward": 0.0004690278630840516
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.7559515198333783,
+                    "demand": 1.3883117943408734,
+                    "dwell": 0.8531797149205981,
+                    "speed": 0.9982332089321747,
+                    "reward": 0.40430169044043907
+                  }
+                },
+                "ensemble_dense_delta_alpha_0p25": {
+                  "total_mse": 11.318016428835554,
+                  "mode": "dense_delta",
+                  "alpha": 0.25,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.23487592217947956,
+                    "halifax_transit_all": 0.7651240778205204
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5412268629424785,
+                      "halifax_transit_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.23487592217947956,
+                      "halifax_transit_all": 0.7651240778205204
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.9509863626201839,
+                  "per_mechanism_mse": {
+                    "headway": 18.764662276412665,
+                    "demand": 4.428945840904567,
+                    "dwell": 0.01598148843877549,
+                    "speed": 3.5927877472151493,
+                    "reward": 0.0011214008981716797
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.9534184090805891,
+                    "demand": 0.8755937740929692,
+                    "dwell": 0.8383147661017443,
+                    "speed": 0.9907370367598003,
+                    "reward": 0.9666467911118289
+                  }
+                },
+                "ensemble_dense_delta_alpha_0p50": {
+                  "total_mse": 10.897602692175928,
+                  "mode": "dense_delta",
+                  "alpha": 0.5,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.23487592217947956,
+                    "halifax_transit_all": 0.7651240778205204
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5412268629424785,
+                      "halifax_transit_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.23487592217947956,
+                      "halifax_transit_all": 0.7651240778205204
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.9156614686570611,
+                  "per_mechanism_mse": {
+                    "headway": 18.10048436360429,
+                    "demand": 3.991798188530029,
+                    "dwell": 0.013609460557215455,
+                    "speed": 3.5694953153709155,
+                    "reward": 0.0010994471037254487
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.9196720277363208,
+                    "demand": 0.7891705536409604,
+                    "dwell": 0.713889184195859,
+                    "speed": 0.9843139813142976,
+                    "reward": 0.9477226356302547
+                  }
+                },
+                "ensemble_dense_delta_alpha_0p75": {
+                  "total_mse": 10.640103408309738,
+                  "mode": "dense_delta",
+                  "alpha": 0.75,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.23487592217947956,
+                    "halifax_transit_all": 0.7651240778205204
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5412268629424785,
+                      "halifax_transit_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.23487592217947956,
+                      "halifax_transit_all": 0.7651240778205204
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.894025318110635,
+                  "per_mechanism_mse": {
+                    "headway": 17.68892206072196,
+                    "demand": 3.7467769297097955,
+                    "dwell": 0.01194774426937555,
+                    "speed": 3.556501464834768,
+                    "reward": 0.0010942323639149948
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8987608559671996,
+                    "demand": 0.7407303386439757,
+                    "dwell": 0.6267232542823431,
+                    "speed": 0.9807308336634905,
+                    "reward": 0.9432275335552726
+                  }
+                },
+                "ensemble_dense_delta_alpha_1p00": {
+                  "total_mse": 10.545518577236965,
+                  "mode": "dense_delta",
+                  "alpha": 1.0,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.23487592217947956,
+                    "halifax_transit_all": 0.7651240778205204
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5412268629424785,
+                      "halifax_transit_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.23487592217947956,
+                      "halifax_transit_all": 0.7651240778205204
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.8860779109809039,
+                  "per_mechanism_mse": {
+                    "headway": 17.52997536776562,
+                    "demand": 3.693882064443867,
+                    "dwell": 0.010996339575255748,
+                    "speed": 3.5538061956067217,
+                    "reward": 0.0011057566787403216
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8906848937732226,
+                    "demand": 0.7302731291020153,
+                    "dwell": 0.5768169763611952,
+                    "speed": 0.9799875938073831,
+                    "reward": 0.9531614848868856
+                  }
+                },
+                "ensemble_static_local_delta_alpha_0p25": {
+                  "total_mse": 11.057916840361871,
+                  "mode": "static_local_delta",
+                  "alpha": 0.25,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.23487592217947956,
+                    "halifax_transit_all": 0.7651240778205204
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5412268629424785,
+                      "halifax_transit_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.23487592217947956,
+                      "halifax_transit_all": 0.7651240778205204
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.9291317237692097,
+                  "per_mechanism_mse": {
+                    "headway": 17.959378947880875,
+                    "demand": 6.083613580568489,
+                    "dwell": 0.018036748610760607,
+                    "speed": 3.6217777225927827,
+                    "reward": 0.0009287720804141358
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.9125025674502818,
+                    "demand": 1.2027182915484165,
+                    "dwell": 0.946124183037877,
+                    "speed": 0.9987312307735264,
+                    "reward": 0.8006008847240418
+                  }
+                },
+                "ensemble_static_local_delta_alpha_0p50": {
+                  "total_mse": 10.716146384913294,
+                  "mode": "static_local_delta",
+                  "alpha": 0.5,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.23487592217947956,
+                    "halifax_transit_all": 0.7651240778205204
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5412268629424785,
+                      "halifax_transit_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.23487592217947956,
+                      "halifax_transit_all": 0.7651240778205204
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.9004147622484597,
+                  "per_mechanism_mse": {
+                    "headway": 16.776018652040637,
+                    "demand": 8.92007362313149,
+                    "dwell": 0.02264929599493535,
+                    "speed": 3.621746162289256,
+                    "reward": 0.0007551226007628891
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8523769188236429,
+                    "demand": 1.7634807941723807,
+                    "dwell": 1.1880770271869754,
+                    "speed": 0.9987225277930569,
+                    "reward": 0.6509151545299695
+                  }
+                },
+                "ensemble_static_local_delta_alpha_0p75": {
+                  "total_mse": 10.876033251942848,
+                  "mode": "static_local_delta",
+                  "alpha": 0.75,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.23487592217947956,
+                    "halifax_transit_all": 0.7651240778205204
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5412268629424785,
+                      "halifax_transit_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.23487592217947956,
+                      "halifax_transit_all": 0.7651240778205204
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.9138491154377506,
+                  "per_mechanism_mse": {
+                    "headway": 16.131374911626295,
+                    "demand": 13.56760001452239,
+                    "dwell": 0.032901470066579966,
+                    "speed": 3.626284079456889,
+                    "reward": 0.00063914530829995
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.8196230541200836,
+                    "demand": 2.68228750787189,
+                    "dwell": 1.7258585324472977,
+                    "speed": 0.9999738910585899,
+                    "reward": 0.5509428094177802
+                  }
+                },
+                "ensemble_static_local_delta_alpha_1p00": {
+                  "total_mse": 11.537577441450503,
+                  "mode": "static_local_delta",
+                  "alpha": 1.0,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.23487592217947956,
+                    "halifax_transit_all": 0.7651240778205204
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5412268629424785,
+                      "halifax_transit_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.23487592217947956,
+                      "halifax_transit_all": 0.7651240778205204
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.9694347833370796,
+                  "per_mechanism_mse": {
+                    "headway": 16.025447726637786,
+                    "demand": 20.026192754741217,
+                    "dwell": 0.04879327082569438,
+                    "speed": 3.6353914740956776,
+                    "reward": 0.000580840203025318
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.814240973339601,
+                    "demand": 3.959138432646951,
+                    "dwell": 2.5594686988188404,
+                    "speed": 1.0024853205701243,
+                    "reward": 0.5006838493874736
+                  }
+                },
+                "ensemble_dense_static_local_delta_alpha_0p25": {
+                  "total_mse": 10.933954216479165,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.25,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.23487592217947956,
+                    "halifax_transit_all": 0.7651240778205204
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5412268629424785,
+                      "halifax_transit_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.23487592217947956,
+                      "halifax_transit_all": 0.7651240778205204
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.9187158734717387,
+                  "per_mechanism_mse": {
+                    "headway": 17.870572904001584,
+                    "demand": 5.447648856726322,
+                    "dwell": 0.015956367182720595,
+                    "speed": 3.5882418698682605,
+                    "reward": 0.0008763345272393538
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.9079903990016888,
+                    "demand": 1.0769893319399997,
+                    "dwell": 0.8369970215140282,
+                    "speed": 0.9894834784176407,
+                    "reward": 0.7553997505062959
+                  }
+                },
+                "ensemble_dense_static_local_delta_alpha_0p50": {
+                  "total_mse": 10.37565502435849,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.5,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.23487592217947956,
+                    "halifax_transit_all": 0.7651240778205204
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5412268629424785,
+                      "halifax_transit_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.23487592217947956,
+                      "halifax_transit_all": 0.7651240778205204
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.8718052755496563,
+                  "per_mechanism_mse": {
+                    "headway": 16.45296616640463,
+                    "demand": 7.533468898016924,
+                    "dwell": 0.018725762703343668,
+                    "speed": 3.5632027317927597,
+                    "reward": 0.0006669946902523149
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.835962864450185,
+                    "demand": 1.4893518009421904,
+                    "dwell": 0.9822666668920801,
+                    "speed": 0.982578756178157,
+                    "reward": 0.5749489572125538
+                  }
+                },
+                "ensemble_dense_static_local_delta_alpha_0p75": {
+                  "total_mse": 10.22644704192655,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 0.75,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.23487592217947956,
+                    "halifax_transit_all": 0.7651240778205204
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5412268629424785,
+                      "halifax_transit_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.23487592217947956,
+                      "halifax_transit_all": 0.7651240778205204
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.8592682062337526,
+                  "per_mechanism_mse": {
+                    "headway": 15.428635586356117,
+                    "demand": 11.315680010705176,
+                    "dwell": 0.027372014475924866,
+                    "speed": 3.55126134614097,
+                    "reward": 0.0005320742362925726
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.7839173963454878,
+                    "demand": 2.2370874070065665,
+                    "dwell": 1.4358089361341535,
+                    "speed": 0.9792858332815483,
+                    "reward": 0.4586476201187703
+                  }
+                },
+                "ensemble_dense_static_local_delta_alpha_1p00": {
+                  "total_mse": 10.486330269183348,
+                  "mode": "dense_static_local_delta",
+                  "alpha": 1.0,
+                  "ensemble": true,
+                  "mechanism_selectable": false,
+                  "ensemble_weights": {
+                    "austin_capmetro_all": 0.23487592217947956,
+                    "halifax_transit_all": 0.7651240778205204
+                  },
+                  "ensemble_weight_diagnostics": {
+                    "weighting": "similarity",
+                    "temperature": 1.0,
+                    "max_rows": 100000,
+                    "source_distances": {
+                      "austin_capmetro_all": 0.5412268629424785,
+                      "halifax_transit_all": 0.13935177101895788
+                    },
+                    "source_weights": {
+                      "austin_capmetro_all": 0.23487592217947956,
+                      "halifax_transit_all": 0.7651240778205204
+                    }
+                  },
+                  "vs_rigid_cfcmt": 0.8811046655240281,
+                  "per_mechanism_mse": {
+                    "headway": 14.797581163856062,
+                    "demand": 16.794282194791112,
+                    "dwell": 0.041895122500464205,
+                    "speed": 3.552417712912902,
+                    "reward": 0.00047157316536012943
+                  },
+                  "vs_rigid_cfcmt_by_mechanism": {
+                    "headway": 0.751853994687598,
+                    "demand": 3.3201961501331354,
+                    "dwell": 2.1976238292402495,
+                    "speed": 0.9796047097278175,
+                    "reward": 0.40649573922494747
+                  }
+                }
+              },
+              "target_similarity_distance": 0.30003158508060673,
+              "target_similarity_weight": 1.362552852477065
+            }
+          ],
+          "static_local_mean_vs_no_local": null,
+          "static_local_win_rate": 0.0,
+          "stable_mean_gain": false,
+          "min_win_rate": 0.6666666666666666,
+          "min_improvement": 0.0,
+          "selected_candidate": "no_local",
+          "selected_target_method": "neural_autodag_latent_cfcmt_fallback_trust",
+          "rigid_guard": {
+            "selected_candidate": "rigid_cfcmt",
+            "candidate_summaries": {},
+            "min_win_rate": 1.0,
+            "min_improvement": 0.0
+          },
+          "rigid_guard_selected_target_method": "cfcmt_ridge_template",
+          "rigid_first_delta_selector": {
+            "selected_candidate": "dense_static_local_delta_alpha_0p75",
+            "selected_mode": "dense_static_local_delta",
+            "selected_alpha": 0.75,
+            "candidate_summaries": {
+              "dense_delta_alpha_0p25": {
+                "mean_vs_rigid_cfcmt": 0.8728413133026836,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.7278323091527487,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "dense_delta_alpha_0p50": {
+                "mean_vs_rigid_cfcmt": 0.7982077287966497,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.6013325338057175,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "dense_delta_alpha_0p75": {
+                "mean_vs_rigid_cfcmt": 0.7760992464818991,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.6205006739589071,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "dense_delta_alpha_1p00": {
+                "mean_vs_rigid_cfcmt": 0.8065158663584303,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.7853367296123158,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "dense_static_local_delta_alpha_0p25": {
+                "mean_vs_rigid_cfcmt": 0.823577180283272,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.7103671569496136,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "dense_static_local_delta_alpha_0p50": {
+                "mean_vs_rigid_cfcmt": 0.7072006473146691,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.5451728988217694,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "dense_static_local_delta_alpha_0p75": {
+                "mean_vs_rigid_cfcmt": 0.6508704010941907,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.5044172256164664,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "dense_static_local_delta_alpha_1p00": {
+                "mean_vs_rigid_cfcmt": 0.6545864416218379,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.5881001373337057,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "ensemble_dense_delta_alpha_0p25": {
+                "mean_vs_rigid_cfcmt": 0.9207300811807052,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.7788438358137922,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "ensemble_dense_delta_alpha_0p50": {
+                "mean_vs_rigid_cfcmt": 0.8987324507992679,
+                "win_rate_vs_rigid_cfcmt": 0.5365238105276271,
+                "unweighted_mean_vs_rigid_cfcmt": 0.680210952460512,
+                "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": false
+              },
+              "ensemble_dense_delta_alpha_0p75": {
+                "mean_vs_rigid_cfcmt": 0.93400710885569,
+                "win_rate_vs_rigid_cfcmt": 0.5365238105276271,
+                "unweighted_mean_vs_rigid_cfcmt": 0.7041013499401608,
+                "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": false
+              },
+              "ensemble_dense_delta_alpha_1p00": {
+                "mean_vs_rigid_cfcmt": 1.0265540553499697,
+                "win_rate_vs_rigid_cfcmt": 0.5365238105276271,
+                "unweighted_mean_vs_rigid_cfcmt": 0.8505150282527375,
+                "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": false
+              },
+              "ensemble_dense_static_local_delta_alpha_0p25": {
+                "mean_vs_rigid_cfcmt": 0.8241148434488839,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.7305408835231267,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "ensemble_dense_static_local_delta_alpha_0p50": {
+                "mean_vs_rigid_cfcmt": 0.7229766885519641,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.5718092774194649,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "ensemble_dense_static_local_delta_alpha_0p75": {
+                "mean_vs_rigid_cfcmt": 0.6965855353092404,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.5238051816890144,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "ensemble_dense_static_local_delta_alpha_1p00": {
+                "mean_vs_rigid_cfcmt": 0.7449413837207141,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.5865285963317759,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "ensemble_static_local_delta_alpha_0p25": {
+                "mean_vs_rigid_cfcmt": 0.8884286468183067,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.8993232318675705,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "ensemble_static_local_delta_alpha_0p50": {
+                "mean_vs_rigid_cfcmt": 0.8329924567255024,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.8418328523558607,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "ensemble_static_local_delta_alpha_0p75": {
+                "mean_vs_rigid_cfcmt": 0.8336914297215872,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.8275288614648711,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "ensemble_static_local_delta_alpha_1p00": {
+                "mean_vs_rigid_cfcmt": 0.8905255658065595,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.8564112591946005,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "static_local_delta_alpha_0p25": {
+                "mean_vs_rigid_cfcmt": 0.8952574482585117,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.9037793445122578,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "static_local_delta_alpha_0p50": {
+                "mean_vs_rigid_cfcmt": 0.8424558353766675,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.8472613734779642,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "static_local_delta_alpha_0p75": {
+                "mean_vs_rigid_cfcmt": 0.8415951613544673,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.8304460868971195,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              },
+              "static_local_delta_alpha_1p00": {
+                "mean_vs_rigid_cfcmt": 0.892675426191912,
+                "win_rate_vs_rigid_cfcmt": 1.0,
+                "unweighted_mean_vs_rigid_cfcmt": 0.8533334847697241,
+                "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                "weighting": "similarity",
+                "folds": 3,
+                "stable": true
+              }
+            },
+            "min_win_rate": 1.0,
+            "min_improvement": 0.005,
+            "min_unweighted_win_rate": 1.0,
+            "weighting": "similarity"
+          },
+          "rigid_first_mechanism_delta_selector": {
+            "selected_by_mechanism": {
+              "headway": {
+                "selected_candidate": "dense_static_local_delta_alpha_1p00",
+                "selected_mode": "dense_static_local_delta",
+                "selected_alpha": 1.0
+              },
+              "demand": {
+                "selected_candidate": "dense_delta_alpha_0p75",
+                "selected_mode": "dense_delta",
+                "selected_alpha": 0.75
+              },
+              "dwell": {
+                "selected_candidate": "dense_delta_alpha_1p00",
+                "selected_mode": "dense_delta",
+                "selected_alpha": 1.0
+              },
+              "speed": {
+                "selected_candidate": "rigid_cfcmt",
+                "selected_mode": null,
+                "selected_alpha": 0.0
+              },
+              "reward": {
+                "selected_candidate": "static_local_delta_alpha_1p00",
+                "selected_mode": "static_local_delta",
+                "selected_alpha": 1.0
+              }
+            },
+            "candidate_summaries_by_mechanism": {
+              "headway": {
+                "dense_delta_alpha_0p25": {
+                  "mean_vs_rigid_cfcmt": 0.8777095245678774,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.7296752966499117,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_delta_alpha_0p50": {
+                  "mean_vs_rigid_cfcmt": 0.8054961333955811,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.6041047410385701,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_delta_alpha_0p75": {
+                  "mean_vs_rigid_cfcmt": 0.7833598264831124,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.6232883331659756,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_delta_alpha_1p00": {
+                  "mean_vs_rigid_cfcmt": 0.8113006038304688,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.7872260730321267,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_static_local_delta_alpha_0p25": {
+                  "mean_vs_rigid_cfcmt": 0.8239531624578099,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.7094086533012783,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_static_local_delta_alpha_0p50": {
+                  "mean_vs_rigid_cfcmt": 0.7043834124206471,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.5410471596504689,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_static_local_delta_alpha_0p75": {
+                  "mean_vs_rigid_cfcmt": 0.6412907498885104,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.49491551904757086,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_static_local_delta_alpha_1p00": {
+                  "mean_vs_rigid_cfcmt": 0.6346751748614009,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.5710137314925849,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "static_local_delta_alpha_0p25": {
+                  "mean_vs_rigid_cfcmt": 0.8880666738784511,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.8985088760038283,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "static_local_delta_alpha_0p50": {
+                  "mean_vs_rigid_cfcmt": 0.8292583113815128,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.8375403503100524,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "static_local_delta_alpha_0p75": {
+                  "mean_vs_rigid_cfcmt": 0.823574912509185,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.8170944229186725,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "static_local_delta_alpha_1p00": {
+                  "mean_vs_rigid_cfcmt": 0.8710164772614681,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.8371710938296887,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                }
+              },
+              "demand": {
+                "dense_delta_alpha_0p25": {
+                  "mean_vs_rigid_cfcmt": 0.8011232103049473,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.8238497087195996,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_delta_alpha_0p50": {
+                  "mean_vs_rigid_cfcmt": 0.6752015219475598,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.7109117194263092,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_delta_alpha_0p75": {
+                  "mean_vs_rigid_cfcmt": 0.6222349349278385,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.6611860321201295,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_delta_alpha_1p00": {
+                  "mean_vs_rigid_cfcmt": 0.6422234492457827,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.6746726468010601,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_static_local_delta_alpha_0p25": {
+                  "mean_vs_rigid_cfcmt": 0.7874249439956404,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.7896434260042291,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_static_local_delta_alpha_0p50": {
+                  "mean_vs_rigid_cfcmt": 0.6947641354311967,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.6937467096099925,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_static_local_delta_alpha_0p75": {
+                  "mean_vs_rigid_cfcmt": 0.7220175743066705,
+                  "win_rate_vs_rigid_cfcmt": 0.5458157158409783,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.7123098508172907,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "dense_static_local_delta_alpha_1p00": {
+                  "mean_vs_rigid_cfcmt": 0.8691852606220611,
+                  "win_rate_vs_rigid_cfcmt": 0.5458157158409783,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.8453328496261235,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "static_local_delta_alpha_0p25": {
+                  "mean_vs_rigid_cfcmt": 0.9718821081065084,
+                  "win_rate_vs_rigid_cfcmt": 0.5458157158409783,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.9627652898586968,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "static_local_delta_alpha_0p50": {
+                  "mean_vs_rigid_cfcmt": 1.0077851380132419,
+                  "win_rate_vs_rigid_cfcmt": 0.5458157158409783,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.9755056212658689,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "static_local_delta_alpha_0p75": {
+                  "mean_vs_rigid_cfcmt": 1.1077090897202015,
+                  "win_rate_vs_rigid_cfcmt": 0.5458157158409783,
+                  "unweighted_mean_vs_rigid_cfcmt": 1.0382209942215173,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "static_local_delta_alpha_1p00": {
+                  "mean_vs_rigid_cfcmt": 1.271653963227388,
+                  "win_rate_vs_rigid_cfcmt": 0.5458157158409783,
+                  "unweighted_mean_vs_rigid_cfcmt": 1.1509114087256425,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                }
+              },
+              "dwell": {
+                "dense_delta_alpha_0p25": {
+                  "mean_vs_rigid_cfcmt": 0.7124342743204485,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.729750814965549,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_delta_alpha_0p50": {
+                  "mean_vs_rigid_cfcmt": 0.5149016632984581,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.5534313435937802,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_delta_alpha_0p75": {
+                  "mean_vs_rigid_cfcmt": 0.40740216693403,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.4710415858846944,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_delta_alpha_1p00": {
+                  "mean_vs_rigid_cfcmt": 0.38993578522716416,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.48258154183829155,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_static_local_delta_alpha_0p25": {
+                  "mean_vs_rigid_cfcmt": 0.6717776713957813,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.6747580682179848,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_static_local_delta_alpha_0p50": {
+                  "mean_vs_rigid_cfcmt": 0.4787272164816601,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.48390595787031804,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_static_local_delta_alpha_0p75": {
+                  "mean_vs_rigid_cfcmt": 0.42084863525763616,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.4274436689570001,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_static_local_delta_alpha_1p00": {
+                  "mean_vs_rigid_cfcmt": 0.49814192772370997,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.505371201478031,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "static_local_delta_alpha_0p25": {
+                  "mean_vs_rigid_cfcmt": 0.8720991109376351,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.8570155372134719,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "static_local_delta_alpha_0p50": {
+                  "mean_vs_rigid_cfcmt": 0.8260675291272443,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.7848395459484325,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "static_local_delta_alpha_0p75": {
+                  "mean_vs_rigid_cfcmt": 0.8619052545688249,
+                  "win_rate_vs_rigid_cfcmt": 0.5458157158409783,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.7834720262048803,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "static_local_delta_alpha_1p00": {
+                  "mean_vs_rigid_cfcmt": 0.979612287262379,
+                  "win_rate_vs_rigid_cfcmt": 0.5458157158409783,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.8529129779828164,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                }
+              },
+              "speed": {
+                "dense_delta_alpha_0p25": {
+                  "mean_vs_rigid_cfcmt": 1.0711938082813024,
+                  "win_rate_vs_rigid_cfcmt": 0.4541842841590216,
+                  "unweighted_mean_vs_rigid_cfcmt": 1.2413276619110027,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.3333333333333333,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "dense_delta_alpha_0p50": {
+                  "mean_vs_rigid_cfcmt": 1.3132621649648095,
+                  "win_rate_vs_rigid_cfcmt": 0.4541842841590216,
+                  "unweighted_mean_vs_rigid_cfcmt": 2.1272689623930745,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.3333333333333333,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "dense_delta_alpha_0p75": {
+                  "mean_vs_rigid_cfcmt": 1.7262050700505214,
+                  "win_rate_vs_rigid_cfcmt": 0.4541842841590216,
+                  "unweighted_mean_vs_rigid_cfcmt": 3.657823901446214,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.3333333333333333,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "dense_delta_alpha_1p00": {
+                  "mean_vs_rigid_cfcmt": 2.310022523538438,
+                  "win_rate_vs_rigid_cfcmt": 0.4541842841590216,
+                  "unweighted_mean_vs_rigid_cfcmt": 5.832992479070419,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.3333333333333333,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "dense_static_local_delta_alpha_0p25": {
+                  "mean_vs_rigid_cfcmt": 1.0758295898903454,
+                  "win_rate_vs_rigid_cfcmt": 0.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 1.23811025207278,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "dense_static_local_delta_alpha_0p50": {
+                  "mean_vs_rigid_cfcmt": 1.3292167789246803,
+                  "win_rate_vs_rigid_cfcmt": 0.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 2.1378462882983733,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "dense_static_local_delta_alpha_0p75": {
+                  "mean_vs_rigid_cfcmt": 1.7601615671030064,
+                  "win_rate_vs_rigid_cfcmt": 0.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 3.6992081086767805,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "dense_static_local_delta_alpha_1p00": {
+                  "mean_vs_rigid_cfcmt": 2.3686639544253256,
+                  "win_rate_vs_rigid_cfcmt": 0.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 5.9221957132080085,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "static_local_delta_alpha_0p25": {
+                  "mean_vs_rigid_cfcmt": 1.0128819966285392,
+                  "win_rate_vs_rigid_cfcmt": 0.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 1.030584677942722,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "static_local_delta_alpha_0p50": {
+                  "mean_vs_rigid_cfcmt": 1.0308612233630747,
+                  "win_rate_vs_rigid_cfcmt": 0.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 1.074141433600081,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "static_local_delta_alpha_0p75": {
+                  "mean_vs_rigid_cfcmt": 1.0539376802036085,
+                  "win_rate_vs_rigid_cfcmt": 0.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 1.13067026697208,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "static_local_delta_alpha_1p00": {
+                  "mean_vs_rigid_cfcmt": 1.0821113671501397,
+                  "win_rate_vs_rigid_cfcmt": 0.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 1.2001711780587188,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                }
+              },
+              "reward": {
+                "dense_delta_alpha_0p25": {
+                  "mean_vs_rigid_cfcmt": 0.9878307164779622,
+                  "win_rate_vs_rigid_cfcmt": 0.9176604736313946,
+                  "unweighted_mean_vs_rigid_cfcmt": 1.0078160912615666,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "dense_delta_alpha_0p50": {
+                  "mean_vs_rigid_cfcmt": 0.9979567918262485,
+                  "win_rate_vs_rigid_cfcmt": 0.9176604736313946,
+                  "unweighted_mean_vs_rigid_cfcmt": 1.0626792970830243,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "dense_delta_alpha_0p75": {
+                  "mean_vs_rigid_cfcmt": 1.030378226044862,
+                  "win_rate_vs_rigid_cfcmt": 0.4541842841590216,
+                  "unweighted_mean_vs_rigid_cfcmt": 1.1645896174643748,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.3333333333333333,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "dense_delta_alpha_1p00": {
+                  "mean_vs_rigid_cfcmt": 1.085095019133797,
+                  "win_rate_vs_rigid_cfcmt": 0.4541842841590216,
+                  "unweighted_mean_vs_rigid_cfcmt": 1.3135470524056154,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.3333333333333333,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "dense_static_local_delta_alpha_0p25": {
+                  "mean_vs_rigid_cfcmt": 0.7054663037763153,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.7502070498691492,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "dense_static_local_delta_alpha_0p50": {
+                  "mean_vs_rigid_cfcmt": 0.5242506862132515,
+                  "win_rate_vs_rigid_cfcmt": 0.9176604736313946,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.6698366819972726,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "dense_static_local_delta_alpha_0p75": {
+                  "mean_vs_rigid_cfcmt": 0.4563531473108087,
+                  "win_rate_vs_rigid_cfcmt": 0.9176604736313946,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.758888896384371,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "dense_static_local_delta_alpha_1p00": {
+                  "mean_vs_rigid_cfcmt": 0.5017736870689874,
+                  "win_rate_vs_rigid_cfcmt": 0.9176604736313946,
+                  "unweighted_mean_vs_rigid_cfcmt": 1.0173636930304457,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 0.6666666666666666,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": false
+                },
+                "static_local_delta_alpha_0p25": {
+                  "mean_vs_rigid_cfcmt": 0.7397542361087858,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.7075955471353996,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "static_local_delta_alpha_0p50": {
+                  "mean_vs_rigid_cfcmt": 0.5644523330589516,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.5365078347140549,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "static_local_delta_alpha_0p75": {
+                  "mean_vs_rigid_cfcmt": 0.47409429085049554,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.4867368627359636,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                },
+                "static_local_delta_alpha_1p00": {
+                  "mean_vs_rigid_cfcmt": 0.4686801094834192,
+                  "win_rate_vs_rigid_cfcmt": 1.0,
+                  "unweighted_mean_vs_rigid_cfcmt": 0.5582826312011266,
+                  "unweighted_win_rate_vs_rigid_cfcmt": 1.0,
+                  "weighting": "similarity",
+                  "folds": 3,
+                  "stable": true
+                }
+              }
+            },
+            "min_win_rate": 1.0,
+            "min_improvement": 0.005,
+            "min_unweighted_win_rate": 1.0,
+            "weighting": "similarity"
+          },
+          "target_similarity": {
+            "target_env": "singapore_lta_all",
+            "weighting": "similarity",
+            "temperature": 1.0,
+            "max_rows": 100000
+          }
+        }
+      },
+      "elapsed_sec": 6.212557554244995
+    }
+  ],
+  "summary": {
+    "splits": 1,
+    "methods": {
+      "cfcmt_ridge_template": {
+        "mean_total_mse": 211.60778529102993,
+        "mean_vs_h2oplus_dense_ridge": 1.0588556019842283,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "h2oplus_dense_ridge": {
+        "mean_total_mse": 199.8457437392694,
+        "mean_vs_h2oplus_dense_ridge": 1.0,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_dense_delta_alpha_0p25": {
+        "mean_total_mse": 210.19875027297246,
+        "mean_vs_h2oplus_dense_ridge": 1.0518049888878804,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_dense_delta_alpha_0p50": {
+        "mean_total_mse": 209.03639988753173,
+        "mean_vs_h2oplus_dense_ridge": 1.0459887510051402,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_dense_delta_alpha_0p75": {
+        "mean_total_mse": 208.12073413470637,
+        "mean_vs_h2oplus_dense_ridge": 1.0414068883360008,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_dense_delta_alpha_1p00": {
+        "mean_total_mse": 207.4517530144974,
+        "mean_vs_h2oplus_dense_ridge": 1.0380594008804673,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_dense_static_local_delta_alpha_0p25": {
+        "mean_total_mse": 207.15591607557818,
+        "mean_vs_h2oplus_dense_ridge": 1.0365790744377625,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_dense_static_local_delta_alpha_0p50": {
+        "mean_total_mse": 203.18944589524637,
+        "mean_vs_h2oplus_dense_ridge": 1.0167314154077725,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_dense_static_local_delta_alpha_0p75": {
+        "mean_total_mse": 199.70837475003444,
+        "mean_vs_h2oplus_dense_ridge": 0.9993126248942575,
+        "wins_vs_h2oplus_dense_ridge": 1
+      },
+      "rigid_first_dense_static_local_delta_alpha_1p00": {
+        "mean_total_mse": 196.71270263994185,
+        "mean_vs_h2oplus_dense_ridge": 0.984322702897215,
+        "wins_vs_h2oplus_dense_ridge": 1
+      },
+      "rigid_first_ensemble_dense_delta_alpha_0p25": {
+        "mean_total_mse": 211.49569309199043,
+        "mean_vs_h2oplus_dense_ridge": 1.0582947083822822,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_ensemble_dense_delta_alpha_0p50": {
+        "mean_total_mse": 211.62153251597974,
+        "mean_vs_h2oplus_dense_ridge": 1.058924391164786,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_ensemble_dense_delta_alpha_0p75": {
+        "mean_total_mse": 211.98530356299736,
+        "mean_vs_h2oplus_dense_ridge": 1.0607446503317375,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_ensemble_dense_delta_alpha_1p00": {
+        "mean_total_mse": 212.587006233044,
+        "mean_vs_h2oplus_dense_ridge": 1.06375548588314,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_ensemble_dense_static_local_delta_alpha_0p25": {
+        "mean_total_mse": 205.60314516530423,
+        "mean_vs_h2oplus_dense_ridge": 1.0288092271484464,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_ensemble_dense_static_local_delta_alpha_0p50": {
+        "mean_total_mse": 201.50741501195705,
+        "mean_vs_h2oplus_dense_ridge": 1.0083147693896126,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_ensemble_dense_static_local_delta_alpha_0p75": {
+        "mean_total_mse": 199.3205948309894,
+        "mean_vs_h2oplus_dense_ridge": 0.9973722287077319,
+        "wins_vs_h2oplus_dense_ridge": 1
+      },
+      "rigid_first_ensemble_dense_static_local_delta_alpha_1p00": {
+        "mean_total_mse": 199.04268462239997,
+        "mean_vs_h2oplus_dense_ridge": 0.9959816051027979,
+        "wins_vs_h2oplus_dense_ridge": 1
+      },
+      "rigid_first_ensemble_static_local_delta_alpha_0p25": {
+        "mean_total_mse": 207.3645329069736,
+        "mean_vs_h2oplus_dense_ridge": 1.0376229637270318,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_ensemble_static_local_delta_alpha_0p50": {
+        "mean_total_mse": 204.6877209717896,
+        "mean_vs_h2oplus_dense_ridge": 1.0242285732081304,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_ensemble_static_local_delta_alpha_0p75": {
+        "mean_total_mse": 203.5773494854776,
+        "mean_vs_h2oplus_dense_ridge": 1.0186724304275234,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_ensemble_static_local_delta_alpha_1p00": {
+        "mean_total_mse": 204.03341844803793,
+        "mean_vs_h2oplus_dense_ridge": 1.020954535385212,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_mechanism_source_gated_delta": {
+        "mean_total_mse": 199.29753437891142,
+        "mean_vs_h2oplus_dense_ridge": 0.997256837448221,
+        "wins_vs_h2oplus_dense_ridge": 1
+      },
+      "rigid_first_source_gated_delta": {
+        "mean_total_mse": 199.70837475003444,
+        "mean_vs_h2oplus_dense_ridge": 0.9993126248942575,
+        "wins_vs_h2oplus_dense_ridge": 1
+      },
+      "rigid_first_static_local_delta_alpha_0p25": {
+        "mean_total_mse": 210.00278598837656,
+        "mean_vs_h2oplus_dense_ridge": 1.0508244111636353,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_static_local_delta_alpha_0p50": {
+        "mean_total_mse": 208.57916927346284,
+        "mean_vs_h2oplus_dense_ridge": 1.0437008333066506,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_static_local_delta_alpha_0p75": {
+        "mean_total_mse": 207.3369351462878,
+        "mean_vs_h2oplus_dense_ridge": 1.037484868413269,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "rigid_first_static_local_delta_alpha_1p00": {
+        "mean_total_mse": 206.27608360685227,
+        "mean_vs_h2oplus_dense_ridge": 1.0321765164834946,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "uncalibrated": {
+        "mean_total_mse": 278.95067622155824,
+        "mean_vs_h2oplus_dense_ridge": 1.3958299586579828,
+        "wins_vs_h2oplus_dense_ridge": 0
+      }
+    }
+  },
+  "real_apc_snapshot_proxy_check": {
+    "ok": true,
+    "summary_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/austin_real_apc_validation_summary.json",
+    "datasets": 2,
+    "total_transitions": 11567532,
+    "routes": 140,
+    "stops": 4891,
+    "trips": 641266,
+    "has_stop_event_vehicle_positions": true,
+    "has_stop_event_demand": true,
+    "has_synchronized_vehicle_snapshot": false,
+    "has_counterfactual_holding_action": false,
+    "usable_for_static_local_proxy": true,
+    "usable_for_true_vehicle_local_graph": false,
+    "observed_external_validation_summary": {
+      "datasets": 2,
+      "total_transitions": 11567532,
+      "all_cfcmt_beats_h2oplus": true,
+      "all_weighted_cfcmt_beats_h2oplus": true,
+      "all_weighted_cfcmt_beats_passive": false,
+      "all_weighted_cfcmt_beats_uncalibrated": false,
+      "mean_h2oplus_vs_passive_ratio": 10.263958139690743,
+      "mean_cfcmt_vs_passive_ratio": 5.364351307702391,
+      "mean_weighted_cfcmt_vs_passive_ratio": 3.3485917050841514,
+      "mean_h2oplus_vs_uncalibrated_ratio": 10.263958139690743,
+      "mean_cfcmt_vs_uncalibrated_ratio": 5.364351307702391,
+      "mean_weighted_cfcmt_vs_uncalibrated_ratio": 3.3485917050841514,
+      "mean_cfcmt_vs_h2oplus_ratio": 0.5226937210740101,
+      "mean_weighted_cfcmt_vs_h2oplus_ratio": 0.326283468384053,
+      "few_shot": {
+        "rows": 10,
+        "budgets": [
+          0.0,
+          0.01,
+          0.05,
+          0.1,
+          0.25
+        ],
+        "min_residual_gate_vs_passive": 0.9549424932150536,
+        "min_target_only_vs_passive": 0.8749373950544398,
+        "all_positive_budget_gate_beats_passive": true
+      }
+    },
+    "notes": "CapMetro APC provides observed stop events with vehicle_id and lat/lon, but not synchronized all-vehicle route snapshots. It is valid for external passive/few-shot APC validation and weak static local proxies; a serious local-graph claim still needs AVL/APC snapshots with neighboring vehicles/stops at the same decision time."
+  }
+}

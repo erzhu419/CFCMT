@@ -1,0 +1,223 @@
+{
+  "advance_contract": {
+    "closed_loop_forbidden_before_nested_stage": true,
+    "required_next_stage": "nested_leave_one_seed_out_joint_horizon_model_gate_selection",
+    "screen_is_not_deployment_evidence": true
+  },
+  "claim_boundary": "This is an adaptive 22-seed redevelopment screen. A feasible result only authorizes leakage-free nested selection; it does not authorize closed-loop or confirmatory claims. v84 and v85 remain sealed.",
+  "created_at_utc": "2026-08-30T08:16:09.166362+00:00",
+  "frozen_inputs": {
+    "cache_audit_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v83r79_external_v9_runtime_queue_trust_redevelopment_20260830/multihorizon_waiting_cache_audit_v1.json",
+    "cache_audit_sha256": "dcee3d860f6ef6feaf7fc4669b80078c0bc87e9eabbfb682f89b2756251dca35",
+    "cache_protocol_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v76_external_v9_multihorizon_waiting_cache.json",
+    "cache_protocol_sha256": "b34d0d4e8cd5618709558fe7362ca505495be08a8b8887d768470ec7b2f8f028",
+    "manifest_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v39_external_la_jinan_v9_manifest.json",
+    "manifest_sha256": "636e09d8e2f47d5fefaa26b33b0552373b01f185e77e18896c97751c267c356c",
+    "partition_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v65_external_v9_post_validation_redevelopment_partition.json",
+    "partition_sha256": "0950dc076766bc3a7ea57ff3f887baa608fb333a8770f8c32174cfd2d09d9d11"
+  },
+  "protocol": "tsc-v83r79-external-v9-multihorizon-latent-screen-v1",
+  "selection": {
+    "bootstrap": {
+      "replicates": 10000,
+      "seed": 20260830,
+      "unit": "simulator_seed"
+    },
+    "gate_candidates": [
+      {
+        "minimum_context_trust": 0.0,
+        "risk_multiplier": 0.0
+      },
+      {
+        "minimum_context_trust": 0.1,
+        "risk_multiplier": 0.0
+      },
+      {
+        "minimum_context_trust": 0.25,
+        "risk_multiplier": 0.0
+      },
+      {
+        "minimum_context_trust": 0.5,
+        "risk_multiplier": 0.0
+      },
+      {
+        "minimum_context_trust": 0.0,
+        "risk_multiplier": 0.25
+      },
+      {
+        "minimum_context_trust": 0.1,
+        "risk_multiplier": 0.25
+      },
+      {
+        "minimum_context_trust": 0.25,
+        "risk_multiplier": 0.25
+      },
+      {
+        "minimum_context_trust": 0.5,
+        "risk_multiplier": 0.25
+      }
+    ],
+    "selection_rule": {
+      "fallback": "retain_phase_pressure_if_no_candidate_is_feasible",
+      "maximum_bootstrap_95pct_upper_mean_delta": 0.0,
+      "maximum_equal_seed_scenario_mean_delta": -0.0015,
+      "maximum_harmful_group_fraction": 0.42,
+      "maximum_worst_seed_mean_delta": 0.0075,
+      "minimum_retained_groups_per_city": 500,
+      "minimum_retained_seed_fraction": 1.0
+    }
+  },
+  "stage": "post_cache_pre_multihorizon_oof_outcomes",
+  "training": {
+    "city": "jinan",
+    "collection_shards": 32,
+    "cross_fitting": "leave_one_simulator_seed_out_22_folds",
+    "expanded_candidate_count": 25,
+    "expected_action_count_per_group": 8,
+    "model_candidates": [
+      {
+        "config": {
+          "scope": "tls_time_phase_pair",
+          "shrinkage": 20.0,
+          "time_bin_sec": 300,
+          "uncertainty_quantile": 0.9
+        },
+        "family": "target_spatiotemporal_action_latent",
+        "key": "base_t300_s20"
+      },
+      {
+        "config": {
+          "scope": "tls_time_phase_pair",
+          "shrinkage": 5.0,
+          "time_bin_sec": 300,
+          "uncertainty_quantile": 0.9
+        },
+        "family": "target_spatiotemporal_action_latent",
+        "key": "base_t300_s5"
+      },
+      {
+        "config": {
+          "scope": "tls_time_phase_pair",
+          "shrinkage": 20.0,
+          "time_bin_sec": 600,
+          "uncertainty_quantile": 0.9
+        },
+        "family": "target_spatiotemporal_action_latent",
+        "key": "base_t600_s20"
+      },
+      {
+        "config": {
+          "base": {
+            "scope": "tls_time_phase_pair",
+            "shrinkage": 20.0,
+            "time_bin_sec": 300,
+            "uncertainty_quantile": 0.9
+          },
+          "distance_bandwidth": 1.0,
+          "feature_set": "state_action",
+          "local_shrinkage": 2.0,
+          "neighbor_count": 10,
+          "uncertainty_quantile": 0.9
+        },
+        "family": "target_state_conditioned_spatiotemporal_latent",
+        "key": "state_action_k10_s2"
+      },
+      {
+        "config": {
+          "base": {
+            "scope": "tls_time_phase_pair",
+            "shrinkage": 20.0,
+            "time_bin_sec": 300,
+            "uncertainty_quantile": 0.9
+          },
+          "distance_bandwidth": 1.0,
+          "feature_set": "compact_state",
+          "local_shrinkage": 2.0,
+          "neighbor_count": 10,
+          "uncertainty_quantile": 0.9
+        },
+        "family": "target_state_conditioned_spatiotemporal_latent",
+        "key": "compact_k10_s2"
+      }
+    ],
+    "reference_policy": "phase_pressure",
+    "rollout_prefix_horizons_sec": [
+      10,
+      30,
+      60,
+      120,
+      450
+    ],
+    "scenarios": [
+      "jinan_3x4_real"
+    ],
+    "sealed_confirmatory_seeds": [
+      30141,
+      24645,
+      67247,
+      52523,
+      40060,
+      41298,
+      70477,
+      77601,
+      24309,
+      24398,
+      95860,
+      42032,
+      89655,
+      75134,
+      22155,
+      49777,
+      98901,
+      44735,
+      78221,
+      52867,
+      25771,
+      90526,
+      36997,
+      30645,
+      99518,
+      32522,
+      91474,
+      30210,
+      66414,
+      55121,
+      34778,
+      48806
+    ],
+    "sealed_prospective_seeds": [
+      10091,
+      11003,
+      12007,
+      91684,
+      62701,
+      76328,
+      85881,
+      83387
+    ],
+    "seeds": [
+      80314,
+      88625,
+      27178,
+      77524,
+      63775,
+      50945,
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ]
+  }
+}

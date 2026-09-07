@@ -1,0 +1,182 @@
+{
+  "protocol": "tsc-v42r38-external-la-nanchang-confirmation-v5",
+  "frozen_at_utc": "2026-08-09T00:53:56Z",
+  "nonbehavioral_amendment": {
+    "amended_at_utc": "2026-08-09T01:05:18Z",
+    "amends_protocol": "tsc-v42r38-external-la-nanchang-confirmation-v1",
+    "pre_amendment_config_sha256": "33ba97410d8ae9e1a5b3ce932dcfedfbbe78295f87e278a0204b6c330130e81c",
+    "pre_amendment_script_sha256": "f4dbfcc878264de27320db86ef4f3c15f880c07fe0b117d228903f1875ee4e7c",
+    "reason": "record generated artifacts relative to the conversion root and emit an explicit scheduler completion marker; topology, demand, signals, runtime, and efficacy protocol are unchanged",
+    "excluded_conversion_root": "cf_h2o/results/cluster/tsc_v42r38_external_la_nanchang_20260809/conversion/full_networks"
+  },
+  "pre_efficacy_conversion_correction": {
+    "corrected_at_utc": "2026-08-09T01:16:23Z",
+    "amends_protocol": "tsc-v42r38-external-la-nanchang-confirmation-v2",
+    "pre_correction_config_sha256": "6dcd1107566e3a29fff3990901967e8dd84b68a50c8b207a84eb51ec6d2897ad",
+    "pre_correction_script_sha256": "704f30e4813015800c765f88cd56c0451bd30d978db17acc95ae61020d8d9373",
+    "reason": "deduplicate exact CityFlow lane-link records before assigning SUMO connection and TLS link indices; external efficacy remained sealed",
+    "excluded_conversion_root": "cf_h2o/results/cluster/tsc_v42r38_external_la_nanchang_20260809/conversion/full_networks_corrected",
+    "la_lane_link_inventory": {
+      "source_records": 708,
+      "unique_sumo_connections": 638,
+      "exact_duplicate_records": 70,
+      "controlled_source_records": 198,
+      "controlled_unique_connections": 191,
+      "controlled_exact_duplicate_records": 7
+    }
+  },
+  "pre_efficacy_nanchang_connection_correction": {
+    "corrected_at_utc": "2026-08-09T01:28:25Z",
+    "amends_protocol": "tsc-v42r38-external-la-nanchang-confirmation-v3",
+    "pre_correction_config_sha256": "2f52c617165545a4729a90cebaed5efd36a03e13e2cfd3e8fe00e7a5b3fb3fec",
+    "pre_correction_script_sha256": "672b79e92d1b9c00a806387702144f6744c35f32982abc02e32158f9296b946b",
+    "reason": "replace netconvert-inferred Nanchang turns with explicit CBEngine lane movement flags and signal approach ordering; external efficacy remained sealed",
+    "v3_execution_status": "failed before atomic output installation due tuple-unpack regression; no v3 output is admissible",
+    "nanchang_connection_inventory": {
+      "movement_order": [
+        "left",
+        "straight",
+        "right"
+      ],
+      "signal_approach_order": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "generated_lane_connections": 13390,
+      "full_flow_route_transitions": 186350,
+      "missing_route_edge_pairs": 0
+    }
+  },
+  "pre_efficacy_nanchang_demand_order_correction": {
+    "corrected_at_utc": "2026-08-09T02:06:16Z",
+    "amends_protocol": "tsc-v42r38-external-la-nanchang-confirmation-v4",
+    "pre_correction_config_sha256": "badbac619c6c1268c7c0ef0042e25fa369db86e3c464021f611ac2ccd6466cd0",
+    "pre_correction_script_sha256": "4d35b9d775ea5c75586382abba1bbf5917063fbdf12092f4363f989fd4a13db8",
+    "reason": "expand all CBEngine inclusive flow intervals into explicit vehicles and globally sort them by departure time so SUMO incremental route loading preserves the full demand; add SUMO-summary demand conservation to admission; external efficacy remained sealed",
+    "excluded_conversion_root": "cf_h2o/results/cluster/tsc_v42r38_external_la_nanchang_20260809/conversion/full_networks_v4",
+    "nanchang_demand_inventory": {
+      "source_flow_definitions": 9786,
+      "explicit_vehicle_count": 126669,
+      "encoding": "explicit_globally_departure_sorted_vehicles",
+      "source_flow_begin_nondecreasing": false
+    }
+  },
+  "development_gate": {
+    "v41_audit_sha256": "5bcae9467cdb4cc157676e94078d204702ebdca6d51007ffca4bc85d13951066",
+    "required_status": "PASS",
+    "frozen_selector": {
+      "scope": "all",
+      "minimum_improvement": 0.0,
+      "maximum_fold_regression": 0.1,
+      "standard_error_multiplier": 0.0,
+      "key": "scope_all_tau_0_rho_0p1_lambda_0"
+    }
+  },
+  "source_evidence": {
+    "manifest": "cf_h2o/config/traffic_signal_cross_city_v2_saltlake18.json",
+    "manifest_sha256": "8c5259597a24e7558a698f38219780f5f8a0ae246daa682282263adfd8e24ec1",
+    "counterfactual_cache_sha256": "14c6dfad87999e55fa86fa942ac0ca2334129f4d1662b3c31a6e4fc7aa74c242",
+    "source_rule_baseline_sha256": "f9223a7001078d9a6df0e1a2ad4bfe1d2bc59fc2547621f092e8be702596dbfa",
+    "source_simulator_seeds": [
+      2027,
+      3037,
+      4047
+    ],
+    "external_targets_must_not_source_each_other": true
+  },
+  "conversion": {
+    "script": "scripts/data/convert_libsignal_external_to_sumo.py",
+    "script_sha256": "c3f2c35365696b35ee1f920ec2fe1a1a54315aee05406485d0b19143b30bd95a",
+    "required_netconvert_version": "1.22.0",
+    "output_root": "cf_h2o/results/cluster/tsc_v42r38_external_la_nanchang_20260809/conversion/full_networks_v5",
+    "generated_artifact_paths": "relative_to_conversion_root",
+    "full_network_only": true,
+    "sources": {
+      "la_flow": {
+        "path": "H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/LA_1x4/LA.json",
+        "sha256": "60d00b06111d63530302f2b401cd753686d73f8c44e0c30434bfc14295520180"
+      },
+      "la_roadnet": {
+        "path": "H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/LA_1x4/roadnet_LA.json",
+        "sha256": "7ec7b5b8a1855c454d56a13112b0435a5a178194b3029525f331402a607f8c24"
+      },
+      "nanchang_flow": {
+        "path": "H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/pb_nanchang/flow_nanchang.txt",
+        "sha256": "3c5b952ae79e3717ad8b85cfa68086d3dd5a64794e800889f1da07224ca4722e"
+      },
+      "nanchang_roadnet": {
+        "path": "H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/pb_nanchang/roadnet_nanchang.txt",
+        "sha256": "b0e455f3ee894b33bd54b5af8d461df6f4380b611a11941e1ab8bb1cc04f92f2"
+      }
+    }
+  },
+  "network_admission": {
+    "script": "cf_h2o/eval/traffic_signal_external_network_admission.py",
+    "script_sha256": "9a437dbe0a36963a04603955d579e4e13b266ce9d61a8436b5cdab30c576ea0d",
+    "require_exact_source_hashes": true,
+    "require_all_routes_topologically_contiguous": true,
+    "require_netconvert_success": true,
+    "require_sumo_route_load_success": true,
+    "require_sumo_summary_demand_conservation": true,
+    "exact_demand_count_field": "vehicle_count",
+    "minimum_controllable_tls": 1,
+    "minimum_safe_complete_action_groups_per_adaptation_seed_pair": 100,
+    "maximum_collision_count": 0,
+    "maximum_teleport_fraction": 0.01,
+    "simulation_horizon_sec": 3600,
+    "backend": "libsumo"
+  },
+  "target_protocol": {
+    "adaptation_seeds": [
+      5057,
+      6067
+    ],
+    "evaluation_seeds": [
+      7079
+    ],
+    "closed_loop_seeds": [
+      8081,
+      9091
+    ],
+    "target_group_budget": 100,
+    "selection_seed": 20260803,
+    "cross_fit_folds": 5,
+    "groups_per_fold": 20,
+    "model_training_groups_per_fold": 80,
+    "counterfactual_collection_shards": 16,
+    "model_ensemble_size": 5,
+    "base_families": [
+      "causal_group_normalized_rigid_advantage",
+      "causal_antisymmetric_pairwise_advantage"
+    ]
+  },
+  "offline_confirmation_gate": {
+    "minimum_macro_relative_improvement": 0.02,
+    "minimum_improved_external_cities": 2,
+    "maximum_absolute_city_regression": 0.01,
+    "minimum_non_anchor_targets": 1
+  },
+  "closed_loop": {
+    "enabled_only_after_offline_gate": true,
+    "horizon_sec": 3600,
+    "baselines": [
+      "fixed_time",
+      "phase_pressure",
+      "max_pressure",
+      "rigid_anchor_mpc",
+      "simulator_only_mpc",
+      "h2oplus_style_dense_residual_mpc"
+    ],
+    "primary_metric": "mean_waiting_time_sec",
+    "secondary_metrics": [
+      "mean_travel_time_sec",
+      "mean_queue_vehicles",
+      "throughput",
+      "teleports",
+      "collisions"
+    ]
+  },
+  "claim_boundary": "external simulator-network confirmation with target offline adaptation; not real-world counterfactual or zero-shot validation"
+}

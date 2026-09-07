@@ -333,6 +333,77 @@ class InvariantMechanismWorldModel:
         }
 
 
+class FixedParentResidualWorldModel:
+    """Fit declared mechanism parents without cross-domain model selection.
+
+    This estimator is intended for adaptation-only compatibility probes where
+    target-only and source-plus-target fits must use the same fixed hypothesis
+    class. It keeps the invariant model's domain-balanced robust residual fit,
+    but disables latent factors and does not require multiple domains.
+    """
+
+    def __init__(
+        self,
+        definitions: Sequence[MechanismDefinition],
+        *,
+        parent_variant: str = "physical",
+        config: MechanismFitConfig | None = None,
+    ) -> None:
+        self.definitions = tuple(definitions)
+        self.parent_variant = str(parent_variant)
+        self.config = config or MechanismFitConfig()
+        self.components: dict[str, _MechanismComponent] = {}
+        for definition in self.definitions:
+            definition.validate()
+            if self.parent_variant not in definition.parent_variants:
+                raise ValueError(
+                    f"{definition.name}: fixed parent variant "
+                    f"{self.parent_variant!r} is absent"
+                )
+
+    def fit(self, dataset: MechanismDataset) -> dict[str, Any]:
+        _validate_dataset_outputs(dataset, self.definitions)
+        if dataset.size < int(self.config.min_domain_rows):
+            raise ValueError("fixed-parent mechanism fit has too few rows")
+        diagnostics: dict[str, Any] = {}
+        self.components = {}
+        for definition in self.definitions:
+            parent_names = tuple(
+                definition.parent_variants[self.parent_variant]
+            )
+            component = _fit_component(
+                dataset,
+                definition,
+                variant_name=self.parent_variant,
+                parent_names=parent_names,
+                latent_rank=0,
+                adaptation_shrinkage=0.0,
+                config=self.config,
+            )
+            self.components[definition.name] = component
+            diagnostics[definition.name] = {
+                "target_name": definition.target_name,
+                "variant_name": self.parent_variant,
+                "parent_names": list(parent_names),
+                "latent_rank": 0,
+                "adaptation_shrinkage": 0.0,
+                "domain_count": int(np.unique(dataset.domains).size),
+                "row_count": int(dataset.size),
+                "calibration_error": float(component.calibration_error),
+                "target_scale": float(component.target_scale),
+                "fit_protocol": "fixed-parent-rank0-domain-balanced-residual-v1",
+            }
+        return diagnostics
+
+    def predict(self, dataset: MechanismDataset) -> dict[str, dict[str, np.ndarray]]:
+        if not self.components:
+            raise RuntimeError("fit must be called before predict")
+        return {
+            name: component.predict(dataset)
+            for name, component in self.components.items()
+        }
+
+
 class DenseResidualWorldModel:
     """Same-output dense baseline with direct access to local and context features."""
 

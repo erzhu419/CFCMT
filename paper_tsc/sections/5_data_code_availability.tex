@@ -1,0 +1,27 @@
+\section{Data and Code Availability}
+
+The source benchmark combines public SUMO/RESCO scenarios
+\citep{lopez2018microscopic,ault2021reinforcement} with public traffic-signal
+benchmark files used by LibSignal \citep{mei2023libsignal}.  The external Los
+Angeles input is the public LibSignal \texttt{LA\_1x4} CityFlow roadnet and
+flow \citep{zhang2019cityflow}, and the Jinan inputs are the public CoLight
+\texttt{Jinan/3\_4} roadnet and three published flow files
+\citep{wei2019colight}.  Conversion to SUMO, route conservation,
+signal-link identity, collision-free admission and exact source hashes are
+recorded in the v8 conversion manifest.
+
+The manuscript source-data directory contains machine-readable CSV files for
+every new figure and table, together with a manifest linking the development
+audit, source and adaptation caches, deployment models, held-out result and
+closed-loop aggregate by SHA-256.  It also contains the target-label-only
+source-contribution table generated from the v90 and v91 audits.  The
+seven-city source-gate CSV and LaTeX table are regenerated directly from the
+frozen v145, v146 and v148 aggregate JSON files; all three decisions remain
+rejected.  The 512 full v91 rollout records remain in the execution archive and
+are represented locally by six complete shard summaries.  The current draft
+makes no claim of a public
+repository DOI.  Before submission, the code snapshot, converted networks,
+configuration files, model artifacts, aggregate JSON, per-rollout results,
+\texttt{tripinfo} files and figure-generation scripts must be deposited in a
+persistent public archive subject to the licences of the upstream benchmark
+files; the DOI should replace this sentence in the accepted manuscript.

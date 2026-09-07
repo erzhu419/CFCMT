@@ -23,13 +23,54 @@ Singapore is the hardest target: unweighted \ours is only slightly better than \
 \label{tab:strict-loo}
 \end{table}
 
-\subsection{Policy-level validation}
+\subsection{Target-information ladder}
+
+\Cref{tab:target-information-ladder} separates the regimes that are easy to confuse in cross-city transit transfer.
+The single-source zero-shot diagnostic is deliberately brittle: across the 12 ordered source-target pairs, \ours wins against \Htwo on 6 pairs with mean ratio $0.927$.
+This shows that ``train on one city, deploy in another'' is possible in some directions but not a stable main claim.
+Adding source diversity changes the result: the multi-source target-label-free setting wins on all four held-out cities with mean weighted ratio $0.578$.
+With small target-route historical labels, the same framework becomes target offline adaptation rather than zero-shot transfer; the $1\%$--$25\%$ route-budget points remain below \Htwo-style dense adaptation on three of four strict targets.
+The $100\%$ target-route point is kept only as an upper-bound reference.
+
+\begin{center}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/target_information_ladder_table.tex}}
+\captionof{table}{Target-information ladder. Zero-shot rows use no target transition labels before reporting; target offline adaptation rows use the stated fraction of passive target route labels and evaluate on held-out target routes except for the oracle row.}
+\label{tab:target-information-ladder}
+\end{center}
+
+\subsection{Guarded full-module source ensemble}
+
+The full-module diagnostic tests whether the rigid \ours residual can be improved without target-label calibration.
+The best selected variant is a rigid-first source-gated delta with a guarded source-city ensemble.
+It uses unlabeled target-city simulator summaries to weight source-city residual experts and to decide whether an ensemble is allowed; target transition labels remain held out.
+The source-summary feature set is selected only by source-fold diagnostics, not by target performance; the selected feature sets are reported in \Cref{tab:guarded-source-feature}.
+Across the six configured selector-stress splits, the guarded selector lowers mean total MSE from $884.853$ for the dense \Htwo-style baseline and $851.893$ for rigid \ours to $836.115$, with $6/6$ wins against \Htwo.
+A same-information dense \Htwo source ensemble, using the same unlabeled target summaries for source weighting, improves to $846.466$ but remains weaker than the guarded mechanism-factored ensemble.
+Because our dense baseline is a reproducible \Htwo-style residual-transfer surrogate rather than a full H2O+ reproduction, \Cref{tab:h2oplus-fidelity} lists the implemented and omitted components.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/guarded_ensemble_table.tex}}
+\caption{Full-module guarded source-ensemble diagnostic. This table uses six configured selector-stress splits, including repeated target cities; it is therefore a source-selection diagnostic rather than the four-target strict leave-one-city-out count in \Cref{tab:strict-loo}.}
+\label{tab:guarded-ensemble}
+\end{table}
+
+The guard is important.
+MBTA and Austin have a dominant similar source under the selected target-summary descriptor, so the ensemble is allowed and improves the selected MSE substantially.
+Halifax has diffuse source weights, so the guard falls back to rigid \ours and avoids the unguarded ensemble regression.
+Per-mechanism hard splicing is weaker in this diagnostic, with mean total MSE $864.592$, because mechanism-level source-fold improvements do not reliably transfer to every target.
+Additional same-information baselines, selector ablations, threshold sensitivity, target-label leakage checks, feature-set ablations, and oracle-gap diagnostics are reported in \Cref{tab:guarded-same-info,tab:guarded-selector-ablation,tab:guarded-threshold,tab:guarded-label-audit,tab:guarded-feature-ablation,tab:guarded-oracle-gap}.
+
+\subsection{One-step policy proxy}
 
 The strict one-step policy summary is more mixed but still favorable.
 \ours improves reward/regret on three of four targets, improves mean absolute headway error on three of four, and lowers bunching rate on all four targets.
 The mean regret ratio is $0.876$, and the mean bunching-rate ratio is $0.644$.
 Halifax is the main policy exception: \ours lowers headway error slightly but has worse reward/regret than \Htwo.
-This is consistent with a limited policy claim: mechanism-factored transfer improves cross-city dynamics strongly and often improves one-step policy quality, but it is not a universal policy dominance result.
+This is consistent with a limited control-facing claim: mechanism-factored transfer improves cross-city dynamics strongly and often improves one-step policy-proxy quality, but it is not a closed-loop operational dominance result.
 
 \begin{figure}[t]
 \centering
@@ -42,7 +83,7 @@ This is consistent with a limited policy claim: mechanism-factored transfer impr
 \centering
 \scriptsize
 \resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/cross_city_policy_table.tex}}
-\caption{Strict leave-one-city-out one-step policy metrics. The table includes reward, regret ratio, headway error ratio, bunching, large-gap rate, and hold-time difference.}
+\caption{Strict leave-one-city-out one-step policy-proxy metrics. The table includes reward, regret ratio, headway error ratio, bunching, large-gap rate, and hold-time difference.}
 \label{tab:policy}
 \end{table}
 
@@ -60,19 +101,34 @@ The best setting in the grid is $T=0.5,\lambda=0$, but the default is not select
 \label{fig:weight-sensitivity}
 \end{figure}
 
-\subsection{Calibration budget and mechanism-level errors}
+\subsection{Target offline adaptation and mechanism-level errors}
 
-The target-route calibration-budget sweep tests whether a calibrated dense residual baseline quickly erases the zero-calibration \ours advantage.
-At $0\%$ target calibration, weighted \ours has mean ratio $0.578$ against the dense source-only baseline.
+The target-route offline-adaptation sweep tests whether a dense residual baseline with the same target passive-label budget quickly erases the no-target-label \ours advantage.
+At $0\%$ target labels, weighted \ours has mean ratio $0.578$ against the dense source-only baseline.
 When $1\%$, $5\%$, $10\%$, and $25\%$ of target routes are added to the dense baseline, the uncalibrated weighted-\ours/H2O ratio remains below $1$ on three of four strict targets, with mean ratios $0.581$, $0.586$, $0.617$, and $0.677$, respectively.
-The $100\%$ target-route point is an in-sample oracle reference and should not be interpreted as deployable zero-calibration evidence.
+When \ours is allowed to use the same target route budget through the mechanism-weighted sufficient statistics, the corresponding mean ratios are $0.580$, $0.583$, $0.609$, and $0.660$.
+The $100\%$ target-route point is an in-sample oracle reference and should not be interpreted as deployable no-calibration evidence.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.70\textwidth]{calibration_budget_ratio.png}
-\caption{Target-route calibration-budget sensitivity. Ratios compare weighted \ours with no target calibration or the same target budget against a dense \Htwo-style baseline using that target budget.}
+\caption{Target-route offline-adaptation budget sensitivity. Ratios compare weighted \ours with no target labels or the same target route-label budget against a dense \Htwo-style baseline using that target budget.}
 \label{fig:calibration}
 \end{figure}
+
+The same-information adaptation-baseline comparison gives a sharper design lesson.
+AdaRL-style selected refit is nearly identical to full \ours refit because the target calibration slice usually selects all mechanism groups.
+By contrast, the low-dimensional FANsRL-style context-bias adapter is better than full refit on average at every positive non-oracle budget, with mean ratios $0.559$, $0.545$, $0.572$, and $0.629$ against the dense adapted baseline.
+It wins on four targets at the $1\%$ budget and on three of four targets at larger route budgets.
+Thus the best few-shot variant is not unconstrained target refitting; it is mechanism-factored transfer plus a low-dimensional target context correction.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/adaptation_baseline_table.tex}}
+\caption{Same-information few-shot adaptation baselines. Ratios are total MSE relative to the dense \Htwo-style baseline using the same target route-label budget. The $1.0$ budget is an in-sample oracle reference.}
+\label{tab:adaptation-baselines}
+\end{table}
 
 Per-mechanism errors show that the total-MSE advantage is not driven by one output group only.
 Weighted \ours improves all three mechanism groups on average: headway/gap ratio $0.574$, demand/dwell/reward ratio $0.771$, and speed ratio $0.668$.
@@ -142,9 +198,81 @@ At $25\%$ target line-group budget, target-only \ours reaches the best ratios, $
 Thus the real APC gap is not evidence against the mechanism-factored representation; it is evidence that source-only residual transfer needs target-domain trust calibration under real APC noise.
 This is the same qualitative regime targeted by AdaRL/FANsRL-style few-shot adaptation, while the direct AdaRL/FANsRL codebases are environment-specific RL systems rather than drop-in bus residual evaluators.
 
+The chronological time-budget sweep is stricter and closer to a deployment story.
+One hour of target history is too small: only $2$ and $18$ calibration transitions are available in the two APC slices, and the residual gate remains above the passive baseline.
+At six hours, the residual gate reaches parity or better in both datasets, with ratios $1.000$ and $0.961$.
+At one day, source-plus-target refitting is below the passive baseline in both datasets, with ratios $0.943$ and $0.938$.
+At one week, target-only mechanism-factored adaptation is best, with ratios $0.893$ and $0.876$.
+This supports the intended target-offline-adaptation claim: a small but nontrivial amount of passive target history is enough to calibrate mechanism trust, whereas the pure source-only model should not be deployed without such a gate.
+
 \subsection{Auxiliary sampled rollout}
 
 The sampled BusSimEnv rollout is not primary evidence, but it checks whether the learned one-step action preferences are grossly inconsistent with executable line environments.
-Under a fair seeded rollout over ten Austin/Halifax line episodes, weighted \ours reaches parity with the dense policy: mean reward is $-1121.574$ for weighted \ours and $-1121.612$ for \Htwo.
-The headway-error metric is slightly worse for weighted \ours, $588.2$ seconds versus $585.6$ seconds.
-Thus rollout supports a limited claim: after schema and reward alignment, \ours does not collapse in executable simulation, but the closed-loop advantage remains too small to serve as the main evidence.
+We expand this diagnostic to $80$ route episodes per policy across all four city bundles and add a threshold equalization baseline.
+The result is mixed and weaker than the one-step policy proxy.
+On raw mean reward, the dense \Htwo-style policy is best, with $-615.8$ versus $-644.9$ for weighted \ours.
+However, raw rewards have different city scales.
+After averaging city-level ratios, weighted \ours has lower headway error than \Htwo, with ratio $0.960$, and a similar bunching rate, with ratio $0.979$.
+The city-stratified paired bootstrap gives a $95\%$ confidence interval of $[0.898,1.008]$ for the weighted-\ours/\Htwo headway-error ratio and $[0.877,1.052]$ for the bunching-rate ratio.
+The city-level pattern remains uneven: \Htwo wins clearly on Austin reward, while weighted \ours improves headway or reward metrics on Halifax, MBTA, and Singapore.
+Thus the expanded rollout should be read as a boundary condition, not as control superiority evidence: the dynamics-transfer result is strong, but closed-loop policy performance remains metric- and environment-sensitive.
+
+We also add a libsumo full-line counterfactual diagnostic after inserting explicit bus-stop dwell points into generated SUMO scenarios.
+The executable scenarios contain all validated lines in the four city bundles: $234$ Austin, $176$ Halifax, $940$ MBTA, and $789$ Singapore lines, for $58116$ generated bus-stop points.
+The rollout uses a four-hour window, at most eight departures per line, the same $\{0,15,30,45,60\}$ second action grid for residual fitting and control, and excludes first-arrival warm-up events whose preceding headway is unobserved.
+Across the reported policies, the diagnostic evaluates roughly $9.6$--$10.0$ thousand repeated-headway stop decisions after discarding about $7.0$--$8.0$ thousand warm-up stop events.
+The unconstrained learned residual controllers remain weak in closed loop: dense \Htwo-MPC has mean headway error $685.55$, no holding has $683.84$, and weighted \ours-MPC improves to $645.35$ but still under-holds severe bunching cases.
+Classical holding is much stronger on this generated topology: threshold equalization reaches $531.35$, and a retuned Daganzo rule with $\alpha=0.8$ reaches $529.64$.
+The best current executable controller is a target-summary gated Daganzo prior.
+It uses only target route/timetable summaries to choose a conservative or aggressive Daganzo gain and reaches mean headway error $528.63$, reward $-529.98$, and bunching rate $0.340$.
+Against dense \Htwo-MPC, the city-stratified paired line bootstrap gives this target-summary prior a reward delta of $155.75$ with interval $[135.14,184.26]$, headway-error ratio $0.660$ with interval $[0.625,0.692]$, and bunching ratio $0.650$ with interval $[0.593,0.698]$.
+This diagnostic changes the control-facing interpretation.
+The mechanism-factored world model improves over dense learned residual MPC, but the closed-loop win over classical rules comes from contextualizing a physically meaningful control prior, not from free-form residual MPC.
+The generated SUMO scenarios are still not field-calibrated counterfactuals, so the result is best read as a design constraint for the next controller: \ours should instantiate target mechanism state and gate a safe holding prior before allowing learned residual actions.
+
+\subsection{RESCO traffic-signal stress test}
+
+The traffic-signal stress test evaluates whether the same mechanism-transfer idea remains useful in a counterfactual control setting where strong classical rules are available.
+We use eight RESCO SUMO scenarios, three matched random seeds, 600-second closed-loop rollouts, and the original SUMO \texttt{tlLogic} green phases as the action set.
+We also include a generated native SUMO actuated-signal baseline that preserves the same network and route demand but lets SUMO's built-in actuated controller run without learned phase overrides.
+The reported metric is mean queue averaged over target scenarios and seeds, with throughput ratio as a secondary check.
+
+\begin{center}
+\includegraphics[width=0.78\textwidth]{traffic_signal_resco_extended_summary.png}
+\captionof{figure}{Extended RESCO multi-seed phase-transfer validation. Bars show mean queue across eight held-out RESCO target scenarios and three matched seeds; error bars show seed-level standard deviation of mean queue.}
+\label{fig:resco-traffic-signal}
+\end{center}
+
+\begin{center}
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/traffic_signal_resco_extended_summary.tex}}
+\captionof{table}{Extended RESCO traffic-signal stress test. Trip time, trip wait, and time loss are official SUMO \texttt{tripinfo} metrics over completed vehicles and should be read together with throughput; lower queue and higher throughput are primary.}
+\label{tab:resco-traffic-signal}
+\end{center}
+
+\Cref{fig:resco-traffic-signal,tab:resco-traffic-signal} show the main result.
+MaxPressure has mean queue $12.907$, while the pressure-guarded CFCMT phase controller has mean queue $12.918$.
+Their official \texttt{tripinfo} metrics are essentially tied: CFCMT has trip time $87.486$, trip wait $8.011$, and time loss $24.413$, compared with $87.589$, $8.061$, and $24.517$ for MaxPressure.
+The next strongest classical row is phase pressure with mean queue $13.245$; it has lower trip time, wait, and time loss, but also lower throughput, so these trip metrics must be interpreted with queue and throughput rather than in isolation.
+The dense \Htwo-style phase residual, target-static simulator MPC, generated native actuated SUMO baseline, and fixed RESCO programs are weaker, with mean queues $17.228$, $20.402$, $30.183$, and $42.673$, respectively.
+The paired seed-target bootstrap for guarded CFCMT versus MaxPressure has mean delta $0.011$ with 95\% interval $[-0.046,0.079]$, so the correct conclusion is near-parity with MaxPressure rather than a significant win.
+Against phase pressure the mean delta is $-0.327$ but the interval $[-0.759,0.023]$ still crosses zero.
+Against dense \Htwo-style residual transfer, target-static simulator MPC, native actuated SUMO, and fixed programs, the intervals favor guarded CFCMT: the mean queue deltas are $-4.310$, $-7.484$, $-17.265$, and $-29.755$, respectively.
+Per-target winners remain mixed, which is important for claim scope: several regular or sparse networks are best handled by MaxPressure or a simulator/pressure variant, while the guarded CFCMT controller avoids the large negative transfer seen in dense residual and simulator-only MPC.
+
+The 3600-second long-horizon check in \Cref{tab:resco-traffic-signal-3600s} is stricter and exposes a boundary.
+Phase pressure is best at mean queue $32.234$ and also has the best trip time, $104.229$.
+MaxPressure and guarded CFCMT rise to mean queues $42.787$ and $43.511$, with trip times $106.918$ and $108.633$.
+Guarded CFCMT still beats dense \Htwo-style residual transfer, native actuated SUMO, and fixed programs, with mean queue deltas $-5.995$, $-14.836$, and $-41.098$ under the paired seed-target bootstrap, but it is significantly worse than phase pressure on this horizon.
+Thus the stress test supports guarded transfer as a safe residual design, not as a long-horizon replacement for a well-tuned pressure rule.
+
+This result changes the control-facing message.
+The evidence is not that CFCMT universally dominates classical traffic control.
+It is that a mechanism-transfer model can be coupled with a source-only pressure guard to reach MaxPressure-level closed-loop safety on a broad RESCO subset while substantially improving over dense residual transfer and simulator-only MPC under the same phase-transfer protocol.
+
+\paragraph{Native-protocol RL cross-checks.}
+\Cref{tab:official-resco-rl-full,tab:libsignal-rl-full} report full-budget external RL runner results.
+The official RESCO adapter completed 42 supported runs with zero failures: \texttt{IDQN} on all eight extended scenarios and upstream-supported \texttt{MPLight} on six scenarios, while the known upstream \texttt{MPLight} crashes on \texttt{cologne8} and \texttt{ingolstadt21} are excluded rather than patched into a different algorithm.
+The patched LibSignal adapter completed 36/36 SUMO runs with zero failures across \texttt{DQN}, \texttt{PressLight}, \texttt{FRAP}, and \texttt{MPLight} on \texttt{sumo1x1}, \texttt{sumo1x3}, and \texttt{sumo4x4}.
+These tables strengthen the experimental audit trail, but they should not be read as direct wins or losses against \ours: RESCO and LibSignal use their own observations, rewards, action timing, and metrics.
+The same-protocol conclusion remains the one above: guarded \ours improves over dense residual transfer and simulator-only MPC and reaches pressure-rule-level safety on the short RESCO stress test, while phase pressure is the stronger long-horizon classical controller.

@@ -125,11 +125,13 @@ class CFH2OTrainer:
         masks = batch.metadata.get("history_masks")
         if features is None:
             input_dim = int(getattr(self.factor_encoder, "input_dim", batch.observations.shape[1]))
-            if input_dim <= batch.observations.shape[1]:
-                base = batch.observations[:, :input_dim]
+            actions = batch.actions if batch.actions.ndim > 1 else batch.actions.reshape(-1, 1)
+            policy_safe = torch.cat([batch.observations, actions.to(device=batch.device, dtype=batch.observations.dtype)], dim=1)
+            if input_dim <= policy_safe.shape[1]:
+                base = policy_safe[:, :input_dim]
             else:
-                pad = batch.observations.new_zeros(batch.batch_size, input_dim - batch.observations.shape[1])
-                base = torch.cat([batch.observations, pad], dim=1)
+                pad = batch.observations.new_zeros(batch.batch_size, input_dim - policy_safe.shape[1])
+                base = torch.cat([policy_safe, pad], dim=1)
             history_len = int(self.config.get("latent", {}).get("history_len", self.training_config.get("history_len", 8)))
             features, masks = build_history_windows(base, history_len=history_len)
         else:

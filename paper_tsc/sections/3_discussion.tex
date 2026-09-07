@@ -1,0 +1,134 @@
+\section{Discussion}
+
+One supported result is about model structure: aligning the estimand and
+capacity with the decision improved a learned controller relative to a dense
+residual.  CFCMT predicts a normalized ordering among phases from the same
+state, keeps a rigid local anchor and allows an all-pair correction only at a
+weight selected on complete held-out target seeds.  This reduced external
+offline regret and closed-loop waiting relative to a same-information dense
+residual.  Because the dense comparison also receives matched action
+contrasts, the gain cannot be explained by reference subtraction alone.
+
+A distinct claim about transferred data did not survive fresh confirmation.
+The target-label-only comparator shares the target labels, feature semantics,
+model family and executor, but source-labelled samples have zero deployed
+weight.  Source-plus-target CFCMT looked better in the seed-8171 offline
+action-regret comparison, yet on 64 new closed-loop seeds it helped Jinan and
+harmed Los Angeles.  The equal-city mean favoured target only, the interval
+crossed zero and the collision count increased.  Cross-network evaluation is
+therefore not evidence that source-city labels improve a target controller.
+The experiment instead identifies network-dependent negative transfer as a
+central failure mode of the present fitting rule.
+
+The experiments also explain why the earlier full mechanism-world-model route
+was not retained as the final controller.  MC-WM decomposed queue propagation,
+red accumulation, mobility, spillback and control cost.  That decomposition is
+useful for diagnosis, but each auxiliary prediction introduces error before the
+model answers the narrower control question.  Good next-state or mechanism loss
+does not guarantee the correct phase ordering, and flexible latent or graph
+paths can dominate the rigid signal under limited target support.  The final
+method is therefore a reverse design from the successful rigid model: preserve
+declared parents and local mechanism features, then add only an antisymmetric
+ranking correction whose effect is measurable and bounded.  This is a change
+in scientific hypothesis, not a residual patch to rescue a predetermined
+``full'' architecture.
+
+Pressure control remains the operational reference.  MaxPressure and phase
+pressure were better than CFCMT in both external cities, with lower system
+vehicle-hours and slightly higher completion.  Traffic-signal control has a
+strong local-rule ceiling because queue pressure directly reflects service
+imbalance.  A learned method that beats fixed time or a dense neural baseline
+but not pressure control is not a replacement controller.  CFCMT is better
+positioned as a transfer layer for settings where the decision depends on
+effects absent from a pressure score, or as a structured model used alongside
+rather than rhetorically above a rule.  The discarded pressure-guard
+experiments in the supplement reinforce this point, but pressure is not hidden
+inside the final v43 policy.
+
+The absence of same-protocol CrossLight, X-Light, MetaLight and GESA
+reproductions is also a substantive comparison gap, not merely a citation
+issue.  Their published protocols use different target interaction budgets,
+state and action interfaces, simulators and training objectives.  Reporting
+their native numbers beside the paired SUMO matrix would manufacture a ranking
+rather than estimate one.  A broader benchmark should reimplement each method
+behind the same safe phase executor and expose three separate target budgets:
+zero labels, passive target transitions and matched counterfactual target
+actions.
+
+Target information changes the interpretation.  The target simulator is
+uncalibrated against field trajectories, which reduces calibration effort, but
+its action outcomes are labelled target data.  The external result is thus a
+few-shot/full-budget offline-adaptation result with 165 and 911 groups, not a
+demonstration that a source-city policy can be deployed without target
+transitions.  A genuine zero-shot arm remains scientifically useful as the
+left endpoint of an information curve, but it is not the basis of the present
+closed-loop claim.  Conversely, field loop-detector or trajectory data could
+adapt passive state representations without supplying the counterfactual
+outcome of an unexecuted phase.
+
+The target-only result also changes how the adaptation budget should be used.
+More source data is not monotonically beneficial after target labels are
+available.  Three subsequent frozen gates tested whether source inclusion could
+be made a target-seed-blocked decision across the seven development city groups
+(Supplementary Table~\ref{tab:source-gate-development}).  Robust-history and
+out-of-fold action-agreement gates selected sources in six and seven cities,
+respectively, but each retained a worst-city regression above 0.02 and failed
+its target-only upper-bound criterion.  A labeled five-mechanism compatibility
+gate removed these regressions only by selecting target only in all seven
+cities.  Thus the additional experiments validate abstention as a safety
+fallback, not a source selector with positive transfer value.
+
+Several limitations constrain generalization.  First, the formal external
+unit count is two cities.  Multiple Jinan demand files improve within-city
+coverage but do not create independent cities, so all intervals are explicitly
+descriptive.  Second, the Los Angeles and Jinan scenarios are CityFlow-derived
+networks converted and semantically audited for SUMO; they are not calibrated
+city-wide digital twins.  Third, training counterfactuals share the same SUMO
+physics family as evaluation.  Cross-network transfer is real at the topology,
+demand and phase-program levels, but sim-to-real transfer is not tested.
+Fourth, the seven-policy closed-loop matrix uses two seeds, whereas the later
+source-contribution comparison uses 64 seeds but the same two target
+geometries.  Both use a fixed 3,600-s horizon.  Unfinished vehicles are
+included, yet longer incidents, non-recurrent demand and detector failure
+remain outside the experiment.
+
+The sequential development record is another limitation and a strength.  A
+diagnostic external seed exposed a one-city regression and motivated removal
+of an arbitrary adaptation cap and stricter complete-seed cross-fitting.  That
+diagnostic seed was then permanently excluded, and a new seed authorized the
+final test.  This is not equivalent to a single untouched preregistration;
+reporting the failed stages is necessary to expose researcher degrees of
+freedom.  The final v43 cache, selectors, deployment models and closed-loop
+matrix are nevertheless hash-linked and frozen before their respective next
+stage.
+
+A later execution-layer programme provides a stronger check on this boundary.
+Its favourable 54-seed adaptive estimate shrank almost to zero on 64 newly
+generated Jinan seeds and failed the preregistered bootstrap, sign-test and
+worst-seed criteria.  Because that programme used a different 120-s latent
+originator and global cooldown, it neither rescues nor invalidates the v43
+anchored all-pair comparison.  It does show why adaptive search and independent
+confirmation must not be pooled, and why the present evidence cannot support
+learned-policy superiority over phase pressure.
+
+The fresh target-only test is more directly damaging to a cross-city source
+benefit claim.  Unlike the execution-layer programme, it holds the CFCMT model,
+target adaptation budget and executor fixed and changes only whether source
+labels enter deployed prediction.  Its rejection cannot be dismissed as a
+different policy class.  Offline regret and short-horizon action ranking did
+not reliably predict the closed-loop value of source data, particularly in the
+Los Angeles corridor where one seed produced a large congestion cascade.
+
+The next decisive experiment is not a relaxed threshold or another unrestricted
+sweep on the same outcomes.  It requires a new compatibility representation
+whose link to downstream action ranking is developed only on the current seven
+groups, then frozen and replicated on additional external cities and a
+calibrated digital twin or prospective signal intervention.  Such a study could
+test whether the local pairwise advantage survives simulator
+mismatch and whether source mechanisms add value in objectives where pressure
+is incomplete, including multimodal priority, spillback risk, emissions or
+network-level coordination.  Until then, the supported claim is narrower:
+causal parent restrictions and antisymmetric action ranking improve a
+simulation-assisted residual relative to dense modelling, while source-data
+benefit is network dependent and classical pressure remains the stronger
+controller on the reported targets.

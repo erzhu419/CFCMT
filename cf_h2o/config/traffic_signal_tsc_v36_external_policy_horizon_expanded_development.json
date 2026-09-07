@@ -1,0 +1,122 @@
+{
+  "protocol": "tsc-v50r46-external-policy-horizon-expanded-development-v1",
+  "frozen_at_utc": "2026-08-09T13:19:55Z",
+  "claim_boundary": "Post-v49 method development. The failed eight-seed robustness cohort is permanently reclassified as development, the original v48 candidate grid is unchanged, and a new 16-seed validation cohort is hash-derived and frozen before expanded-grid outcomes are collected.",
+  "parent_robustness_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v35_external_policy_horizon_robustness.json",
+    "sha256": "160d8d2f28e560a82fbe350d4022e01004bd0d9f63fd210a726d55c9599eb082"
+  },
+  "failed_v49_robustness_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v49r45_policy_horizon_robustness_20260809/robustness_audit_v1.json",
+    "sha256": "695359ecffa3e747c8d7968e89e949b963e489ca9d5c53a98ca1a7af9fc46063",
+    "required_status": "PASS",
+    "required_decision": "reject_v49_and_preserve_prospective_seeds"
+  },
+  "candidate_grid_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v34_external_policy_horizon_adaptation.json",
+    "sha256": "7f6c8d65083bcad3d50d60015dea7ec218c926123f30d0e01f449ea62b383eb3",
+    "candidate_count_per_city": 28,
+    "active_candidate_count_per_city": 27,
+    "candidate_definitions_must_not_change": true
+  },
+  "city_scenarios": {
+    "los_angeles": [
+      "la_1x4"
+    ],
+    "jinan": [
+      "jinan_3x4_real",
+      "jinan_3x4_real_2000",
+      "jinan_3x4_real_2500"
+    ]
+  },
+  "expanded_development_grid": {
+    "additional_seeds": [
+      52282,
+      41242,
+      63792,
+      80722,
+      75638,
+      61337,
+      73385,
+      81189
+    ],
+    "original_adaptation_seeds": [
+      5057,
+      6067
+    ],
+    "selection_pool_seed_count": 10,
+    "run_phase_pressure": false,
+    "phase_pressure_reference": "reuse hash-audited v49 paired phase rollouts for the additional seeds and v48 phase rollouts for the original seeds",
+    "run_all_27_active_candidates": true,
+    "matrix_size": 864,
+    "horizon_sec": 3600,
+    "selection_rule": {
+      "minimum_city_mean_relative_improvement": 0.005,
+      "maximum_bootstrap_95pct_upper_mean_relative_delta": 0.01,
+      "maximum_seed_level_city_mean_relative_regression": 0.05,
+      "minimum_improved_seed_fraction": 0.6,
+      "minimum_intervened_seed_fraction": 0.8,
+      "method_teleports_must_not_exceed_paired_phase_pressure": true,
+      "method_collision_incidents_must_not_exceed_paired_phase_pressure": true,
+      "robust_score": "mean_relative_delta + 0.5 * seed_delta_std + max(worst_seed_delta, 0)",
+      "fallback": "phase_pressure when no active candidate is feasible"
+    },
+    "bootstrap": {
+      "unit": "seed-level equal-scenario city relative delta",
+      "replicates": 10000,
+      "seed": 20260810,
+      "confidence": 0.95,
+      "interval": "percentile"
+    },
+    "learning_curve_budgets": [
+      2,
+      4,
+      6,
+      8,
+      10
+    ],
+    "learning_curve_seed_order": [
+      5057,
+      6067,
+      52282,
+      41242,
+      63792,
+      80722,
+      75638,
+      61337,
+      73385,
+      81189
+    ]
+  },
+  "new_untouched_validation": {
+    "seed_derivation": "first sixteen values in SHA256(v49_audit_sha256 + ':expanded_robustness:' + integer) mapped to [15000,89999] that were absent from the entire repository at protocol freeze",
+    "seeds": [
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ],
+    "must_not_run_until_expanded_selection_is_hash_frozen": true,
+    "selected_policy_and_thresholds_must_not_change": true
+  },
+  "prospective_confirmation_reservation": {
+    "seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "must_not_run_until_new_untouched_validation_passes_and_analysis_is_hash_frozen": true
+  }
+}

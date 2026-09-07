@@ -41,13 +41,14 @@ from cf_h2o.eval.traffic_signal_resco_cfcmt_v3 import (
     OUTPUT_NAMES_V4,
     ONE_STEP_OUTPUT_NAMES_V4,
     POLICY_CONSISTENT_ESTIMAND_PROTOCOL_V4,
-    WAITING_ALIGNED_ESTIMAND_PROTOCOL_V5,
+    WAITING_ALIGNED_ESTIMAND_PROTOCOL_V6,
     normalize_rollout_prefix_horizons,
     rollout_prefix_target_name,
     STATE_SNAPSHOT_PROTOCOL_V3,
     STRICT_SAFETY_MONITORING_V3,
     calibrate_target_policy_selection_v3,
     collect_counterfactual_transitions_v3,
+    counterfactual_cost_contract_v5,
     evaluate_policy_v3,
     fit_contrast_models_v3,
     has_fitted_target_specialist_v3,
@@ -258,6 +259,12 @@ def _map_fresh_sumo_processes(worker: Any, jobs: Sequence[Mapping[str, Any]], wo
         process_count = min(int(workers), len(jobs))
     if not jobs:
         return []
+    current_directory = Path.cwd()
+    if not os.access(current_directory, os.R_OK | os.X_OK):
+        raise PermissionError(
+            "libsumo spawn workers cannot enter the current directory: "
+            f"{current_directory}"
+        )
     context = mp.get_context("spawn")
     with context.Pool(processes=process_count, maxtasksperchild=1) as pool:
         results = []
@@ -409,7 +416,7 @@ def _validate_counterfactual_cache_dataset(
             )
         )
         expected_estimand = (
-            WAITING_ALIGNED_ESTIMAND_PROTOCOL_V5
+            WAITING_ALIGNED_ESTIMAND_PROTOCOL_V6
             if cost_mode == "halted_queue"
             else POLICY_CONSISTENT_ESTIMAND_PROTOCOL_V4
         )
@@ -696,6 +703,9 @@ def _counterfactual_cache_identity(
         identity["rollout_prefix_horizons_sec"] = list(prefix_horizons)
     if str(counterfactual_cost_mode) != "system_vehicle_load":
         identity["counterfactual_cost_mode"] = str(counterfactual_cost_mode)
+        identity["counterfactual_cost_contract"] = counterfactual_cost_contract_v5(
+            counterfactual_cost_mode
+        )
     return identity
 
 

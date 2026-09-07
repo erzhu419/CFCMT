@@ -16,6 +16,7 @@ from cf_h2o.eval.traffic_signal_causal_source_components import (
 )
 from cf_h2o.eval.traffic_signal_causal_source_weighting import (
     FrozenCausalSourceMixtureModel,
+    FrozenCausalSourceSelectorModel,
 )
 from cf_h2o.eval.traffic_signal_external_city_oof_freeze import _sha256
 from cf_h2o.eval.traffic_signal_external_closed_loop_confirmation import (
@@ -27,6 +28,10 @@ from cf_h2o.eval.traffic_signal_external_closed_loop_confirmation import (
     run_external_closed_loop_rollout,
 )
 from cf_h2o.eval.traffic_signal_resco_cfcmt_v3 import ContrastGuardConfig
+from cf_h2o.eval.traffic_signal_resco_cfcmt_v3 import (
+    FittedContrastModelsV3,
+    PriorRegularizationConfig,
+)
 from cf_h2o.eval.traffic_signal_strict_target_only_fit import (
     MODEL_PROTOCOL as STRICT_TARGET_ONLY_MODEL_PROTOCOL,
     TARGET_ONLY_FAMILY,
@@ -35,10 +40,353 @@ from cf_h2o.eval.traffic_signal_source_only_guard import load_source_only_guard
 from cf_h2o.eval.traffic_signal_topology_repaired_external_refit import (
     MODEL_PROTOCOL,
 )
+from cf_h2o.eval.traffic_signal_waiting_aligned_component_fit import (
+    H2OPLUS_FAMILY as PURE_WAITING_H2OPLUS_FAMILY,
+    H2OPLUS_MODEL_PROTOCOL as PURE_WAITING_H2OPLUS_MODEL_PROTOCOL,
+    MODEL_BUNDLE_PROTOCOL as PURE_WAITING_MODEL_BUNDLE_PROTOCOL,
+    STRICT_TARGET_MODEL_PROTOCOL as PURE_WAITING_STRICT_TARGET_MODEL_PROTOCOL,
+    TARGET_ONLY_FAMILY as PURE_WAITING_TARGET_ONLY_FAMILY,
+    validate_architecture_matched_target_contract,
+    validate_target_label_free_blend_contract,
+)
+from cf_h2o.eval.traffic_signal_waiting_aligned_source_selector import (
+    PURE_WAITING_RESULT_PROTOCOL,
+)
 
 
 RESULT_PROTOCOL = "tsc-v93-source-city-causal-component-rollout-v1"
 ANALYSIS_PROTOCOL = "tsc-v93-source-city-causal-selection-development-v1"
+PURE_WAITING_ANALYSIS_PROTOCOL = (
+    "tsc-v117-pure-waiting-selector-heldout-city-confirmation-v2"
+)
+PURE_WAITING_ROLLOUT_PROTOCOL = (
+    "tsc-v117-pure-waiting-selector-heldout-city-rollout-v2"
+)
+PURE_WAITING_ARMS = (
+    "target_only_b100",
+    "source_selected_b100",
+    "source_selected_b0",
+)
+PURE_WAITING_H2OPLUS_ARMS = (
+    "h2oplus_dense_b0",
+    "h2oplus_dense_b100",
+)
+
+
+def load_pure_waiting_h2oplus_runtime_override(
+    *,
+    model_path: Path,
+    expected_model_sha256: str,
+    expected_adaptation_contract_sha256: str,
+    city: str,
+    arm: str,
+    prediction_horizon_sec: int = 450,
+) -> ClosedLoopMethodRuntimeOverride:
+    """Load an H2O+-style dense comparator with the V115 information budget."""
+
+    if arm not in PURE_WAITING_H2OPLUS_ARMS:
+        raise ValueError(f"unknown pure-waiting H2O+ arm: {arm}")
+    if _sha256(model_path) != str(expected_model_sha256):
+        raise ValueError("pure-waiting H2O+ model identity changed")
+    payload = pickle.loads(Path(model_path).read_bytes())
+    budget = 0 if arm.endswith("_b0") else 100
+    diagnostics = dict(payload.get("fit_diagnostics", {}))
+    fitted_domains = set(str(value) for value in diagnostics.get("source_domains", ()))
+    expected_target_presence = budget > 0
+    if (
+        payload.get("protocol") != PURE_WAITING_H2OPLUS_MODEL_PROTOCOL
+        or payload.get("city") != city
+        or payload.get("family") != PURE_WAITING_H2OPLUS_FAMILY
+        or payload.get("objective_mode") != "control_only"
+        or payload.get("target_name") != "prefix_mean_cost_450s"
+        or payload.get("prior_policy") != "phase_pressure"
+        or str(getattr(payload.get("prior_spec"), "key", ""))
+        != "phase_pressure"
+        or int(payload.get("target_group_budget", -1)) != budget
+        or payload.get("adaptation_contract_sha256")
+        != str(expected_adaptation_contract_sha256)
+        or len(tuple(payload.get("selected_group_ids", ()))) != budget
+        or (city in fitted_domains) != expected_target_presence
+        or int(diagnostics.get("target_adaptation_groups", -1)) != budget
+        or int(prediction_horizon_sec) != 450
+    ):
+        raise ValueError("pure-waiting H2O+ runtime contract changed")
+    model = payload["model"]
+    models = FittedContrastModelsV3(
+        family_models={PURE_WAITING_H2OPLUS_FAMILY: model},
+        prior_policy="phase_pressure",
+        prior_spec=payload["prior_spec"],
+        prediction_horizon_sec=450,
+        objective_modes={PURE_WAITING_H2OPLUS_FAMILY: "control_only"},
+        guards={PURE_WAITING_H2OPLUS_FAMILY: ContrastGuardConfig()},
+        regularizers={
+            PURE_WAITING_H2OPLUS_FAMILY: PriorRegularizationConfig()
+        },
+        target_support=None,
+        hierarchy_layers={},
+        diagnostics={
+            "protocol": PURE_WAITING_ANALYSIS_PROTOCOL,
+            "arm": arm,
+            "city": city,
+            "comparator": "h2oplus_style_dense_residual_mpc",
+        },
+    )
+    return ClosedLoopMethodRuntimeOverride(
+        runtime_policy=f"{PURE_WAITING_H2OPLUS_FAMILY}_contrast_raw",
+        models=models,
+        selected_candidate=arm,
+        anchored_blend_model=None,
+        provenance={
+            "analysis_protocol": PURE_WAITING_ANALYSIS_PROTOCOL,
+            "arm": arm,
+            "city": city,
+            "model_path": str(Path(model_path).resolve()),
+            "model_sha256": str(expected_model_sha256),
+            "adaptation_contract_sha256": str(
+                expected_adaptation_contract_sha256
+            ),
+            "target_transition_label_budget": budget,
+            "comparator": "h2oplus_style_dense_residual_mpc",
+            "guard_config": None,
+        },
+    )
+
+
+def _pure_waiting_profile(
+    selector: Mapping[str, Any],
+    *,
+    arm: str,
+) -> tuple[dict[str, Any], str, bool]:
+    if arm not in PURE_WAITING_ARMS:
+        raise ValueError(f"unknown pure-waiting confirmation arm: {arm}")
+    if arm == "source_selected_b0":
+        section = selector.get("zero_shot_source_admission")
+        if not isinstance(section, Mapping) or not section.get(
+            "source_transfer_gate_passed", False
+        ):
+            raise ValueError("V116 did not authorize the B0 source profile")
+        selection = dict(section["full_development_selection"])
+        definitions = dict(section["profile_definitions"])
+        selected_key = selection.get("selected_profile_key")
+        if selected_key is None:
+            raise ValueError("V116 B0 selection fell back to phase pressure")
+        return dict(definitions[str(selected_key)]), str(selected_key), True
+
+    selection = dict(selector["full_development_selection"])
+    definitions = dict(selector["profile_definitions"])
+    selected_key = selection.get("selected_profile_key")
+    if selected_key is None:
+        raise ValueError("V116 B100 selection fell back to phase pressure")
+    selected = dict(definitions[str(selected_key)])
+    if arm == "source_selected_b100":
+        if (
+            not selector.get("source_transfer_gate_passed", False)
+            or selected.get("source_city_group") is None
+        ):
+            raise ValueError("V116 did not authorize the B100 source profile")
+        return selected, str(selected_key), False
+    target_key = (
+        selected_key
+        if selected.get("source_city_group") is None
+        else selected.get("target_profile_key")
+    )
+    if target_key is None or str(target_key) not in definitions:
+        raise ValueError("V116 selected source has no matched target-only profile")
+    target = dict(definitions[str(target_key)])
+    if target.get("source_city_group") is not None:
+        raise ValueError("V116 target-only comparator contains source data")
+    return target, str(target_key), False
+
+
+def load_pure_waiting_selector_runtime_override(
+    *,
+    component_bundle_path: Path,
+    expected_component_bundle_sha256: str,
+    selector_result_path: Path,
+    expected_selector_result_sha256: str,
+    city: str,
+    arm: str,
+    prediction_horizon_sec: int = 450,
+    strict_target_only_model_path: Path | None = None,
+    expected_strict_target_only_model_sha256: str | None = None,
+) -> ClosedLoopMethodRuntimeOverride:
+    """Instantiate the exact V116 selector profile for prospective rollout."""
+
+    if _sha256(component_bundle_path) != str(expected_component_bundle_sha256):
+        raise ValueError("pure-waiting component bundle identity changed")
+    if _sha256(selector_result_path) != str(expected_selector_result_sha256):
+        raise ValueError("pure-waiting selector result identity changed")
+    selector = json.loads(Path(selector_result_path).read_text(encoding="utf-8"))
+    if (
+        selector.get("protocol") != PURE_WAITING_RESULT_PROTOCOL
+        or selector.get("selector_cache_audit", {}).get("decision")
+        != "authorize_v116_pure_waiting_nested_source_selection"
+    ):
+        raise ValueError("V116 selector contract changed")
+    profile, profile_key, zero_shot = _pure_waiting_profile(selector, arm=arm)
+    bundle = pickle.loads(Path(component_bundle_path).read_bytes())
+    expected_budget = 0 if zero_shot else 100
+    component_payloads = dict(bundle.get("component_models", {}))
+    if (
+        bundle.get("protocol") != PURE_WAITING_MODEL_BUNDLE_PROTOCOL
+        or bundle.get("city") != city
+        or bundle.get("target_name") != "prefix_mean_cost_450s"
+        or bundle.get("prior_policy") != "phase_pressure"
+        or int(bundle.get("target_group_budget", -1)) != expected_budget
+        or not component_payloads
+        or int(prediction_horizon_sec) != 450
+    ):
+        raise ValueError("pure-waiting component runtime contract changed")
+    validate_target_label_free_blend_contract(bundle)
+    prior_specs = [models.prior_spec for models in component_payloads.values()]
+    if any(str(spec.key) != "phase_pressure" for spec in prior_specs):
+        raise ValueError("pure-waiting component priors changed")
+    prior_spec = prior_specs[0]
+    selected_candidate = str(bundle["selected_candidate"])
+    source_models = {
+        str(group): FrozenAnchoredBlendModel(
+            anchor_model=models.family_models[ANCHOR_FAMILY],
+            correction_model=models.family_models[CORRECTION_FAMILY],
+            candidate=selected_candidate,
+            anchor_objective_mode=models.objective_modes[ANCHOR_FAMILY],
+            correction_objective_mode=models.objective_modes[CORRECTION_FAMILY],
+        )
+        for group, models in component_payloads.items()
+    }
+
+    strict = None
+    strict_values = (
+        strict_target_only_model_path,
+        expected_strict_target_only_model_sha256,
+    )
+    if any(value is not None for value in strict_values) and not all(
+        value is not None for value in strict_values
+    ):
+        raise ValueError("pure-waiting strict target arguments are incomplete")
+    if not zero_shot:
+        if strict_target_only_model_path is None:
+            raise ValueError("B100 runtime requires the strict target-only model")
+        if _sha256(strict_target_only_model_path) != str(
+            expected_strict_target_only_model_sha256
+        ):
+            raise ValueError("pure-waiting strict target identity changed")
+        strict = pickle.loads(Path(strict_target_only_model_path).read_bytes())
+        if (
+            strict.get("protocol") != PURE_WAITING_STRICT_TARGET_MODEL_PROTOCOL
+            or strict.get("city") != city
+            or strict.get("family") != PURE_WAITING_TARGET_ONLY_FAMILY
+            or strict.get("target_name") != "prefix_mean_cost_450s"
+            or int(strict.get("target_group_budget", -1)) != 100
+            or strict.get("adaptation_contract_sha256")
+            != bundle.get("adaptation_contract_sha256")
+            or tuple(strict.get("selected_group_ids", ()))
+            != tuple(bundle.get("selected_group_ids", ()))
+            or int(
+                strict.get("fit_diagnostics", {}).get(
+                    "source_row_count_consumed", -1
+                )
+            )
+            != 0
+        ):
+            raise ValueError("pure-waiting strict target runtime contract changed")
+        validate_architecture_matched_target_contract(strict)
+        if (
+            strict.get("selected_candidate") != selected_candidate
+            or strict.get("blend_candidate_selection_sha256")
+            != bundle.get("candidate_selection_sha256")
+        ):
+            raise ValueError(
+                "pure-waiting target-only/source component architecture differs"
+            )
+
+    source_group = profile.get("source_city_group")
+    source_weight = float(profile.get("source_weight", 0.0))
+    minimum_support = float(profile.get("minimum_source_support", 0.0))
+    if arm == "target_only_b100":
+        if source_group is not None or source_weight != 0.0 or strict is None:
+            raise ValueError("target-only V116 arm changed information budget")
+        runtime_model = strict["model"]
+    else:
+        normalized_group = str(source_group)
+        if zero_shot:
+            if not normalized_group.startswith("b0_"):
+                raise ValueError("B0 selector profile lost its information label")
+            normalized_group = normalized_group.removeprefix("b0_")
+        runtime_model = FrozenCausalSourceSelectorModel(
+            source_models=source_models,
+            source_objective_modes={
+                group: "control_only" for group in source_models
+            },
+            source_profile=normalized_group,
+            source_weight=source_weight,
+            minimum_source_support=minimum_support,
+            target_only_model=None if zero_shot else strict["model"],
+            target_only_objective_mode="control_only",
+        )
+    guard = ContrastGuardConfig(
+        enabled=True,
+        risk_multiplier=float(profile["risk_multiplier"]),
+        min_context_trust=float(profile["minimum_context_trust"]),
+        margin=0.0,
+        max_relative_rule_gap=1.0,
+    )
+    models = FittedContrastModelsV3(
+        family_models={ANCHOR_FAMILY: runtime_model},
+        prior_policy=str(prior_spec.key),
+        prior_spec=prior_spec,
+        prediction_horizon_sec=450,
+        objective_modes={ANCHOR_FAMILY: "control_only"},
+        guards={ANCHOR_FAMILY: guard},
+        regularizers={ANCHOR_FAMILY: PriorRegularizationConfig()},
+        target_support=None,
+        hierarchy_layers={},
+        diagnostics={
+            "protocol": PURE_WAITING_ANALYSIS_PROTOCOL,
+            "arm": arm,
+            "profile_key": profile_key,
+            "selector_city": selector.get("city"),
+            "deployment_city": city,
+        },
+    )
+    return ClosedLoopMethodRuntimeOverride(
+        runtime_policy=f"{ANCHOR_FAMILY}_contrast_guard",
+        models=models,
+        selected_candidate=selected_candidate,
+        anchored_blend_model=runtime_model,
+        provenance={
+            "analysis_protocol": PURE_WAITING_ANALYSIS_PROTOCOL,
+            "arm": arm,
+            "city": city,
+            "selector_city": selector.get("city"),
+            "selector_result_path": str(Path(selector_result_path).resolve()),
+            "selector_result_sha256": str(expected_selector_result_sha256),
+            "component_bundle_path": str(Path(component_bundle_path).resolve()),
+            "component_bundle_sha256": str(expected_component_bundle_sha256),
+            "strict_target_only_model_path": (
+                str(Path(strict_target_only_model_path).resolve())
+                if strict_target_only_model_path is not None
+                else None
+            ),
+            "strict_target_only_model_sha256": (
+                str(expected_strict_target_only_model_sha256)
+                if strict_target_only_model_path is not None
+                else None
+            ),
+            "profile_key": profile_key,
+            "profile": profile,
+            "target_transition_label_budget": 0 if zero_shot else 100,
+            "source_profile": source_group,
+            "source_weight": source_weight,
+            "minimum_source_support": minimum_support,
+            "guard_config": {
+                "enabled": True,
+                "risk_multiplier": guard.risk_multiplier,
+                "min_context_trust": guard.min_context_trust,
+                "margin": guard.margin,
+                "max_relative_rule_gap": guard.max_relative_rule_gap,
+            },
+        },
+    )
 
 
 def load_source_city_component_runtime_override(
@@ -312,4 +660,87 @@ def run_source_city_component_rollout(
     result["target_only_anchor"] = runtime_override.provenance[
         "target_only_anchor"
     ]
+    return result
+
+
+def run_pure_waiting_selector_rollout(
+    *,
+    component_bundle_path: Path,
+    expected_component_bundle_sha256: str,
+    selector_result_path: Path,
+    expected_selector_result_sha256: str,
+    arm: str,
+    candidate_key: str,
+    allowed_seeds: tuple[int, ...],
+    rollout_kwargs: Mapping[str, Any],
+    strict_target_only_model_path: Path | None = None,
+    expected_strict_target_only_model_sha256: str | None = None,
+) -> dict[str, Any]:
+    protocol_path = Path(str(rollout_kwargs["protocol_spec_path"]))
+    protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+    parent_path = Path(str(protocol["parent_protocol"]["path"]))
+    if not parent_path.is_absolute():
+        parent_path = protocol_path.resolve().parents[2] / parent_path
+    parent = json.loads(parent_path.read_text(encoding="utf-8"))
+    cache = dict(parent["counterfactual_cache"])
+    prediction_horizon_sec = int(cache["control_interval_sec"]) * int(
+        cache["counterfactual_horizon_intervals"]
+    )
+    if prediction_horizon_sec != 450:
+        raise ValueError("V117 requires the frozen 450-second rollout horizon")
+    scenario = str(rollout_kwargs["scenario"])
+    city_scenarios = protocol["target_protocol"]["external_city_scenarios"]
+    cities = [
+        city for city, scenarios in city_scenarios.items() if scenario in scenarios
+    ]
+    if len(cities) != 1:
+        raise ValueError("V117 scenario is not uniquely assigned to one city")
+    city = str(cities[0])
+    selector = json.loads(Path(selector_result_path).read_text(encoding="utf-8"))
+    if str(selector.get("city")) == city:
+        raise ValueError("V117 deployment city must be held out from V116 selection")
+    runtime_override = load_pure_waiting_selector_runtime_override(
+        component_bundle_path=component_bundle_path,
+        expected_component_bundle_sha256=expected_component_bundle_sha256,
+        selector_result_path=selector_result_path,
+        expected_selector_result_sha256=expected_selector_result_sha256,
+        city=city,
+        arm=arm,
+        prediction_horizon_sec=prediction_horizon_sec,
+        strict_target_only_model_path=strict_target_only_model_path,
+        expected_strict_target_only_model_sha256=(
+            expected_strict_target_only_model_sha256
+        ),
+    )
+    diagnostic = ClosedLoopDiagnosticSpec(
+        name=f"cfcmt_pure_waiting_{candidate_key}",
+        source_policy=METHOD_POLICY,
+        coordination_mode="sparse",
+        result_protocol=PURE_WAITING_ROLLOUT_PROTOCOL,
+        guard_config=runtime_override.models.guards[ANCHOR_FAMILY],
+        allowed_seeds=tuple(int(value) for value in allowed_seeds),
+        analysis_status="prospective-v117-selector-city-heldout-confirmation",
+    )
+    result = run_external_closed_loop_rollout(
+        **dict(rollout_kwargs),
+        policy=diagnostic.name,
+        diagnostic_spec=diagnostic,
+        method_runtime_override=runtime_override,
+    )
+    result["analysis_protocol"] = PURE_WAITING_ANALYSIS_PROTOCOL
+    result["candidate_key"] = str(candidate_key)
+    result["selector_arm"] = arm
+    result["selector_profile"] = runtime_override.provenance["profile"]
+    result["target_transition_label_budget"] = runtime_override.provenance[
+        "target_transition_label_budget"
+    ]
+    result["selector_result_sha256"] = str(expected_selector_result_sha256)
+    result["component_bundle_sha256"] = str(
+        expected_component_bundle_sha256
+    )
+    result["strict_target_only_model_sha256"] = (
+        str(expected_strict_target_only_model_sha256)
+        if strict_target_only_model_path is not None
+        else None
+    )
     return result

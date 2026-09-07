@@ -1,0 +1,35 @@
+{
+  "protocol": "tsc-v123-target-budget-source-value-curve-v1",
+  "scientific_status": "development-budget-curve-not-confirmation",
+  "estimand_protocol": "one-control-interval-local-mechanisms-plus-pure-halted-queue-rollout-value-v2",
+  "reference_policy": "phase_pressure",
+  "target_city": "jinan",
+  "target_budgets": [0, 25, 50, 100, 250, 500, 1000],
+  "target_budget_selection": {
+    "method": "city-scenario-and-seed-balanced-coverage-first-nested-v1",
+    "selection_seed": 20260803,
+    "b100_must_equal_v115": true,
+    "all_positive_budgets_must_be_strictly_nested": true
+  },
+  "fixed_development_selector": {
+    "scenario": "jinan_3x4_real",
+    "seed_count": 22,
+    "labels_used_for_model_fit": 0,
+    "labels_used_for_development_selection": true
+  },
+  "architecture_match": {
+    "target_only_and_source_augmented_use_same_base_families": true,
+    "source_augmented_receives_exact_same_target_groups": true,
+    "source_city_added_one_at_a_time": true,
+    "source_blend_weights": [0.25, 0.5, 0.75, 1.0]
+  },
+  "selection": {
+    "method": "nested_leave_one_selector_seed_out",
+    "minimum_mean_source_contribution": 0.0005,
+    "paired_bootstrap_replicates": 10000,
+    "paired_bootstrap_seed": 20260901,
+    "upper_95_must_be_negative": true,
+    "source_policy_must_beat_phase_pressure": true
+  },
+  "claim_boundary": "V123 is a Jinan development curve on a previously used selector cache. It diagnoses where source information helps as target labels increase; only a later frozen fresh-city experiment can support cross-city efficacy."
+}

@@ -1,0 +1,110 @@
+{
+  "protocol": "tsc-v46r42-external-oof-validated-support-development-v1",
+  "frozen_at_utc": "2026-08-09T11:32:05Z",
+  "claim_boundary": "OOF-validated support redesign evaluated first on previously inspected closed-loop seeds; these development outcomes are falsification evidence and cannot confirm effectiveness",
+  "parent_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v29_external_full_budget_confirmation.json",
+    "sha256": "ea06fa3020450fe04be29cbcf35d1e8c758c53fd02a2a52f9d6d065d85077258"
+  },
+  "estimand_aligned_joint_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v46r42_oof_validated_support_20260809/oof_validated_support_joint_audit_v1.json",
+    "sha256": "d4b1efcacf6f63e45a89733946ae482c06df02ebe9c7da72f45a2ecc613169f9",
+    "decision": "authorize_oof_validated_support_contaminated_seed_development_only"
+  },
+  "city_artifacts": {
+    "los_angeles": {
+      "certificate": {
+        "path": "cf_h2o/results/cluster/tsc_v46r42_oof_validated_support_20260809/freeze_v1/los_angeles/freeze.json",
+        "sha256": "89d5c5945665edad5805c6025b5c98b4d02bad7caaf094e39e159004fbacd6d7"
+      },
+      "model": {
+        "path": "cf_h2o/results/cluster/tsc_v46r42_oof_validated_support_20260809/freeze_v1/los_angeles/model.pkl",
+        "sha256": "a9c15c9ee88d306ad4d19c18c825213e63bb6389550c32cf395f30c023d769a2"
+      },
+      "deployment_decision": "deploy_oof_conformal_trust_region",
+      "validated_oof_prototypes": 4
+    },
+    "jinan": {
+      "certificate": {
+        "path": "cf_h2o/results/cluster/tsc_v46r42_oof_validated_support_20260809/freeze_v1/jinan/freeze.json",
+        "sha256": "ab7b9f44484782fa81ed71ca1f356d0994ebce0b80d5cafc97cbc087eb37700b"
+      },
+      "model": {
+        "path": "cf_h2o/results/cluster/tsc_v46r42_oof_validated_support_20260809/freeze_v1/jinan/model.pkl",
+        "sha256": "cd71678c7441f1fc92d332630e3e805080d5a560faad1e7b23b7016794f2974b"
+      },
+      "deployment_decision": "deploy_pressure_prior_only",
+      "validated_oof_prototypes": 0
+    }
+  },
+  "estimand_contract": {
+    "counterfactual_behavior_policy": "phase_pressure",
+    "counterfactual_rollout_policy": "phase_pressure",
+    "contrast_reference_policy": "phase_pressure",
+    "deployment_fallback_policy": "phase_pressure",
+    "candidate_selection": "two-fold leave-one-adaptation-seed-out",
+    "guard_selection": "fold-max finite-sample conformal safety margin with fold and scenario gates",
+    "deployment_support": "nearest prototype in deterministic topology-invariant coordinates fitted only to OOF actions accepted by the frozen guard",
+    "minimum_operational_total_vehicles": 1.0,
+    "activation": "after the same 60-second warm-up used by counterfactual collection"
+  },
+  "development": {
+    "closed_loop_seeds": [
+      8081,
+      9091
+    ],
+    "status": "contaminated_by_v43_v44_and_v45_closed_loop_diagnostics",
+    "permitted_use": "OOF-support falsification and redesign only",
+    "policies": [
+      "cfcmt_oof_validated_mpc",
+      "phase_pressure"
+    ],
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "paired_unit": "scenario_seed",
+    "advance_gate": {
+      "los_angeles_city_mean_relative_regression_vs_phase_pressure_maximum": 0.0,
+      "los_angeles_worst_seed_relative_regression_vs_phase_pressure_maximum": 0.02,
+      "los_angeles_minimum_executed_interventions_per_seed": 1,
+      "jinan_must_reproduce_phase_pressure_semantically": true,
+      "method_teleports_must_not_exceed_paired_phase_pressure": true,
+      "method_collision_incidents_must_not_exceed_paired_phase_pressure": true,
+      "all_result_and_tripinfo_hashes_must_verify": true
+    }
+  },
+  "prospective_confirmation_reservation": {
+    "closed_loop_seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "reservation_inherited_from_v30_before_any_v45_or_v46_model_fit": true,
+    "must_not_be_run_or_inspected_until_development_gate_passes_and_confirmation_analysis_is_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "candidate_policies_for_later_freeze": [
+      "cfcmt_oof_validated_mpc",
+      "phase_pressure",
+      "max_pressure",
+      "selected_source_prior",
+      "fixed_time",
+      "rigid_anchor_mpc",
+      "simulator_only_mpc",
+      "h2oplus_style_dense_residual_mpc"
+    ]
+  },
+  "deployment": {
+    "policy": "cfcmt_oof_validated_mpc",
+    "coordination_mode": "sparse",
+    "cooldown": "prediction_horizon_minus_one_control_interval",
+    "failed_city_gate_falls_back_exactly_to_phase_pressure": true,
+    "old_v43_offline_authorization_role": "environment and baseline integrity only; it does not authorize v46 effectiveness"
+  }
+}

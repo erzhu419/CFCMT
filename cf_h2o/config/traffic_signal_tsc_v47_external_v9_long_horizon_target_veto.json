@@ -1,0 +1,540 @@
+{
+  "protocol": "tsc-v65r61-external-v9-long-horizon-target-veto-cache-v1",
+  "frozen_at_utc": "2026-08-10T04:43:43.930071+00:00",
+  "scientific_status": {
+    "stage": "post_v64_falsification_pre_v65_outcome_successor_freeze",
+    "v64_failure_interpretation": "A 60-second action-level estimand did not survive repeated 3600-second deployment; observable execution thresholds were insufficient to repair the horizon mismatch.",
+    "successor_hypothesis": "Retain the cross-city short-horizon CFCMT proposal, but permit execution only when a target-city 300-second recovery-value head predicts nonpositive cost with a frozen uncertainty/support gate.",
+    "no_v65_cache_training_or_closed_loop_outcome_exists": true,
+    "future_file_counts_at_freeze": {
+      "cache": 0,
+      "training": 0,
+      "closed_loop": 0
+    }
+  },
+  "parent_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v46_external_v9_hierarchical_closed_loop_development.json",
+    "sha256": "cbdd465fa0d5583d7937742afc5f5188901c3708742ed4156d6a78c567586b70"
+  },
+  "v64_falsification_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v64r60_external_v9_hierarchical_closed_loop_development_20260810/development_selection_audit_v1.json",
+    "sha256": "377b18947e81a0e4cfce52f6ffd74ce2f0f236b6843a53d0dff20d52be225643",
+    "protocol": "tsc-v64r60-external-v9-hierarchical-closed-loop-development-selection-audit-v1",
+    "decision": "reject_hierarchical_development_and_preserve_validation_and_prospective_seeds"
+  },
+  "environment": {
+    "protocol": {
+      "path": "cf_h2o/config/traffic_signal_tsc_v41_external_v9_full_budget_refit.json",
+      "sha256": "472985aa515aab31849d2072c118b562183beaea9f6bf8f5920f69614ff35548"
+    },
+    "network_parent_protocol": {
+      "path": "cf_h2o/config/traffic_signal_tsc_v40_external_v9_network_repair_confirmation.json",
+      "sha256": "9d35605ea736c5b3938190bd9ce456ac741b26c76e0ede343ea39d65eb26419c"
+    },
+    "external_manifest": {
+      "path": "cf_h2o/config/traffic_signal_tsc_v39_external_la_jinan_v9_manifest.json",
+      "sha256": "636e09d8e2f47d5fefaa26b33b0552373b01f185e77e18896c97751c267c356c"
+    },
+    "conversion_root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v53r49_external_network_repair_20260810/conversion_v9_authoritative/full_networks_v9",
+    "conversion_manifest": {
+      "path": "cf_h2o/results/cluster/tsc_v53r49_external_network_repair_20260810/conversion_v9_authoritative/full_networks_v9/conversion_manifest.json",
+      "sha256": "b140f2deea63653efd225c53ad306bf910ecf1ee149fb894c202227d7d454f56"
+    },
+    "conversion_tree_sha256": "9aa639a6fde43c4008bc6b4c24e2171ae3135858a437e10bfc65440a002015de",
+    "sumo_version": "1.22.0",
+    "duration_sec": 3600,
+    "control_interval_sec": 10,
+    "warmup_sec": 60,
+    "prediction_horizon_sec": 60
+  },
+  "city_scenarios": {
+    "los_angeles": [
+      "la_1x4"
+    ],
+    "jinan": [
+      "jinan_3x4_real",
+      "jinan_3x4_real_2000",
+      "jinan_3x4_real_2500"
+    ]
+  },
+  "proposal": {
+    "method": "frozen_v60_hierarchical_cfcmt",
+    "target_labels_used_by_proposal": false,
+    "city_artifacts": {
+      "los_angeles": {
+        "certificate": {
+          "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/los_angeles/freeze.json",
+          "sha256": "264e4d6821efd305b0a91953fc7eb06730aede63d302700045afce1713ff61c1"
+        },
+        "model": {
+          "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/los_angeles/model.pkl",
+          "sha256": "dbeb80b1796dbe8b7910ba77bbe3ce587898da78cb7de3e47408806c878198df"
+        },
+        "selected_candidate": "constant_alpha_0p8",
+        "deployment": {
+          "conformal_guard": {
+            "enabled": true,
+            "margin": 0.0,
+            "max_relative_rule_gap": 0.0,
+            "min_context_trust": 0.5,
+            "risk_multiplier": 0.0
+          },
+          "coordination_mode_before_closed_loop_selection": "direct",
+          "fallback_policy": "phase_pressure",
+          "policy": "cfcmt_hierarchical_guard_mpc",
+          "regularizer": {
+            "blend_weight": 2.0,
+            "enabled": true,
+            "min_context_trust": 0.5,
+            "risk_multiplier": 0.0
+          },
+          "runtime_policy_suffix": "_hierarchical_guard",
+          "target_support": {
+            "combination": "minimum_component_support",
+            "conformal_guard_enabled": true,
+            "conformal_support": {
+              "distance": "nearest_standardized_rms",
+              "feature_count": 16,
+              "feature_names": [
+                "total_q",
+                "total_veh",
+                "mean_speed",
+                "mean_occ",
+                "green_q",
+                "red_q",
+                "green_down_q",
+                "green_down_occ",
+                "delta_green_q",
+                "delta_red_q",
+                "delta_green_down_q",
+                "delta_green_down_occ",
+                "delta_service_pressure",
+                "delta_switch_indicator",
+                "delta_clearance_fraction",
+                "delta_current_phase_overlap"
+              ],
+              "label_free": false,
+              "minimum_total_vehicles": 1.0,
+              "prototype_count": 4,
+              "support": "exp(-distance)",
+              "support_protocol": "oof-safe-action-nearest-prototype-v1"
+            },
+            "pressure_support": {
+              "distance": "nearest_standardized_rms",
+              "feature_count": 16,
+              "feature_names": [
+                "total_q",
+                "total_veh",
+                "mean_speed",
+                "mean_occ",
+                "green_q",
+                "red_q",
+                "green_down_q",
+                "green_down_occ",
+                "delta_green_q",
+                "delta_red_q",
+                "delta_green_down_q",
+                "delta_green_down_occ",
+                "delta_service_pressure",
+                "delta_switch_indicator",
+                "delta_clearance_fraction",
+                "delta_current_phase_overlap"
+              ],
+              "label_free": true,
+              "minimum_total_vehicles": 0.0,
+              "prototype_count": 746,
+              "support": "exp(-distance)",
+              "support_protocol": "target-action-coverage-nearest-prototype-v1"
+            },
+            "support_protocol": "pressure-and-oof-safe-intersection-v1"
+          }
+        }
+      },
+      "jinan": {
+        "certificate": {
+          "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/jinan/freeze.json",
+          "sha256": "a617c6312fa6e95877a44235b0caa5204cbe3053c1738baf839031255eb8dc2d"
+        },
+        "model": {
+          "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/jinan/model.pkl",
+          "sha256": "f2685b558733fe7bd7f2170ebe7306fbbe799f4c28ce6bf91f5c5776b0afbb8a"
+        },
+        "selected_candidate": "constant_alpha_0p8",
+        "deployment": {
+          "conformal_guard": {
+            "enabled": false,
+            "margin": 0.0,
+            "max_relative_rule_gap": 1.0,
+            "min_context_trust": 0.0,
+            "risk_multiplier": 1.0
+          },
+          "coordination_mode_before_closed_loop_selection": "direct",
+          "fallback_policy": "phase_pressure",
+          "policy": "cfcmt_hierarchical_guard_mpc",
+          "regularizer": {
+            "blend_weight": 8.0,
+            "enabled": true,
+            "min_context_trust": 0.5,
+            "risk_multiplier": 0.5
+          },
+          "runtime_policy_suffix": "_hierarchical_guard",
+          "target_support": {
+            "combination": "pressure_support_only",
+            "conformal_guard_enabled": false,
+            "conformal_support": {
+              "distance": "nearest_standardized_rms",
+              "feature_count": 16,
+              "feature_names": [
+                "total_q",
+                "total_veh",
+                "mean_speed",
+                "mean_occ",
+                "green_q",
+                "red_q",
+                "green_down_q",
+                "green_down_occ",
+                "delta_green_q",
+                "delta_red_q",
+                "delta_green_down_q",
+                "delta_green_down_occ",
+                "delta_service_pressure",
+                "delta_switch_indicator",
+                "delta_clearance_fraction",
+                "delta_current_phase_overlap"
+              ],
+              "label_free": true,
+              "minimum_total_vehicles": 0.0,
+              "prototype_count": 7288,
+              "support": "exp(-distance)",
+              "support_protocol": "target-action-coverage-nearest-prototype-v1"
+            },
+            "pressure_support": {
+              "distance": "nearest_standardized_rms",
+              "feature_count": 16,
+              "feature_names": [
+                "total_q",
+                "total_veh",
+                "mean_speed",
+                "mean_occ",
+                "green_q",
+                "red_q",
+                "green_down_q",
+                "green_down_occ",
+                "delta_green_q",
+                "delta_red_q",
+                "delta_green_down_q",
+                "delta_green_down_occ",
+                "delta_service_pressure",
+                "delta_switch_indicator",
+                "delta_clearance_fraction",
+                "delta_current_phase_overlap"
+              ],
+              "label_free": true,
+              "minimum_total_vehicles": 0.0,
+              "prototype_count": 7288,
+              "support": "exp(-distance)",
+              "support_protocol": "target-action-coverage-nearest-prototype-v1"
+            },
+            "support_protocol": "pressure-and-oof-safe-intersection-v1"
+          }
+        }
+      }
+    },
+    "prediction_horizon_sec": 60,
+    "immutability": "Model, target-support objects, regularizer, conformal guard, and hierarchical layer order are loaded byte-for-byte from v60."
+  },
+  "long_horizon_collection": {
+    "seeds": [
+      80314,
+      88625,
+      27178,
+      77524,
+      63775,
+      50945
+    ],
+    "duration_sec": 3600,
+    "warmup_sec": 60,
+    "control_interval_sec": 10,
+    "counterfactual_horizon_intervals": 30,
+    "rollout_value_horizon_sec": 300,
+    "max_focal_tls": 4,
+    "collection_shards_per_scenario_seed": 16,
+    "workers_per_seed": 64,
+    "behavior_policy": "phase_pressure",
+    "reference_action": "phase_pressure",
+    "scenario_count": 4,
+    "expected_cache_file_count": 384,
+    "reporting_unit": "city",
+    "scenario_weighting_within_city": "equal",
+    "seed_weighting_within_city": "equal",
+    "full_network_and_full_benchmark_horizon": true
+  },
+  "target_veto_training": {
+    "classification": "target_simulator_labeled_few_shot_adaptation",
+    "zero_shot_claim_permitted": false,
+    "model_family": "causal_target_only",
+    "target_head": "dedicated_city_specific_pairwise_causal_advantage",
+    "target_head_capacity": {
+      "max_iter": 80,
+      "max_leaf_nodes": 7,
+      "min_samples_leaf": 4,
+      "l2_regularization": 16.0
+    },
+    "training_target": "300-second system-vehicle cost after one candidate action followed by phase-pressure recovery",
+    "cross_fitting": "leave_one_simulator_seed_out_within_target_city",
+    "selection_scope": "The target head may veto an action proposed by frozen CFCMT; it may neither propose a new action nor replace phase pressure.",
+    "gate_candidates": [
+      {
+        "key": "r0p0_t0p0",
+        "risk_multiplier": 0.0,
+        "min_context_trust": 0.0
+      },
+      {
+        "key": "r0p0_t0p25",
+        "risk_multiplier": 0.0,
+        "min_context_trust": 0.25
+      },
+      {
+        "key": "r0p0_t0p5",
+        "risk_multiplier": 0.0,
+        "min_context_trust": 0.5
+      },
+      {
+        "key": "r0p0_t0p75",
+        "risk_multiplier": 0.0,
+        "min_context_trust": 0.75
+      },
+      {
+        "key": "r0p25_t0p0",
+        "risk_multiplier": 0.25,
+        "min_context_trust": 0.0
+      },
+      {
+        "key": "r0p25_t0p25",
+        "risk_multiplier": 0.25,
+        "min_context_trust": 0.25
+      },
+      {
+        "key": "r0p25_t0p5",
+        "risk_multiplier": 0.25,
+        "min_context_trust": 0.5
+      },
+      {
+        "key": "r0p25_t0p75",
+        "risk_multiplier": 0.25,
+        "min_context_trust": 0.75
+      },
+      {
+        "key": "r0p5_t0p0",
+        "risk_multiplier": 0.5,
+        "min_context_trust": 0.0
+      },
+      {
+        "key": "r0p5_t0p25",
+        "risk_multiplier": 0.5,
+        "min_context_trust": 0.25
+      },
+      {
+        "key": "r0p5_t0p5",
+        "risk_multiplier": 0.5,
+        "min_context_trust": 0.5
+      },
+      {
+        "key": "r0p5_t0p75",
+        "risk_multiplier": 0.5,
+        "min_context_trust": 0.75
+      },
+      {
+        "key": "r1p0_t0p0",
+        "risk_multiplier": 1.0,
+        "min_context_trust": 0.0
+      },
+      {
+        "key": "r1p0_t0p25",
+        "risk_multiplier": 1.0,
+        "min_context_trust": 0.25
+      },
+      {
+        "key": "r1p0_t0p5",
+        "risk_multiplier": 1.0,
+        "min_context_trust": 0.5
+      },
+      {
+        "key": "r1p0_t0p75",
+        "risk_multiplier": 1.0,
+        "min_context_trust": 0.75
+      },
+      {
+        "key": "r2p0_t0p0",
+        "risk_multiplier": 2.0,
+        "min_context_trust": 0.0
+      },
+      {
+        "key": "r2p0_t0p25",
+        "risk_multiplier": 2.0,
+        "min_context_trust": 0.25
+      },
+      {
+        "key": "r2p0_t0p5",
+        "risk_multiplier": 2.0,
+        "min_context_trust": 0.5
+      },
+      {
+        "key": "r2p0_t0p75",
+        "risk_multiplier": 2.0,
+        "min_context_trust": 0.75
+      }
+    ],
+    "gate_candidate_count": 20,
+    "gate_rule": "accept iff proposal action predicted_delta + risk_multiplier * uncertainty < 0 and context_trust >= min_context_trust",
+    "selection_unit": "paired_action_group_equalized_within_seed_scenario",
+    "city_specific_gate_permitted": true,
+    "selection_rule": {
+      "minimum_retained_groups_per_city": 12,
+      "minimum_retained_seed_fraction": 0.6666666666666666,
+      "maximum_equal_seed_scenario_mean_delta": -0.001,
+      "maximum_bootstrap_95pct_upper_mean_delta": 0.0,
+      "maximum_worst_seed_mean_delta": 0.01,
+      "maximum_harmful_group_fraction": 0.45,
+      "robust_score": "mean_delta + 0.5 * seed_delta_std + max(worst_seed_delta, 0)",
+      "tie_break": "lower robust score, lower mean delta, lower harmful fraction, more retained seeds, more retained groups, higher trust, higher risk multiplier, lexical key",
+      "fallback": "always_veto_to_phase_pressure_if_no_gate_is_feasible"
+    },
+    "bootstrap": {
+      "replicates": 10000,
+      "seed": 20260817,
+      "unit": "simulator_seed_with_equal_scenario_weighting_within_city"
+    },
+    "final_fit": "refit_selected_city_gate_head_on_all_six_collection_seeds"
+  },
+  "closed_loop_development": {
+    "seeds": [
+      52282,
+      41242,
+      63792,
+      80722,
+      75638,
+      61337,
+      73385,
+      81189
+    ],
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "phase_policy": "phase_pressure",
+    "method_candidates": [
+      {
+        "key": "cfcmt_target_veto_cd120",
+        "runtime_policy": "causal_group_normalized_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 11,
+        "max_simultaneous_overrides": 1
+      },
+      {
+        "key": "cfcmt_target_veto_cd300",
+        "runtime_policy": "causal_group_normalized_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 29,
+        "max_simultaneous_overrides": 1
+      },
+      {
+        "key": "cfcmt_target_veto_cd450",
+        "runtime_policy": "causal_group_normalized_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 44,
+        "max_simultaneous_overrides": 1
+      }
+    ],
+    "candidate_count": 3,
+    "policy_count": 4,
+    "matrix_size": 128,
+    "duration_sec": 3600,
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "reuse_v64_phase_pressure_rollouts_by_exact_identity_and_hash": true,
+    "reporting_unit": "city",
+    "scenario_weighting_within_city": "equal",
+    "seed_weighting": "equal",
+    "selection_rule": {
+      "minimum_city_mean_relative_improvement": 0.005,
+      "maximum_bootstrap_95pct_upper_mean_relative_delta": 0.01,
+      "maximum_seed_level_city_mean_relative_regression": 0.01,
+      "minimum_improved_seed_fraction": 0.5,
+      "minimum_executed_interventions_per_scenario_seed": 1,
+      "method_teleports_must_not_exceed_paired_phase_pressure": true,
+      "method_collision_incidents_must_not_exceed_paired_phase_pressure": true,
+      "robust_score": "city_mean_relative_delta + 0.5 * seed_delta_std + max(worst_seed_delta, 0)",
+      "global_selector": "lowest_equal_city_mean_robust_score_among_all_city_feasible_candidates",
+      "tie_break": "lower global robust score, lower equal-city mean delta, fewer interventions, longer cooldown, lexical key",
+      "fallback": "phase_pressure_if_no_common_candidate_is_feasible"
+    },
+    "fallback": "phase_pressure"
+  },
+  "validation": {
+    "closed_loop_seeds": [
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ],
+    "must_not_run_until_development_selector_and_analysis_hash_are_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "method_and_execution_candidate_must_be_hash_frozen_before_launch": true
+  },
+  "prospective_confirmation": {
+    "closed_loop_seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "must_not_run_until_validation_passes_and_prospective_analysis_is_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "candidate_policies_for_later_freeze": [
+      "cfcmt_oof_validated_mpc",
+      "phase_pressure",
+      "max_pressure",
+      "fixed_time",
+      "rigid_anchor_mpc",
+      "simulator_only_mpc",
+      "h2oplus_style_dense_residual_mpc"
+    ],
+    "release_condition": "validation_gate_passed_and_analysis_hash_frozen"
+  },
+  "claim_boundary": "The target veto is few-shot because it consumes target-city simulator counterfactual labels. This protocol can authorize cache collection, OOF veto training, and development-seed selection only; validation and prospective claims remain sealed."
+}

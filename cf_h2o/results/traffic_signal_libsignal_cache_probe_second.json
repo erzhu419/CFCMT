@@ -1,0 +1,88 @@
+{
+  "aggregate": [
+    {
+      "agent": "dqn",
+      "delay": 0.2045,
+      "elapsed_sec": 3.647808074951172,
+      "network": "sumo1x1",
+      "queue": 3.8333,
+      "reward": -4.5,
+      "runs": 1,
+      "throughput": 2.0,
+      "travel_time": 25.0
+    },
+    {
+      "agent": "fixedtime",
+      "delay": 1.5158,
+      "elapsed_sec": 2.5973401069641113,
+      "network": "sumo1x1",
+      "queue": 2.5,
+      "reward": -7.45,
+      "runs": 1,
+      "throughput": 5.0,
+      "travel_time": 39.4
+    }
+  ],
+  "experiment": "traffic_signal_libsignal_baseline",
+  "runs": [
+    {
+      "agent": "fixedtime",
+      "cached": true,
+      "delay": 1.5158,
+      "elapsed_sec": 2.5973401069641113,
+      "episodes": 1,
+      "network": "sumo1x1",
+      "ok": true,
+      "queue": 2.5,
+      "returncode": 0,
+      "reward": -7.45,
+      "seed": null,
+      "stderr_tail": "Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.\nPlease upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.\nUsers of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.\nSee the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.",
+      "stdout_tail": "building world...\nConnection ID debug\nFixedTime Agent has no Network model\n2026-06-03 06:54:52 (INFO): Final Travel Time is 39.4000, mean rewards: -7.4500, queue: 2.5000, delay: 1.5158, throughput: 5\n2026-06-03 06:54:52 (INFO): Total time taken: 0.02023005485534668",
+      "steps": 60,
+      "test_steps": 60,
+      "throughput": 5.0,
+      "travel_time": 39.4
+    },
+    {
+      "agent": "dqn",
+      "cached": true,
+      "delay": 0.2045,
+      "elapsed_sec": 3.647808074951172,
+      "episodes": 1,
+      "network": "sumo1x1",
+      "ok": true,
+      "queue": 3.8333,
+      "returncode": 0,
+      "reward": -4.5,
+      "seed": null,
+      "stderr_tail": "Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.\nPlease upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.\nUsers of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.\nSee the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.",
+      "stdout_tail": "building world...\nConnection ID debug\nDQNNet(\n  (dense_1): Linear(in_features=12, out_features=20, bias=True)\n  (dense_2): Linear(in_features=20, out_features=20, bias=True)\n  (dense_3): Linear(in_features=20, out_features=4, bias=True)\n)\n2026-06-03 06:54:51 (INFO): step:60/60, q_loss:0, rewards:-2.7250001430511475, queue:2.1666667461395264, delay:0.19531665742397308, throughput:6\n2026-06-03 06:54:51 (INFO): episode:0/1, real avg travel time:32.833333333333336\n2026-06-03 06:54:51 (INFO): Test step:0/1, travel time :25.0, rewards:-4.5, queue:3.8333332538604736, delay:0.2045460194349289, throughput:2\n2026-06-03 06:54:51 (INFO): Final Travel Time is 25.0000, mean rewards: -4.5000, queue: 3.8333, delay: 0.2045, throughput: 2\n2026-06-03 06:54:51 (INFO): Total time taken: 0.06975579261779785",
+      "steps": 60,
+      "test_steps": 60,
+      "throughput": 2.0,
+      "travel_time": 25.0
+    }
+  ],
+  "setting": {
+    "agents": [
+      "fixedtime",
+      "dqn"
+    ],
+    "cache_dir": "cf_h2o/results/libsignal_cache_probe",
+    "episodes": 1,
+    "extra_args": [],
+    "interface": "libsumo",
+    "networks": [
+      "sumo1x1"
+    ],
+    "protocol_note": "LibSignal state/reward/action/logging; not same-protocol CFCMT phase-MPC",
+    "repo_root": "H2Oplus/downloads/traffic_signal_libsignal/repo",
+    "resume": true,
+    "seeds": [],
+    "steps": 60,
+    "test_steps": 60,
+    "timeout_sec": 120.0,
+    "workers": 2
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "protocol": "tsc-v133-historical-action-identifiability-v1",
+  "scientific_status": "abundant-target-identifiability-development-screen",
+  "predecessor": "tsc-v132-familywise-mechanistic-pressure-screen-v1",
+  "reference_policy": "phase_pressure",
+  "target_city": "jinan",
+  "source_predictions_used": false,
+  "outer_protocol": {
+    "split": "leave_one_selector_seed_out",
+    "development_seed_count": 21,
+    "heldout_seed_count": 1,
+    "heldout_seed_labels_used_for_lookup_or_selection": false
+  },
+  "history_key": "scenario_control_interval_tls_exact_candidate_state",
+  "history_gate": {
+    "minimum_support_fraction": 0.8,
+    "minimum_mean_effect": 0.0005,
+    "conservative_minimum_improving_seed_fraction": 0.8,
+    "conservative_upper_95_must_be_negative": true
+  },
+  "action_constraint": "nondecreasing_instantaneous_service_pressure",
+  "development_gate": {
+    "mean_vs_phase_pressure_must_be_at_most": -0.0005,
+    "upper_95_bound_must_be_negative": true,
+    "successor": "local_causal_dynamics_model_only_if_history_signal_is_identifiable"
+  },
+  "claim_boundary": "V133 uses 21 target counterfactual histories to predict a held-out simulator realization. It is neither zero-shot nor source transfer and is not a closed-loop result."
+}

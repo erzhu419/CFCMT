@@ -372,6 +372,14 @@ def test_offline_source_selector_accepts_stable_cross_fitted_gain() -> None:
     assert result["selected_candidate_key"] == "atlanta_w1"
     assert result["selected_source_city_group"] == "atlanta"
     assert result["selection_reason"] == "offline_cross_fitted_source_benefit"
+    source = result["grid"]["atlanta_w1"]
+    assert source["fold_regret_deltas"] == pytest.approx(
+        [-0.04, -0.03, -0.05, -0.02, -0.04]
+    )
+    assert source["standard_error"] == pytest.approx(
+        np.std([-0.04, -0.03, -0.05, -0.02, -0.04], ddof=1)
+        / np.sqrt(5)
+    )
 
 
 def test_offline_source_selector_falls_back_on_one_bad_fold() -> None:

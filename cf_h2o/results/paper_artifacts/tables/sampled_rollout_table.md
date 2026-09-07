@@ -1,7 +1,8 @@
-| policy                           | episodes | mean_reward | mean_headway_abs_error | mean_hold_seconds |
-| -------------------------------- | -------- | ----------- | ---------------------- | ----------------- |
-| no_hold                          | 10       | -1138.411   | 601.9113               | 0.0               |
-| fixed_30                         | 10       | -1151.2901  | 598.4459               | 30.0              |
-| h2oplus_dense_policy             | 10       | -1121.612   | 585.5526               | 3.117             |
-| cfcmt_mechanism_policy           | 10       | -1122.2105  | 589.1995               | 3.4897            |
-| cfcmt_similarity_weighted_policy | 10       | -1121.574   | 588.2357               | 3.2859            |
+| policy                           | episodes | mean_reward | city_reward_gain | mean_headway_abs_error | city_headway_ratio | city_bunching_ratio | hold_seconds |
+| -------------------------------- | -------- | ----------- | ---------------- | ---------------------- | ------------------ | ------------------- | ------------ |
+| no_hold                          | 80       | -681.1014   | 0.0              | 472.9819               | 1.1801             | 1.4256              | 0.0          |
+| fixed_30                         | 80       | -709.0151   | -27.9138         | 482.1026               | 1.1852             | 1.0873              | 28.125       |
+| threshold_equalization_policy    | 80       | -679.4363   | 1.6651           | 468.8503               | 1.134              | 1.2468              | 1.1384       |
+| h2oplus_dense_policy             | 80       | -615.8469   | 65.2545          | 440.0112               | 1.0                | 1.0                 | 12.2202      |
+| cfcmt_mechanism_policy           | 80       | -642.9006   | 38.2008          | 451.4064               | 0.9752             | 0.9688              | 5.3885       |
+| cfcmt_similarity_weighted_policy | 80       | -644.8675   | 36.2339          | 448.0122               | 0.9601             | 0.9786              | 6.1688       |

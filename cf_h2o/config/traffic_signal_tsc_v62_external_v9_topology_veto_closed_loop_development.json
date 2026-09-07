@@ -1,0 +1,402 @@
+{
+  "claim_boundary": "Only the six adaptation seeds may be used for this paired development gate. The 16 validation and three prospective seeds remain sealed.",
+  "development": {
+    "active_cities": [
+      "jinan"
+    ],
+    "bootstrap": {
+      "replicates": 10000,
+      "seed": 20260821,
+      "unit": "paired_simulator_seed_equal_scenarios_within_city"
+    },
+    "candidate": {
+      "cooldown_intervals": 44,
+      "coordination_mode": "direct",
+      "key": "cfcmt_topology_veto_cd450",
+      "max_simultaneous_overrides": 1,
+      "runtime_policy": "causal_group_normalized_rigid_advantage_contrast_hierarchical_guard",
+      "selection_origin": "predeclared_v58_execution_candidate_reused_after_future_feature_rejection_before_any_v75_rollout"
+    },
+    "city_scenarios": {
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ],
+      "los_angeles": [
+        "la_1x4"
+      ]
+    },
+    "classification": "target_labeled_few_shot_adaptation_development",
+    "duration_sec": 3600,
+    "fallback_cities": [
+      "los_angeles"
+    ],
+    "paired_matrix_size": 48,
+    "phase_policy": "phase_pressure",
+    "policies": [
+      "phase_pressure",
+      "cfcmt_topology_veto_cd450"
+    ],
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "seeds": [
+      80314,
+      88625,
+      27178,
+      77524,
+      63775,
+      50945
+    ],
+    "selection_rule": {
+      "active_city": {
+        "maximum_bootstrap_95pct_upper_mean_relative_delta": 0.01,
+        "maximum_seed_level_city_mean_relative_regression": 0.01,
+        "minimum_city_mean_relative_improvement": 0.005,
+        "minimum_executed_interventions_per_scenario_seed": 1,
+        "minimum_improved_seed_fraction": 0.5
+      },
+      "all_cities_must_satisfy_declared_active_or_fallback_contract": true,
+      "fallback": "phase_pressure_if_no_candidate_is_feasible",
+      "fallback_city": {
+        "executed_interventions_must_equal": 0,
+        "mean_travel_time_must_equal_phase_atol": 1e-12,
+        "mean_waiting_time_must_equal_phase_atol": 1e-12,
+        "safety_counts_must_equal_phase": true
+      },
+      "global_selector": "lowest equal-active-city robust score among candidates satisfying every active and fallback city contract",
+      "method_collision_incidents_must_not_exceed_paired_phase_pressure": true,
+      "method_teleports_must_not_exceed_paired_phase_pressure": true,
+      "robust_score": "city_mean_relative_delta + 0.5 * seed_delta_std + max(worst_seed_delta, 0)",
+      "tie_break": "lower active-city robust score, lower active-city mean delta, fewer interventions, longer cooldown, lexical key"
+    },
+    "single_candidate_no_execution_hyperparameter_search": true
+  },
+  "environment": {
+    "control_interval_sec": 10,
+    "conversion_manifest": {
+      "path": "cf_h2o/results/cluster/tsc_v53r49_external_network_repair_20260810/conversion_v9_authoritative/full_networks_v9/conversion_manifest.json",
+      "sha256": "b140f2deea63653efd225c53ad306bf910ecf1ee149fb894c202227d7d454f56"
+    },
+    "conversion_root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v53r49_external_network_repair_20260810/conversion_v9_authoritative/full_networks_v9",
+    "conversion_tree_sha256": "9aa639a6fde43c4008bc6b4c24e2171ae3135858a437e10bfc65440a002015de",
+    "duration_sec": 3600,
+    "external_manifest": {
+      "path": "cf_h2o/config/traffic_signal_tsc_v39_external_la_jinan_v9_manifest.json",
+      "sha256": "636e09d8e2f47d5fefaa26b33b0552373b01f185e77e18896c97751c267c356c"
+    },
+    "network_parent_protocol": {
+      "path": "cf_h2o/config/traffic_signal_tsc_v40_external_v9_network_repair_confirmation.json",
+      "sha256": "9d35605ea736c5b3938190bd9ce456ac741b26c76e0ede343ea39d65eb26419c"
+    },
+    "prediction_horizon_sec": 60,
+    "protocol": {
+      "path": "cf_h2o/config/traffic_signal_tsc_v41_external_v9_full_budget_refit.json",
+      "sha256": "472985aa515aab31849d2072c118b562183beaea9f6bf8f5920f69614ff35548"
+    },
+    "sumo_version": "1.22.0",
+    "warmup_sec": 60
+  },
+  "failed_v61_preflight": {
+    "path": "cf_h2o/results/cluster/tsc_v78r74_external_v9_topology_veto_closed_loop_development_20260830/launch_v1.json",
+    "reason": "incorrect_empty_remote_conversion_path",
+    "rollouts_observed": false,
+    "sha256": "b655d12c9ed66c2eb74b667e0a5eaca5404b310d8e61803437c32ebf5609f6ea"
+  },
+  "frozen_at_utc": "2026-08-30T01:21:16.487430+00:00",
+  "future_file_counts_at_freeze": {
+    "abandoned_v75_root": 0,
+    "development_audit": 0,
+    "development_results": 0,
+    "launch_output": 0,
+    "prospective_root": 0,
+    "validation_root": 0
+  },
+  "future_outputs": {
+    "prospective_root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v80r76_external_v9_topology_veto_prospective_20260830",
+    "validation_root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v79r75_external_v9_topology_veto_validation_20260830"
+  },
+  "hierarchical_freeze_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/joint_freeze_audit_v1.json",
+    "sha256": "b113215b8fba6cf322d367b7f007d40e3f6ebd9264fa4422da6a7e00fb549c2b"
+  },
+  "proposal": {
+    "city_artifacts": {
+      "jinan": {
+        "certificate": {
+          "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/jinan/freeze.json",
+          "sha256": "a617c6312fa6e95877a44235b0caa5204cbe3053c1738baf839031255eb8dc2d"
+        },
+        "deployment": {
+          "conformal_guard": {
+            "enabled": false,
+            "margin": 0.0,
+            "max_relative_rule_gap": 1.0,
+            "min_context_trust": 0.0,
+            "risk_multiplier": 1.0
+          },
+          "coordination_mode_before_closed_loop_selection": "direct",
+          "fallback_policy": "phase_pressure",
+          "policy": "cfcmt_hierarchical_guard_mpc",
+          "regularizer": {
+            "blend_weight": 8.0,
+            "enabled": true,
+            "min_context_trust": 0.5,
+            "risk_multiplier": 0.5
+          },
+          "runtime_policy_suffix": "_hierarchical_guard",
+          "target_support": {
+            "combination": "pressure_support_only",
+            "conformal_guard_enabled": false,
+            "conformal_support": {
+              "distance": "nearest_standardized_rms",
+              "feature_count": 16,
+              "feature_names": [
+                "total_q",
+                "total_veh",
+                "mean_speed",
+                "mean_occ",
+                "green_q",
+                "red_q",
+                "green_down_q",
+                "green_down_occ",
+                "delta_green_q",
+                "delta_red_q",
+                "delta_green_down_q",
+                "delta_green_down_occ",
+                "delta_service_pressure",
+                "delta_switch_indicator",
+                "delta_clearance_fraction",
+                "delta_current_phase_overlap"
+              ],
+              "label_free": true,
+              "minimum_total_vehicles": 0.0,
+              "prototype_count": 7288,
+              "support": "exp(-distance)",
+              "support_protocol": "target-action-coverage-nearest-prototype-v1"
+            },
+            "pressure_support": {
+              "distance": "nearest_standardized_rms",
+              "feature_count": 16,
+              "feature_names": [
+                "total_q",
+                "total_veh",
+                "mean_speed",
+                "mean_occ",
+                "green_q",
+                "red_q",
+                "green_down_q",
+                "green_down_occ",
+                "delta_green_q",
+                "delta_red_q",
+                "delta_green_down_q",
+                "delta_green_down_occ",
+                "delta_service_pressure",
+                "delta_switch_indicator",
+                "delta_clearance_fraction",
+                "delta_current_phase_overlap"
+              ],
+              "label_free": true,
+              "minimum_total_vehicles": 0.0,
+              "prototype_count": 7288,
+              "support": "exp(-distance)",
+              "support_protocol": "target-action-coverage-nearest-prototype-v1"
+            },
+            "support_protocol": "pressure-and-oof-safe-intersection-v1"
+          }
+        },
+        "model": {
+          "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/jinan/model.pkl",
+          "sha256": "f2685b558733fe7bd7f2170ebe7306fbbe799f4c28ce6bf91f5c5776b0afbb8a"
+        },
+        "selected_candidate": "constant_alpha_0p8"
+      },
+      "los_angeles": {
+        "certificate": {
+          "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/los_angeles/freeze.json",
+          "sha256": "264e4d6821efd305b0a91953fc7eb06730aede63d302700045afce1713ff61c1"
+        },
+        "deployment": {
+          "conformal_guard": {
+            "enabled": true,
+            "margin": 0.0,
+            "max_relative_rule_gap": 0.0,
+            "min_context_trust": 0.5,
+            "risk_multiplier": 0.0
+          },
+          "coordination_mode_before_closed_loop_selection": "direct",
+          "fallback_policy": "phase_pressure",
+          "policy": "cfcmt_hierarchical_guard_mpc",
+          "regularizer": {
+            "blend_weight": 2.0,
+            "enabled": true,
+            "min_context_trust": 0.5,
+            "risk_multiplier": 0.0
+          },
+          "runtime_policy_suffix": "_hierarchical_guard",
+          "target_support": {
+            "combination": "minimum_component_support",
+            "conformal_guard_enabled": true,
+            "conformal_support": {
+              "distance": "nearest_standardized_rms",
+              "feature_count": 16,
+              "feature_names": [
+                "total_q",
+                "total_veh",
+                "mean_speed",
+                "mean_occ",
+                "green_q",
+                "red_q",
+                "green_down_q",
+                "green_down_occ",
+                "delta_green_q",
+                "delta_red_q",
+                "delta_green_down_q",
+                "delta_green_down_occ",
+                "delta_service_pressure",
+                "delta_switch_indicator",
+                "delta_clearance_fraction",
+                "delta_current_phase_overlap"
+              ],
+              "label_free": false,
+              "minimum_total_vehicles": 1.0,
+              "prototype_count": 4,
+              "support": "exp(-distance)",
+              "support_protocol": "oof-safe-action-nearest-prototype-v1"
+            },
+            "pressure_support": {
+              "distance": "nearest_standardized_rms",
+              "feature_count": 16,
+              "feature_names": [
+                "total_q",
+                "total_veh",
+                "mean_speed",
+                "mean_occ",
+                "green_q",
+                "red_q",
+                "green_down_q",
+                "green_down_occ",
+                "delta_green_q",
+                "delta_red_q",
+                "delta_green_down_q",
+                "delta_green_down_occ",
+                "delta_service_pressure",
+                "delta_switch_indicator",
+                "delta_clearance_fraction",
+                "delta_current_phase_overlap"
+              ],
+              "label_free": true,
+              "minimum_total_vehicles": 0.0,
+              "prototype_count": 746,
+              "support": "exp(-distance)",
+              "support_protocol": "target-action-coverage-nearest-prototype-v1"
+            },
+            "support_protocol": "pressure-and-oof-safe-intersection-v1"
+          }
+        },
+        "model": {
+          "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/los_angeles/model.pkl",
+          "sha256": "dbeb80b1796dbe8b7910ba77bbe3ce587898da78cb7de3e47408806c878198df"
+        },
+        "selected_candidate": "constant_alpha_0p8"
+      }
+    },
+    "method": "frozen_v60_hierarchical_cfcmt",
+    "prediction_horizon_sec": 60,
+    "target_labels_used_by_proposal": false
+  },
+  "proposal_parent_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v46_external_v9_hierarchical_closed_loop_development.json",
+    "sha256": "cbdd465fa0d5583d7937742afc5f5188901c3708742ed4156d6a78c567586b70"
+  },
+  "prospective_confirmation": {
+    "candidate_policies_for_later_freeze": [
+      "cfcmt_oof_validated_mpc",
+      "phase_pressure",
+      "max_pressure",
+      "fixed_time",
+      "rigid_anchor_mpc",
+      "simulator_only_mpc",
+      "h2oplus_style_dense_residual_mpc"
+    ],
+    "city_scenarios": {
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ],
+      "los_angeles": [
+        "la_1x4"
+      ]
+    },
+    "closed_loop_seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "must_not_run_until_validation_passes_and_prospective_analysis_is_frozen": true,
+    "release_condition": "validation_gate_passed_and_analysis_hash_frozen"
+  },
+  "protocol": "tsc-v78r74-external-v9-topology-veto-closed-loop-development-v2",
+  "runtime_executable_sources": {
+    "cf_h2o/eval/traffic_signal_external_topology_veto_closed_loop_development.py": "c93e1e6ead3091f321e9fe348ea5819ab8b3c6dcb513b6599e7c6afdb59433cb",
+    "cf_h2o/eval/traffic_signal_resco_cfcmt_v3.py": "1a42ca1c411db5481804f8f002897d7311a04a80ddf22ab717d9815bb1448d38",
+    "cf_h2o/traffic_signal/topology_target_veto.py": "c169f7f8c0509faa37aac7949ce79f2b7dca4aeaf350a495d15bfb88d80246eb",
+    "scripts/cluster/audit_tsc_external_topology_veto_closed_loop_development.py": "cdcf45e7e9e98e3e003ee42d68d1a89efa90ab40eae681137b6b8e588b86737e",
+    "scripts/cluster/launch_tsc_external_topology_veto_closed_loop_development.py": "983a4de60c3c1c232b617969a3a85480b7f1f9837ef178e1d30a87d3143ae453",
+    "scripts/cluster/run_tsc_external_topology_veto_closed_loop_development_shard.py": "87d480ee16a56afa3a3903ad1150a79cbbd9fdb19053b6af0857b672410c8cda"
+  },
+  "stage": "post_v77_artifact_audit_pre_adaptation_seed_closed_loop_outcome",
+  "topology_veto_artifact_root": {
+    "files": {
+      "jinan/freeze.json": "aaf20dec433fe9ca77e408e0be522e8db6c17a44420023ed46b5ec90d64b61d5",
+      "jinan/model.pkl": "c7b1eb2df03e52773239e4fde81d68a0f389e2da52ee05e6c7892607d13837a3",
+      "los_angeles/freeze.json": "a7f7bd142262ac9703b14deebcde64aee4da4235826bd77df9f97a307d2e3035",
+      "los_angeles/model.pkl": "944e5d75a99fa58d49a138cc48997126e07caaf4d1aaefdf87a167bf2eae32e9"
+    },
+    "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v77r73_external_v9_topology_veto_freeze_20260830/freeze_v1"
+  },
+  "topology_veto_freeze_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v60_external_v9_topology_veto_freeze.json",
+    "sha256": "b0c6cb4e44eade384f6aa86044a48ee0232c1deb7f96a444bc151896d8f053a7"
+  },
+  "topology_veto_freeze_result": {
+    "path": "cf_h2o/results/cluster/tsc_v77r73_external_v9_topology_veto_freeze_20260830/freeze_result_v1.json",
+    "sha256": "3928c673ee1f5b9ac21273e4e551e70d68b647b7822984f7ad4a6d6fde562f79"
+  },
+  "topology_veto_joint_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v77r73_external_v9_topology_veto_freeze_20260830/joint_freeze_audit_v1.json",
+    "sha256": "0d1e18e64441bc73429de6cb69807d793a1d95af488af4a45984f6e2d1d9a8a5"
+  },
+  "validation": {
+    "city_scenarios": {
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ],
+      "los_angeles": [
+        "la_1x4"
+      ]
+    },
+    "closed_loop_seeds": [
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ],
+    "method_and_execution_candidate_must_be_hash_frozen_before_launch": true,
+    "must_not_run_until_development_selector_and_analysis_hash_are_frozen": true
+  }
+}

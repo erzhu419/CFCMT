@@ -1,0 +1,204 @@
+{
+  "artifact": {
+    "artifact_key": "state_action_h120_r025_t010",
+    "certificate": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v83r79_external_v9_runtime_queue_trust_redevelopment_20260830/uncertainty_horizon_artifacts_v2/state_action_h120_r025_t010/freeze.json",
+      "sha256": "c0febedddd8d428654a8f9077aa20cf47326a2c403fe39a5a712d5eabed58543"
+    },
+    "freeze_result": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v83r79_external_v9_runtime_queue_trust_redevelopment_20260830/uncertainty_horizon_artifact_freeze_v3.json",
+      "sha256": "8064ce96265fb3a5ef0c3bd278051592b90e28169301a83fe661b1ae4ff544f1"
+    },
+    "independent_audit": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v83r79_external_v9_runtime_queue_trust_redevelopment_20260830/uncertainty_horizon_artifact_audit_v3.json",
+      "sha256": "d0078dc00fd01c77513443a3069f1c7f43805c0f4176464421ee7e6c72a7d492"
+    },
+    "minimum_context_trust": 0.1,
+    "model": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v83r79_external_v9_runtime_queue_trust_redevelopment_20260830/uncertainty_horizon_artifacts_v2/state_action_h120_r025_t010/model.pkl",
+      "sha256": "c35c4a81ee14b17ddbc544def6e3bcfcd1458331abca8816e6beeb09091a4abe"
+    },
+    "prediction_horizon_sec": 120,
+    "prediction_sha256": "1d68ab7dedb62cbaa4eb2288a7e5165455f4d4520d42ac4318059c1c746029a4",
+    "protocol": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v82_external_v9_uncertainty_horizon_artifacts.json",
+      "sha256": "4c2539388dab7335233b2845dce25abd5f242c0d401b1b32ec911438bd3211cf"
+    },
+    "risk_multiplier": 0.25,
+    "root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v83r79_external_v9_runtime_queue_trust_redevelopment_20260830/uncertainty_horizon_artifacts_v2"
+  },
+  "claim_boundary": "This 64-rollout experiment is the first untouched confirmation of the single v83-selected uh_state_action_h120 policy. It compares against paired PhasePressure under the same full-day SUMO protocol. No v84 outcome was available when the policy and gate were frozen; the eight-seed v85 prospective root remains sealed.",
+  "confirmation": {
+    "bootstrap": {
+      "replicates": 10000,
+      "seed": 20260831,
+      "unit": "paired_simulator_seed"
+    },
+    "city_scenarios": {
+      "jinan": [
+        "jinan_3x4_real"
+      ]
+    },
+    "classification": "untouched_confirmatory",
+    "confirmation_rule": {
+      "fallback": "phase_pressure_if_no_candidate_is_feasible",
+      "maximum_bootstrap_95pct_upper_mean_relative_delta": 0.0,
+      "maximum_equal_seed_mean_relative_delta": 0.0,
+      "maximum_worst_seed_relative_delta": 0.05,
+      "method_collision_incidents_must_not_exceed_paired_phase_pressure": true,
+      "method_teleports_must_not_exceed_paired_phase_pressure": true,
+      "minimum_active_seed_fraction": 0.75,
+      "minimum_improved_seed_fraction": 0.5,
+      "selector": "lowest_mean_relative_delta_then_lower_bootstrap_upper_then_fewer_overrides_then_shorter_horizon_then_method_key"
+    },
+    "matrix_size": 64,
+    "method_candidate": {
+      "artifact_key": "state_action_h120_r025_t010",
+      "candidate_role": "adaptive_successor_candidate",
+      "cooldown_intervals": 0,
+      "coordination_mode": "direct",
+      "execution_trust_region": {
+        "enabled": true,
+        "global_cooldown_intervals": 11,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "min_priority": 0.0,
+        "min_total_queue": 0.0,
+        "min_total_vehicles": 1.0
+      },
+      "key": "uh_state_action_h120",
+      "prediction_horizon_sec": 120,
+      "runtime_policy": "causal_group_normalized_rigid_advantage_contrast_hierarchical_guard",
+      "selection_eligible_closed_loop": true
+    },
+    "method_key": "uh_state_action_h120",
+    "pairing_unit": "same_scenario_same_simulator_seed",
+    "phase_policy": "phase_pressure",
+    "policies": [
+      "phase_pressure",
+      "uh_state_action_h120"
+    ],
+    "policy_count": 2,
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "seed_count": 32,
+    "seeds": [
+      30141,
+      24645,
+      67247,
+      52523,
+      40060,
+      41298,
+      70477,
+      77601,
+      24309,
+      24398,
+      95860,
+      42032,
+      89655,
+      75134,
+      22155,
+      49777,
+      98901,
+      44735,
+      78221,
+      52867,
+      25771,
+      90526,
+      36997,
+      30645,
+      99518,
+      32522,
+      91474,
+      30210,
+      66414,
+      55121,
+      34778,
+      48806
+    ]
+  },
+  "confirmation_parent": {
+    "v83_decision": "authorize_uncertainty_horizon_confirmatory_freeze",
+    "v83_independent_audit": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v83r79_external_v9_runtime_queue_trust_redevelopment_20260830/uncertainty_horizon_closed_loop_audit_v1.json",
+      "sha256": "2986e5a520a3fbef372077bfc964598276c6ec93cdb9b21966195fe5ce2dc340"
+    },
+    "v83_protocol": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v83_external_v9_uncertainty_horizon_closed_loop_development.json",
+      "sha256": "e4f2a6d3e51358b8ae5ab508d0413f0faab46eb46498e9ee813c41fa8de30d2f"
+    }
+  },
+  "created_at_utc": "2026-08-30T11:43:58.224523+00:00",
+  "environment": {
+    "control_interval_sec": 10,
+    "conversion_manifest": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v53r49_external_network_repair_20260810/conversion_v9_authoritative/full_networks_v9/conversion_manifest.json",
+      "sha256": "b140f2deea63653efd225c53ad306bf910ecf1ee149fb894c202227d7d454f56"
+    },
+    "conversion_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9",
+    "conversion_tree_sha256": "9aa639a6fde43c4008bc6b4c24e2171ae3135858a437e10bfc65440a002015de",
+    "duration_sec": 3600,
+    "external_manifest": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v39_external_la_jinan_v9_manifest.json",
+      "sha256": "636e09d8e2f47d5fefaa26b33b0552373b01f185e77e18896c97751c267c356c"
+    },
+    "network_parent_protocol": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v40_external_v9_network_repair_confirmation.json",
+      "sha256": "9d35605ea736c5b3938190bd9ce456ac741b26c76e0ede343ea39d65eb26419c"
+    },
+    "prediction_horizons_sec": [
+      60,
+      120
+    ],
+    "protocol": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v41_external_v9_full_budget_refit.json",
+      "sha256": "472985aa515aab31849d2072c118b562183beaea9f6bf8f5920f69614ff35548"
+    },
+    "sumo_version": "1.22.0",
+    "warmup_sec": 60
+  },
+  "output_roots": {
+    "local_results_root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v84r80_external_v9_runtime_queue_trust_confirmation_20260830",
+    "remote_results_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v84r80_external_v9_runtime_queue_trust_confirmation_20260830"
+  },
+  "partition": {
+    "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v65_external_v9_post_validation_redevelopment_partition.json",
+    "sha256": "0950dc076766bc3a7ea57ff3f887baa608fb333a8770f8c32174cfd2d09d9d11"
+  },
+  "prospective_partition": {
+    "remains_sealed": true,
+    "root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v85r81_external_v9_runtime_queue_trust_prospective_20260830",
+    "seed_count": 8
+  },
+  "protocol": "tsc-v84r80-external-v9-uncertainty-horizon-confirmation-v1",
+  "runtime_parent": {
+    "hierarchical_freeze_audit": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/joint_freeze_audit_v1.json",
+      "sha256": "b113215b8fba6cf322d367b7f007d40e3f6ebd9264fa4422da6a7e00fb549c2b"
+    },
+    "hierarchical_freeze_root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1",
+    "hierarchical_parent": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v44_external_v9_hierarchical_guard_confirmation.json",
+      "sha256": "8d0e848ac0b6dd0c8880ee9da4102e083a679ea83103f722f4cb10eac76c06ca"
+    },
+    "offline_result": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v61r57_external_v9_hierarchical_offline_20260810/offline_confirmation_v1.json",
+      "sha256": "f57d93b6b0b9cbf22d8e4bd160358233dbb37234d3e80476e5fed3066480109f"
+    },
+    "protocol": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v46_external_v9_hierarchical_closed_loop_development.json",
+      "sha256": "cbdd465fa0d5583d7937742afc5f5188901c3708742ed4156d6a78c567586b70"
+    },
+    "support_audit": {
+      "path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v61r57_external_v9_hierarchical_offline_20260810/target_support_equivalence_audit_v1.json",
+      "sha256": "d9ea0d08565504897dd70160be55126f52c42ebe2a3a7eb670a3163774ecf52f"
+    }
+  },
+  "scientific_status": {
+    "candidate_count": 1,
+    "candidate_selection_complete_before_v84": true,
+    "threshold_or_architecture_tuning_in_v84": false,
+    "v84_outcomes_inspected_before_freeze": false,
+    "v85_outcomes_inspected_before_freeze": false
+  },
+  "stage": "post_v83_selection_pre_v84_outcomes"
+}

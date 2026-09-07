@@ -79,6 +79,7 @@ def load_frozen_counterfactual_bank(
     collection_shards: int,
     workers: int,
     scenario_seeds: Mapping[str, Sequence[int]] | None = None,
+    scenario_collection_shards: Mapping[str, int] | None = None,
 ) -> tuple[dict[str, MechanismDataset], dict[str, Any]]:
     """Load an exact cache by embedded identity without synthesizing misses."""
 
@@ -114,6 +115,20 @@ def load_frozen_counterfactual_bank(
                     f"scenario seed list must be nonempty and unique: {scenario}"
                 )
             requested_by_scenario[scenario] = scenario_values
+    shard_overrides = {
+        str(name): int(value)
+        for name, value in dict(scenario_collection_shards or {}).items()
+    }
+    if set(shard_overrides) - set(scenarios) or any(
+        value < 1 for value in shard_overrides.values()
+    ):
+        raise ValueError("scenario collection-shard overrides are invalid")
+    expected_shards_by_scenario = {
+        scenario: int(shard_overrides.get(scenario, collection_shards))
+        for scenario in scenarios
+    }
+    if any(value < 1 for value in expected_shards_by_scenario.values()):
+        raise ValueError("collection_shards must be positive")
     paths = sorted(Path(cache_root).glob("*.npz"))
     if not paths:
         raise FileNotFoundError(f"no counterfactual cache files under {cache_root}")
@@ -133,7 +148,8 @@ def load_frozen_counterfactual_bank(
             requested_by_scenario[scenario]
         ):
             continue
-        if shard_count != int(collection_shards) or not 0 <= shard < shard_count:
+        expected_shards = expected_shards_by_scenario[scenario]
+        if shard_count != expected_shards or not 0 <= shard < shard_count:
             raise ValueError(f"unexpected shard identity at {path}: {identity}")
         key = (scenario, seed)
         if shard in shards.setdefault(key, {}):
@@ -155,7 +171,7 @@ def load_frozen_counterfactual_bank(
     merged_by_scenario_seed = {}
     for scenario, seed in sorted(expected_keys):
         indexed = shards[(scenario, seed)]
-        expected_indices = set(range(int(collection_shards)))
+        expected_indices = set(range(expected_shards_by_scenario[scenario]))
         if set(indexed) != expected_indices:
             raise ValueError(
                 f"incomplete cache shards for {scenario}/seed={seed}: "
@@ -164,7 +180,7 @@ def load_frozen_counterfactual_bank(
         merged_by_scenario_seed[(scenario, seed)] = _merge_collection_shards_v3(
             scenario,
             seed,
-            [indexed[index] for index in range(int(collection_shards))],
+            [indexed[index] for index in range(expected_shards_by_scenario[scenario])],
         )
     bank = {
         scenario: _merge_scenario_seed_datasets_v3(
@@ -184,9 +200,13 @@ def load_frozen_counterfactual_bank(
         ),
         "cache_root": str(Path(cache_root).resolve()),
         "file_count": len(paths),
-        "used_file_count": len(expected_keys) * int(collection_shards),
+        "used_file_count": sum(
+            expected_shards_by_scenario[scenario]
+            for scenario, _ in expected_keys
+        ),
         "scenario_count": len(scenarios),
         "collection_shards": int(collection_shards),
+        "collection_shards_by_scenario": expected_shards_by_scenario,
         "unique_identities": len(identity_sha),
         "rows_by_scenario": {name: int(dataset.size) for name, dataset in bank.items()},
         "groups_by_scenario": {
@@ -472,37 +492,37 @@ def fit_target_screening_models(
     source_city_groups = sorted(
         {str(scenario_city_groups[name]) for name in source_names}
     )
-    selector_costs = {
-        city_group: {
-            policy: float(
-                np.mean(
+    if prior_policy_override is None:
+        selector_costs = {
+            city_group: {
+                policy: float(
+                    np.mean(
+                        [
+                            source_rule_costs[name][policy]
+                            for name in source_names
+                            if str(scenario_city_groups[name]) == city_group
+                        ]
+                    )
+                )
+                for policy in source_rule_specs
+            }
+            for city_group in source_city_groups
+        }
+        if target_city_group in selector_costs:
+            raise AssertionError("offline screen target city entered source selector")
+        selector_contexts = {
+            city_group: np.mean(
+                np.vstack(
                     [
-                        source_rule_costs[name][policy]
+                        bank[name].context
                         for name in source_names
                         if str(scenario_city_groups[name]) == city_group
                     ]
-                )
+                ),
+                axis=0,
             )
-            for policy in source_rule_specs
+            for city_group in source_city_groups
         }
-        for city_group in source_city_groups
-    }
-    if target_city_group in selector_costs:
-        raise AssertionError("offline screen target city entered source selector")
-    selector_contexts = {
-        city_group: np.mean(
-            np.vstack(
-                [
-                    bank[name].context
-                    for name in source_names
-                    if str(scenario_city_groups[name]) == city_group
-                ]
-            ),
-            axis=0,
-        )
-        for city_group in source_city_groups
-    }
-    if prior_policy_override is None:
         selected_prior_policy, prior_diagnostics = (
             select_contextual_policy_from_domain_costs(
                 selector_costs,

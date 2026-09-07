@@ -1,0 +1,73 @@
+{
+  "protocol": "tsc-v119-target-calibrated-causal-source-gate-v1",
+  "scientific_status": "development-selector-only-never-confirmatory",
+  "estimand_protocol": "one-control-interval-local-mechanisms-plus-pure-halted-queue-rollout-value-v2",
+  "reference_policy": "phase_pressure",
+  "target_name": "prefix_mean_cost_450s",
+  "target_calibration": {
+    "city": "jinan",
+    "scenarios": [
+      "jinan_3x4_real",
+      "jinan_3x4_real_2000",
+      "jinan_3x4_real_2500"
+    ],
+    "seeds": [5057, 6067],
+    "action_group_budget": 100,
+    "group_ids": "identical_to_v115_frozen_b100",
+    "model_family": "standardized_ridge_action_regret",
+    "group_cross_fit_folds": 5
+  },
+  "source_information": {
+    "model": "v115_source_components_b0",
+    "target_transition_labels_consumed_by_source_model": 0,
+    "city_identity_features": false,
+    "aggregation": "source-city-permutation-invariant",
+    "features": [
+      "score_mean",
+      "score_median",
+      "score_min",
+      "score_max",
+      "score_std",
+      "score_q25",
+      "score_q75",
+      "improvement_support",
+      "upper_bound_mean",
+      "upper_bound_max"
+    ]
+  },
+  "architecture_matched_arms": [
+    "target_only_neutral_source_slots",
+    "source_aligned",
+    "source_group_permutation_placebo"
+  ],
+  "shared_hyperparameter_selection": {
+    "ridge_alpha_grid": [0.1, 1.0, 10.0, 100.0, 1000.0],
+    "criterion": "paired_mean_group_mse_of_target_only_and_source_aligned_oof",
+    "same_selected_alpha_for_all_arms": true
+  },
+  "uncertainty": {
+    "method": "one_sided_group_max_oof_residual",
+    "quantiles": [0.5, 0.75, 0.9, 0.95],
+    "minimum_predicted_gains": [0.0, 0.0015, 0.003],
+    "minimum_source_support": 0.5
+  },
+  "development_selector": {
+    "scenario": "jinan_3x4_real",
+    "seed_count": 22,
+    "seed_source": "v116_disclosed_selector_cache",
+    "target_labels_used_for_gate_model_fit": 0,
+    "selection": "nested_leave_one_seed_familywise"
+  },
+  "admission_gate": {
+    "minimum_mean_improvement_vs_phase_pressure": 0.0015,
+    "minimum_mean_source_contribution_vs_matched_target_only": 0.0005,
+    "minimum_mean_source_contribution_vs_matched_placebo": 0.0005,
+    "upper_confidence_bounds_must_be_negative": true,
+    "maximum_worst_seed_regression": 0.0075,
+    "maximum_harmful_override_fraction": 0.42,
+    "maximum_harmful_seed_fraction": 0.25,
+    "intervention_fraction_range": [0.0025, 0.05],
+    "minimum_nested_source_selection_fraction": 0.5
+  },
+  "claim_boundary": "V119 is a disclosed Jinan development experiment. Passing permits freezing one gate for a target-label-disjoint fresh-city confirmation; it is not itself confirmatory evidence. Failing retains the PhasePressure fallback and does not invalidate the earlier V98 comparison against strict target-only."
+}

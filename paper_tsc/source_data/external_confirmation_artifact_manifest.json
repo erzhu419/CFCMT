@@ -1,0 +1,61 @@
+{
+  "hard_gates": {
+    "closed_loop_passed": true,
+    "development_passed": true,
+    "external_offline_passed": true,
+    "external_target_cities": 2,
+    "rollouts": 56,
+    "source_ablation_integrity_passed": true,
+    "source_confirmation_decision": "reject_fresh_source_contribution_confirmation",
+    "source_confirmation_integrity_passed": true,
+    "teleports": 0
+  },
+  "inputs": {
+    "closed_loop_protocol": "tsc-v43r39-external-closed-loop-aggregate-v4",
+    "development_protocol": "tsc_v41r37_seed_heldout_b100_cross_fitted_ensemble_development",
+    "heldout_protocol": "tsc-v43r39-external-seed8171-heldout-evaluation-v1",
+    "jinan_method_protocol": "tsc-v43r39-external-city-full-oof-refit-freeze-v1",
+    "los_angeles_method_protocol": "tsc-v43r39-external-city-full-oof-refit-freeze-v1",
+    "source_ablation_protocol": "tsc-v90r86-source-contribution-ablation-audit-v1",
+    "source_confirmation_protocol": "tsc-v91r87-source-contribution-fresh-confirmation-audit-v1"
+  },
+  "metric_population": "all departed vehicles, including write-unfinished records whose duration and waiting are accrued to the fixed 3600-second horizon",
+  "outputs": {
+    "figure": "figures/tsc_external_confirmation.{pdf,svg,png,tiff}",
+    "network_figure": "figures/traffic_signal_transfer_networks.{pdf,svg,png,tiff}",
+    "source_data": [
+      "source_data/development_seed_heldout_action_regret.csv",
+      "source_data/external_offline_confirmation.csv",
+      "source_data/external_closed_loop_macro.csv",
+      "source_data/external_closed_loop_city.csv",
+      "source_data/external_closed_loop_comparisons.csv",
+      "source_data/external_source_contribution_closed_loop.csv",
+      "source_data/traffic_signal_transfer_networks.csv"
+    ],
+    "tables": [
+      "tables/development_seed_heldout_confirmation.tex",
+      "tables/external_offline_confirmation.tex",
+      "tables/external_closed_loop_macro.tex",
+      "tables/external_closed_loop_city.tex",
+      "tables/external_closed_loop_comparisons.tex",
+      "tables/external_source_contribution_closed_loop.tex",
+      "tables/traffic_signal_transfer_networks.tex",
+      "tables/external_confirmation_provenance.tex"
+    ]
+  },
+  "protocol": "paper-tsc-external-confirmation-artifacts-v1",
+  "provenance": {
+    "Jinan_deployment_model": "a34970f1e4f023079650866097359ec3b2509e17787685249a21363cc7b03741",
+    "Los_Angeles_deployment_model": "f26ee8e5829e248ef411f77ad3e19ed0d63fd52cdfdae6d8291a9a3aeaaa7aff",
+    "closed-loop_aggregate": "be36c73c5835e632231140fdbdabc4bba422f54b503160c0179efc902d4534e0",
+    "closed-loop_source_tree": "ad555ff72a11a62cc88c8bbbe2ab2f5df1db8de920af03e2f61d99aaba226a7d",
+    "development_audit": "5bcae9467cdb4cc157676e94078d204702ebdca6d51007ffca4bc85d13951066",
+    "fresh_target-only_confirmation": "3a0ee874afeff6df96a90fb4aed4e42f79705469f0d2a72da514932385990f67",
+    "held-out_seed-8171_result": "20d682b48bca0f8821ecf98e54b04c94af87d530add51cc1d92d9a176f74cf60",
+    "joint_method_freeze": "471e8c34eb7be96411c812c7fe961d5c07f1857e3fb50d2c8d7edd59fc23c596",
+    "post-freeze_target-only_ablation": "238dbdc27ceb7ce016b9c995b5472cf1ad71a76632b6609b0df66408a1e26a7e",
+    "source_cache": "14c6dfad87999e55fa86fa942ac0ca2334129f4d1662b3c31a6e4fc7aa74c242",
+    "target_adaptation_cache": "beb6a968c43dd58ceac4df6d9da8dfca47fc1f0869dfda0dc151a3e9cae58d77"
+  },
+  "statistical_boundary": "descriptive paired hierarchy; only two independent target cities"
+}

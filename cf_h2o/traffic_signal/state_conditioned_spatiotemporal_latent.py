@@ -9,6 +9,9 @@ import numpy as np
 
 from cf_h2o.traffic_signal.action_ranker import group_normalized_action_target
 from cf_h2o.traffic_signal.mechanism_world_model import MechanismDataset
+from cf_h2o.traffic_signal.movement_arrival_timeline import (
+    MOVEMENT_ARRIVAL_FEATURE_NAMES,
+)
 from cf_h2o.traffic_signal.spatiotemporal_action_latent import (
     SpatiotemporalActionLatentConfig,
     TargetSpatiotemporalActionLatent,
@@ -41,9 +44,15 @@ STATE_ACTION_FEATURES = (
     "delta_red_pressure",
     "delta_green_corridor_pressure",
 )
+STATE_ACTION_ARRIVAL_FEATURES = (
+    *STATE_ACTION_FEATURES,
+    *MOVEMENT_ARRIVAL_FEATURE_NAMES,
+    *(f"delta_{name}" for name in MOVEMENT_ARRIVAL_FEATURE_NAMES),
+)
 FEATURE_SETS = {
     "compact_state": COMPACT_STATE_FEATURES,
     "state_action": STATE_ACTION_FEATURES,
+    "state_action_arrival": STATE_ACTION_ARRIVAL_FEATURES,
 }
 
 

@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "matrix_protocol_tag": "v39",
+  "protocol": "anchored-pairwise-expanded-seven-city-development-v39",
+  "expected_sumo_version": "1.22.0",
+  "manifest": "cf_h2o/config/traffic_signal_saltlake_confirmatory_v1.json",
+  "development_manifest": "cf_h2o/config/traffic_signal_cross_city_v2_saltlake18.json",
+  "combined_counterfactual_cache_sha256": "14c6dfad87999e55fa86fa942ac0ca2334129f4d1662b3c31a6e4fc7aa74c242",
+  "expanded_source_rule_baseline_sha256": "f9223a7001078d9a6df0e1a2ad4bfe1d2bc59fc2547621f092e8be702596dbfa",
+  "source_rule_cache_version": "v5-benchmark-collision-audited-no-teleport-full-input-hash-sumo122-20260808",
+  "counterfactual": {
+    "source_duration_sec": 600.0,
+    "control_interval_sec": 10,
+    "warmup_sec": 60.0
+  },
+  "development": {
+    "source_policy_seeds": [1709, 2027],
+    "source_rule_grid": "generalized",
+    "target_group_budget": 60,
+    "target_adaptation_selection_seed": 20260803,
+    "candidate_families": [
+      "causal_group_normalized_rigid_advantage",
+      "causal_antisymmetric_pairwise_advantage",
+      "constant_pairwise_shrinkage",
+      "local_disagreement_confidence_shrinkage"
+    ],
+    "constant_alpha_grid": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+    "local_disagreement_cap_grid": [0.25, 0.5, 1.0, 2.0, 4.0],
+    "local_confidence_multiplier_grid": [0.0, 0.25, 0.5, 1.0],
+    "selection_gate": {
+      "minimum_macro_relative_improvement": 0.02,
+      "minimum_training_city_improvements": 4,
+      "minimum_global_city_improvements": 5,
+      "maximum_absolute_city_regression": 0.01
+    },
+    "external_holdouts": ["los_angeles", "nanchang"]
+  },
+  "cache_assignments": {
+    "node001": ["saltlake_400s_200w_q1_weekday_peak"],
+    "node002": ["saltlake_state_university_q1_weekday_peak"]
+  }
+}

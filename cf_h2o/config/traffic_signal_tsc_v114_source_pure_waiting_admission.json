@@ -1,0 +1,22 @@
+{
+  "protocol": "tsc-v114-source-pure-waiting-admission-v1",
+  "scientific_status": "post-v113_estimand-implementation-invalidation_native-safety-admission",
+  "collection_protocol": {
+    "path": "traffic_signal_tsc_v114_source_pure_waiting_cache.json",
+    "protocol": "tsc-v114-source-pure-waiting-cache-v1",
+    "sha256": "4d879033ec6943a289bf7e3da7396de6dedc59617a29dfa8f8b7e51e21b5941a"
+  },
+  "admission": {
+    "expected_collected_scenario_count": 18,
+    "expected_training_scenario_count": 17,
+    "excluded_scenarios": {
+      "ingolstadt21": {
+        "decision": "exclude_from_pure_waiting_mechanism_training",
+        "reason": "native_and_phase_pressure_behavior_collisions_make_all_450s_action_groups_safety-censored",
+        "required_native_safety_status": "UNSAFE",
+        "required_collection_status": "complete_but_zero_retained_groups"
+      }
+    }
+  },
+  "claim_boundary": "All 18 scenarios must be recollected under the pure halted-vehicle contract. Ingolstadt21 remains a complete failed-admission case only if its replacement shards reproduce zero retained safe groups and the unchanged native safety audit remains valid."
+}

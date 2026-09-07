@@ -1,0 +1,91 @@
+{
+  "protocol": "tsc-v49r45-external-policy-horizon-robustness-v1",
+  "frozen_at_utc": "2026-08-09T13:02:26Z",
+  "claim_boundary": "Untouched robustness development for a city-level selector frozen entirely from adaptation seeds 5057/6067. These results may authorize a later prospective analysis freeze but are not prospective confirmation.",
+  "parent_adaptation_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v34_external_policy_horizon_adaptation.json",
+    "sha256": "7f6c8d65083bcad3d50d60015dea7ec218c926123f30d0e01f449ea62b383eb3"
+  },
+  "adaptation_selection_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v48r44_policy_horizon_20260809/adaptation_selection_audit_v1.json",
+    "sha256": "3a2833d51dcef5ed3f6a1ffc273690d5b57aa44f09ad1b3b8aab6108a4718a01",
+    "required_status": "PASS",
+    "required_decision": "authorize_frozen_v48_selector_for_untouched_robustness"
+  },
+  "frozen_city_deployment": {
+    "los_angeles": {
+      "key": "cfcmt_pr_b0p25_cd6",
+      "family": "cfcmt_pressure_regularized_direct",
+      "blend_weight": 0.25,
+      "risk_multiplier": 0.0,
+      "min_context_trust": 0.25,
+      "cooldown_intervals": 6,
+      "fallback": false
+    },
+    "jinan": {
+      "key": "phase_pressure",
+      "family": "phase_pressure",
+      "blend_weight": null,
+      "risk_multiplier": null,
+      "min_context_trust": null,
+      "cooldown_intervals": 0,
+      "fallback": true
+    }
+  },
+  "city_scenarios": {
+    "los_angeles": [
+      "la_1x4"
+    ],
+    "jinan": [
+      "jinan_3x4_real",
+      "jinan_3x4_real_2000",
+      "jinan_3x4_real_2500"
+    ]
+  },
+  "untouched_robustness": {
+    "seeds": [
+      52282,
+      41242,
+      63792,
+      80722,
+      75638,
+      61337,
+      73385,
+      81189
+    ],
+    "policies": [
+      "cfcmt_policy_horizon_selected_mpc",
+      "phase_pressure"
+    ],
+    "matrix_size": 64,
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "reporting_unit": "city",
+    "scenario_weighting_within_city": "equal",
+    "seed_weighting": "equal",
+    "bootstrap": {
+      "unit": "seed-level equal-scenario city relative delta",
+      "replicates": 10000,
+      "seed": 20260809,
+      "confidence": 0.95,
+      "interval": "percentile"
+    },
+    "advance_gate": {
+      "each_city_mean_relative_regression_vs_phase_pressure_maximum": 0.0,
+      "each_city_bootstrap_95pct_upper_mean_relative_delta_maximum": 0.02,
+      "worst_scenario_seed_relative_regression_vs_phase_pressure_maximum": 0.05,
+      "minimum_fraction_of_active_city_seeds_with_interventions": 0.75,
+      "fallback_city_metrics_and_tripinfo_must_match_phase_pressure": true,
+      "method_teleports_must_not_exceed_paired_phase_pressure": true,
+      "method_collision_incidents_must_not_exceed_paired_phase_pressure": true,
+      "all_result_and_tripinfo_hashes_must_verify": true
+    }
+  },
+  "prospective_confirmation_reservation": {
+    "seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "must_not_run_until_robustness_gate_passes_and_analysis_is_hash_frozen": true
+  }
+}

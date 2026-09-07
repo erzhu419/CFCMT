@@ -1,0 +1,22 @@
+{
+  "protocol": "tsc-v112-source-waiting-aligned-admission-v2",
+  "scientific_status": "disclosed_post-collection_native-safety_admission_repair",
+  "collection_protocol": {
+    "path": "traffic_signal_tsc_v112_source_waiting_aligned_cache.json",
+    "protocol": "tsc-v112-source-waiting-aligned-cache-v1",
+    "sha256": "0dc0aebd5189b813bac128306962e07a7f5e65c3eeedcd5f6dbd4a7ed7b0b3ed"
+  },
+  "admission": {
+    "expected_collected_scenario_count": 18,
+    "expected_training_scenario_count": 17,
+    "excluded_scenarios": {
+      "ingolstadt21": {
+        "decision": "exclude_from_waiting_aligned_mechanism_training",
+        "reason": "native_and_phase_pressure_behavior_collisions_make_all_450s_action_groups_safety-censored",
+        "required_native_safety_status": "UNSAFE",
+        "required_collection_status": "complete_but_zero_retained_groups"
+      }
+    }
+  },
+  "claim_boundary": "All 18 source scenarios were collected. Ingolstadt21 is retained as a complete failed-admission case but cannot train a 450-second counterfactual mechanism. The resulting model is a 17-scenario, seven-source-city-group model; Ingolstadt remains represented by ingolstadt1 and ingolstadt7."
+}

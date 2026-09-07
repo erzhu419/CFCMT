@@ -1862,6 +1862,34 @@ def _bus_linear_reward_from_predicted_state(pred_y: np.ndarray, obs_action: np.n
     return reward
 
 
+def _ensure_line_env_views(env_path: Path, max_lines: int) -> tuple[Path, list[str]]:
+    """Create BusSimEnv-compatible single-line views for sampled rollout.
+
+    MultiLineEnv creates the same ``_line_envs/<line>/`` layout lazily, but
+    loading a full 800--900 line city only to evaluate 20 lines is wasteful.
+    This helper creates the lightweight symlink views directly.
+    """
+
+    line_root = env_path / "_line_envs"
+    line_root.mkdir(parents=True, exist_ok=True)
+    created: list[str] = []
+    for line_dir in _line_dirs(env_path, max_lines):
+        target = line_root / line_dir.name
+        target.mkdir(parents=True, exist_ok=True)
+        config_src = env_path / "config.json"
+        config_dst = target / "config.json"
+        if config_src.exists() and not config_dst.exists():
+            shutil.copy2(config_src, config_dst)
+        data_dst = target / "data"
+        if data_dst.is_symlink() and not data_dst.exists():
+            data_dst.unlink()
+        if not data_dst.exists():
+            os.symlink(line_dir.resolve(), data_dst)
+        (target / "pic").mkdir(exist_ok=True)
+        created.append(line_dir.name)
+    return line_root, created
+
+
 def _predict_action_from_obs(
     obs: np.ndarray,
     method: str,
@@ -1877,6 +1905,15 @@ def _predict_action_from_obs(
         return 0.0
     if method == "fixed_30":
         return 30.0
+    if method == "threshold_equalization_policy":
+        target = max(float(obs[8]), 60.0)
+        fwd = float(obs[5])
+        bwd = float(obs[6])
+        if fwd < 0.75 * target and bwd > 1.25 * target:
+            return float(min(actions, key=lambda value: abs(value - 60.0)))
+        if fwd < 0.90 * target and bwd > 1.10 * target:
+            return float(min(actions, key=lambda value: abs(value - 30.0)))
+        return 0.0
     feature_obs = _rollout_feature_obs(
         obs,
         line_key=line_key,
@@ -1928,6 +1965,7 @@ def run_sampled_rollout(
     policies = [
         "no_hold",
         "fixed_30",
+        "threshold_equalization_policy",
         "h2oplus_dense_policy",
         "cfcmt_mechanism_policy",
         "cfcmt_similarity_weighted_policy",
@@ -1948,7 +1986,7 @@ def run_sampled_rollout(
         cfcmt_beta = _fit_cfcmt(train_stats, ridge)
         cfcmt_weighted_beta = _fit_cfcmt(train_weighted, ridge)
         env_path = _resolve_path(root, spec["env_path"])
-        line_env_root = env_path / "_line_envs"
+        line_env_root, prepared_lines = _ensure_line_env_views(env_path, lines_per_city)
         if not line_env_root.exists():
             rows.append(
                 {
@@ -1960,6 +1998,7 @@ def run_sampled_rollout(
                     "decisions": 0,
                     "skipped": True,
                     "skip_reason": f"missing line env directory: {line_env_root}",
+                    "prepared_lines": prepared_lines,
                 }
             )
             continue
@@ -1992,6 +2031,12 @@ def run_sampled_rollout(
                 reward_sum = 0.0
                 headway_abs_sum = 0.0
                 hold_sum = 0.0
+                waiting_sum = 0.0
+                bunching_sum = 0.0
+                large_gap_sum = 0.0
+                headway_sum = 0.0
+                headway_sq_sum = 0.0
+                headway_count = 0
                 done = False
                 t0 = time.time()
                 while decisions < max_decisions and not done:
@@ -2017,7 +2062,15 @@ def run_sampled_rollout(
                         action_dict[agent] = action
                         reward_sum += float(rew.get(agent, 0.0))
                         target_hw = max(float(vec[8]), 60.0)
-                        headway_abs_sum += 0.5 * (abs(float(vec[5]) - target_hw) + abs(float(vec[6]) - target_hw))
+                        fwd_hw = float(vec[5])
+                        bwd_hw = float(vec[6])
+                        headway_abs_sum += 0.5 * (abs(fwd_hw - target_hw) + abs(bwd_hw - target_hw))
+                        waiting_sum += max(float(vec[7]), 0.0)
+                        bunching_sum += float(fwd_hw < 0.5 * target_hw or bwd_hw < 0.5 * target_hw)
+                        large_gap_sum += float(fwd_hw > 1.5 * target_hw or bwd_hw > 1.5 * target_hw)
+                        headway_sum += fwd_hw + bwd_hw
+                        headway_sq_sum += fwd_hw * fwd_hw + bwd_hw * bwd_hw
+                        headway_count += 2
                         hold_sum += action
                         decisions += 1
                         if decisions >= max_decisions:
@@ -2035,6 +2088,13 @@ def run_sampled_rollout(
                         "elapsed_sec": time.time() - t0,
                         "mean_reward": reward_sum / denom,
                         "mean_headway_abs_error": headway_abs_sum / denom,
+                        "mean_waiting_passengers": waiting_sum / denom,
+                        "bunching_rate": bunching_sum / denom,
+                        "large_gap_rate": large_gap_sum / denom,
+                        "headway_cv": (
+                            math.sqrt(max(headway_sq_sum / max(1, headway_count) - (headway_sum / max(1, headway_count)) ** 2, 0.0))
+                            / max(headway_sum / max(1, headway_count), 1e-6)
+                        ),
                         "mean_hold_seconds": hold_sum / denom,
                     }
                 )
@@ -2045,6 +2105,10 @@ def run_sampled_rollout(
             "episodes": len(group),
             "mean_reward": float(np.mean([row["mean_reward"] for row in group])) if group else None,
             "mean_headway_abs_error": float(np.mean([row["mean_headway_abs_error"] for row in group])) if group else None,
+            "mean_waiting_passengers": float(np.mean([row["mean_waiting_passengers"] for row in group])) if group else None,
+            "bunching_rate": float(np.mean([row["bunching_rate"] for row in group])) if group else None,
+            "large_gap_rate": float(np.mean([row["large_gap_rate"] for row in group])) if group else None,
+            "headway_cv": float(np.mean([row["headway_cv"] for row in group])) if group else None,
             "mean_hold_seconds": float(np.mean([row["mean_hold_seconds"] for row in group])) if group else None,
         }
     return {

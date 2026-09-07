@@ -20,7 +20,26 @@ and train residual models on
 \[
     \Delta_c(s,a) = \y^{\mathrm{target}} - \y^{\mathrm{sim}}.
 \]
-For cross-city validation, source cities $\mathcal{C}_{\mathrm{src}}$ are used for fitting and a held-out target city $c^\star$ is used only for evaluation.
+For cross-city validation, source cities $\mathcal{C}_{\mathrm{src}}$ are used for fitting and a held-out target city $c^\star$ is used for evaluation.
+The target transition labels $\y^{\mathrm{target}}$ are never used for target-label-free model fitting or source selection.
+However, the target city's unlabeled covariates, schedules, simulator outputs, speed summaries, and static local descriptors may be used to choose or weight source mechanisms.
+
+\paragraph{Target-information budgets.}
+We distinguish four information budgets.
+In \emph{single-source zero-shot} transfer, one source city provides residual labels and the target city contributes only route/timetable/static-summary inputs.
+In \emph{multi-source target-label-free} transfer, several source cities provide residual labels, while the target still provides no transition labels before reporting; unlabeled target summaries may be used for source weighting.
+In \emph{few-shot target offline adaptation}, a small passive target history is available before deployment and may update mechanism trust, context bias, or residual sufficient statistics, with held-out target transitions reserved for evaluation.
+In \emph{target-calibrated oracle} rows, the target budget is large or in-sample; these rows bound performance but are not no-calibration deployment evidence.
+The paper's main claim concerns the second and third budgets, not pure one-city zero-shot deployment.
+
+\paragraph{Traffic-signal stress-test task.}
+The RESCO traffic-signal experiment is used as a counterfactual-control stress test rather than as the primary bus-holding task.
+For each signalized network $n$, each controlled traffic light $i$, and each decision time $t$, the state $x_{n,i,t}$ contains phase-local queue, occupancy, waiting-time, and downstream-spillback summaries.
+The action $a_{i,t}$ is one of the green phases already defined by the SUMO \texttt{tlLogic}; no synthetic phase set is introduced.
+The prediction target is the next local queue/cost summary after applying that phase for one control interval.
+Cross-network validation holds out one RESCO scenario as the target and fits phase-transfer models from the remaining scenarios.
+Zero-target-label rows use only source transitions plus target network descriptors and target-static simulator summaries; few-shot rows may use a short passive target slice to update a low-dimensional bias or trust parameter.
+Closed-loop target rollout metrics are used only for final evaluation.
 
 The main evaluation unit is a city target, not a route.
 For four cities, the strict leave-one-city-out protocol has exactly four target evaluations:
@@ -28,9 +47,12 @@ For four cities, the strict leave-one-city-out protocol has exactly four target 
     \{(\mathcal{C}\setminus\{c\}) \rightarrow c : c \in \mathcal{C}\}.
 \]
 This avoids counting repeated target cities as independent evidence.
+Additional configured split diagnostics are reported separately when they test source-selection behavior rather than the four-city claim.
 
 \paragraph{Claim scope.}
 The target transitions are static-data-derived pseudo-observations.
 They combine agency data, schedule-derived speeds or headways, passenger-demand summaries, and deterministic transition rules.
 They are useful for reproducible cross-city validation, but they are not vehicle-level AVL/APC ground truth.
 Accordingly, the paper evaluates transfer robustness under open static-data-derived dynamics, not operational field performance.
+Real passive APC/AVL slices validate observed action-$0$ dynamics and target offline adaptation, but they still do not provide labels for unobserved holding actions.
+Closed-loop counterfactual policy claims therefore require a validated simulator, benchmark simulator, intervention logs, natural experiments, or field trials; this is why the RESCO traffic-signal benchmark is reported as a counterfactual stress test rather than as bus-field evidence.

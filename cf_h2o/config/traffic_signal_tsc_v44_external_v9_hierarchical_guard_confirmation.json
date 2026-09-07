@@ -1,0 +1,494 @@
+{
+  "protocol": "tsc-v61r57-external-v9-hierarchical-guard-confirmation-v1",
+  "frozen_at_utc": "2026-08-10T03:06:40.622604+00:00",
+  "claim_boundary": "The controller structure was selected on the explicitly contaminated seed 9277. Models and all numeric gates are now immutable. Six hash-derived offline seeds, eight closed-loop development seeds, sixteen validation seeds, and three prospective seeds have disjoint roles.",
+  "diagnostic_parent": {
+    "path": "cf_h2o/results/cluster/tsc_v57r53_external_v9_seed9277_20260810/hierarchical_guard_diagnostic_v2.json",
+    "sha256": "f5365e81a7059622663a27a561b413b4e34ac3ef23891671fdb01117407fc91c",
+    "role": "post-failure_design_diagnostic_not_confirmation"
+  },
+  "seed_novelty_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/seed_novelty_audit_v1.json",
+    "sha256": "11f1dd91694b36aa7d45210b23d35c0d1fe44e2f26bc7ba2337121579e77f92a",
+    "status": "PASS"
+  },
+  "hierarchical_joint_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/joint_freeze_audit_v1.json",
+    "sha256": "b113215b8fba6cf322d367b7f007d40e3f6ebd9264fa4422da6a7e00fb549c2b",
+    "decision": "authorize_hierarchical_fresh_offline_seed_collection"
+  },
+  "city_artifacts": {
+    "los_angeles": {
+      "certificate": {
+        "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/los_angeles/freeze.json",
+        "sha256": "264e4d6821efd305b0a91953fc7eb06730aede63d302700045afce1713ff61c1"
+      },
+      "model": {
+        "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/los_angeles/model.pkl",
+        "sha256": "dbeb80b1796dbe8b7910ba77bbe3ce587898da78cb7de3e47408806c878198df"
+      },
+      "selected_candidate": "constant_alpha_0p8",
+      "deployment": {
+        "conformal_guard": {
+          "enabled": true,
+          "margin": 0.0,
+          "max_relative_rule_gap": 0.0,
+          "min_context_trust": 0.5,
+          "risk_multiplier": 0.0
+        },
+        "coordination_mode_before_closed_loop_selection": "direct",
+        "fallback_policy": "phase_pressure",
+        "policy": "cfcmt_hierarchical_guard_mpc",
+        "regularizer": {
+          "blend_weight": 2.0,
+          "enabled": true,
+          "min_context_trust": 0.5,
+          "risk_multiplier": 0.0
+        },
+        "runtime_policy_suffix": "_hierarchical_guard",
+        "target_support": {
+          "combination": "minimum_component_support",
+          "conformal_guard_enabled": true,
+          "conformal_support": {
+            "distance": "nearest_standardized_rms",
+            "feature_count": 16,
+            "feature_names": [
+              "total_q",
+              "total_veh",
+              "mean_speed",
+              "mean_occ",
+              "green_q",
+              "red_q",
+              "green_down_q",
+              "green_down_occ",
+              "delta_green_q",
+              "delta_red_q",
+              "delta_green_down_q",
+              "delta_green_down_occ",
+              "delta_service_pressure",
+              "delta_switch_indicator",
+              "delta_clearance_fraction",
+              "delta_current_phase_overlap"
+            ],
+            "label_free": false,
+            "minimum_total_vehicles": 1.0,
+            "prototype_count": 4,
+            "support": "exp(-distance)",
+            "support_protocol": "oof-safe-action-nearest-prototype-v1"
+          },
+          "pressure_support": {
+            "distance": "nearest_standardized_rms",
+            "feature_count": 16,
+            "feature_names": [
+              "total_q",
+              "total_veh",
+              "mean_speed",
+              "mean_occ",
+              "green_q",
+              "red_q",
+              "green_down_q",
+              "green_down_occ",
+              "delta_green_q",
+              "delta_red_q",
+              "delta_green_down_q",
+              "delta_green_down_occ",
+              "delta_service_pressure",
+              "delta_switch_indicator",
+              "delta_clearance_fraction",
+              "delta_current_phase_overlap"
+            ],
+            "label_free": true,
+            "minimum_total_vehicles": 0.0,
+            "prototype_count": 746,
+            "support": "exp(-distance)",
+            "support_protocol": "target-action-coverage-nearest-prototype-v1"
+          },
+          "support_protocol": "pressure-and-oof-safe-intersection-v1"
+        }
+      }
+    },
+    "jinan": {
+      "certificate": {
+        "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/jinan/freeze.json",
+        "sha256": "a617c6312fa6e95877a44235b0caa5204cbe3053c1738baf839031255eb8dc2d"
+      },
+      "model": {
+        "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/jinan/model.pkl",
+        "sha256": "f2685b558733fe7bd7f2170ebe7306fbbe799f4c28ce6bf91f5c5776b0afbb8a"
+      },
+      "selected_candidate": "constant_alpha_0p8",
+      "deployment": {
+        "conformal_guard": {
+          "enabled": false,
+          "margin": 0.0,
+          "max_relative_rule_gap": 1.0,
+          "min_context_trust": 0.0,
+          "risk_multiplier": 1.0
+        },
+        "coordination_mode_before_closed_loop_selection": "direct",
+        "fallback_policy": "phase_pressure",
+        "policy": "cfcmt_hierarchical_guard_mpc",
+        "regularizer": {
+          "blend_weight": 8.0,
+          "enabled": true,
+          "min_context_trust": 0.5,
+          "risk_multiplier": 0.5
+        },
+        "runtime_policy_suffix": "_hierarchical_guard",
+        "target_support": {
+          "combination": "pressure_support_only",
+          "conformal_guard_enabled": false,
+          "conformal_support": {
+            "distance": "nearest_standardized_rms",
+            "feature_count": 16,
+            "feature_names": [
+              "total_q",
+              "total_veh",
+              "mean_speed",
+              "mean_occ",
+              "green_q",
+              "red_q",
+              "green_down_q",
+              "green_down_occ",
+              "delta_green_q",
+              "delta_red_q",
+              "delta_green_down_q",
+              "delta_green_down_occ",
+              "delta_service_pressure",
+              "delta_switch_indicator",
+              "delta_clearance_fraction",
+              "delta_current_phase_overlap"
+            ],
+            "label_free": true,
+            "minimum_total_vehicles": 0.0,
+            "prototype_count": 7288,
+            "support": "exp(-distance)",
+            "support_protocol": "target-action-coverage-nearest-prototype-v1"
+          },
+          "pressure_support": {
+            "distance": "nearest_standardized_rms",
+            "feature_count": 16,
+            "feature_names": [
+              "total_q",
+              "total_veh",
+              "mean_speed",
+              "mean_occ",
+              "green_q",
+              "red_q",
+              "green_down_q",
+              "green_down_occ",
+              "delta_green_q",
+              "delta_red_q",
+              "delta_green_down_q",
+              "delta_green_down_occ",
+              "delta_service_pressure",
+              "delta_switch_indicator",
+              "delta_clearance_fraction",
+              "delta_current_phase_overlap"
+            ],
+            "label_free": true,
+            "minimum_total_vehicles": 0.0,
+            "prototype_count": 7288,
+            "support": "exp(-distance)",
+            "support_protocol": "target-action-coverage-nearest-prototype-v1"
+          },
+          "support_protocol": "pressure-and-oof-safe-intersection-v1"
+        }
+      }
+    }
+  },
+  "city_scenarios": {
+    "los_angeles": [
+      "la_1x4"
+    ],
+    "jinan": [
+      "jinan_3x4_real",
+      "jinan_3x4_real_2000",
+      "jinan_3x4_real_2500"
+    ]
+  },
+  "fresh_offline_confirmation": {
+    "seeds": [
+      80314,
+      88625,
+      27178,
+      77524,
+      63775,
+      50945
+    ],
+    "seed_derivation": {
+      "algorithm": "sha256-prefix64-modulo-v1",
+      "input": "<diagnostic_sha256>|cfcmt-v9-hierarchical-successor-v1|offline-confirmation|<index>",
+      "diagnostic_sha256": "f5365e81a7059622663a27a561b413b4e34ac3ef23891671fdb01117407fc91c",
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "minimum": 13001,
+      "modulus": 76999
+    },
+    "duration_sec": 600,
+    "warmup_sec": 60,
+    "control_interval_sec": 10,
+    "counterfactual_horizon_intervals": 6,
+    "collection_shards_per_scenario_seed": 16,
+    "behavior_policy": "phase_pressure",
+    "reporting_unit": "city",
+    "scenario_weighting_within_city": "equal",
+    "seed_weighting_within_city": "equal",
+    "action_level_gate": {
+      "minimum_equal_seed_scenario_mean_improvement": 0.001,
+      "maximum_bootstrap_95pct_upper_delta": 0.01,
+      "maximum_seed_scenario_mean_delta": 0.01,
+      "minimum_nonpositive_seed_fraction": 0.6666666666666666,
+      "minimum_override_fraction": 0.005,
+      "maximum_override_fraction": 0.5,
+      "bootstrap_unit": "counterfactual_action_group_within_seed_scenario",
+      "bootstrap_replicates": 10000,
+      "all_cities_must_pass": true
+    },
+    "authorization_if_passed": "closed_loop_development_grid_replay_only"
+  },
+  "closed_loop_development": {
+    "seeds": [
+      52282,
+      41242,
+      63792,
+      80722,
+      75638,
+      61337,
+      73385,
+      81189
+    ],
+    "duration_sec": 3600,
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "reporting_unit": "city",
+    "scenario_weighting_within_city": "equal",
+    "seed_weighting": "equal",
+    "adaptation_coupled_seeds_excluded": [
+      5057,
+      6067
+    ],
+    "candidate_grid": {
+      "policy_horizon_protocol": {
+        "path": "cf_h2o/config/traffic_signal_tsc_v34_external_policy_horizon_adaptation.json",
+        "sha256": "7f6c8d65083bcad3d50d60015dea7ec218c926123f30d0e01f449ea62b383eb3"
+      },
+      "global_cooldown_protocol": {
+        "path": "cf_h2o/config/traffic_signal_tsc_v38_external_estimand_aligned_global_cooldown_development.json",
+        "sha256": "f85ba0b9aceb8da82c40fd9eebc2796ba3e9fe6bcb8e8a7b0ec2eec150ac9be3"
+      },
+      "base_candidates": [
+        "cfcmt_pr_b2_cd3",
+        "cfcmt_pr_b0p25_cd6"
+      ],
+      "execution_trust_regions": [
+        {
+          "key": "h60_q0",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 0.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 5
+        },
+        {
+          "key": "h60_q1",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 1.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 5
+        },
+        {
+          "key": "h60_q5",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 5.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 5
+        },
+        {
+          "key": "h60_q10",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 10.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 5
+        },
+        {
+          "key": "h90_q0",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 0.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 8
+        },
+        {
+          "key": "h90_q1",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 1.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 8
+        },
+        {
+          "key": "h90_q5",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 5.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 8
+        },
+        {
+          "key": "h90_q10",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 10.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 8
+        },
+        {
+          "key": "h120_q0",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 0.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 11
+        },
+        {
+          "key": "h120_q1",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 1.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 11
+        },
+        {
+          "key": "h120_q5",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 5.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 11
+        },
+        {
+          "key": "h120_q10",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 10.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 11
+        }
+      ],
+      "candidate_count": 24,
+      "numeric_grid_must_not_change_after_v9_closed_loop_starts": true
+    },
+    "selection_rule": {
+      "minimum_city_mean_relative_improvement": 0.005,
+      "maximum_seed_level_city_mean_relative_regression": 0.01,
+      "method_teleports_must_not_exceed_paired_phase_pressure": true,
+      "method_collision_incidents_must_not_exceed_paired_phase_pressure": true,
+      "minimum_executed_interventions_per_scenario_seed": 1,
+      "robust_score": "city_mean_relative_delta + 0.5 * seed_delta_std + max(worst_seed_delta, 0)",
+      "tie_break": "lower robust score, lower mean delta, fewer interventions, lower blend weight, longer cooldown",
+      "fallback": "phase_pressure when no active candidate is feasible"
+    },
+    "fallback": "phase_pressure"
+  },
+  "closed_loop_validation": {
+    "closed_loop_seeds": [
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ],
+    "must_not_run_until_development_selector_and_analysis_hash_are_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "method_and_execution_candidate_must_be_hash_frozen_before_launch": true
+  },
+  "prospective_confirmation": {
+    "closed_loop_seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "must_not_run_until_validation_passes_and_prospective_analysis_is_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "candidate_policies_for_later_freeze": [
+      "cfcmt_oof_validated_mpc",
+      "phase_pressure",
+      "max_pressure",
+      "fixed_time",
+      "rigid_anchor_mpc",
+      "simulator_only_mpc",
+      "h2oplus_style_dense_residual_mpc"
+    ],
+    "release_condition": "validation_gate_passed_and_analysis_hash_frozen"
+  },
+  "deployment_contract": {
+    "method": "cfcmt_hierarchical_guard_mpc",
+    "runtime_policy_suffix": "_hierarchical_guard",
+    "fallback_policy": "phase_pressure",
+    "pressure_and_conformal_gates_applied_to_same_action": true,
+    "no_target_refit_after_v60": true,
+    "equal_city_reporting": true
+  }
+}

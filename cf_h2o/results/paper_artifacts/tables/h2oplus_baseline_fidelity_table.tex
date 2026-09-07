@@ -1,0 +1,11 @@
+\begin{tabular}{llll}
+\toprule
+component & original H2O+ role & implemented here & deviation / reason \\
+\midrule
+offline residual correction & learn simulator-to-data correction & ridge dense residual on source transitions & sufficient-statistics surrogate for reproducibility \\
+target calibration & may adapt with target data or online feedback & excluded from primary cross-city fit & tests target-label-free transfer \\
+source/target domains & not explicitly separated in original setting & source cities train, target city held out & cross-city protocol requires domain split \\
+policy learning loop & optimize policy with corrected dynamics & one-step policy proxy and auxiliary rollout & paper focuses on world-model transfer \\
+same-information variant & not a separate original component & source-weighted dense residual ensemble & fairness check for unlabeled target-summary use \\
+\bottomrule
+\end{tabular}
