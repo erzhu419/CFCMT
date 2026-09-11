@@ -1067,6 +1067,116 @@ class CausalReferenceResidualRegressor:
         return weights
 
 
+class CausalReferenceEndpointResidualRegressor(CausalReferenceResidualRegressor):
+    """Fit reference residuals while retaining both physical action endpoints."""
+
+    def __init__(
+        self,
+        *,
+        config: PairwisePreferenceConfig | None = None,
+        state_feature_names: Sequence[str] = PAIRWISE_CAUSAL_STATE_PARENTS,
+        action_feature_names: Sequence[str] = PAIRWISE_CAUSAL_ACTION_PARENTS,
+        endpoint_feature_names: Sequence[str] = PAIRWISE_CAUSAL_ACTION_PARENTS,
+    ) -> None:
+        super().__init__(
+            config=config,
+            state_feature_names=state_feature_names,
+            action_feature_names=action_feature_names,
+        )
+        self.requested_endpoint_feature_names = tuple(endpoint_feature_names)
+        self.endpoint_feature_names: tuple[str, ...] = ()
+        self.endpoint_feature_indices = np.zeros(0, dtype=int)
+
+    def fit(self, dataset: MechanismDataset) -> dict[str, Any]:
+        diagnostics = super().fit(dataset)
+        diagnostics.update(
+            {
+                "residual_protocol": "causal_reference_endpoint_residual_v1",
+                "endpoint_feature_names": list(self.endpoint_feature_names),
+                "endpoint_feature_count": len(self.endpoint_feature_names),
+                "design_feature_count": (
+                    len(self.state_feature_names)
+                    + len(self.action_feature_names)
+                    + len(self.endpoint_feature_names)
+                ),
+            }
+        )
+        return diagnostics
+
+    def _resolve_features(
+        self,
+        dataset: MechanismDataset,
+        *,
+        require_fitted_names: bool = False,
+    ) -> None:
+        index = {
+            name: position for position, name in enumerate(dataset.feature_names)
+        }
+        state_names = (
+            self.state_feature_names
+            if require_fitted_names
+            else self.requested_state_feature_names
+        )
+        action_names = (
+            self.action_feature_names
+            if require_fitted_names
+            else self.requested_action_feature_names
+        )
+        endpoint_names = (
+            self.endpoint_feature_names
+            if require_fitted_names
+            else self.requested_endpoint_feature_names
+        )
+        missing = [
+            name
+            for name in (*state_names, *action_names, *endpoint_names)
+            if name not in index
+        ]
+        if missing:
+            raise KeyError(
+                f"reference endpoint residual prediction missing features: {missing}"
+            )
+        if not state_names or not action_names or not endpoint_names:
+            raise ValueError(
+                "reference endpoint residual model requires state, action, and endpoint parents"
+            )
+        self.state_feature_names = tuple(state_names)
+        self.action_feature_names = tuple(action_names)
+        self.endpoint_feature_names = tuple(endpoint_names)
+        self.state_feature_indices = np.asarray(
+            [index[name] for name in self.state_feature_names], dtype=int
+        )
+        self.action_feature_indices = np.asarray(
+            [index[name] for name in self.action_feature_names], dtype=int
+        )
+        self.endpoint_feature_indices = np.asarray(
+            [index[name] for name in self.endpoint_feature_names], dtype=int
+        )
+
+    def _design(
+        self, dataset: MechanismDataset
+    ) -> tuple[np.ndarray, np.ndarray]:
+        contrast, reference = super()._design(dataset)
+        groups = np.asarray(dataset.metadata["action_group_ids"])
+        features = np.asarray(dataset.features, dtype=float)
+        midpoint = np.empty(
+            (dataset.size, len(self.endpoint_feature_names)), dtype=float
+        )
+        for group in np.unique(groups):
+            rows = np.flatnonzero(groups == group)
+            reference_rows = rows[reference[rows]]
+            if reference_rows.size != 1:
+                raise ValueError(
+                    f"reference endpoint residual group {group!r} requires one reference row"
+                )
+            actions = features[rows][:, self.endpoint_feature_indices]
+            reference_action = features[
+                int(reference_rows[0]), self.endpoint_feature_indices
+            ]
+            midpoint[rows] = 0.5 * (actions + reference_action)
+        return np.column_stack([contrast, midpoint]), reference
+
+
 class TargetAdaptedActionAdvantageRegressor:
     """Shrink a source causal advantage prior toward a low-capacity target head."""
 

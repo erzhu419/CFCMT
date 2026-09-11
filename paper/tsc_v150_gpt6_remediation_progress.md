@@ -859,3 +859,25 @@ reserve use, controller adoption or deployment. No post-result threshold,
 feature, seed, fold or model change is permitted under this protocol. This
 negative case must remain visible if later claims are narrowed to separately
 confirmed cities. [Final OOF result and provenance](/home/erzhu419/mine_code/CFCMT/cf_h2o/results/paper_artifacts/tsc_v158_native_prefix_ranking_calibration_v1.json).
+
+## 2026-09-11 V159 Native Endpoint Ablation
+
+V159 performed the approved target-only representation test on the exact V158
+native B100 bank, adding zero simulator trajectories. The delta arm reproduced
+every V158 target-native seed cost exactly. The endpoint arm added only the 40
+physical candidate/reference midpoint features; folds, HGB settings, labels,
+threshold zero and the no-stay veto were unchanged.
+
+Endpoint minus delta was **-0.00060648**, paired 95%
+`[-0.00223628,+0.00081223]`, with **5/10** seeds improving. It met the frozen
+mean threshold but failed the bootstrap and 7/10 seed-win requirements. It also
+worsened the `_2000` demand by `+0.00157150`, so the all-demand requirement
+failed. Endpoint target remained `+0.00065478` worse than PhasePressure and
+improved in only 3/10 seeds.
+
+Some descriptive ranking metrics moved favorably and total harmful-override
+cost fell, while total realized gain and missed-benefit regret worsened.
+Harmful overrides remained 26 and the endpoint effect was not seed- or
+demand-stable. The final status is
+**OOF_GATE_FAIL**: no source comparison, reserve simulation, controller
+adoption or transfer claim is authorized. [V159 result and provenance](/home/erzhu419/mine_code/CFCMT/cf_h2o/results/paper_artifacts/tsc_v159_native_endpoint_ablation_v1.json).
