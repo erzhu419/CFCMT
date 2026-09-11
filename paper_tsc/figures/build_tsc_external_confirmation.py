@@ -54,6 +54,22 @@ DEFAULT_SOURCE_CONFIRMATION = (
     / "tsc_v91_external_source_contribution_20260830"
     / "source_contribution_audit_v1.json"
 )
+DEFAULT_V98_SOURCE_CONFIRMATION = (
+    REPO
+    / "cf_h2o"
+    / "results"
+    / "cluster"
+    / "tsc_v98_target_offline_source_selection_20260831"
+    / "strict_fresh_confirmation_v2"
+    / "audit_v2.json"
+)
+DEFAULT_V98_REMOTE_INTEGRITY = (
+    REPO
+    / "cf_h2o"
+    / "results"
+    / "paper_artifacts"
+    / "tsc_v98_strict_target_anchor_remote_integrity_audit_v1.json"
+)
 DEFAULT_SOURCE_MANIFEST = REPO / "cf_h2o" / "config" / "traffic_signal_cross_city_v2_saltlake18.json"
 DEFAULT_EXTERNAL_CONVERSION = (
     REPO
@@ -225,6 +241,157 @@ def validate_source_contribution(v90: dict, v91: dict) -> None:
     )
 
 
+def validate_jinan_conditional_source_transfer(v91: dict, v98: dict) -> None:
+    v91_summary = v91["confirmation_summary"]
+    v91_deltas = [
+        float(row["city_relative_deltas"]["jinan"])
+        for row in v91["seed_rows"]
+    ]
+    require(len(v91_deltas) == 64, "v91 Jinan conditional seed count changed")
+    require(
+        all(delta < 0.0 for delta in v91_deltas),
+        "v91 no longer improves Jinan on every seed",
+    )
+    require(
+        math.isclose(
+            float(v91_summary["city_mean_relative_deltas"]["jinan"]),
+            sum(v91_deltas) / len(v91_deltas),
+            rel_tol=0.0,
+            abs_tol=1e-12,
+        )
+        and math.isclose(
+            float(v91_summary["city_mean_relative_deltas"]["jinan"]),
+            -0.030446469768574826,
+            rel_tol=0.0,
+            abs_tol=1e-12,
+        ),
+        "v91 Jinan conditional effect changed",
+    )
+
+    expected_gates = {
+        "bootstrap_ci_upper_below_zero",
+        "mean_waiting_improves",
+        "no_collision_excess",
+        "no_teleport_excess",
+        "wilcoxon_two_sided_p_below_0p05",
+    }
+    require(
+        v98.get("protocol")
+        == "tsc-v98-target-offline-source-fresh-confirmation-audit-v2"
+        and v98.get("scientific_status")
+        == "fresh-seed-closed-loop-confirmation"
+        and v98.get("confirmation_passed") is True
+        and v98.get("seed_count") == 56
+        and v98.get("scenario_count") == 3
+        and v98.get("method_count") == 2
+        and v98.get("matrix_size") == 336
+        and set(v98.get("gates", {})) == expected_gates
+        and all(v98["gates"].values()),
+        "v98 Jinan controller-pair confirmation is not valid",
+    )
+    anchor = v98.get("target_only_anchor", {})
+    require(
+        anchor.get("family") == "causal_target_only_v2"
+        and anchor.get("protocol") == "cfcmt-strict-target-only-action-model-v1"
+        and anchor.get("source_rows_consumed") == 0,
+        "v98 comparator is not the strict zero-source-row target model",
+    )
+    require(
+        v98.get("claim_boundary")
+        == (
+            "This evaluates the B100 offline-selected Hangzhou component against "
+            "causal_target_only_v2, fitted with zero source rows, under the same "
+            "Jinan pressure guard."
+        ),
+        "v98 source, comparator or shared-guard boundary changed",
+    )
+    v98_seed = v98["statistics"]["paired_seed"]
+    v98_deltas = [float(value) for value in v98_seed["relative_deltas"]]
+    require(
+        v98_seed.get("n") == 56
+        and len(v98_deltas) == 56
+        and v98_seed.get("improved_seed_count") == 56
+        and v98_seed.get("worsened_seed_count") == 0
+        and v98_seed.get("tied_seed_count") == 0
+        and all(delta < 0.0 for delta in v98_deltas),
+        "v98 seed-level controller-pair outcome changed",
+    )
+    require(
+        math.isclose(
+            float(v98_seed["mean_relative_delta"]),
+            sum(v98_deltas) / len(v98_deltas),
+            rel_tol=0.0,
+            abs_tol=1e-12,
+        )
+        and math.isclose(
+            float(v98_seed["mean_relative_delta"]),
+            -0.045274013085975714,
+            rel_tol=0.0,
+            abs_tol=1e-12,
+        )
+        and np.allclose(
+            np.asarray(v98_seed["bootstrap_mean_ci95"], dtype=float),
+            np.asarray([-0.04786736703256771, -0.04278512539219397]),
+            rtol=0.0,
+            atol=1e-12,
+        ),
+        "v98 Jinan paired-seed estimate changed",
+    )
+
+
+def validate_v98_remote_integrity(v98: dict, integrity: dict) -> None:
+    expected = integrity.get("expected", {})
+    observed = integrity.get("observed", {})
+    require(
+        integrity.get("protocol")
+        == "tsc-v98-strict-target-anchor-remote-integrity-audit-v1"
+        and integrity.get("scientific_status")
+        == "retrospective_remote_provenance_integrity_audit"
+        and integrity.get("passed") is True
+        and integrity.get("bad_counts") == {}
+        and integrity.get("scan", {}).get("mode")
+        == "remote_in_place_json_metadata_only"
+        and integrity.get("scan", {}).get("raw_results_copied_to_local") is False,
+        "v98 remote result-identity audit is not valid",
+    )
+    require(
+        integrity.get("inputs", {}).get("numerical_audit_protocol")
+        == v98.get("protocol")
+        and expected.get("result_count") == 336
+        and expected.get("unique_identity_count") == 336
+        and expected.get("seed_count") == 56
+        and expected.get("scenario_count") == 3
+        and expected.get("arm_counts")
+        == {"offline_selector": 168, "target_only": 168}
+        and observed.get("result_count") == 336
+        and observed.get("unique_identity_count") == 336
+        and observed.get("arms")
+        == {"offline_selector": 168, "target_only": 168},
+        "v98 remote identity coverage changed",
+    )
+    anchor = v98["target_only_anchor"]
+    require(
+        expected.get("target_model_family") == anchor.get("family")
+        and expected.get("target_model_protocol") == anchor.get("protocol")
+        and expected.get("target_source_rows_consumed")
+        == anchor.get("source_rows_consumed")
+        and expected.get("model_hashes", {}).get("strict_target_only")
+        == anchor.get("model_sha256"),
+        "v98 remote comparator identity differs from the numerical audit",
+    )
+    limitations = set(integrity.get("limitations", []))
+    require(
+        "The shared pressure guard inherited its risk multiplier from V93 target closed-loop development."
+        in limitations
+        and (
+            "The V98 strict target-only estimator consumed zero source rows but had lower capacity than the "
+            "source-augmented model, so V98 alone does not isolate source-row value from architecture."
+        )
+        in limitations,
+        "v98 comparator and inherited-guard claim boundary changed",
+    )
+
+
 def method_freeze_rows(external_root: Path) -> dict[str, dict]:
     rows = {}
     for city in ("los_angeles", "jinan"):
@@ -388,6 +555,106 @@ def source_contribution_rows(v90: dict, v91: dict) -> list[dict]:
     return rows
 
 
+def source_contribution_seed_rows(v91: dict) -> list[dict]:
+    rows = []
+    seen_seeds: set[int] = set()
+    for raw in v91["seed_rows"]:
+        seed = int(raw["seed"])
+        require(seed not in seen_seeds, f"duplicate v91 seed: {seed}")
+        seen_seeds.add(seed)
+        target_waiting = float(raw["target_only_macro_waiting"])
+        method_waiting = float(raw["method_macro_waiting"])
+        relative_delta = float(raw["relative_delta"])
+        require(
+            math.isclose(
+                relative_delta,
+                (method_waiting - target_waiting) / target_waiting,
+                rel_tol=0.0,
+                abs_tol=1e-12,
+            ),
+            f"v91 seed-level effect changed: {seed}",
+        )
+        rows.append(
+            {
+                "seed": seed,
+                "target_only_macro_wait_sec": target_waiting,
+                "cfcmt_macro_wait_sec": method_waiting,
+                "macro_relative_delta": relative_delta,
+                "los_angeles_relative_delta": float(
+                    raw["city_relative_deltas"]["los_angeles"]
+                ),
+                "jinan_relative_delta": float(
+                    raw["city_relative_deltas"]["jinan"]
+                ),
+            }
+        )
+    expected_count = int(v91["confirmation_summary"]["seed_count"])
+    require(
+        len(rows) == expected_count == 64,
+        "v91 seed-level source-contribution cohort changed",
+    )
+    return sorted(rows, key=lambda row: row["seed"])
+
+
+def jinan_conditional_source_transfer_rows(v91: dict, v98: dict) -> list[dict]:
+    validate_jinan_conditional_source_transfer(v91, v98)
+    v91_delta = float(
+        v91["confirmation_summary"]["city_mean_relative_deltas"]["jinan"]
+    )
+    v98_summary = v98["statistics"]["paired_seed"]
+    v98_ci = v98_summary["bootstrap_mean_ci95"]
+    return [
+        {
+            "experiment": "V91 Jinan city diagnostic",
+            "protocol_relation": "final V43 controller; V91 confirmation",
+            "selection_and_evaluation": "frozen two-city protocol; Jinan diagnostic",
+            "seed_count": 64,
+            "scenario_count": 3,
+            "mean_relative_waiting_delta": v91_delta,
+            "ci95_low": "",
+            "ci95_high": "",
+            "improved_seed_count": 64,
+            "improved_seed_denominator": 64,
+            "all_seed_deltas_improved": True,
+            "comparator": "final V43 legacy near-target-only",
+            "guard": "none in final V43 controller",
+            "pooled_with_other_row": False,
+            "comparison_scope": (
+                "controller-pair contrast; retained source prior prevents "
+                "strict source-row attribution"
+            ),
+        },
+        {
+            "experiment": "V98 Jinan controller-pair confirmation",
+            "protocol_relation": "post-V91 V98 successor",
+            "selection_and_evaluation": "B100 target-offline preselection; fresh Jinan confirmation",
+            "seed_count": int(v98["seed_count"]),
+            "scenario_count": int(v98["scenario_count"]),
+            "mean_relative_waiting_delta": float(
+                v98_summary["mean_relative_delta"]
+            ),
+            "ci95_low": float(v98_ci[0]),
+            "ci95_high": float(v98_ci[1]),
+            "improved_seed_count": int(v98_summary["improved_seed_count"]),
+            "improved_seed_denominator": int(v98_summary["n"]),
+            "all_seed_deltas_improved": True,
+            "comparator": (
+                "strict zero-source-row lower-capacity target model "
+                "(causal_target_only_v2)"
+            ),
+            "guard": (
+                "post-V91 shared inherited Jinan pressure guard "
+                "(risk_multiplier=0.5)"
+            ),
+            "pooled_with_other_row": False,
+            "comparison_scope": (
+                "controller-pair contrast; lower-capacity comparator prevents "
+                "source-row attribution"
+            ),
+        },
+    ]
+
+
 def closed_loop_rows(closed_loop: dict) -> tuple[list[dict], list[dict], list[dict]]:
     macro_rows = []
     city_rows = []
@@ -545,7 +812,7 @@ def build_result_tables(
     lines = [
         r"\begin{tabular}{lrrrrrrrrr}",
         r"\toprule",
-        r"Evidence & Seeds & Paired cells & Target-only wait & CFCMT wait & $\Delta$ wait & LA $\Delta$ & Jinan $\Delta$ & Improved & Incidents C/T \\",
+        r"Evidence & Seeds & Paired cells & Legacy near-target-only wait & CFCMT wait & $\Delta$ wait & LA $\Delta$ & Jinan $\Delta$ & Improved & Incidents C/legacy \\",
         r"\midrule",
     ]
     for row in source_contribution:
@@ -583,6 +850,62 @@ def build_result_tables(
         r"\end{tabular}",
     ]
     write_text(TABLES / "development_seed_heldout_confirmation.tex", "\n".join(lines))
+
+
+def build_jinan_conditional_source_transfer_table(rows: list[dict]) -> None:
+    require(
+        len(rows) == 2 and all(row["pooled_with_other_row"] is False for row in rows),
+        "Jinan controller-comparison rows must remain separate",
+    )
+    lines = [
+        (
+            r"\begin{tabular}{@{}"
+            r">{\raggedright\arraybackslash}p{0.12\textwidth}"
+            r">{\raggedright\arraybackslash}p{0.17\textwidth}rrrl"
+            r">{\raggedright\arraybackslash}p{0.20\textwidth}"
+            r">{\raggedright\arraybackslash}p{0.17\textwidth}@{}}"
+        ),
+        r"\toprule",
+        r"Experiment & Selection/evaluation & Seeds & Improved & $\Delta$ waiting & 95\% interval & Comparator & Guard \\",
+        r"\midrule",
+    ]
+    for row in rows:
+        interval = (
+            f"[{100.0 * float(row['ci95_low']):.3f}, "
+            f"{100.0 * float(row['ci95_high']):.3f}]\\%"
+            if row["ci95_low"] != ""
+            else "--"
+        )
+        lines.append(
+            f"{latex_escape(row['experiment'])} & "
+            f"{latex_escape(row['selection_and_evaluation'])} & "
+            f"{row['seed_count']} & "
+            f"{row['improved_seed_count']}/{row['improved_seed_denominator']} & "
+            f"{100.0 * float(row['mean_relative_waiting_delta']):+.3f}\\% & "
+            f"{interval} & "
+            f"{latex_escape(row['comparator'])} & "
+            f"{latex_escape(row['guard'])} \\\\"
+        )
+    lines.extend(
+        [
+            r"\midrule",
+            (
+                r"\multicolumn{8}{@{}p{\textwidth}@{}}{\footnotesize "
+                r"Negative differences favour the first-listed controller.  The V91 "
+                r"row is its Jinan city diagnostic and has no city-specific "
+                r"interval in that audit.  V98 compares a preselected controller "
+                r"with its declared lower-capacity zero-source-row target comparator; "
+                r"the two rows are not pooled, and V98 does not isolate source-row "
+                r"contribution.} \\"
+            ),
+            r"\bottomrule",
+            r"\end{tabular}",
+        ]
+    )
+    write_text(
+        TABLES / "jinan_conditional_source_transfer.tex",
+        "\n".join(lines),
+    )
 
 
 def development_value(rows: list[dict], key: str) -> float:
@@ -737,6 +1060,175 @@ def result_figure(
         ax.spines["bottom"].set_color(COLORS["grid"])
     fig.subplots_adjust(left=0.15, right=0.985, top=0.93, bottom=0.12)
     export_figure(fig, HERE / "tsc_external_confirmation")
+    plt.close(fig)
+
+
+def source_contribution_figure(v91: dict, seed_rows: list[dict]) -> None:
+    summary = v91["confirmation_summary"]
+    fig = plt.figure(figsize=(7.25, 3.25), facecolor="white")
+    grid = fig.add_gridspec(
+        1,
+        2,
+        width_ratios=[0.9, 1.55],
+        wspace=0.50,
+    )
+    ax_a = fig.add_subplot(grid[0, 0])
+    ax_b = fig.add_subplot(grid[0, 1])
+
+    labels = ("Los Angeles", "Jinan", "Equal-city macro")
+    effects = np.asarray(
+        [
+            summary["city_mean_relative_deltas"]["los_angeles"],
+            summary["city_mean_relative_deltas"]["jinan"],
+            summary["mean_relative_delta"],
+        ],
+        dtype=float,
+    ) * 100.0
+    positions = np.arange(len(labels))[::-1]
+    for position, value in zip(positions, effects, strict=True):
+        color = COLORS["harm"] if value > 0.0 else COLORS["cfcmt"]
+        ax_a.scatter(
+            value,
+            position,
+            s=42,
+            color=color,
+            edgecolor="white",
+            linewidth=0.6,
+            zorder=3,
+        )
+        ax_a.text(
+            value + (0.55 if value >= 0.0 else -0.55),
+            position,
+            f"{value:+.2f}%",
+            ha="left" if value >= 0.0 else "right",
+            va="center",
+            fontsize=6.5,
+            color=color,
+        )
+    macro_ci = np.asarray(summary["bootstrap"]["ci95"], dtype=float) * 100.0
+    ax_a.plot(
+        macro_ci,
+        [positions[-1], positions[-1]],
+        color=COLORS["ink"],
+        lw=1.6,
+        solid_capstyle="round",
+        zorder=2,
+    )
+    ax_a.axvline(0.0, color=COLORS["ink"], lw=0.8, ls=(0, (3, 2)))
+    ax_a.set_yticks(positions, labels)
+    ax_a.set_xlim(-7.0, 15.0)
+    ax_a.set_xlabel("Mean waiting-time difference (%)\nnegative favors CFCMT")
+    ax_a.grid(axis="x", color=COLORS["grid"], lw=0.6)
+    ax_a.tick_params(axis="y", length=0)
+    ax_a.set_title(
+        "a  Network-specific controller effect",
+        loc="left",
+        fontweight="bold",
+        fontsize=8.1,
+        pad=10,
+    )
+    ax_a.text(
+        0.0,
+        -0.28,
+        "Line: paired 95% seed interval for the equal-city macro.",
+        transform=ax_a.transAxes,
+        fontsize=5.8,
+        color=COLORS["muted"],
+        va="top",
+    )
+
+    distributions = (
+        (
+            "Los Angeles",
+            np.asarray(
+                [row["los_angeles_relative_delta"] for row in seed_rows],
+                dtype=float,
+            )
+            * 100.0,
+        ),
+        (
+            "Jinan",
+            np.asarray(
+                [row["jinan_relative_delta"] for row in seed_rows], dtype=float
+            )
+            * 100.0,
+        ),
+        (
+            "Equal-city macro",
+            np.asarray(
+                [row["macro_relative_delta"] for row in seed_rows], dtype=float
+            )
+            * 100.0,
+        ),
+    )
+    rng = np.random.default_rng(91)
+    for position, (label, values) in zip(positions, distributions, strict=True):
+        jitter = rng.uniform(-0.17, 0.17, size=len(values))
+        beneficial = values < 0.0
+        ax_b.scatter(
+            values[beneficial],
+            position + jitter[beneficial],
+            s=11,
+            color=COLORS["cfcmt"],
+            alpha=0.68,
+            linewidth=0,
+            label="CFCMT lower wait" if label == "Los Angeles" else None,
+            zorder=3,
+        )
+        ax_b.scatter(
+            values[~beneficial],
+            position + jitter[~beneficial],
+            s=11,
+            color=COLORS["harm"],
+            alpha=0.68,
+            linewidth=0,
+            label="CFCMT higher wait" if label == "Los Angeles" else None,
+            zorder=3,
+        )
+        ax_b.scatter(
+            np.median(values),
+            position,
+            marker="|",
+            s=95,
+            color=COLORS["ink"],
+            linewidth=1.2,
+            zorder=4,
+        )
+        ax_b.text(
+            385.0,
+            position,
+            f"{int(np.sum(beneficial))}/64 improve",
+            ha="right",
+            va="center",
+            fontsize=6.0,
+            color=COLORS["muted"],
+        )
+    ax_b.axvline(0.0, color=COLORS["ink"], lw=0.8, ls=(0, (3, 2)))
+    ax_b.set_xscale("symlog", linthresh=5.0, linscale=1.0)
+    ax_b.set_xlim(-20.0, 450.0)
+    ticks = (-10, -5, 0, 5, 10, 50, 400)
+    ax_b.set_xticks(ticks, [str(value) for value in ticks])
+    ax_b.set_yticks(positions, [row[0] for row in distributions])
+    ax_b.set_xlabel(
+        "Per-seed CFCMT minus legacy-comparator waiting (%)\n"
+        "symmetric-log scale; black tick is median"
+    )
+    ax_b.grid(axis="x", color=COLORS["grid"], lw=0.6)
+    ax_b.tick_params(axis="y", length=0)
+    ax_b.legend(loc="upper left", ncols=2, bbox_to_anchor=(0.0, 1.02), fontsize=6.1)
+    ax_b.set_title(
+        "b  V91 legacy-comparator diagnostic",
+        loc="left",
+        fontweight="bold",
+        fontsize=8.1,
+        pad=26,
+    )
+
+    for ax in (ax_a, ax_b):
+        ax.spines["left"].set_color(COLORS["grid"])
+        ax.spines["bottom"].set_color(COLORS["grid"])
+    fig.subplots_adjust(left=0.14, right=0.99, top=0.88, bottom=0.24)
+    export_figure(fig, HERE / "tsc_source_contribution_diagnostic")
     plt.close(fig)
 
 
@@ -937,6 +1429,8 @@ def qa_manifest(
     joint_audit: dict,
     source_ablation: dict,
     source_confirmation: dict,
+    v98_source_confirmation: dict,
+    v98_remote_integrity: dict,
     freezes: dict[str, dict],
     *,
     development_path: Path,
@@ -945,6 +1439,8 @@ def qa_manifest(
     joint_audit_path: Path,
     source_ablation_path: Path,
     source_confirmation_path: Path,
+    v98_source_confirmation_path: Path,
+    v98_remote_integrity_path: Path,
 ) -> None:
     provenance = {
         "development audit": sha256(development_path),
@@ -954,19 +1450,27 @@ def qa_manifest(
         "held-out seed-8171 result": sha256(heldout_path),
         "closed-loop aggregate": sha256(closed_loop_path),
         "post-freeze target-only ablation": sha256(source_ablation_path),
-        "fresh target-only confirmation": sha256(source_confirmation_path),
+        "v91 legacy near-target-only confirmation": sha256(source_confirmation_path),
+        "v98 preselected controller-pair confirmation": sha256(
+            v98_source_confirmation_path
+        ),
+        "v98 remote result identity audit": sha256(v98_remote_integrity_path),
         "Los Angeles deployment model": freezes["los_angeles"]["model_artifact"]["sha256"],
         "Jinan deployment model": freezes["jinan"]["model_artifact"]["sha256"],
         "closed-loop source tree": closed_loop["provenance"]["source_tree_sha256"],
     }
     payload = {
-        "protocol": "paper-tsc-external-confirmation-artifacts-v1",
+        "protocol": "paper-tsc-external-confirmation-artifacts-v2",
         "inputs": {
             "development_protocol": development.get("audit"),
             "heldout_protocol": heldout.get("protocol"),
             "closed_loop_protocol": closed_loop.get("protocol"),
             "source_ablation_protocol": source_ablation.get("protocol"),
             "source_confirmation_protocol": source_confirmation.get("protocol"),
+            "v98_source_confirmation_protocol": v98_source_confirmation.get(
+                "protocol"
+            ),
+            "v98_remote_integrity_protocol": v98_remote_integrity.get("protocol"),
             "los_angeles_method_protocol": freezes["los_angeles"].get("protocol"),
             "jinan_method_protocol": freezes["jinan"].get("protocol"),
         },
@@ -984,11 +1488,22 @@ def qa_manifest(
             "source_ablation_integrity_passed": source_ablation.get("status") == "PASS",
             "source_confirmation_integrity_passed": source_confirmation.get("integrity_gate", {}).get("passed") is True,
             "source_confirmation_decision": source_confirmation.get("decision"),
+            "v98_jinan_conditional_confirmation_passed": v98_source_confirmation.get(
+                "confirmation_passed"
+            )
+            is True,
+            "v98_remote_result_identity_passed": v98_remote_integrity.get("passed")
+            is True,
+            "v98_remote_unique_identities": v98_remote_integrity.get(
+                "observed", {}
+            ).get("unique_identity_count"),
+            "conditional_transfer_rows_pooled": False,
         },
         "statistical_boundary": closed_loop["estimands"]["bootstrap_scope"],
         "metric_population": closed_loop["estimands"]["implemented_primary_population"],
         "outputs": {
             "figure": "figures/tsc_external_confirmation.{pdf,svg,png,tiff}",
+            "source_contribution_figure": "figures/tsc_source_contribution_diagnostic.{pdf,svg,png,tiff}",
             "network_figure": "figures/traffic_signal_transfer_networks.{pdf,svg,png,tiff}",
             "source_data": [
                 "source_data/development_seed_heldout_action_regret.csv",
@@ -997,6 +1512,8 @@ def qa_manifest(
                 "source_data/external_closed_loop_city.csv",
                 "source_data/external_closed_loop_comparisons.csv",
                 "source_data/external_source_contribution_closed_loop.csv",
+                "source_data/external_source_contribution_seed.csv",
+                "source_data/jinan_conditional_source_transfer.csv",
                 "source_data/traffic_signal_transfer_networks.csv",
             ],
             "tables": [
@@ -1006,6 +1523,7 @@ def qa_manifest(
                 "tables/external_closed_loop_city.tex",
                 "tables/external_closed_loop_comparisons.tex",
                 "tables/external_source_contribution_closed_loop.tex",
+                "tables/jinan_conditional_source_transfer.tex",
                 "tables/traffic_signal_transfer_networks.tex",
                 "tables/external_confirmation_provenance.tex",
             ],
@@ -1039,6 +1557,16 @@ def main() -> int:
     parser.add_argument(
         "--source-confirmation", type=Path, default=DEFAULT_SOURCE_CONFIRMATION
     )
+    parser.add_argument(
+        "--v98-source-confirmation",
+        type=Path,
+        default=DEFAULT_V98_SOURCE_CONFIRMATION,
+    )
+    parser.add_argument(
+        "--v98-remote-integrity",
+        type=Path,
+        default=DEFAULT_V98_REMOTE_INTEGRITY,
+    )
     parser.add_argument("--source-manifest", type=Path, default=DEFAULT_SOURCE_MANIFEST)
     parser.add_argument("--external-conversion", type=Path, default=DEFAULT_EXTERNAL_CONVERSION)
     args = parser.parse_args()
@@ -1049,8 +1577,14 @@ def main() -> int:
     joint_audit = load_json(args.joint_audit)
     source_ablation = load_json(args.source_ablation)
     source_confirmation = load_json(args.source_confirmation)
+    v98_source_confirmation = load_json(args.v98_source_confirmation)
+    v98_remote_integrity = load_json(args.v98_remote_integrity)
     validate_results(development, heldout, closed_loop)
     validate_source_contribution(source_ablation, source_confirmation)
+    validate_jinan_conditional_source_transfer(
+        source_confirmation, v98_source_confirmation
+    )
+    validate_v98_remote_integrity(v98_source_confirmation, v98_remote_integrity)
     require(
         joint_audit.get("protocol")
         == "tsc-v43r39-external-full-budget-joint-freeze-audit-v1"
@@ -1065,6 +1599,10 @@ def main() -> int:
     source_contribution = source_contribution_rows(
         source_ablation, source_confirmation
     )
+    source_contribution_seeds = source_contribution_seed_rows(source_confirmation)
+    jinan_conditional_transfer = jinan_conditional_source_transfer_rows(
+        source_confirmation, v98_source_confirmation
+    )
     networks = network_rows(args.source_manifest, args.external_conversion)
 
     write_csv(SOURCE_DATA / "development_seed_heldout_action_regret.csv", development_source)
@@ -1076,6 +1614,14 @@ def main() -> int:
         SOURCE_DATA / "external_source_contribution_closed_loop.csv",
         source_contribution,
     )
+    write_csv(
+        SOURCE_DATA / "external_source_contribution_seed.csv",
+        source_contribution_seeds,
+    )
+    write_csv(
+        SOURCE_DATA / "jinan_conditional_source_transfer.csv",
+        jinan_conditional_transfer,
+    )
     build_result_tables(
         development,
         offline_source,
@@ -1084,8 +1630,10 @@ def main() -> int:
         comparison_source,
         source_contribution,
     )
+    build_jinan_conditional_source_transfer_table(jinan_conditional_transfer)
     build_network_table(networks)
     result_figure(development, offline_source, macro_source, city_source, comparison_source)
+    source_contribution_figure(source_confirmation, source_contribution_seeds)
     network_figure(networks)
     qa_manifest(
         development,
@@ -1094,6 +1642,8 @@ def main() -> int:
         joint_audit,
         source_ablation,
         source_confirmation,
+        v98_source_confirmation,
+        v98_remote_integrity,
         freezes,
         development_path=args.development,
         heldout_path=args.heldout,
@@ -1101,6 +1651,8 @@ def main() -> int:
         joint_audit_path=args.joint_audit,
         source_ablation_path=args.source_ablation,
         source_confirmation_path=args.source_confirmation,
+        v98_source_confirmation_path=args.v98_source_confirmation,
+        v98_remote_integrity_path=args.v98_remote_integrity,
     )
     print("publication artifacts generated and protocol gates verified")
     return 0

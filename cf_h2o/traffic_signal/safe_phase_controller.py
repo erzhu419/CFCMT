@@ -416,7 +416,8 @@ def _clearance_yellow_state(state: str) -> str:
     chars = []
     for char in state:
         if char == "G":
-            chars.append("y")
+            # SUMO retains major-link priority only for uppercase yellow.
+            chars.append("Y")
         elif char == "g":
             chars.append("y")
         else:

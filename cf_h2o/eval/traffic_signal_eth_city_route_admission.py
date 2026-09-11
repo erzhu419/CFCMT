@@ -38,6 +38,34 @@ from scripts.data.repair_eth_boston_protected_uncontrolled_merge_tls import (
     PACKAGE_PROTOCOL as BOSTON_V11_PACKAGE_PROTOCOL,
     validate_protected_uncontrolled_merge_manifest,
 )
+from scripts.data.repair_eth_boston_joined_tls_uncontrolled_merge import (
+    PACKAGE_PROTOCOL as BOSTON_V12_PACKAGE_PROTOCOL,
+    validate_joined_tls_uncontrolled_merge_manifest,
+)
+from scripts.data.repair_eth_boston_systemic_right_of_way import (
+    PACKAGE_PROTOCOL as BOSTON_V13_PACKAGE_PROTOCOL,
+    validate_systemic_right_of_way_manifest,
+)
+from scripts.data.repair_eth_boston_systemic_uncontrolled_major import (
+    PACKAGE_PROTOCOL as BOSTON_V14_PACKAGE_PROTOCOL,
+    validate_systemic_uncontrolled_major_manifest,
+)
+from scripts.data.repair_eth_boston_tls_yellow_clearance import (
+    PACKAGE_PROTOCOL as BOSTON_V15_PACKAGE_PROTOCOL,
+    validate_tls_yellow_clearance_manifest,
+)
+from scripts.data.repair_eth_boston_implicit_no_tls_major import (
+    PACKAGE_PROTOCOL as BOSTON_V16_PACKAGE_PROTOCOL,
+    validate_implicit_no_tls_major_manifest,
+)
+from scripts.data.repair_eth_boston_no_tls_major_response import (
+    PACKAGE_PROTOCOL as BOSTON_V17_PACKAGE_PROTOCOL,
+    validate_no_tls_major_response_manifest,
+)
+from scripts.data.repair_eth_boston_controlled_shared_receiving_yield import (
+    PACKAGE_PROTOCOL as BOSTON_V18_PACKAGE_PROTOCOL,
+    validate_controlled_shared_receiving_yield_manifest,
+)
 
 
 PROTOCOL = "eth-five-city-complete-demand-duarouter-admission-v3"
@@ -79,7 +107,21 @@ def validate_package(
         )
     package = _read_json(manifest_path)
     package_protocol = package.get("protocol")
-    if package_protocol == BOSTON_V11_PACKAGE_PROTOCOL:
+    if package_protocol == BOSTON_V18_PACKAGE_PROTOCOL:
+        validate_controlled_shared_receiving_yield_manifest(package)
+    elif package_protocol == BOSTON_V17_PACKAGE_PROTOCOL:
+        validate_no_tls_major_response_manifest(package)
+    elif package_protocol == BOSTON_V16_PACKAGE_PROTOCOL:
+        validate_implicit_no_tls_major_manifest(package)
+    elif package_protocol == BOSTON_V15_PACKAGE_PROTOCOL:
+        validate_tls_yellow_clearance_manifest(package)
+    elif package_protocol == BOSTON_V14_PACKAGE_PROTOCOL:
+        validate_systemic_uncontrolled_major_manifest(package)
+    elif package_protocol == BOSTON_V13_PACKAGE_PROTOCOL:
+        validate_systemic_right_of_way_manifest(package)
+    elif package_protocol == BOSTON_V12_PACKAGE_PROTOCOL:
+        validate_joined_tls_uncontrolled_merge_manifest(package)
+    elif package_protocol == BOSTON_V11_PACKAGE_PROTOCOL:
         validate_protected_uncontrolled_merge_manifest(package)
     elif package_protocol == BOSTON_V10_PACKAGE_PROTOCOL:
         validate_permissive_merge_manifest(package)

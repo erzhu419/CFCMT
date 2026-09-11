@@ -1,0 +1,250 @@
+{
+  "protocol": "tsc-v154n-cologne-accepted-action-counterfactual-summary-v2",
+  "created_at_utc": "2026-09-09T14:23:54.652737+00:00",
+  "status": "PASS",
+  "interpretation": "The preselected highest-score accepted action is beneficial under the original 450-second halted-queue objective when branches start from identical native prefixes. The initial state-reload attempt reverses the ranking and is INVALID for this causal comparison.",
+  "scenario": "cologne1",
+  "seed": 52282,
+  "target_time_sec": 25800,
+  "end_time_sec": 26250,
+  "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/fit_v2/model.pkl",
+  "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+  "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+  "threshold": 0.3580414874633295,
+  "threshold_retuned": false,
+  "new_model_fit_count": 0,
+  "selected_trace": {
+    "time_sec": 25800.0,
+    "tls_id": "cluster_357187_359543",
+    "prior_phase_state": "rrrrrGGGggrrrrrGGGgg",
+    "selected_phase_state": "GGGggrrrrrGGGggrrrrr",
+    "priority": 0.7897511244854812,
+    "selection_layer": "state_conditioned_source_utility",
+    "target_veto": null,
+    "target_originator": {
+      "reference_index": 6,
+      "proposed_index": 2,
+      "selected_index": 2,
+      "rigid_selected_index": 2,
+      "learned_differs": true,
+      "eligible": true,
+      "priority": 0.7897511244854812,
+      "rejection": null,
+      "arm": "rigid_target_only",
+      "source_city_admitted": false,
+      "utility_gate_selected": false,
+      "selected_candidate_key": null,
+      "source_changed_rigid_action": false,
+      "predicted_score": -0.7897511244854812,
+      "reference_score": 0.0,
+      "rigid_predicted_score": -0.7897511244854812,
+      "candidate_score_constraint": null,
+      "candidate_changed_rigid_group_count": 0,
+      "candidate_pressure_aligned_change_group_count": 0,
+      "candidate_off_reference_rejected_group_count": 0,
+      "source_changed_to_reference_action": false,
+      "source_changed_off_reference_action": false
+    },
+    "request_accepted": true,
+    "execution_effective": true,
+    "override_kind": "switch",
+    "executor_mode_before": "green",
+    "current_green_state_before": "rrrrrGGGGGrrrrrsrrrr",
+    "global_cooldown_active_before": false,
+    "stay_bypass_remaining_before": 0,
+    "green_elapsed_sec_before": 6.0,
+    "total_queue": 28.507639759050676,
+    "total_vehicles": 27.0,
+    "mean_speed": 4.8118770312093195,
+    "mean_occupancy": 0.2881987952533771
+  },
+  "label_contract": {
+    "mode": "halted_queue",
+    "horizon_sec": 450,
+    "control_interval_sec": 10,
+    "controlled_lane_count": 8,
+    "aggregation": "Mean of 450 post-step native SUMO halting counts summed over the eight controlled lanes and divided by eight.",
+    "first_interval": "Request rigid or captured PP action through the unchanged safe executor for ten seconds.",
+    "continuation": "PhasePressure in both branches for the remaining 440 seconds.",
+    "score_scale": "Predicted advantage is group-normalized; compare ordering, not magnitude, against raw branch costs."
+  },
+  "comparison": {
+    "rigid_cost": 0.8436111111111111,
+    "phase_pressure_cost": 1.0208333333333333,
+    "rigid_minus_pp": -0.17722222222222217,
+    "actual_advantage_pp_minus_rigid": 0.17722222222222217,
+    "relative_cost_change_pct": -17.360544217687067,
+    "ranking": "beneficial"
+  },
+  "safety": {
+    "rigid": {
+      "raw_collision_events": 0,
+      "collision_event_steps": 0,
+      "unique_collision_incidents": 0,
+      "starting_teleports": 0,
+      "ending_teleports": 0,
+      "collision_samples": [],
+      "no_teleport_passed": true
+    },
+    "phase_pressure": {
+      "raw_collision_events": 0,
+      "collision_event_steps": 0,
+      "unique_collision_incidents": 0,
+      "starting_teleports": 0,
+      "ending_teleports": 0,
+      "collision_samples": [],
+      "no_teleport_passed": true
+    },
+    "rigid_replay": {
+      "raw_collision_events": 0,
+      "collision_event_steps": 0,
+      "unique_collision_incidents": 0,
+      "starting_teleports": 0,
+      "ending_teleports": 0,
+      "collision_samples": [],
+      "no_teleport_passed": true
+    }
+  },
+  "validation": {
+    "all_checks_passed": true,
+    "checks": {
+      "reference_completed": true,
+      "reference_trace_exact": true,
+      "reference_first_interval_complete": true,
+      "reference_zero_collisions": true,
+      "reference_zero_teleports": true,
+      "reference_prefix_safe": true,
+      "reference_selected_decision_exact": true,
+      "rigid_prefix_safe": true,
+      "rigid_selected_decision_exact": true,
+      "rigid_physical_start_exact": true,
+      "rigid_pending_start_exact": true,
+      "rigid_decision_prefix_exact": true,
+      "rigid_pp_reference_exact": true,
+      "rigid_full_horizon": true,
+      "rigid_controlled_handoff": true,
+      "phase_pressure_prefix_safe": true,
+      "phase_pressure_selected_decision_exact": true,
+      "phase_pressure_physical_start_exact": true,
+      "phase_pressure_pending_start_exact": true,
+      "phase_pressure_decision_prefix_exact": true,
+      "phase_pressure_pp_reference_exact": true,
+      "phase_pressure_full_horizon": true,
+      "phase_pressure_controlled_handoff": true,
+      "rigid_replay_prefix_safe": true,
+      "rigid_replay_selected_decision_exact": true,
+      "rigid_replay_physical_start_exact": true,
+      "rigid_replay_pending_start_exact": true,
+      "rigid_replay_decision_prefix_exact": true,
+      "rigid_replay_pp_reference_exact": true,
+      "rigid_replay_full_horizon": true,
+      "rigid_replay_controlled_handoff": true,
+      "first_interval_exact": true,
+      "same_action_replay_exact": true
+    },
+    "decision_prefix_length": 49,
+    "accepted_reference_trace_length": 16,
+    "physical_start_comparisons": {
+      "rigid": {
+        "passed": true,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "max_position_or_speed_difference": 0.0
+      },
+      "phase_pressure": {
+        "passed": true,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "max_position_or_speed_difference": 0.0
+      },
+      "rigid_replay": {
+        "passed": true,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "max_position_or_speed_difference": 0.0
+      }
+    },
+    "native_first_interval": {
+      "passed": true,
+      "left_count": 10,
+      "right_count": 10,
+      "max_absolute_difference": 0.0
+    },
+    "same_action_repeat": {
+      "passed": true,
+      "left_count": 460,
+      "right_count": 460,
+      "max_absolute_difference": 0.0
+    }
+  },
+  "preserved_invalid_attempt": {
+    "task_id": "t91766",
+    "status": "INVALID",
+    "failure": "The loaded state matched observed positions/speeds/executor state, and repeated itself, but did not reproduce the original first interval.",
+    "native_first_step_halted_vehicles": 19.0,
+    "restored_first_step_halted_vehicles": 14.0,
+    "first_interval_check": {
+      "passed": false,
+      "left_count": 10,
+      "right_count": 10,
+      "max_absolute_difference": 0.625
+    },
+    "same_loaded_action_repeat": {
+      "passed": true,
+      "left_count": 460,
+      "right_count": 460,
+      "max_absolute_difference": 0.0
+    },
+    "restored_costs_diagnostic_only": {
+      "rigid": 1.0469444444444445,
+      "phase_pressure": 0.7133333333333334
+    },
+    "restored_rigid_minus_pp": 0.3336111111111111,
+    "ranking_reversed_relative_to_native_prefix": true,
+    "raw_result": "cf_h2o/results/cluster/tsc_v154n_cologne_accepted_action_counterfactual_20260909/replay/seed_52282/t25800/result.json"
+  },
+  "execution": {
+    "valid_task_id": "t91776",
+    "invalid_task_id": "t91766",
+    "new_task_count": 2,
+    "valid_scientific_branches": 2,
+    "preserved_invalid_scientific_branches": 2,
+    "technical_same_action_repeats": 2,
+    "total_simulated_seconds": 5720,
+    "runner_elapsed_sec_total": 5.372897705994546,
+    "runner_elapsed_sec_valid": 3.8595634680241346,
+    "retrieved_files": [
+      {
+        "path": "cf_h2o/results/cluster/tsc_v154n_cologne_accepted_action_counterfactual_20260909/replay/seed_52282/t25800/result.json",
+        "bytes": 48360
+      },
+      {
+        "path": "cf_h2o/results/cluster/tsc_v154n_cologne_accepted_action_counterfactual_20260909/live_v2/seed_52282/t25800/result.json",
+        "bytes": 86933
+      }
+    ],
+    "retrieved_bytes_total": 135293,
+    "test_count": 12,
+    "test_files": [
+      "tests/test_cologne_action_branch_checks.py",
+      "tests/test_cologne_accepted_action_counterfactual.py"
+    ]
+  },
+  "next_step": {
+    "purpose": "Determine whether native-prefix versus state-reload differences also affect the existing B100 training labels before changing the model or threshold.",
+    "scope": "Nine original B100 groups: earliest, chronological median, and latest group within each of the original training seeds2027/3037/4047. Freeze exact group IDs before generating outcomes.",
+    "comparison": "For each selected group, reproduce its original behavior prefix and compare all eight native-prefix action costs/orderings against its saved reload-based labels. Preserve unsafe and unmatched-state groups as failures.",
+    "held_fixed": "Original B100 roster, fitted model, occupancy equations, repaired network, executor, threshold, 450-second objective and PP continuation.",
+    "executed": false
+  },
+  "limitations": [
+    "One selected online action does not establish the quality of all73 accepted actions or explain the remaining full-run waiting gap.",
+    "The particular SUMO state/statistic responsible for reload divergence is unidentified; effects on the existing training labels remain unmeasured.",
+    "The two actions share PP continuation; later thresholded decisions in the original closed loop are a different continuation."
+  ],
+  "raw_result": "cf_h2o/results/cluster/tsc_v154n_cologne_accepted_action_counterfactual_20260909/live_v2/seed_52282/t25800/result.json",
+  "protocol_files": [
+    "cf_h2o/results/cluster/tsc_v154n_cologne_accepted_action_counterfactual_20260909/protocol_v1.json",
+    "cf_h2o/results/cluster/tsc_v154n_cologne_accepted_action_counterfactual_20260909/protocol_v2.json"
+  ]
+}

@@ -32,6 +32,7 @@ from cf_h2o.eval.traffic_signal_resco_probe import (
     prepare_scenarios,
 )
 from cf_h2o.eval.traffic_signal_transfer_feasibility import _format_table
+from cf_h2o.traffic_signal.occupancy_equations import pressure_receiving_factor
 
 
 DEFAULT_ENV_ROOT = DEFAULT_RESC0_ROOT / "environments"
@@ -174,7 +175,9 @@ def _phase_score(sumo_api: Any, info: TlsPhaseInfo, candidate: PhaseCandidate, *
     score = 0.0
     for lane, queue in lane_score.items():
         if spillback and down_occ.get(lane):
-            block = max(0.20, 1.0 - float(np.mean(down_occ[lane])) / 120.0)
+            block = float(pressure_receiving_factor(
+                float(np.mean(down_occ[lane])), minimum_factor=0.20
+            ))
             score += queue * block
         else:
             score += queue
@@ -215,6 +218,7 @@ def _sumo_arguments(
     tripinfo_output: Path | None = None,
     load_state: Path | None = None,
     begin_time: float | None = None,
+    save_state_rng: bool = True,
 ) -> list[str]:
     args = [
         "-c",
@@ -234,7 +238,7 @@ def _sumo_arguments(
         "--collision.check-junctions",
         str(SUMO_EXECUTION_PROTOCOL["collision_check_junctions"]).lower(),
         "--save-state.rng",
-        "true",
+        str(bool(save_state_rng)).lower(),
         "--save-state.precision",
         "8",
         "--thread-rngs",
@@ -260,7 +264,14 @@ def _sumo_arguments(
     return args
 
 
-def _start_sumo(sumo_api: Any, sumocfg: Path, seed: int, *, tripinfo_output: Path | None = None) -> None:
+def _start_sumo(
+    sumo_api: Any,
+    sumocfg: Path,
+    seed: int,
+    *,
+    tripinfo_output: Path | None = None,
+    save_state_rng: bool = True,
+) -> None:
     try:
         sumo_api.close()
     except Exception:
@@ -271,6 +282,7 @@ def _start_sumo(sumo_api: Any, sumocfg: Path, seed: int, *, tripinfo_output: Pat
             seed,
             include_executable=True,
             tripinfo_output=tripinfo_output,
+            save_state_rng=save_state_rng,
         )
     )
 
@@ -282,6 +294,7 @@ def _reload_sumo_state(
     state_path: Path,
     *,
     begin_time: float,
+    save_state_rng: bool = True,
 ) -> None:
     """Reload the network and state so unsaved vehicle-model internals are reset."""
 
@@ -292,6 +305,7 @@ def _reload_sumo_state(
             include_executable=False,
             load_state=state_path,
             begin_time=begin_time,
+            save_state_rng=save_state_rng,
         )
     )
 

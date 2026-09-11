@@ -16,7 +16,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Callable, Mapping, Sequence
 
 import numpy as np
 
@@ -25,6 +25,7 @@ from cf_h2o.eval.traffic_signal_resco_cfcmt_benchmark import _parse_tripinfo_met
 from cf_h2o.eval.traffic_signal_resco_cfcmt_v2 import (
     CONTEXT_NAMES_V2,
     FEATURE_NAMES_V2,
+    OCCUPANCY_EQUATION_PROTOCOL,
     OUTPUT_NAMES_V2,
     LocalTransitionState,
     _behavior_candidate,
@@ -1463,10 +1464,14 @@ def collect_counterfactual_transitions_v3(
     collection_shard_index: int = 0,
     collection_shard_count: int = 1,
     rollout_prefix_horizons_sec: Sequence[int] | None = None,
+    selected_action_group_ids: Sequence[str] | None = None,
 ) -> MechanismDataset:
     """Collect matched actions from an uninterrupted trace, then branch in pass two."""
 
     cost_contract = counterfactual_cost_contract_v5(counterfactual_cost_mode)
+    requested_groups = (
+        None if selected_action_group_ids is None else set(selected_action_group_ids)
+    )
     if int(collection_shard_count) < 1:
         raise ValueError("collection_shard_count must be positive")
     if not 0 <= int(collection_shard_index) < int(collection_shard_count):
@@ -1603,6 +1608,15 @@ def collect_counterfactual_transitions_v3(
                     collection_opportunity_idx += 1
                     if assigned_shard == int(collection_shard_index):
                         focal_ids = list(selected_focal_ids)
+
+                # Selection only reduces saved branches; the behavior trajectory,
+                # coverage counts and shard opportunities above remain unchanged.
+                if requested_groups is not None:
+                    focal_ids = [
+                        tls_id for tls_id in focal_ids
+                        if f"{scenario}:seed{int(seed)}:{interval_idx}:{tls_id}"
+                        in requested_groups
+                    ]
 
                 if focal_ids:
                     snapshots = {tls_id: executor.snapshot() for tls_id, executor in executors.items()}
@@ -1960,6 +1974,7 @@ def collect_counterfactual_transitions_v3(
         domains=np.asarray([scenario] * features.shape[0]),
         metadata={
             "scenario": scenario,
+            "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
             "sumocfg": str(sumocfg),
             "seed": int(seed),
             "duration_sec": float(duration_sec),
@@ -1970,6 +1985,9 @@ def collect_counterfactual_transitions_v3(
             "counterfactual_horizon_sec": int(control_interval_sec)
             * max(int(counterfactual_horizon_intervals), 1),
             "action_group_ids": row_groups,
+            "selected_action_group_ids": (
+                None if requested_groups is None else sorted(requested_groups)
+            ),
             "row_tls": row_tls,
             "row_times": row_times,
             "candidate_states": row_candidate_states,
@@ -2209,6 +2227,10 @@ def merge_counterfactual_datasets_v3(datasets: Sequence[MechanismDataset]) -> Me
         raise ValueError("counterfactual dataset has an invalid output schema")
     seen_groups: set[str] = set()
     for dataset_index, item in enumerate(datasets):
+        if item.metadata.get("occupancy_equation_protocol") != first.metadata.get(
+            "occupancy_equation_protocol"
+        ):
+            raise ValueError("counterfactual datasets use different occupancy equation contracts")
         if item.feature_names != first.feature_names or item.context_names != first.context_names:
             raise ValueError("counterfactual datasets use incompatible schemas")
         item_output_names = tuple(
@@ -2363,6 +2385,7 @@ def merge_counterfactual_datasets_v3(datasets: Sequence[MechanismDataset]) -> Me
             ),
             "behavior_policy": first.metadata.get("behavior_policy"),
             "state_snapshot_protocol": first.metadata.get("state_snapshot_protocol"),
+            "occupancy_equation_protocol": first.metadata.get("occupancy_equation_protocol"),
             "sumo_execution_protocol": first.metadata.get("sumo_execution_protocol"),
             "strict_safety_monitoring": first.metadata.get(
                 "strict_safety_monitoring"
@@ -3902,6 +3925,7 @@ def _absolute_target_candidates(
         domains=np.asarray(["target"] * len(candidates)),
         metadata={
             "action_group_ids": ["target_state"] * len(candidates),
+            "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
             "row_tls": [str(state.tls_id)] * len(candidates),
             "row_times": [float(state.sim_time)] * len(candidates),
             "candidate_states": [str(candidate.state) for candidate in candidates],
@@ -4195,7 +4219,13 @@ def _contrast_proposal(
             eligible=bool(decision.eligible),
             priority=float(decision.priority),
             rejection=decision.rejection,
-            selection_layer="target_spatiotemporal_latent",
+            selection_layer=str(
+                getattr(
+                    action_originator,
+                    "selection_layer",
+                    "target_spatiotemporal_latent",
+                )
+            ),
             originator_diagnostics=decision.to_dict(),
         )
     score, uncertainty, trust, _ = _group_adjusted_scores(
@@ -4490,7 +4520,7 @@ def _coordinate_contrast_proposals(
             "pressure_prior_fallback",
         }:
             audit.hierarchical_decisions += 1
-        if proposal.selection_layer == "target_spatiotemporal_latent":
+        if proposal.originator_diagnostics is not None:
             audit.target_originator_decisions += 1
         if proposal.selection_layer == "pressure_prior_fallback":
             audit.hierarchical_prior_fallbacks += 1
@@ -4582,7 +4612,7 @@ def _coordinate_contrast_proposals(
         for tls_id in selected_ids
     )
     audit.selected_target_originators += sum(
-        proposals[tls_id].selection_layer == "target_spatiotemporal_latent"
+        proposals[tls_id].originator_diagnostics is not None
         for tls_id in selected_ids
     )
     audit.rejected_coordination += len(spatially_rejected)
@@ -4708,6 +4738,7 @@ def evaluate_policy_v3(
     residual_cooldown_intervals_override: int | None = None,
     residual_execution_trust_region: ResidualExecutionTrustRegionConfig
     | None = None,
+    step_observer: Callable[..., None] | None = None,
 ) -> dict[str, Any]:
     coordination_modes = {"sparse", "spatial_only", "direct"}
     if residual_coordination_mode not in coordination_modes:
@@ -4802,6 +4833,16 @@ def evaluate_policy_v3(
                             executors[tls_id].request(candidate.state)
                     else:
                         model = models.family_models[learned_family]
+                        prepare_interval = getattr(
+                            models.action_originator, "prepare_interval", None
+                        )
+                        if callable(prepare_interval):
+                            prepare_interval(
+                                states=states,
+                                executors=executors,
+                                routing_graph=routing_graph,
+                                control_interval_sec=control_interval_sec,
+                            )
                         proposals = {
                             tls_id: _contrast_proposal(
                                 model=model,
@@ -5063,11 +5104,17 @@ def evaluate_policy_v3(
             remaining = min(int(control_interval_sec), max(int(math.ceil(end_time - float(sumo_api.simulation.getTime()))), 0))
             for _ in range(remaining):
                 before = float(sumo_api.simulation.getTime())
+                if step_observer is not None:
+                    step_observer(stage="before_simulation_step", time_sec=before, executors=executors)
                 sumo_api.simulationStep()
                 now = float(sumo_api.simulation.getTime())
+                if step_observer is not None:
+                    step_observer(stage="after_simulation_step_before_executor", time_sec=now, executors=executors)
                 elapsed = max(now - before, 0.0)
                 for executor in executors.values():
                     executor.advance(elapsed)
+                if step_observer is not None:
+                    step_observer(stage="after_executor_advance", time_sec=now, executors=executors)
                 departed += int(sumo_api.simulation.getDepartedNumber())
                 arrived += int(sumo_api.simulation.getArrivedNumber())
                 loaded += int(sumo_api.simulation.getLoadedNumber())

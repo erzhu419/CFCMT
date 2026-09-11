@@ -72,7 +72,7 @@ Adaptation seeds, the offline confirmation seed and closed-loop seeds are
 disjoint, and the evaluation cache did not exist when the target model and
 selector were frozen.
 
-The empirical design has four levels.  First, 18 source networks from seven
+The empirical design has five levels.  First, 18 source networks from seven
 city groups support leave-one-city-out development with an excluded evaluation
 seed.  Second, two external city-derived networks, Los Angeles and Jinan, test
 the frozen procedure using all valid target adaptation groups and a new
@@ -80,11 +80,16 @@ offline seed.  Third, 56 matched 3,600-s closed-loop rollouts compare CFCMT with
 fixed time, simulator-only model predictive control, a rigid causal anchor, an
 H2O$^+$-style dense residual and two classical pressure policies.  All policies
 share target networks, feasible green phases, demand seeds, signal-transition
-execution and metric populations.  Fourth, a target-label-only model already
+execution and metric populations.  Fourth, a legacy near-target-only model already
 frozen in the same baseline family is compared with CFCMT on 64 newly generated
-seeds, four target scenarios and 512 rollouts.  This final stage directly tests
-whether source-labelled counterfactuals improve closed-loop control after the
-target adaptation budget is held fixed.  Official RESCO and LibSignal reinforcement
+seeds, four target scenarios and 512 rollouts.  This fourth stage directly tests
+whether the original source-plus-target controller improves both external
+targets after the target adaptation budget is held fixed.  Fifth, a separate
+post-V91 target-offline selector abstains to exact target-only control for Los
+Angeles and admits a Hangzhou source component for Jinan before 56 further
+Jinan seeds are observed.  This conditional experiment is reported separately
+because it uses a topology-repaired refit and a shared pressure guard absent
+from the frozen v43 controller.  Official RESCO and LibSignal reinforcement
 learning runs are retained only as native-protocol integration checks because
 their state, reward, action timing and training budgets are not commensurate
 with this experiment \citep{ault2021reinforcement,mei2023libsignal}.
@@ -98,12 +103,16 @@ action-common domain bias.  Second, it combines a parent-restricted anchor with
 an antisymmetric all-action correction and derives exact ranking and bounded
 perturbation properties.  Third, it implements an auditable seed-blocked
 selection and full-refit protocol that prevents out-of-fold or evaluation
-models from entering deployment.  Fourth, it separates structured-model gain
-from source-data gain.  CFCMT improves the dense residual, but a fresh
-target-label-only comparison reveals positive source contribution in Jinan and
-negative transfer in Los Angeles, rejecting a general source-benefit claim.
+models from entering deployment.  Fourth, it separates structured-model gain,
+controller-pair performance and source-row attribution.  CFCMT improves the
+dense residual, while the fresh V91 comparison reveals a Jinan benefit and Los
+Angeles negative transfer, rejecting a joint two-city source-benefit claim.
+The distinct V98 selector subsequently abstains for Los Angeles and reproduces
+a Jinan-specific controller gain against its declared lower-capacity
+zero-source-row target model; this comparison does not isolate source-row
+contribution.
 Classical pressure control remains the closed-loop ceiling, and a separate
 64-seed execution-layer challenge does not close that gap.  The contribution
-is consequently an auditable action-ranking framework and a falsifiable account
-of where cross-network transfer fails, not a claim that complexity or source
-volume alone should replace a strong traffic-control rule.
+is consequently an auditable action-ranking framework and evidence for
+target-network-dependent controller outcomes, not a claim that complexity or
+source volume alone should replace a strong traffic-control rule.

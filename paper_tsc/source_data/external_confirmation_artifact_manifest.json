@@ -1,6 +1,7 @@
 {
   "hard_gates": {
     "closed_loop_passed": true,
+    "conditional_transfer_rows_pooled": false,
     "development_passed": true,
     "external_offline_passed": true,
     "external_target_cities": 2,
@@ -8,7 +9,10 @@
     "source_ablation_integrity_passed": true,
     "source_confirmation_decision": "reject_fresh_source_contribution_confirmation",
     "source_confirmation_integrity_passed": true,
-    "teleports": 0
+    "teleports": 0,
+    "v98_jinan_conditional_confirmation_passed": true,
+    "v98_remote_result_identity_passed": true,
+    "v98_remote_unique_identities": 336
   },
   "inputs": {
     "closed_loop_protocol": "tsc-v43r39-external-closed-loop-aggregate-v4",
@@ -17,12 +21,15 @@
     "jinan_method_protocol": "tsc-v43r39-external-city-full-oof-refit-freeze-v1",
     "los_angeles_method_protocol": "tsc-v43r39-external-city-full-oof-refit-freeze-v1",
     "source_ablation_protocol": "tsc-v90r86-source-contribution-ablation-audit-v1",
-    "source_confirmation_protocol": "tsc-v91r87-source-contribution-fresh-confirmation-audit-v1"
+    "source_confirmation_protocol": "tsc-v91r87-source-contribution-fresh-confirmation-audit-v1",
+    "v98_remote_integrity_protocol": "tsc-v98-strict-target-anchor-remote-integrity-audit-v1",
+    "v98_source_confirmation_protocol": "tsc-v98-target-offline-source-fresh-confirmation-audit-v2"
   },
   "metric_population": "all departed vehicles, including write-unfinished records whose duration and waiting are accrued to the fixed 3600-second horizon",
   "outputs": {
     "figure": "figures/tsc_external_confirmation.{pdf,svg,png,tiff}",
     "network_figure": "figures/traffic_signal_transfer_networks.{pdf,svg,png,tiff}",
+    "source_contribution_figure": "figures/tsc_source_contribution_diagnostic.{pdf,svg,png,tiff}",
     "source_data": [
       "source_data/development_seed_heldout_action_regret.csv",
       "source_data/external_offline_confirmation.csv",
@@ -30,6 +37,8 @@
       "source_data/external_closed_loop_city.csv",
       "source_data/external_closed_loop_comparisons.csv",
       "source_data/external_source_contribution_closed_loop.csv",
+      "source_data/external_source_contribution_seed.csv",
+      "source_data/jinan_conditional_source_transfer.csv",
       "source_data/traffic_signal_transfer_networks.csv"
     ],
     "tables": [
@@ -39,23 +48,26 @@
       "tables/external_closed_loop_city.tex",
       "tables/external_closed_loop_comparisons.tex",
       "tables/external_source_contribution_closed_loop.tex",
+      "tables/jinan_conditional_source_transfer.tex",
       "tables/traffic_signal_transfer_networks.tex",
       "tables/external_confirmation_provenance.tex"
     ]
   },
-  "protocol": "paper-tsc-external-confirmation-artifacts-v1",
+  "protocol": "paper-tsc-external-confirmation-artifacts-v2",
   "provenance": {
     "Jinan_deployment_model": "a34970f1e4f023079650866097359ec3b2509e17787685249a21363cc7b03741",
     "Los_Angeles_deployment_model": "f26ee8e5829e248ef411f77ad3e19ed0d63fd52cdfdae6d8291a9a3aeaaa7aff",
     "closed-loop_aggregate": "be36c73c5835e632231140fdbdabc4bba422f54b503160c0179efc902d4534e0",
     "closed-loop_source_tree": "ad555ff72a11a62cc88c8bbbe2ab2f5df1db8de920af03e2f61d99aaba226a7d",
     "development_audit": "5bcae9467cdb4cc157676e94078d204702ebdca6d51007ffca4bc85d13951066",
-    "fresh_target-only_confirmation": "3a0ee874afeff6df96a90fb4aed4e42f79705469f0d2a72da514932385990f67",
     "held-out_seed-8171_result": "20d682b48bca0f8821ecf98e54b04c94af87d530add51cc1d92d9a176f74cf60",
     "joint_method_freeze": "471e8c34eb7be96411c812c7fe961d5c07f1857e3fb50d2c8d7edd59fc23c596",
     "post-freeze_target-only_ablation": "238dbdc27ceb7ce016b9c995b5472cf1ad71a76632b6609b0df66408a1e26a7e",
     "source_cache": "14c6dfad87999e55fa86fa942ac0ca2334129f4d1662b3c31a6e4fc7aa74c242",
-    "target_adaptation_cache": "beb6a968c43dd58ceac4df6d9da8dfca47fc1f0869dfda0dc151a3e9cae58d77"
+    "target_adaptation_cache": "beb6a968c43dd58ceac4df6d9da8dfca47fc1f0869dfda0dc151a3e9cae58d77",
+    "v91_legacy_near-target-only_confirmation": "3a0ee874afeff6df96a90fb4aed4e42f79705469f0d2a72da514932385990f67",
+    "v98_preselected_controller-pair_confirmation": "bb00da6d3ee0f9420bdd7827eeada7c0b4755fadae4a871e3de6c42ded1dc65d",
+    "v98_remote_result_identity_audit": "f8243b8279e600721f978a763415ced656c3528b190fb952877b17f2b982a91b"
   },
   "statistical_boundary": "descriptive paired hierarchy; only two independent target cities"
 }

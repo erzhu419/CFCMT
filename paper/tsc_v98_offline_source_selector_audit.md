@@ -46,8 +46,10 @@ fits only target rows and reports `source_rows_consumed = 0`.
 
 The deployable strict Jinan model is identified by SHA-256
 `3424307a5399c4fbed63bc3158001adaf53eaa8ef04d53daf56c5eef744fdd13`.
-The remote provenance audit found this exact anchor in all 336 closed-loop result
-files.
+The remote in-place integrity audit found this exact anchor in all 336
+closed-loop result files, alongside the expected source-aware model and
+component-bundle identities. It copied no raw result, CSV or checkpoint to the
+local machine.
 
 ## Fresh Confirmation
 
@@ -70,11 +72,13 @@ All five pre-specified efficacy and safety gates passed.
 
 ## Interpretation
 
-The old positive effect is real. More importantly, the corrected experiment
-shows that target-offline causal source selection retains the effect when the
-comparison model consumes no source rows. The defensible claim is therefore
-that source-city information can improve a target-adapted causal controller
-after source identity is selected from passive target counterfactual data.
+The old positive effect is reproducible. More importantly, the corrected
+experiment shows that target-offline causal source selection retains the effect
+when the comparison model consumes no source rows. The defensible claim is that
+the frozen conditional protocol improves this strict target comparator after
+source identity is selected from passive target counterfactual data. Because
+the strict comparator has lower capacity, this comparison alone does not
+identify an architecture-held-fixed causal contribution from source rows.
 
 ## Remaining Limitation
 
@@ -90,5 +94,6 @@ source-only or analytic guard must be frozen before the unseen-city experiment.
 - Strict model audits: `cf_h2o/results/cluster/tsc_v98_target_offline_source_selection_20260831/strict_target_only_v2/`
 - Frozen confirmation protocol: `cf_h2o/config/traffic_signal_tsc_v98_strict_target_fresh_confirmation_v2.json`
 - Corrected audit: `cf_h2o/results/cluster/tsc_v98_target_offline_source_selection_20260831/strict_fresh_confirmation_v2/audit_v2.json`
+- Remote result-identity audit: `cf_h2o/results/paper_artifacts/tsc_v98_strict_target_anchor_remote_integrity_audit_v1.json`
 - The earlier `audit.json` is retained as a superseded numerical audit; its
   hard-coded claim sentence incorrectly named the v93 anchor.

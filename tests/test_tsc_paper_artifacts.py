@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 import re
 from pathlib import Path
 
@@ -10,11 +11,17 @@ from paper_tsc.figures.build_tsc_external_confirmation import (
     DEFAULT_HELDOUT,
     DEFAULT_SOURCE_ABLATION,
     DEFAULT_SOURCE_CONFIRMATION,
+    DEFAULT_V98_REMOTE_INTEGRITY,
+    DEFAULT_V98_SOURCE_CONFIRMATION,
+    jinan_conditional_source_transfer_rows,
     load_json,
     method_freeze_rows,
     offline_rows,
     source_contribution_rows,
+    source_contribution_seed_rows,
+    validate_jinan_conditional_source_transfer,
     validate_source_contribution,
+    validate_v98_remote_integrity,
 )
 from paper_tsc.figures.build_tsc_postfreeze_stress_test import build_rows
 
@@ -33,6 +40,7 @@ def test_submission_references_only_canonical_figures() -> None:
         "traffic_signal_transfer_networks.pdf",
         "tsc_anchored_transfer_schematic.pdf",
         "tsc_external_confirmation.pdf",
+        "tsc_source_contribution_diagnostic.pdf",
     }
     main = (PAPER / "main.tex").read_text(encoding="utf-8")
     assert r"\graphicspath{{figures/}}" in main
@@ -116,6 +124,16 @@ def test_source_contribution_claim_is_rebuilt_from_frozen_audits() -> None:
     assert confirmation["jinan_relative_delta"] == pytest.approx(-0.03044646977)
     assert confirmation["decision"] == "confirmation rejected"
 
+    seed_rows = source_contribution_seed_rows(v91)
+    assert len(seed_rows) == 64
+    assert len({row["seed"] for row in seed_rows}) == 64
+    assert sum(row["macro_relative_delta"] < 0.0 for row in seed_rows) == 29
+    assert sum(row["los_angeles_relative_delta"] < 0.0 for row in seed_rows) == 22
+    assert all(row["jinan_relative_delta"] < 0.0 for row in seed_rows)
+    assert max(row["macro_relative_delta"] for row in seed_rows) == pytest.approx(
+        2.6755648985, abs=5e-10
+    )
+
     results = (PAPER / "sections/2_results.tex").read_text(encoding="utf-8")
     for claim in (
         "0.3104 to 0.2685 (13.48\\%)",
@@ -126,3 +144,84 @@ def test_source_contribution_claim_is_rebuilt_from_frozen_audits() -> None:
         "confirmation was rejected",
     ):
         assert claim in results
+
+
+def test_jinan_conditional_transfer_rows_keep_v91_and_v98_separate() -> None:
+    v91 = load_json(DEFAULT_SOURCE_CONFIRMATION)
+    v98 = load_json(DEFAULT_V98_SOURCE_CONFIRMATION)
+    integrity = load_json(DEFAULT_V98_REMOTE_INTEGRITY)
+    validate_jinan_conditional_source_transfer(v91, v98)
+    validate_v98_remote_integrity(v98, integrity)
+    assert integrity["observed"]["unique_identity_count"] == 336
+
+    rows = jinan_conditional_source_transfer_rows(v91, v98)
+    assert len(rows) == 2
+    assert all(row["pooled_with_other_row"] is False for row in rows)
+
+    v91_row, v98_row = rows
+    assert v91_row["experiment"] == "V91 Jinan city diagnostic"
+    assert (
+        v91_row["selection_and_evaluation"]
+        == "frozen two-city protocol; Jinan diagnostic"
+    )
+    assert v91_row["seed_count"] == 64
+    assert v91_row["mean_relative_waiting_delta"] == pytest.approx(
+        -0.030446469768574826, abs=5e-13
+    )
+    assert v91_row["improved_seed_count"] == 64
+    assert v91_row["ci95_low"] == ""
+    assert v91_row["comparator"] == "final V43 legacy near-target-only"
+
+    assert v98_row["seed_count"] == 56
+    assert v98_row["mean_relative_waiting_delta"] == pytest.approx(
+        -0.045274013085975714, abs=5e-13
+    )
+    assert v98_row["ci95_low"] == pytest.approx(-0.04786736703256771)
+    assert v98_row["ci95_high"] == pytest.approx(-0.04278512539219397)
+    assert v98_row["improved_seed_count"] == 56
+    assert v98_row["experiment"] == "V98 Jinan controller-pair confirmation"
+    assert "strict zero-source-row lower-capacity" in v98_row["comparator"]
+    assert "post-V91 shared inherited" in v98_row["guard"]
+    assert "controller-pair contrast" in v98_row["comparison_scope"]
+    assert "source-row attribution" in v98_row["comparison_scope"]
+
+    source_csv = (
+        PAPER / "source_data/jinan_conditional_source_transfer.csv"
+    ).read_text(encoding="utf-8")
+    assert "final V43 legacy near-target-only" in source_csv
+    assert "strict zero-source-row lower-capacity target model" in source_csv
+    assert "controller-pair contrast; lower-capacity comparator" in source_csv
+    assert source_csv.count(",False") == 2
+
+    table = (PAPER / "tables/jinan_conditional_source_transfer.tex").read_text(
+        encoding="utf-8"
+    )
+    assert "64/64 & -3.045\\%" in table
+    assert "56/56 & -4.527\\% & [-4.787, -4.279]\\%" in table
+    assert "the two rows are not pooled" in table
+    assert "V98 does not isolate source-row contribution" in table
+    legacy_table = (
+        PAPER / "tables/external_source_contribution_closed_loop.tex"
+    ).read_text(encoding="utf-8")
+    assert "Legacy near-target-only wait" in legacy_table
+
+    manifest = load_json(
+        PAPER / "source_data/external_confirmation_artifact_manifest.json"
+    )
+    assert manifest["protocol"] == "paper-tsc-external-confirmation-artifacts-v2"
+    assert manifest["hard_gates"]["conditional_transfer_rows_pooled"] is False
+    assert manifest["hard_gates"]["v98_remote_result_identity_passed"] is True
+    assert manifest["hard_gates"]["v98_remote_unique_identities"] == 336
+    assert (
+        manifest["provenance"]["v98_preselected_controller-pair_confirmation"]
+        == "bb00da6d3ee0f9420bdd7827eeada7c0b4755fadae4a871e3de6c42ded1dc65d"
+    )
+
+
+def test_jinan_conditional_transfer_rejects_nonzero_source_comparator() -> None:
+    v91 = load_json(DEFAULT_SOURCE_CONFIRMATION)
+    v98 = deepcopy(load_json(DEFAULT_V98_SOURCE_CONFIRMATION))
+    v98["target_only_anchor"]["source_rows_consumed"] = 1
+
+    with pytest.raises(ValueError, match="strict zero-source-row"):
+        validate_jinan_conditional_source_transfer(v91, v98)

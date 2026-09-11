@@ -147,6 +147,177 @@ def test_validate_eth_city_package_dispatches_boston_v11_manifest(
     assert observed == [city_admission.BOSTON_V11_PACKAGE_PROTOCOL]
 
 
+def test_validate_eth_city_package_dispatches_boston_v12_manifest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root, _ = _package(tmp_path)
+    manifest_path = root / "package_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["protocol"] = city_admission.BOSTON_V12_PACKAGE_PROTOCOL
+    manifest_path.write_text(
+        json.dumps(manifest, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    observed: list[str] = []
+    monkeypatch.setattr(
+        city_admission,
+        "validate_joined_tls_uncontrolled_merge_manifest",
+        lambda value: observed.append(str(value["protocol"])),
+    )
+    _validate_package(
+        root,
+        expected_manifest_sha256=_sha256(manifest_path),
+        expected_city_code="BOS",
+    )
+    assert observed == [city_admission.BOSTON_V12_PACKAGE_PROTOCOL]
+
+
+def test_validate_eth_city_package_dispatches_boston_v13_manifest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root, _ = _package(tmp_path)
+    manifest_path = root / "package_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["protocol"] = city_admission.BOSTON_V13_PACKAGE_PROTOCOL
+    manifest_path.write_text(
+        json.dumps(manifest, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    observed: list[str] = []
+    monkeypatch.setattr(
+        city_admission,
+        "validate_systemic_right_of_way_manifest",
+        lambda value: observed.append(str(value["protocol"])),
+    )
+    _validate_package(
+        root,
+        expected_manifest_sha256=_sha256(manifest_path),
+        expected_city_code="BOS",
+    )
+    assert observed == [city_admission.BOSTON_V13_PACKAGE_PROTOCOL]
+
+
+def test_validate_eth_city_package_dispatches_boston_v14_manifest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root, _ = _package(tmp_path)
+    manifest_path = root / "package_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["protocol"] = city_admission.BOSTON_V14_PACKAGE_PROTOCOL
+    manifest_path.write_text(
+        json.dumps(manifest, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    observed: list[str] = []
+    monkeypatch.setattr(
+        city_admission,
+        "validate_systemic_uncontrolled_major_manifest",
+        lambda value: observed.append(str(value["protocol"])),
+    )
+    _validate_package(
+        root,
+        expected_manifest_sha256=_sha256(manifest_path),
+        expected_city_code="BOS",
+    )
+    assert observed == [city_admission.BOSTON_V14_PACKAGE_PROTOCOL]
+
+
+def test_validate_eth_city_package_dispatches_boston_v15_manifest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root, _ = _package(tmp_path)
+    manifest_path = root / "package_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["protocol"] = city_admission.BOSTON_V15_PACKAGE_PROTOCOL
+    manifest_path.write_text(
+        json.dumps(manifest, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    observed: list[str] = []
+    monkeypatch.setattr(
+        city_admission,
+        "validate_tls_yellow_clearance_manifest",
+        lambda value: observed.append(str(value["protocol"])),
+    )
+    _validate_package(
+        root,
+        expected_manifest_sha256=_sha256(manifest_path),
+        expected_city_code="BOS",
+    )
+    assert observed == [city_admission.BOSTON_V15_PACKAGE_PROTOCOL]
+
+
+def test_validate_eth_city_package_dispatches_boston_v16_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    package_root, _ = _package(tmp_path)
+    manifest_path = package_root / "package_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["protocol"] = city_admission.BOSTON_V16_PACKAGE_PROTOCOL
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    observed = []
+    monkeypatch.setattr(
+        city_admission,
+        "validate_implicit_no_tls_major_manifest",
+        lambda value: observed.append(value["protocol"]),
+    )
+
+    city_admission._validate_package(
+        package_root,
+        expected_manifest_sha256=city_admission._sha256(manifest_path),
+        expected_city_code="BOS",
+    )
+
+    assert observed == [city_admission.BOSTON_V16_PACKAGE_PROTOCOL]
+
+
+def test_validate_eth_city_package_dispatches_boston_v17_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    package_root, _ = _package(tmp_path)
+    manifest_path = package_root / "package_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["protocol"] = city_admission.BOSTON_V17_PACKAGE_PROTOCOL
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    observed = []
+    monkeypatch.setattr(
+        city_admission,
+        "validate_no_tls_major_response_manifest",
+        lambda value: observed.append(value["protocol"]),
+    )
+
+    city_admission._validate_package(
+        package_root,
+        expected_manifest_sha256=city_admission._sha256(manifest_path),
+        expected_city_code="BOS",
+    )
+
+    assert observed == [city_admission.BOSTON_V17_PACKAGE_PROTOCOL]
+
+
+def test_validate_eth_city_package_dispatches_boston_v18_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    package_root, _ = _package(tmp_path)
+    manifest_path = package_root / "package_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["protocol"] = city_admission.BOSTON_V18_PACKAGE_PROTOCOL
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    observed = []
+    monkeypatch.setattr(
+        city_admission,
+        "validate_controlled_shared_receiving_yield_manifest",
+        lambda value: observed.append(value["protocol"]),
+    )
+
+    city_admission._validate_package(
+        package_root,
+        expected_manifest_sha256=city_admission._sha256(manifest_path),
+        expected_city_code="BOS",
+    )
+
+    assert observed == [city_admission.BOSTON_V18_PACKAGE_PROTOCOL]
+
+
 def test_full_admission_checks_require_exact_conservation_and_safety() -> None:
     observed = {
         "termination_reason": "all_vehicles_completed",
@@ -283,3 +454,73 @@ def test_collision_sample_records_route_and_live_signal_state(tmp_path: Path) ->
             "next_switch_sec": 98.0,
         }
     ]
+
+
+def test_read_only_diagnostic_trace_records_lane_order_and_vehicle_dynamics() -> None:
+    class Vehicle:
+        @staticmethod
+        def getIDList():
+            return ("collider", "victim", "foe")
+
+        @staticmethod
+        def getLeader(vehicle_id, _distance):
+            return ("victim", 0.9) if vehicle_id == "collider" else ("", -1.0)
+
+        @staticmethod
+        def getFollower(vehicle_id, _distance):
+            return ("collider", 0.9) if vehicle_id == "victim" else ("", -1.0)
+
+        @staticmethod
+        def getLaneChangeState(_vehicle_id, direction):
+            return (direction, 0)
+
+        @staticmethod
+        def getNextTLS(_vehicle_id):
+            return ()
+
+    for method, value in {
+        "getAcceleration": -4.5,
+        "getActionStepLength": 1.0,
+        "getAllowedSpeed": 13.8,
+        "getApparentDecel": 4.5,
+        "getDecel": 4.5,
+        "getEmergencyDecel": 9.0,
+        "getLaneChangeMode": 1621,
+        "getLaneID": "target_1",
+        "getLanePosition": 52.0,
+        "getLateralLanePosition": 0.0,
+        "getLength": 5.0,
+        "getMinGap": 1.5,
+        "getRoadID": "target",
+        "getRouteIndex": 4,
+        "getSignals": 0,
+        "getSpeed": 10.3,
+        "getSpeedMode": 31,
+        "getSpeedWithoutTraCI": 10.3,
+        "getTau": 1.0,
+    }.items():
+        setattr(Vehicle, method, staticmethod(lambda _vehicle_id, value=value: value))
+
+    class Lane:
+        @staticmethod
+        def getLastStepVehicleIDs(lane_id):
+            return (
+                ("collider", "victim") if lane_id == "target_1" else ("foe",)
+            )
+
+    sample = city_admission._diagnostic_trace_sample(
+        SimpleNamespace(vehicle=Vehicle(), lane=Lane()),
+        time_sec=17264.0,
+        vehicle_ids=("collider", "victim"),
+        lane_ids=("target_1", "foe_0"),
+    )
+
+    assert sample["vehicle_ids_by_lane"] == {
+        "target_1": ["collider", "victim"],
+        "foe_0": ["foe"],
+    }
+    vehicles = {row["vehicle_id"]: row for row in sample["vehicles"]}
+    assert vehicles["collider"]["LeaderWithin100m"] == ["victim", 0.9]
+    assert vehicles["victim"]["FollowerWithin100m"] == ["collider", 0.9]
+    assert vehicles["foe"]["MinGap"] == 1.5
+    assert vehicles["collider"]["LaneChangeStateLeft"] == [1, 0]

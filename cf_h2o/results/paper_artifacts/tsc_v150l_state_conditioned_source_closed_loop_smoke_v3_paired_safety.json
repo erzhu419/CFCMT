@@ -1,0 +1,172 @@
+{
+  "admitted_city_nondegrading_count": 1,
+  "admitted_city_source_minus_matched_placebo_mean": 162.8742758898345,
+  "admitted_city_source_minus_rigid_mean": 192.16902273468236,
+  "city_summaries": {
+    "atlanta": {
+      "arm_mean_costs": {
+        "phase_pressure": 2276.758754863813,
+        "rigid_target_only": 2248.066037735849,
+        "same_capacity_placebo_corrected_rigid": 2248.066037735849,
+        "selected_source_corrected_rigid": 2248.066037735849
+      },
+      "offline_source_admitted": false,
+      "scenario_seed_unit_count": 1,
+      "source_changed_rigid_action_count": 0,
+      "source_minus_matched_placebo": 0.0,
+      "source_minus_rigid": 0.0,
+      "source_relative_change_vs_rigid": 0.0
+    },
+    "cologne": {
+      "arm_mean_costs": {
+        "phase_pressure": 14.99106699751861,
+        "rigid_target_only": 1484.364303178484,
+        "same_capacity_placebo_corrected_rigid": 1535.5944584382871,
+        "selected_source_corrected_rigid": 2047.5096418732783
+      },
+      "offline_source_admitted": true,
+      "scenario_seed_unit_count": 1,
+      "source_changed_rigid_action_count": 2,
+      "source_minus_matched_placebo": 511.91518343499115,
+      "source_minus_rigid": 563.1453386947942,
+      "source_relative_change_vs_rigid": 0.3793848568635917
+    },
+    "new_york": {
+      "arm_mean_costs": {
+        "phase_pressure": 1085.8698531758698,
+        "rigid_target_only": 1331.851780726257,
+        "same_capacity_placebo_corrected_rigid": 1393.5126548672567,
+        "selected_source_corrected_rigid": 1366.9168367799768
+      },
+      "offline_source_admitted": true,
+      "scenario_seed_unit_count": 1,
+      "source_changed_rigid_action_count": 600,
+      "source_minus_matched_placebo": -26.595818087279895,
+      "source_minus_rigid": 35.0650560537199,
+      "source_relative_change_vs_rigid": 0.026328046830105204
+    },
+    "resco_synthetic": {
+      "arm_mean_costs": {
+        "phase_pressure": 31.1663272233537,
+        "rigid_target_only": 122.28852681602173,
+        "same_capacity_placebo_corrected_rigid": 97.28173794976239,
+        "selected_source_corrected_rigid": 100.58520027155465
+      },
+      "offline_source_admitted": true,
+      "scenario_seed_unit_count": 1,
+      "source_changed_rigid_action_count": 362,
+      "source_minus_matched_placebo": 3.303462321792267,
+      "source_minus_rigid": -21.703326544467075,
+      "source_relative_change_vs_rigid": -0.17747639218124586
+    }
+  },
+  "claim_boundary": "V150L is a seven-city development result. A pass authorizes a new-city confirmation but is not itself independent external evidence.",
+  "created_at_utc": "2026-09-08T03:37:37.945834+00:00",
+  "development_gate": {
+    "decision": "authorize_v150l_full_development_matrix",
+    "operational_checks": {
+      "all_rollouts_complete": true,
+      "all_source_arms_entered_originator": true,
+      "exact_rigid_fallback_for_offline_rejected_cities": true,
+      "selected_source_collision_incidents_noninferior_to_rigid_and_phase": true,
+      "zero_teleports_all_arms": true
+    },
+    "passed": true,
+    "performance_checks": {}
+  },
+  "exact_fallback_failures": [],
+  "inference_unit": "city",
+  "observed_collision_rows": [
+    {
+      "collision_events": 40,
+      "collision_incidents": 20,
+      "identity": [
+        "cologne",
+        "cologne1",
+        41242,
+        "phase_pressure"
+      ]
+    },
+    {
+      "collision_events": 2,
+      "collision_incidents": 2,
+      "identity": [
+        "resco_synthetic",
+        "grid4x4",
+        41242,
+        "phase_pressure"
+      ]
+    },
+    {
+      "collision_events": 2,
+      "collision_incidents": 1,
+      "identity": [
+        "resco_synthetic",
+        "grid4x4",
+        41242,
+        "same_capacity_placebo_corrected_rigid"
+      ]
+    }
+  ],
+  "offline_admitted_source_cities": [
+    "cologne",
+    "new_york",
+    "resco_synthetic"
+  ],
+  "originator_failures": [],
+  "paired_collision_audit": [
+    {
+      "city": "atlanta",
+      "noninferior_to_phase_pressure": true,
+      "noninferior_to_rigid": true,
+      "passed": true,
+      "phase_pressure_collision_incidents": 0,
+      "rigid_collision_incidents": 0,
+      "scenario": "atlanta_1x5",
+      "seed": 41242,
+      "selected_source_collision_incidents": 0
+    },
+    {
+      "city": "cologne",
+      "noninferior_to_phase_pressure": true,
+      "noninferior_to_rigid": true,
+      "passed": true,
+      "phase_pressure_collision_incidents": 20,
+      "rigid_collision_incidents": 0,
+      "scenario": "cologne1",
+      "seed": 41242,
+      "selected_source_collision_incidents": 0
+    },
+    {
+      "city": "new_york",
+      "noninferior_to_phase_pressure": true,
+      "noninferior_to_rigid": true,
+      "passed": true,
+      "phase_pressure_collision_incidents": 0,
+      "rigid_collision_incidents": 0,
+      "scenario": "manhattan_28x7",
+      "seed": 41242,
+      "selected_source_collision_incidents": 0
+    },
+    {
+      "city": "resco_synthetic",
+      "noninferior_to_phase_pressure": true,
+      "noninferior_to_rigid": true,
+      "passed": true,
+      "phase_pressure_collision_incidents": 2,
+      "rigid_collision_incidents": 0,
+      "scenario": "grid4x4",
+      "seed": 41242,
+      "selected_source_collision_incidents": 0
+    }
+  ],
+  "paired_collision_failures": [],
+  "primary_metric": "mean_tripinfo_waiting_time",
+  "protocol": "tsc-v150l-state-conditioned-source-closed-loop-aggregate-v3",
+  "rollout_count": 16,
+  "scenario_seed_unit_count": 4,
+  "scientific_status": "seven-city-smoke-development-aggregate",
+  "source_changed_rigid_action_count": 964,
+  "stage": "smoke",
+  "teleport_failures": []
+}

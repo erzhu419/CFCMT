@@ -222,7 +222,7 @@ def select_city_budget_groups(
     if len(selected) != int(budget) or len(set(selected)) != int(budget):
         raise ValueError(f"{city}: V143 B{budget} group selection is incomplete")
     return tuple(sorted(selected)), {
-        "protocol": "city-scenario-seed-balanced-coverage-first-b25-v1",
+        "protocol": f"city-scenario-seed-balanced-coverage-first-b{int(budget)}-v1",
         "city": str(city),
         "budget": int(budget),
         "selection_seed": int(SELECTION_SEED),

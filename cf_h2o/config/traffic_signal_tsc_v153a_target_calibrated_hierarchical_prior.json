@@ -1,0 +1,45 @@
+{
+  "protocol": "tsc-v153a-target-calibrated-hierarchical-prior-v3",
+  "corrects": "tsc-v153a-target-calibrated-hierarchical-prior-target-v2",
+  "feature_binding": "stored_feature_names",
+  "redeveloped_after": "tsc-v152a-hierarchical-mechanism-prior-aggregate-v1",
+  "target_city_groups": [
+    "atlanta",
+    "cologne",
+    "hangzhou",
+    "ingolstadt",
+    "new_york",
+    "resco_synthetic",
+    "salt_lake_city"
+  ],
+  "target_budget": 100,
+  "target_selector_label_group_count": 100,
+  "target_evaluation_label_count": 0,
+  "prior_protocol": "equal-city-median-coefficient-adaptive-precision-v1",
+  "prior_strength_grid": [0.005, 0.01, 0.025, 0.05, 0.1],
+  "candidate_mechanism_block_count": 6,
+  "selector": {
+    "protocol": "five-fold-complete-selector-source-identity-audit-v3",
+    "fold_count": 5,
+    "outer_training_group_count": 80,
+    "inner_training_group_count": 60,
+    "inner_fit_excludes_outer_heldout": true,
+    "selection_rule": "maximize_worst_comparator_mean_gain",
+    "minimum_mean_gain_each_comparison": 0.0005,
+    "minimum_nondegrading_folds_each_comparison": 4,
+    "minimum_intervention_groups": 5,
+    "target_evaluation_excluded": true
+  },
+  "source_null_fallback": "bitwise_exact_rigid_cfcmt",
+  "matched_placebo_pipeline": "same_candidate_same_target_folds_with_source_labels_permuted_by_stable_city_identity",
+  "zero_centred_control": "same_candidate_same_target_folds_and_source_derived_precision_with_zero_prior_center",
+  "development_gate": {
+    "minimum_admitted_target_cities": 2,
+    "require_no_target_city_regression": true,
+    "require_every_admitted_target_improve_rigid": true,
+    "require_every_admitted_target_beat_matched_placebo": true,
+    "require_every_admitted_target_beat_zero_centred_prior": true,
+    "require_exact_fallback_for_rejected_targets": true
+  },
+  "claim_boundary": "Seven-city B100 few-shot target-adaptation development test; target evaluation groups are untouched, but target adaptation labels select the prior."
+}

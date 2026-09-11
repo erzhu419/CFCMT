@@ -70,3 +70,21 @@ def test_full_state_reload_uses_network_configuration_and_saved_time(tmp_path):
     assert arguments[arguments.index("--load-state") + 1] == str(state)
     assert arguments[arguments.index("--begin") + 1] == "63.50000000"
     assert "sumo" not in arguments
+
+
+def test_rng_free_state_reload_uses_new_future_seed(tmp_path):
+    calls = []
+    api = SimpleNamespace(load=lambda arguments: calls.append(arguments))
+
+    _reload_sumo_state(
+        api,
+        tmp_path / "scenario.sumocfg",
+        9102,
+        tmp_path / "state_without_rng.xml",
+        begin_time=300.0,
+        save_state_rng=False,
+    )
+
+    arguments = calls[0]
+    assert arguments[arguments.index("--seed") + 1] == "9102"
+    assert arguments[arguments.index("--save-state.rng") + 1] == "false"

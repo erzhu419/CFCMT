@@ -1,0 +1,1455 @@
+{
+  "protocol": "tsc-v154o-cologne-training-label-restore-audit-summary-v1",
+  "status": "PASS",
+  "finding": "The original collector exactly reproduces the saved labels, but their action rankings differ from native-prefix outcomes in the same frozen training groups.",
+  "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+  "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+  "frozen_threshold": {
+    "protocol": "tsc-v154l-cologne-rigid-oof-threshold-v1",
+    "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+    "fit_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/fit_v2/result.json",
+    "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/fit_v2/model.pkl",
+    "threshold": 0.3580414874633295,
+    "mode": "minimum_advantage",
+    "comparison": "predicted_advantage > threshold + 1e-12",
+    "selection_data": "Only 100 seed-held-out predictions from the original B100 training roster",
+    "calibration_mean_cost": 0.7573541790453554
+  },
+  "selection_rule": "Within each original training seed, sort the original B100 groups by interval; select indices0,(n-1)//2,n-1. No labels or predictions used for selection.",
+  "label_contract": {
+    "mode": "halted_queue",
+    "horizon_sec": 450,
+    "control_interval_sec": 10,
+    "controlled_lane_count": 8,
+    "aggregation": "Mean of 450 post-step native SUMO halting counts summed over the eight controlled lanes and divided by eight.",
+    "first_interval": "Request one of the eight stored candidate phases through the unchanged safe executor for ten seconds.",
+    "continuation": "PhasePressure for the remaining440 seconds of every action branch."
+  },
+  "new_model_fit_count": 0,
+  "threshold_retuned": false,
+  "summary": {
+    "planned_groups": 9,
+    "valid_groups": 9,
+    "native_action_rows": 72,
+    "non_reference_action_rows": 63,
+    "groups_with_changed_costs": 8,
+    "groups_with_changed_optimal_set": 8,
+    "groups_with_disjoint_optimal_sets": 8,
+    "groups_with_strict_sign_flips": 7,
+    "strict_sign_flip_actions": 23,
+    "sign_change_actions_including_ties": 24,
+    "mean_absolute_cost_error": 0.06340277777777777,
+    "max_absolute_cost_error": 0.3819444444444443,
+    "mean_native_regret_of_stored_optimum_min": 0.07712962962962962,
+    "mean_native_regret_of_stored_optimum_max": 0.07712962962962962,
+    "max_original_collector_reproduction_error": 0.0,
+    "native_collision_events": 0,
+    "native_starting_teleports": 0,
+    "short_history_controls_matching_old_labels": 3
+  },
+  "per_period": {
+    "early": {
+      "mean_absolute_cost_error": 0.07104166666666666,
+      "mean_native_regret_of_stored_optimum": 0.0692592592592592
+    },
+    "middle": {
+      "mean_absolute_cost_error": 0.11526620370370369,
+      "mean_native_regret_of_stored_optimum": 0.16194444444444445
+    },
+    "late": {
+      "mean_absolute_cost_error": 0.0039004629629629636,
+      "mean_native_regret_of_stored_optimum": 0.00018518518518518406
+    }
+  },
+  "groups": [
+    {
+      "group_id": "cologne1:seed2027:6:cluster_357187_359543",
+      "seed": 2027,
+      "position": "early",
+      "interval_index": 6,
+      "time_sec": 25260,
+      "bank_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/collection/cologne1/seed_2027/bank.npz",
+      "candidate_states": [
+        "srrrrrrrrrGGGGGrrrrr",
+        "GGGGGrrrrrsrrrrrrrrr",
+        "GGGggrrrrrGGGggrrrrr",
+        "rrrGGrrrrrrrrGGrrrrr",
+        "rrrrrGGGGGrrrrrsrrrr",
+        "rrrrrsrrrrrrrrrGGGGG",
+        "rrrrrGGGggrrrrrGGGgg",
+        "rrrrrrrrGGrrrrrrrrGG"
+      ],
+      "reference_index": 1,
+      "stored_costs": [
+        1.2383333333333333,
+        0.9922222222222222,
+        0.9927777777777778,
+        1.0330555555555556,
+        1.1302777777777777,
+        1.1130555555555555,
+        0.9869444444444444,
+        1.1130555555555555
+      ],
+      "native_costs": [
+        1.1694444444444445,
+        0.9719444444444445,
+        0.9725,
+        1.103888888888889,
+        1.0305555555555554,
+        1.06,
+        1.0486111111111112,
+        1.06
+      ],
+      "comparison": {
+        "mean_absolute_cost_error": 0.05597222222222217,
+        "max_absolute_cost_error": 0.09972222222222227,
+        "cost_deltas": [
+          -0.06888888888888878,
+          -0.020277777777777728,
+          -0.020277777777777728,
+          0.0708333333333333,
+          -0.09972222222222227,
+          -0.05305555555555541,
+          0.06166666666666676,
+          -0.05305555555555541
+        ],
+        "stored_advantages": [
+          -0.24611111111111106,
+          0.0,
+          -0.0005555555555555314,
+          -0.04083333333333339,
+          -0.1380555555555555,
+          -0.12083333333333324,
+          0.005277777777777826,
+          -0.12083333333333324
+        ],
+        "native_advantages": [
+          -0.1975,
+          0.0,
+          -0.0005555555555555314,
+          -0.13194444444444442,
+          -0.05861111111111095,
+          -0.08805555555555555,
+          -0.07666666666666666,
+          -0.08805555555555555
+        ],
+        "strict_sign_flip_indices": [
+          6
+        ],
+        "any_advantage_sign_change_indices": [
+          6
+        ],
+        "stored_optimal_indices": [
+          6
+        ],
+        "native_optimal_indices": [
+          1
+        ],
+        "optimal_set_changed": true,
+        "disjoint_optimal_sets": true,
+        "any_cost_changed": true
+      },
+      "native_regret_of_stored_optimum_min": 0.07666666666666666,
+      "native_regret_of_stored_optimum_max": 0.07666666666666666,
+      "original_collector_reproduction_error": 0.0,
+      "native_state_and_safety_valid": true,
+      "short_history_control": {
+        "phase": "GGGGGrrrrrsrrrrrrrrr",
+        "restoration": {
+          "passed": true,
+          "mismatch_count": 0,
+          "mismatches": [],
+          "max_position_or_speed_difference": 4.754269866680261e-09
+        },
+        "original_pending": 4,
+        "restored_pending": 0,
+        "status": "PASS",
+        "cost": 0.97,
+        "sample_count": 450,
+        "first_interval_costs": [
+          0.25,
+          0.25,
+          0.375,
+          0.25,
+          0.0,
+          0.125,
+          0.125,
+          0.25,
+          0.375,
+          0.25
+        ],
+        "end_time_sec": 25710.0,
+        "one_step": {
+          "total_q": 4.808098342283035,
+          "green_q": 0.35030606724938074,
+          "red_q": 4.457792275033654,
+          "green_down_occ": 0.03201035498195741,
+          "mean_speed": 11.445003535595532
+        },
+        "terminal": {
+          "total_q": 15.737519167984821,
+          "green_q": 3.751530336246904,
+          "red_q": 11.985988831737918,
+          "green_down_occ": 0.01429671318212357,
+          "mean_speed": 4.494718799108828
+        },
+        "safety": {
+          "raw_collision_events": 0,
+          "collision_event_steps": 0,
+          "unique_collision_incidents": 0,
+          "starting_teleports": 0,
+          "ending_teleports": 0,
+          "collision_samples": [],
+          "no_teleport_passed": true
+        },
+        "stored_label_exact": false,
+        "full_horizon": true,
+        "native_minus_restored_cost": 0.0019444444444445264,
+        "first_interval_max_difference": 0.0
+      },
+      "initial_group_status_preserved": "INVALID"
+    },
+    {
+      "group_id": "cologne1:seed2027:211:cluster_357187_359543",
+      "seed": 2027,
+      "position": "middle",
+      "interval_index": 211,
+      "time_sec": 27310,
+      "bank_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/collection/cologne1/seed_2027/bank.npz",
+      "candidate_states": [
+        "srrrrrrrrrGGGGGrrrrr",
+        "GGGGGrrrrrsrrrrrrrrr",
+        "GGGggrrrrrGGGggrrrrr",
+        "rrrGGrrrrrrrrGGrrrrr",
+        "rrrrrGGGGGrrrrrsrrrr",
+        "rrrrrsrrrrrrrrrGGGGG",
+        "rrrrrGGGggrrrrrGGGgg",
+        "rrrrrrrrGGrrrrrrrrGG"
+      ],
+      "reference_index": 2,
+      "stored_costs": [
+        0.8411111111111111,
+        0.7741666666666667,
+        0.8502777777777778,
+        0.6572222222222223,
+        0.6572222222222223,
+        0.8438888888888889,
+        0.8438888888888889,
+        0.8438888888888889
+      ],
+      "native_costs": [
+        0.8036111111111112,
+        0.8408333333333333,
+        0.7780555555555555,
+        1.0391666666666666,
+        1.0391666666666666,
+        0.9094444444444445,
+        0.8427777777777777,
+        0.9094444444444445
+      ],
+      "comparison": {
+        "mean_absolute_cost_error": 0.13406249999999997,
+        "max_absolute_cost_error": 0.3819444444444443,
+        "cost_deltas": [
+          -0.03749999999999998,
+          0.06666666666666665,
+          -0.0722222222222223,
+          0.3819444444444443,
+          0.3819444444444443,
+          0.06555555555555559,
+          -0.0011111111111111738,
+          0.06555555555555559
+        ],
+        "stored_advantages": [
+          0.009166666666666656,
+          0.07611111111111113,
+          0.0,
+          0.19305555555555554,
+          0.19305555555555554,
+          0.006388888888888888,
+          0.006388888888888888,
+          0.006388888888888888
+        ],
+        "native_advantages": [
+          -0.025555555555555665,
+          -0.06277777777777782,
+          0.0,
+          -0.26111111111111107,
+          -0.26111111111111107,
+          -0.131388888888889,
+          -0.06472222222222224,
+          -0.131388888888889
+        ],
+        "strict_sign_flip_indices": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "any_advantage_sign_change_indices": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "stored_optimal_indices": [
+          3,
+          4
+        ],
+        "native_optimal_indices": [
+          2
+        ],
+        "optimal_set_changed": true,
+        "disjoint_optimal_sets": true,
+        "any_cost_changed": true
+      },
+      "native_regret_of_stored_optimum_min": 0.26111111111111107,
+      "native_regret_of_stored_optimum_max": 0.26111111111111107,
+      "original_collector_reproduction_error": 0.0,
+      "native_state_and_safety_valid": true,
+      "short_history_control": {
+        "phase": "GGGggrrrrrGGGggrrrrr",
+        "restoration": {
+          "passed": true,
+          "mismatch_count": 0,
+          "mismatches": [],
+          "max_position_or_speed_difference": 4.973175649070072e-09
+        },
+        "original_pending": 0,
+        "restored_pending": 0,
+        "status": "PASS",
+        "cost": 0.9538888888888889,
+        "sample_count": 450,
+        "first_interval_costs": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_time_sec": 27760.0,
+        "one_step": {
+          "total_q": 0.7028976776640383,
+          "green_q": 0.35030606724938074,
+          "red_q": 0.35259161041465764,
+          "green_down_occ": 0.013591537256309651,
+          "mean_speed": 15.1918962883913
+        },
+        "terminal": {
+          "total_q": 27.1929918192734,
+          "green_q": 16.373737364223132,
+          "red_q": 10.819254455050269,
+          "green_down_occ": 0.015575511431842458,
+          "mean_speed": 8.10730957859311
+        },
+        "safety": {
+          "raw_collision_events": 0,
+          "collision_event_steps": 0,
+          "unique_collision_incidents": 0,
+          "starting_teleports": 0,
+          "ending_teleports": 0,
+          "collision_samples": [],
+          "no_teleport_passed": true
+        },
+        "stored_label_exact": false,
+        "full_horizon": true,
+        "native_minus_restored_cost": -0.1758333333333334,
+        "first_interval_max_difference": 0.0
+      },
+      "initial_group_status_preserved": "INVALID"
+    },
+    {
+      "group_id": "cologne1:seed2027:356:cluster_357187_359543",
+      "seed": 2027,
+      "position": "late",
+      "interval_index": 356,
+      "time_sec": 28760,
+      "bank_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/collection/cologne1/seed_2027/bank.npz",
+      "candidate_states": [
+        "srrrrrrrrrGGGGGrrrrr",
+        "GGGGGrrrrrsrrrrrrrrr",
+        "GGGggrrrrrGGGggrrrrr",
+        "rrrGGrrrrrrrrGGrrrrr",
+        "rrrrrGGGGGrrrrrsrrrr",
+        "rrrrrsrrrrrrrrrGGGGG",
+        "rrrrrGGGggrrrrrGGGgg",
+        "rrrrrrrrGGrrrrrrrrGG"
+      ],
+      "reference_index": 5,
+      "stored_costs": [
+        0.04805555555555555,
+        0.06,
+        0.052222222222222225,
+        0.051111111111111114,
+        0.0675,
+        0.05361111111111111,
+        0.05333333333333334,
+        0.05361111111111111
+      ],
+      "native_costs": [
+        0.04833333333333333,
+        0.06166666666666667,
+        0.05277777777777778,
+        0.04805555555555555,
+        0.06666666666666667,
+        0.06861111111111111,
+        0.06861111111111111,
+        0.06861111111111111
+      ],
+      "comparison": {
+        "mean_absolute_cost_error": 0.006458333333333334,
+        "max_absolute_cost_error": 0.015277777777777772,
+        "cost_deltas": [
+          0.00027777777777777957,
+          0.0016666666666666705,
+          0.0005555555555555522,
+          -0.0030555555555555614,
+          -0.0008333333333333387,
+          0.015,
+          0.015277777777777772,
+          0.015
+        ],
+        "stored_advantages": [
+          0.005555555555555557,
+          -0.006388888888888888,
+          0.001388888888888884,
+          0.0024999999999999953,
+          -0.013888888888888895,
+          0.0,
+          0.00027777777777777263,
+          0.0
+        ],
+        "native_advantages": [
+          0.020277777777777777,
+          0.006944444444444441,
+          0.01583333333333333,
+          0.020555555555555556,
+          0.001944444444444443,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "strict_sign_flip_indices": [
+          1,
+          4
+        ],
+        "any_advantage_sign_change_indices": [
+          1,
+          4,
+          6
+        ],
+        "stored_optimal_indices": [
+          0
+        ],
+        "native_optimal_indices": [
+          3
+        ],
+        "optimal_set_changed": true,
+        "disjoint_optimal_sets": true,
+        "any_cost_changed": true
+      },
+      "native_regret_of_stored_optimum_min": 0.00027777777777777957,
+      "native_regret_of_stored_optimum_max": 0.00027777777777777957,
+      "original_collector_reproduction_error": 0.0,
+      "native_state_and_safety_valid": true,
+      "short_history_control": {
+        "phase": "rrrrrsrrrrrrrrrGGGGG",
+        "restoration": {
+          "passed": true,
+          "mismatch_count": 0,
+          "mismatches": [],
+          "max_position_or_speed_difference": 4.983850665496448e-09
+        },
+        "original_pending": 0,
+        "restored_pending": 0,
+        "status": "PASS",
+        "cost": 0.05361111111111111,
+        "sample_count": 450,
+        "first_interval_costs": [
+          0.25,
+          0.125,
+          0.25,
+          0.125,
+          0.0,
+          0.25,
+          0.375,
+          0.375,
+          0.5,
+          0.5
+        ],
+        "end_time_sec": 29210.0,
+        "one_step": {
+          "total_q": 7.1645771441338875,
+          "green_q": 0.0,
+          "red_q": 7.1645771441338875,
+          "green_down_occ": 0.004061930267048299,
+          "mean_speed": 10.060985216693874
+        },
+        "terminal": {
+          "total_q": -7.765154919567454e-19,
+          "green_q": 0.0,
+          "red_q": -7.765154919567454e-19,
+          "green_down_occ": 0.0,
+          "mean_speed": 16.665
+        },
+        "safety": {
+          "raw_collision_events": 0,
+          "collision_event_steps": 0,
+          "unique_collision_incidents": 0,
+          "starting_teleports": 0,
+          "ending_teleports": 0,
+          "collision_samples": [],
+          "no_teleport_passed": true
+        },
+        "stored_label_exact": true,
+        "full_horizon": true,
+        "native_minus_restored_cost": 0.015,
+        "first_interval_max_difference": 0.0
+      },
+      "initial_group_status_preserved": "PASS"
+    },
+    {
+      "group_id": "cologne1:seed3037:6:cluster_357187_359543",
+      "seed": 3037,
+      "position": "early",
+      "interval_index": 6,
+      "time_sec": 25260,
+      "bank_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/collection/cologne1/seed_3037/bank.npz",
+      "candidate_states": [
+        "srrrrrrrrrGGGGGrrrrr",
+        "GGGGGrrrrrsrrrrrrrrr",
+        "GGGggrrrrrGGGggrrrrr",
+        "rrrGGrrrrrrrrGGrrrrr",
+        "rrrrrGGGGGrrrrrsrrrr",
+        "rrrrrsrrrrrrrrrGGGGG",
+        "rrrrrGGGggrrrrrGGGgg",
+        "rrrrrrrrGGrrrrrrrrGG"
+      ],
+      "reference_index": 1,
+      "stored_costs": [
+        1.3027777777777778,
+        1.1177777777777778,
+        1.1177777777777778,
+        1.3027777777777778,
+        1.113888888888889,
+        1.3027777777777778,
+        1.0855555555555556,
+        0.9455555555555556
+      ],
+      "native_costs": [
+        1.2113888888888888,
+        1.0638888888888889,
+        1.0638888888888889,
+        1.2113888888888888,
+        1.0108333333333333,
+        1.2113888888888888,
+        1.01,
+        1.0675
+      ],
+      "comparison": {
+        "mean_absolute_cost_error": 0.08531250000000003,
+        "max_absolute_cost_error": 0.1219444444444443,
+        "cost_deltas": [
+          -0.09138888888888896,
+          -0.053888888888888875,
+          -0.053888888888888875,
+          -0.09138888888888896,
+          -0.10305555555555568,
+          -0.09138888888888896,
+          -0.0755555555555556,
+          0.1219444444444443
+        ],
+        "stored_advantages": [
+          -0.18500000000000005,
+          0.0,
+          0.0,
+          -0.18500000000000005,
+          0.0038888888888888307,
+          -0.18500000000000005,
+          0.03222222222222215,
+          0.17222222222222217
+        ],
+        "native_advantages": [
+          -0.14749999999999996,
+          0.0,
+          0.0,
+          -0.14749999999999996,
+          0.053055555555555634,
+          -0.14749999999999996,
+          0.053888888888888875,
+          -0.0036111111111110095
+        ],
+        "strict_sign_flip_indices": [
+          7
+        ],
+        "any_advantage_sign_change_indices": [
+          7
+        ],
+        "stored_optimal_indices": [
+          7
+        ],
+        "native_optimal_indices": [
+          6
+        ],
+        "optimal_set_changed": true,
+        "disjoint_optimal_sets": true,
+        "any_cost_changed": true
+      },
+      "native_regret_of_stored_optimum_min": 0.057499999999999885,
+      "native_regret_of_stored_optimum_max": 0.057499999999999885,
+      "original_collector_reproduction_error": 0.0,
+      "native_state_and_safety_valid": true,
+      "short_history_control": {
+        "phase": "GGGGGrrrrrsrrrrrrrrr",
+        "restoration": {
+          "passed": true,
+          "mismatch_count": 0,
+          "mismatches": [],
+          "max_position_or_speed_difference": 4.879872506080574e-09
+        },
+        "original_pending": 6,
+        "restored_pending": 0,
+        "status": "PASS",
+        "cost": 1.2177777777777778,
+        "sample_count": 450,
+        "first_interval_costs": [
+          0.375,
+          0.25,
+          0.25,
+          0.375,
+          0.25,
+          0.625,
+          0.375,
+          0.375,
+          0.5,
+          0.25
+        ],
+        "end_time_sec": 25710.0,
+        "one_step": {
+          "total_q": 5.158404409532416,
+          "green_q": 0.7006121344987615,
+          "red_q": 4.457792275033654,
+          "green_down_occ": 0.0,
+          "mean_speed": 11.460255705126649
+        },
+        "terminal": {
+          "total_q": 26.54904511429325,
+          "green_q": 4.751530336246904,
+          "red_q": 21.79751477804635,
+          "green_down_occ": 0.018075544795236428,
+          "mean_speed": 3.6296275263851325
+        },
+        "safety": {
+          "raw_collision_events": 0,
+          "collision_event_steps": 0,
+          "unique_collision_incidents": 0,
+          "starting_teleports": 0,
+          "ending_teleports": 0,
+          "collision_samples": [],
+          "no_teleport_passed": true
+        },
+        "stored_label_exact": false,
+        "full_horizon": true,
+        "native_minus_restored_cost": -0.15388888888888896,
+        "first_interval_max_difference": 0.0
+      },
+      "initial_group_status_preserved": "INVALID"
+    },
+    {
+      "group_id": "cologne1:seed3037:211:cluster_357187_359543",
+      "seed": 3037,
+      "position": "middle",
+      "interval_index": 211,
+      "time_sec": 27310,
+      "bank_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/collection/cologne1/seed_3037/bank.npz",
+      "candidate_states": [
+        "srrrrrrrrrGGGGGrrrrr",
+        "GGGGGrrrrrsrrrrrrrrr",
+        "GGGggrrrrrGGGggrrrrr",
+        "rrrGGrrrrrrrrGGrrrrr",
+        "rrrrrGGGGGrrrrrsrrrr",
+        "rrrrrsrrrrrrrrrGGGGG",
+        "rrrrrGGGggrrrrrGGGgg",
+        "rrrrrrrrGGrrrrrrrrGG"
+      ],
+      "reference_index": 2,
+      "stored_costs": [
+        0.8777777777777778,
+        0.8036111111111112,
+        1.1630555555555555,
+        0.8013888888888889,
+        0.8013888888888889,
+        0.8463888888888889,
+        0.7477777777777778,
+        0.7694444444444445
+      ],
+      "native_costs": [
+        0.8269444444444445,
+        0.7519444444444444,
+        0.8577777777777778,
+        0.8333333333333334,
+        0.8333333333333334,
+        0.7538888888888889,
+        0.7538888888888889,
+        0.8288888888888889
+      ],
+      "comparison": {
+        "mean_absolute_cost_error": 0.07871527777777777,
+        "max_absolute_cost_error": 0.30527777777777776,
+        "cost_deltas": [
+          -0.050833333333333286,
+          -0.05166666666666675,
+          -0.30527777777777776,
+          0.03194444444444444,
+          0.03194444444444444,
+          -0.09249999999999992,
+          0.006111111111111178,
+          0.05944444444444441
+        ],
+        "stored_advantages": [
+          0.28527777777777774,
+          0.35944444444444434,
+          0.0,
+          0.3616666666666666,
+          0.3616666666666666,
+          0.31666666666666665,
+          0.41527777777777775,
+          0.393611111111111
+        ],
+        "native_advantages": [
+          0.030833333333333268,
+          0.10583333333333333,
+          0.0,
+          0.02444444444444438,
+          0.02444444444444438,
+          0.10388888888888881,
+          0.10388888888888881,
+          0.028888888888888853
+        ],
+        "strict_sign_flip_indices": [],
+        "any_advantage_sign_change_indices": [],
+        "stored_optimal_indices": [
+          6
+        ],
+        "native_optimal_indices": [
+          1
+        ],
+        "optimal_set_changed": true,
+        "disjoint_optimal_sets": true,
+        "any_cost_changed": true
+      },
+      "native_regret_of_stored_optimum_min": 0.0019444444444445264,
+      "native_regret_of_stored_optimum_max": 0.0019444444444445264,
+      "original_collector_reproduction_error": 0.0,
+      "native_state_and_safety_valid": true,
+      "short_history_control": {
+        "phase": "GGGggrrrrrGGGggrrrrr",
+        "restoration": {
+          "passed": true,
+          "mismatch_count": 0,
+          "mismatches": [],
+          "max_position_or_speed_difference": 4.889997740065155e-09
+        },
+        "original_pending": 0,
+        "restored_pending": 0,
+        "status": "PASS",
+        "cost": 0.8375,
+        "sample_count": 450,
+        "first_interval_costs": [
+          0.125,
+          0.125,
+          0.125,
+          0.125,
+          0.125,
+          0.125,
+          0.125,
+          0.125,
+          0.125,
+          0.125
+        ],
+        "end_time_sec": 27760.0,
+        "one_step": {
+          "total_q": 2.405795355328077,
+          "green_q": 0.7006121344987615,
+          "red_q": 1.7051832208293154,
+          "green_down_occ": 0.007569128292724218,
+          "mean_speed": 12.701361619815962
+        },
+        "terminal": {
+          "total_q": 18.7839539962161,
+          "green_q": 13.668404333728152,
+          "red_q": 5.115549662487946,
+          "green_down_occ": 0.004014939309056956,
+          "mean_speed": 8.192320926450527
+        },
+        "safety": {
+          "raw_collision_events": 0,
+          "collision_event_steps": 0,
+          "unique_collision_incidents": 0,
+          "starting_teleports": 0,
+          "ending_teleports": 0,
+          "collision_samples": [],
+          "no_teleport_passed": true
+        },
+        "stored_label_exact": false,
+        "full_horizon": true,
+        "native_minus_restored_cost": 0.020277777777777728,
+        "first_interval_max_difference": 0.0
+      },
+      "initial_group_status_preserved": "INVALID"
+    },
+    {
+      "group_id": "cologne1:seed3037:356:cluster_357187_359543",
+      "seed": 3037,
+      "position": "late",
+      "interval_index": 356,
+      "time_sec": 28760,
+      "bank_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/collection/cologne1/seed_3037/bank.npz",
+      "candidate_states": [
+        "srrrrrrrrrGGGGGrrrrr",
+        "GGGGGrrrrrsrrrrrrrrr",
+        "GGGggrrrrrGGGggrrrrr",
+        "rrrGGrrrrrrrrGGrrrrr",
+        "rrrrrGGGGGrrrrrsrrrr",
+        "rrrrrsrrrrrrrrrGGGGG",
+        "rrrrrGGGggrrrrrGGGgg",
+        "rrrrrrrrGGrrrrrrrrGG"
+      ],
+      "reference_index": 5,
+      "stored_costs": [
+        0.04861111111111111,
+        0.10861111111111112,
+        0.049166666666666664,
+        0.0725,
+        0.09388888888888888,
+        0.10527777777777778,
+        0.08083333333333333,
+        0.10527777777777778
+      ],
+      "native_costs": [
+        0.04388888888888889,
+        0.10083333333333333,
+        0.043611111111111114,
+        0.06666666666666667,
+        0.09472222222222222,
+        0.1111111111111111,
+        0.08638888888888889,
+        0.1111111111111111
+      ],
+      "comparison": {
+        "mean_absolute_cost_error": 0.005243055555555556,
+        "max_absolute_cost_error": 0.007777777777777786,
+        "cost_deltas": [
+          -0.004722222222222225,
+          -0.007777777777777786,
+          -0.00555555555555555,
+          -0.005833333333333329,
+          0.0008333333333333387,
+          0.005833333333333329,
+          0.005555555555555564,
+          0.005833333333333329
+        ],
+        "stored_advantages": [
+          0.056666666666666664,
+          -0.003333333333333341,
+          0.05611111111111111,
+          0.03277777777777778,
+          0.011388888888888893,
+          0.0,
+          0.02444444444444445,
+          0.0
+        ],
+        "native_advantages": [
+          0.06722222222222221,
+          0.010277777777777775,
+          0.06749999999999999,
+          0.04444444444444444,
+          0.016388888888888883,
+          0.0,
+          0.024722222222222215,
+          0.0
+        ],
+        "strict_sign_flip_indices": [
+          1
+        ],
+        "any_advantage_sign_change_indices": [
+          1
+        ],
+        "stored_optimal_indices": [
+          0
+        ],
+        "native_optimal_indices": [
+          2
+        ],
+        "optimal_set_changed": true,
+        "disjoint_optimal_sets": true,
+        "any_cost_changed": true
+      },
+      "native_regret_of_stored_optimum_min": 0.00027777777777777263,
+      "native_regret_of_stored_optimum_max": 0.00027777777777777263,
+      "original_collector_reproduction_error": 0.0,
+      "native_state_and_safety_valid": true,
+      "short_history_control": {
+        "phase": "rrrrrsrrrrrrrrrGGGGG",
+        "restoration": {
+          "passed": true,
+          "mismatch_count": 0,
+          "mismatches": [],
+          "max_position_or_speed_difference": 4.845955636767485e-09
+        },
+        "original_pending": 0,
+        "restored_pending": 0,
+        "status": "PASS",
+        "cost": 0.10527777777777778,
+        "sample_count": 450,
+        "first_interval_costs": [
+          0.25,
+          0.125,
+          0.25,
+          0.25,
+          0.25,
+          0.5,
+          0.375,
+          0.25,
+          0.5,
+          0.25
+        ],
+        "end_time_sec": 29210.0,
+        "one_step": {
+          "total_q": 4.8142710768845065,
+          "green_q": 0.0,
+          "red_q": 4.8142710768845065,
+          "green_down_occ": 0.007920719127615678,
+          "mean_speed": 11.791583279453546
+        },
+        "terminal": {
+          "total_q": -7.765154919567454e-19,
+          "green_q": 0.0,
+          "red_q": -7.765154919567454e-19,
+          "green_down_occ": 0.0,
+          "mean_speed": 16.665
+        },
+        "safety": {
+          "raw_collision_events": 0,
+          "collision_event_steps": 0,
+          "unique_collision_incidents": 0,
+          "starting_teleports": 0,
+          "ending_teleports": 0,
+          "collision_samples": [],
+          "no_teleport_passed": true
+        },
+        "stored_label_exact": true,
+        "full_horizon": true,
+        "native_minus_restored_cost": 0.005833333333333329,
+        "first_interval_max_difference": 0.0
+      },
+      "initial_group_status_preserved": "PASS"
+    },
+    {
+      "group_id": "cologne1:seed4047:6:cluster_357187_359543",
+      "seed": 4047,
+      "position": "early",
+      "interval_index": 6,
+      "time_sec": 25260,
+      "bank_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/collection/cologne1/seed_4047/bank.npz",
+      "candidate_states": [
+        "srrrrrrrrrGGGGGrrrrr",
+        "GGGGGrrrrrsrrrrrrrrr",
+        "GGGggrrrrrGGGggrrrrr",
+        "rrrGGrrrrrrrrGGrrrrr",
+        "rrrrrGGGGGrrrrrsrrrr",
+        "rrrrrsrrrrrrrrrGGGGG",
+        "rrrrrGGGggrrrrrGGGgg",
+        "rrrrrrrrGGrrrrrrrrGG"
+      ],
+      "reference_index": 1,
+      "stored_costs": [
+        1.1669444444444443,
+        1.085,
+        1.085,
+        1.0972222222222223,
+        1.1875,
+        1.0438888888888889,
+        1.1780555555555556,
+        0.9505555555555556
+      ],
+      "native_costs": [
+        1.178611111111111,
+        1.0725,
+        1.0725,
+        1.0130555555555556,
+        1.0333333333333334,
+        1.1691666666666667,
+        1.1397222222222223,
+        1.0866666666666667
+      ],
+      "comparison": {
+        "mean_absolute_cost_error": 0.07184027777777777,
+        "max_absolute_cost_error": 0.15416666666666656,
+        "cost_deltas": [
+          0.011666666666666714,
+          -0.012499999999999956,
+          -0.012499999999999956,
+          -0.08416666666666672,
+          -0.15416666666666656,
+          0.12527777777777782,
+          -0.03833333333333333,
+          0.13611111111111107
+        ],
+        "stored_advantages": [
+          -0.08194444444444438,
+          0.0,
+          0.0,
+          -0.012222222222222356,
+          -0.10250000000000004,
+          0.0411111111111111,
+          -0.09305555555555567,
+          0.13444444444444437
+        ],
+        "native_advantages": [
+          -0.10611111111111104,
+          0.0,
+          0.0,
+          0.05944444444444441,
+          0.03916666666666657,
+          -0.09666666666666668,
+          -0.0672222222222223,
+          -0.01416666666666666
+        ],
+        "strict_sign_flip_indices": [
+          3,
+          4,
+          5,
+          7
+        ],
+        "any_advantage_sign_change_indices": [
+          3,
+          4,
+          5,
+          7
+        ],
+        "stored_optimal_indices": [
+          7
+        ],
+        "native_optimal_indices": [
+          3
+        ],
+        "optimal_set_changed": true,
+        "disjoint_optimal_sets": true,
+        "any_cost_changed": true
+      },
+      "native_regret_of_stored_optimum_min": 0.07361111111111107,
+      "native_regret_of_stored_optimum_max": 0.07361111111111107,
+      "original_collector_reproduction_error": 0.0,
+      "native_state_and_safety_valid": true,
+      "short_history_control": {
+        "phase": "GGGGGrrrrrsrrrrrrrrr",
+        "restoration": {
+          "passed": true,
+          "mismatch_count": 0,
+          "mismatches": [],
+          "max_position_or_speed_difference": 4.992761759581299e-09
+        },
+        "original_pending": 5,
+        "restored_pending": 0,
+        "status": "PASS",
+        "cost": 1.0925,
+        "sample_count": 450,
+        "first_interval_costs": [
+          0.25,
+          0.25,
+          0.375,
+          0.25,
+          0.125,
+          0.0,
+          0.125,
+          0.25,
+          0.375,
+          0.25
+        ],
+        "end_time_sec": 25710.0,
+        "one_step": {
+          "total_q": 4.808098342283035,
+          "green_q": 0.35030606724938074,
+          "red_q": 4.457792275033654,
+          "green_down_occ": 0.03201035498195741,
+          "mean_speed": 11.327322784057696
+        },
+        "terminal": {
+          "total_q": 28.30425600662603,
+          "green_q": 7.152754605244427,
+          "red_q": 21.1515014013816,
+          "green_down_occ": 0.016106748194219166,
+          "mean_speed": 4.081584820592815
+        },
+        "safety": {
+          "raw_collision_events": 0,
+          "collision_event_steps": 0,
+          "unique_collision_incidents": 0,
+          "starting_teleports": 0,
+          "ending_teleports": 0,
+          "collision_samples": [],
+          "no_teleport_passed": true
+        },
+        "stored_label_exact": false,
+        "full_horizon": true,
+        "native_minus_restored_cost": -0.020000000000000018,
+        "first_interval_max_difference": 0.0
+      },
+      "initial_group_status_preserved": "INVALID"
+    },
+    {
+      "group_id": "cologne1:seed4047:211:cluster_357187_359543",
+      "seed": 4047,
+      "position": "middle",
+      "interval_index": 211,
+      "time_sec": 27310,
+      "bank_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/collection/cologne1/seed_4047/bank.npz",
+      "candidate_states": [
+        "srrrrrrrrrGGGGGrrrrr",
+        "GGGGGrrrrrsrrrrrrrrr",
+        "GGGggrrrrrGGGggrrrrr",
+        "rrrGGrrrrrrrrGGrrrrr",
+        "rrrrrGGGGGrrrrrsrrrr",
+        "rrrrrsrrrrrrrrrGGGGG",
+        "rrrrrGGGggrrrrrGGGgg",
+        "rrrrrrrrGGrrrrrrrrGG"
+      ],
+      "reference_index": 2,
+      "stored_costs": [
+        0.9863888888888889,
+        0.9586111111111111,
+        0.9044444444444445,
+        0.9944444444444445,
+        0.9944444444444445,
+        1.0755555555555556,
+        0.9294444444444444,
+        1.0755555555555556
+      ],
+      "native_costs": [
+        0.9202777777777778,
+        0.8688888888888889,
+        1.0122222222222221,
+        0.9113888888888889,
+        0.9113888888888889,
+        0.8283333333333334,
+        0.7894444444444444,
+        0.8283333333333334
+      ],
+      "comparison": {
+        "mean_absolute_cost_error": 0.1330208333333333,
+        "max_absolute_cost_error": 0.24722222222222223,
+        "cost_deltas": [
+          -0.06611111111111112,
+          -0.08972222222222215,
+          0.10777777777777764,
+          -0.08305555555555555,
+          -0.08305555555555555,
+          -0.24722222222222223,
+          -0.14,
+          -0.24722222222222223
+        ],
+        "stored_advantages": [
+          -0.08194444444444438,
+          -0.054166666666666585,
+          0.0,
+          -0.08999999999999997,
+          -0.08999999999999997,
+          -0.1711111111111111,
+          -0.02499999999999991,
+          -0.1711111111111111
+        ],
+        "native_advantages": [
+          0.09194444444444438,
+          0.1433333333333332,
+          0.0,
+          0.10083333333333322,
+          0.10083333333333322,
+          0.18388888888888877,
+          0.22277777777777774,
+          0.18388888888888877
+        ],
+        "strict_sign_flip_indices": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "any_advantage_sign_change_indices": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "stored_optimal_indices": [
+          2
+        ],
+        "native_optimal_indices": [
+          6
+        ],
+        "optimal_set_changed": true,
+        "disjoint_optimal_sets": true,
+        "any_cost_changed": true
+      },
+      "native_regret_of_stored_optimum_min": 0.22277777777777774,
+      "native_regret_of_stored_optimum_max": 0.22277777777777774,
+      "original_collector_reproduction_error": 0.0,
+      "native_state_and_safety_valid": true,
+      "short_history_control": {
+        "phase": "GGGggrrrrrGGGggrrrrr",
+        "restoration": {
+          "passed": true,
+          "mismatch_count": 0,
+          "mismatches": [],
+          "max_position_or_speed_difference": 4.891836269393934e-09
+        },
+        "original_pending": 0,
+        "restored_pending": 0,
+        "status": "PASS",
+        "cost": 0.8125,
+        "sample_count": 450,
+        "first_interval_costs": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_time_sec": 27760.0,
+        "one_step": {
+          "total_q": 1.0539565141052836,
+          "green_q": 0.701364903690626,
+          "red_q": 0.35259161041465764,
+          "green_down_occ": 0.0046151133681265576,
+          "mean_speed": 15.211498536296823
+        },
+        "terminal": {
+          "total_q": 19.190501066537188,
+          "green_q": 12.371578275030542,
+          "red_q": 6.818922791506645,
+          "green_down_occ": 0.020572756660848398,
+          "mean_speed": 7.9232334122928325
+        },
+        "safety": {
+          "raw_collision_events": 0,
+          "collision_event_steps": 0,
+          "unique_collision_incidents": 0,
+          "starting_teleports": 0,
+          "ending_teleports": 0,
+          "collision_samples": [],
+          "no_teleport_passed": true
+        },
+        "stored_label_exact": false,
+        "full_horizon": true,
+        "native_minus_restored_cost": 0.19972222222222213,
+        "first_interval_max_difference": 0.0
+      },
+      "initial_group_status_preserved": "INVALID"
+    },
+    {
+      "group_id": "cologne1:seed4047:359:cluster_357187_359543",
+      "seed": 4047,
+      "position": "late",
+      "interval_index": 359,
+      "time_sec": 28790,
+      "bank_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/collection/cologne1/seed_4047/bank.npz",
+      "candidate_states": [
+        "srrrrrrrrrGGGGGrrrrr",
+        "GGGGGrrrrrsrrrrrrrrr",
+        "GGGggrrrrrGGGggrrrrr",
+        "rrrGGrrrrrrrrGGrrrrr",
+        "rrrrrGGGGGrrrrrsrrrr",
+        "rrrrrsrrrrrrrrrGGGGG",
+        "rrrrrGGGggrrrrrGGGgg",
+        "rrrrrrrrGGrrrrrrrrGG"
+      ],
+      "reference_index": 4,
+      "stored_costs": [
+        0.05638888888888889,
+        0.11277777777777778,
+        0.06027777777777778,
+        0.0763888888888889,
+        0.06333333333333334,
+        0.11277777777777778,
+        0.06333333333333334,
+        0.11277777777777778
+      ],
+      "native_costs": [
+        0.05638888888888889,
+        0.11277777777777778,
+        0.06027777777777778,
+        0.0763888888888889,
+        0.06333333333333334,
+        0.11277777777777778,
+        0.06333333333333334,
+        0.11277777777777778
+      ],
+      "comparison": {
+        "mean_absolute_cost_error": 0.0,
+        "max_absolute_cost_error": 0.0,
+        "cost_deltas": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "stored_advantages": [
+          0.0069444444444444475,
+          -0.049444444444444444,
+          0.0030555555555555614,
+          -0.013055555555555556,
+          0.0,
+          -0.049444444444444444,
+          0.0,
+          -0.049444444444444444
+        ],
+        "native_advantages": [
+          0.0069444444444444475,
+          -0.049444444444444444,
+          0.0030555555555555614,
+          -0.013055555555555556,
+          0.0,
+          -0.049444444444444444,
+          0.0,
+          -0.049444444444444444
+        ],
+        "strict_sign_flip_indices": [],
+        "any_advantage_sign_change_indices": [],
+        "stored_optimal_indices": [
+          0
+        ],
+        "native_optimal_indices": [
+          0
+        ],
+        "optimal_set_changed": false,
+        "disjoint_optimal_sets": false,
+        "any_cost_changed": false
+      },
+      "native_regret_of_stored_optimum_min": 0.0,
+      "native_regret_of_stored_optimum_max": 0.0,
+      "original_collector_reproduction_error": 0.0,
+      "native_state_and_safety_valid": true,
+      "short_history_control": {
+        "phase": "rrrrrGGGGGrrrrrsrrrr",
+        "restoration": {
+          "passed": true,
+          "mismatch_count": 0,
+          "mismatches": [],
+          "max_position_or_speed_difference": 4.896378413832281e-09
+        },
+        "original_pending": 2,
+        "restored_pending": 0,
+        "status": "PASS",
+        "cost": 0.06333333333333334,
+        "sample_count": 450,
+        "first_interval_costs": [
+          0.5,
+          0.625,
+          0.5,
+          0.875,
+          1.125,
+          0.75,
+          0.875,
+          1.125,
+          0.875,
+          1.25
+        ],
+        "end_time_sec": 29240.0,
+        "one_step": {
+          "total_q": 15.277214068192126,
+          "green_q": 0.702777977966562,
+          "red_q": 14.574436090225564,
+          "green_down_occ": 0.026167591945857226,
+          "mean_speed": 11.156610238598937
+        },
+        "terminal": {
+          "total_q": -7.765154919567454e-19,
+          "green_q": 0.0,
+          "red_q": -7.765154919567454e-19,
+          "green_down_occ": 0.0,
+          "mean_speed": 16.665
+        },
+        "safety": {
+          "raw_collision_events": 0,
+          "collision_event_steps": 0,
+          "unique_collision_incidents": 0,
+          "starting_teleports": 0,
+          "ending_teleports": 0,
+          "collision_samples": [],
+          "no_teleport_passed": true
+        },
+        "stored_label_exact": true,
+        "full_horizon": true,
+        "native_minus_restored_cost": 0.0,
+        "first_interval_max_difference": 0.0
+      },
+      "initial_group_status_preserved": "PASS"
+    }
+  ],
+  "execution": {
+    "native_tasks": [
+      "t91785",
+      "t91786",
+      "t91787"
+    ],
+    "collector_replay_tasks": [
+      "t91805",
+      "t91806",
+      "t91807"
+    ],
+    "native_branches": 72,
+    "short_history_pp_controls": 9,
+    "original_collector_action_rows": 72,
+    "original_collector_total_restores": 75,
+    "runner_elapsed_sec_total": 106.42935346718878,
+    "retrieved_bytes_total": 174017,
+    "retrieved_files": [
+      "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154o_cologne_training_label_restore_audit_20260909/audit/seed_2027/result.json",
+      "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154o_cologne_training_label_restore_audit_20260909/audit/seed_3037/result.json",
+      "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154o_cologne_training_label_restore_audit_20260909/audit/seed_4047/result.json",
+      "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154o_cologne_training_label_restore_audit_20260909/collector_replay_v1/seed_2027/result.json",
+      "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154o_cologne_training_label_restore_audit_20260909/collector_replay_v1/seed_3037/result.json",
+      "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154o_cologne_training_label_restore_audit_20260909/collector_replay_v1/seed_4047/result.json"
+    ],
+    "focused_tests_passed": 10
+  },
+  "preserved_failed_controls": "The three initial runner results remain INVALID because six shortened-history PP restore controls do not reproduce their old labels. The final comparison reuses only their fully matched, complete and safe native branches; old labels are validated by the separate unchanged collector replay.",
+  "next_step": {
+    "purpose": "Replace restore-based label generation with native-prefix branching before another model or threshold change.",
+    "scope": "Recollect the original100 B100 groups, keeping exact group IDs, eight candidates, original PP behavior prefixes, repaired network/executor, occupancy equations and450-second target. Retain any unsafe group as a failed group without replacement.",
+    "reuse": "Reuse these72 validated native labels for the nine audited groups when constructing the full corrected bank.",
+    "fitting": "Refit and recalibrate using only the original training seeds after a complete valid B100 bank exists.",
+    "executed": false
+  },
+  "limitations": [
+    "Nine preselected groups do not estimate the error rate across all100 training groups or other cities.",
+    "Two late groups change optimal action with native regret only0.000277778; early and middle differences are larger.",
+    "The specific hidden SUMO state causing the restore divergence is not isolated. This audit does not quantify how much of the closed-loop waiting gap it explains."
+  ]
+}

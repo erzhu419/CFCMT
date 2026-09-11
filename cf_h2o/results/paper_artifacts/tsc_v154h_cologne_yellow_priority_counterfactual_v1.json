@@ -1,0 +1,241 @@
+{
+  "protocol": "tsc-v154h-cologne-yellow-priority-counterfactual-v1",
+  "status": "PASS",
+  "status_scope": "Local readjudication of the retained single-transition experiment",
+  "task_id": "t91152",
+  "baseline_task_id": "t91112",
+  "raw_result": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154h_cologne_yellow_priority_counterfactual_20260909/counterfactual_v1/result.json",
+  "baseline_result": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154g_cologne_uturn_collision_replay_20260909/replay_v1/result.json",
+  "raw_runner_status_retained": "FAIL",
+  "original_safety_status_retained": "FAIL",
+  "adjudication_correction": {
+    "issue": "Runtime leader tuples were compared directly with baseline JSON lists; exact persisted values are equal.",
+    "changed_check": "exact_original_preintervention_samples",
+    "comparison": "Exact JSON representation, preserving values and order; no numeric tolerance.",
+    "prefix_samples": 122,
+    "prefix_exact": true,
+    "original_preintervention_sample_exact": true,
+    "other_checks": "Carried unchanged from the retained runner result; full_prefix_steps was measured at runtime, not reconstructed locally.",
+    "raw_result_modified": false,
+    "simulation_rerun": false
+  },
+  "checks": {
+    "runner_completed": true,
+    "exact_original_preintervention_samples": true,
+    "one_intervention": true,
+    "complete_same_window": true,
+    "same_signal_and_executor_timing": true,
+    "full_prefix_steps": true,
+    "native_inventory_agrees": true,
+    "zero_native_collisions": true,
+    "no_teleports": true,
+    "both_focal_vehicles_passed": true
+  },
+  "timing_differences": [],
+  "controller_snapshot": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/85b2b43cd12832c5a1dd",
+  "executed_tooling_snapshot": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/e220b1dd08164ebe6f97",
+  "local_comparator_fix": "/home/erzhu419/mine_code/CFCMT/scripts/data/run_cologne_yellow_priority_counterfactual.py",
+  "seed": 52282,
+  "simulation_window_sec": [
+    25200,
+    27486
+  ],
+  "trace_window_sec": [
+    27440,
+    27485
+  ],
+  "intervention": {
+    "time_sec": 27480.0,
+    "stage": "before_simulation_step",
+    "before": {
+      "tls_id": "cluster_357187_359543",
+      "mode": "yellow",
+      "current_state": "rrrrryyyyyrrrrryyyyy",
+      "current_green_state": "rrrrrGGGggrrrrrGGGgg",
+      "target_green_state": "GGGGGrrrrrsrrrrrrrrr",
+      "green_elapsed_sec": 6.0,
+      "remaining_sec": 3.0,
+      "pending_all_red_sec": 1.0,
+      "audit": {
+        "requests": 229,
+        "accepted_requests": 163,
+        "same_phase_requests": 63,
+        "rejected_busy": 3,
+        "rejected_min_green": 0,
+        "switches": 163,
+        "green_seconds": 1523.0,
+        "yellow_seconds": 486.0,
+        "all_red_seconds": 271.0,
+        "occupancy_clearance_extensions": 109,
+        "occupancy_clearance_extension_seconds": 109.0
+      }
+    },
+    "after": {
+      "tls_id": "cluster_357187_359543",
+      "mode": "yellow",
+      "current_state": "rrrrrYYYyyrrrrrYYYyy",
+      "current_green_state": "rrrrrGGGggrrrrrGGGgg",
+      "target_green_state": "GGGGGrrrrrsrrrrrrrrr",
+      "green_elapsed_sec": 6.0,
+      "remaining_sec": 3.0,
+      "pending_all_red_sec": 1.0,
+      "audit": {
+        "requests": 229,
+        "accepted_requests": 163,
+        "same_phase_requests": 63,
+        "rejected_busy": 3,
+        "rejected_min_green": 0,
+        "switches": 163,
+        "green_seconds": 1523.0,
+        "yellow_seconds": 486.0,
+        "all_red_seconds": 271.0,
+        "occupancy_clearance_extensions": 109,
+        "occupancy_clearance_extension_seconds": 109.0
+      }
+    },
+    "changed_indices": [
+      5,
+      6,
+      7,
+      15,
+      16,
+      17
+    ]
+  },
+  "native_collision_incidents": {
+    "baseline": 1,
+    "counterfactual": 0
+  },
+  "native_collision_reports": {
+    "baseline": 2,
+    "counterfactual": 0
+  },
+  "at_intervention_before": {
+    "200684_437_0": {
+      "lane_id": ":cluster_357187_359543_16_1",
+      "lane_position_m": 11.741335334859812,
+      "speed_mps": 7.090619710621744,
+      "acceleration_mps2": 2.294881541118957,
+      "leader": [
+        "113757_402_0",
+        17.977881521688737
+      ]
+    },
+    "201382_438_0": {
+      "lane_id": ":cluster_357187_359543_9_0",
+      "lane_position_m": 10.346551992850221,
+      "speed_mps": 9.734608184011732,
+      "acceleration_mps2": -3.8890193526788313,
+      "leader": [
+        "113757_402_0",
+        17.382664863698327
+      ]
+    }
+  },
+  "at_intervention_after": {
+    "200684_437_0": {
+      "lane_id": ":cluster_357187_359543_16_1",
+      "lane_position_m": 11.741335334859812,
+      "speed_mps": 7.090619710621744,
+      "acceleration_mps2": 2.294881541118957,
+      "leader": [
+        "113757_402_0",
+        17.977881521688737
+      ]
+    },
+    "201382_438_0": {
+      "lane_id": ":cluster_357187_359543_9_0",
+      "lane_position_m": 10.346551992850221,
+      "speed_mps": 9.734608184011732,
+      "acceleration_mps2": -3.8890193526788313,
+      "leader": [
+        "200684_437_0",
+        7.763448007149778
+      ]
+    }
+  },
+  "one_second_later": {
+    "baseline": {
+      "200684_437_0": {
+        "lane_id": ":cluster_357187_359543_16_1",
+        "lane_position_m": 21.347543054862292,
+        "speed_mps": 9.60620772000248,
+        "acceleration_mps2": 2.5155880093807363,
+        "leader": [
+          "201382_438_0",
+          -1.0
+        ]
+      },
+      "201382_438_0": {
+        "lane_id": "32324544#0_1",
+        "lane_position_m": 1.48559712575741,
+        "speed_mps": 11.989045132907187,
+        "acceleration_mps2": 2.2544369488954548,
+        "leader": [
+          "113757_402_0",
+          19.328328349047396
+        ]
+      }
+    },
+    "counterfactual": {
+      "200684_437_0": {
+        "lane_id": ":cluster_357187_359543_16_1",
+        "lane_position_m": 21.347543054862292,
+        "speed_mps": 9.60620772000248,
+        "acceleration_mps2": 2.5155880093807363,
+        "leader": [
+          "113757_402_0",
+          22.306382419942516
+        ]
+      },
+      "201382_438_0": {
+        "lane_id": ":cluster_357187_359543_9_0",
+        "lane_position_m": 16.082212945320563,
+        "speed_mps": 5.735660952470343,
+        "acceleration_mps2": -3.998947231541389,
+        "leader": [
+          "200684_437_0",
+          2.027787054679436
+        ]
+      }
+    }
+  },
+  "body_separation": {
+    "observations_available": 51,
+    "closest_sample_time_sec": 27481.0,
+    "maximum_recorded_axis_penetration_m": -1.5638728078720305,
+    "baseline_at_27481_axis_penetration_m": 0.36794559047484654,
+    "interpretation": "Negative values denote separation; positive values denote overlap. This is a sampled polygon diagnostic, not continuous minimum distance."
+  },
+  "focal_passages": {
+    "200684_437_0": {
+      "time_sec": 27482.0,
+      "lane_id": "32324544#0_1",
+      "lane_position_m": 10.704911064109499,
+      "route": [
+        "27115123#2",
+        "27115123#3",
+        "32324544#0"
+      ]
+    },
+    "201382_438_0": {
+      "time_sec": 27483.0,
+      "lane_id": "32324544#0_1",
+      "lane_position_m": 0.1665429498460913,
+      "route": [
+        "23429231#1",
+        "32324544#0"
+      ]
+    }
+  },
+  "cost": {
+    "new_simulations": 1,
+    "runner_elapsed_sec": 2.9592429138720036,
+    "retrieved_json_bytes": 316291,
+    "prelaunch_tests_passed": 6,
+    "after_comparator_correction_tests_passed": 7
+  },
+  "conclusion": "Keeping G-to-Y and g-to-y priority for this transition restores the U-turn yielding constraint and removes the reproduced collision with fixed network and timing.",
+  "limitations": "One bounded PP/52282 event; production mapping and full-duration controller comparison have not been changed or validated by this test.",
+  "next_step": "Integrate the priority-preserving yellow mapping into the shared executor, then run rigid and PhasePressure for 3600 seconds on the fixed network and the same three prespecified seeds."
+}

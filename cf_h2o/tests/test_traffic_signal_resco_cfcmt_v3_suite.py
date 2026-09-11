@@ -27,6 +27,7 @@ from cf_h2o.eval.traffic_signal_resco_cfcmt_v3_suite import (
     _validate_counterfactual_cache_dataset,
     select_target_closed_loop_policies_v3,
 )
+from cf_h2o.traffic_signal.occupancy_equations import OCCUPANCY_EQUATION_PROTOCOL
 from cf_h2o.traffic_signal.dataset_cache import load_mechanism_dataset, save_mechanism_dataset
 from cf_h2o.traffic_signal.mechanism_world_model import (
     MechanismDataset,
@@ -978,6 +979,7 @@ def test_source_rule_worker_rejects_cached_teleport(tmp_path):
 
 def test_counterfactual_cache_validation_rejects_wrong_identity():
     identity = {
+        "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
         "scenario": "scenario",
         "seed": 17,
         "collection_shard_index": 0,
@@ -992,15 +994,31 @@ def test_counterfactual_cache_validation_rejects_wrong_identity():
         priors=dataset.priors,
         targets=dataset.targets,
         domains=dataset.domains,
-        metadata={**dict(dataset.metadata), "counterfactual_cache_identity": identity},
+        metadata={**dict(dataset.metadata), "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL, "counterfactual_cache_identity": identity},
     )
     _validate_counterfactual_cache_dataset(dataset, identity, None)
     with pytest.raises(ValueError, match="identity mismatch"):
         _validate_counterfactual_cache_dataset(dataset, {**identity, "seed": 18}, None)
 
 
+def test_counterfactual_merge_preserves_units_and_rejects_old_new_mix():
+    first = _counterfactual_shard(0, "g0")
+    second = _counterfactual_shard(1, "g1")
+    first = replace(first, metadata={
+        **first.metadata, "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
+    })
+    with pytest.raises(ValueError, match="occupancy equation contracts"):
+        merge_counterfactual_datasets_v3([first, second])
+    second = replace(second, metadata={
+        **second.metadata, "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
+    })
+    merged = merge_counterfactual_datasets_v3([first, second])
+    assert merged.metadata["occupancy_equation_protocol"] == OCCUPANCY_EQUATION_PROTOCOL
+
+
 def test_current_counterfactual_cache_requires_policy_consistent_estimand():
     identity = {
+        "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
         "version": COUNTERFACTUAL_CACHE_VERSION,
         "scenario": "scenario",
         "seed": 17,
@@ -1011,6 +1029,7 @@ def test_current_counterfactual_cache_requires_policy_consistent_estimand():
     }
     source = _counterfactual_shard(0, "g0")
     metadata = {
+        "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
         **dict(source.metadata),
         "counterfactual_cache_identity": identity,
         "counterfactual_estimand": POLICY_CONSISTENT_ESTIMAND_PROTOCOL_V4,
@@ -1051,6 +1070,7 @@ def test_multihorizon_cache_requires_full_horizon_equivalence():
     prefix_names = tuple(rollout_prefix_target_name(value) for value in horizons)
     output_names = (*OUTPUT_NAMES_V4, *prefix_names)
     identity = {
+        "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
         "version": MULTIHORIZON_COUNTERFACTUAL_CACHE_VERSION,
         "scenario": "scenario",
         "seed": 17,
@@ -1062,6 +1082,7 @@ def test_multihorizon_cache_requires_full_horizon_equivalence():
     }
     source = _counterfactual_shard(0, "g0")
     metadata = {
+        "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
         **dict(source.metadata),
         "counterfactual_cache_identity": identity,
         "counterfactual_estimand": POLICY_CONSISTENT_ESTIMAND_PROTOCOL_V4,
@@ -1109,6 +1130,7 @@ def test_multihorizon_cache_requires_full_horizon_equivalence():
 
 def test_counterfactual_cache_allows_a_valid_empty_trailing_shard():
     identity = {
+        "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
         "scenario": "scenario",
         "seed": 17,
         "collection_shard_index": 1,
@@ -1123,6 +1145,7 @@ def test_counterfactual_cache_allows_a_valid_empty_trailing_shard():
         targets={name: np.zeros(0) for name in OUTPUT_NAMES_V3},
         domains=np.asarray([], dtype=str),
         metadata={
+            "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
             "scenario": "scenario",
             "seed": 17,
             "counterfactual_cache_identity": identity,
@@ -1190,6 +1213,7 @@ def test_counterfactual_cache_allows_a_valid_empty_trailing_shard():
 
 def test_counterfactual_cache_allows_fully_censored_action_group_without_rows():
     identity = {
+        "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
         "scenario": "scenario",
         "seed": 17,
         "collection_shard_index": 0,
@@ -1197,6 +1221,7 @@ def test_counterfactual_cache_allows_fully_censored_action_group_without_rows():
     }
     source = _counterfactual_shard(0, "g0")
     metadata = {
+        "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
         **dict(source.metadata),
         "counterfactual_cache_identity": identity,
         "counterfactual_branches": 0,
@@ -1246,6 +1271,7 @@ def test_counterfactual_cache_allows_fully_censored_action_group_without_rows():
 
 def test_counterfactual_cache_preserves_replay_check_before_full_censor():
     identity = {
+        "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
         "scenario": "scenario",
         "seed": 17,
         "collection_shard_index": 0,
@@ -1253,6 +1279,7 @@ def test_counterfactual_cache_preserves_replay_check_before_full_censor():
     }
     source = _counterfactual_shard(0, "g0")
     metadata = {
+        "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
         **dict(source.metadata),
         "counterfactual_cache_identity": identity,
         "counterfactual_branches": 0,
@@ -1302,6 +1329,7 @@ def test_counterfactual_cache_preserves_replay_check_before_full_censor():
 
 def test_counterfactual_cache_rejects_missing_safety_protocol():
     identity = {
+        "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
         "scenario": "scenario",
         "seed": 17,
         "collection_shard_index": 0,
@@ -1310,6 +1338,7 @@ def test_counterfactual_cache_rejects_missing_safety_protocol():
     source = _counterfactual_shard(0, "g0")
     metadata = dict(source.metadata)
     metadata.pop("strict_safety_monitoring")
+    metadata["occupancy_equation_protocol"] = OCCUPANCY_EQUATION_PROTOCOL
     dataset = MechanismDataset(
         feature_names=source.feature_names,
         features=source.features,

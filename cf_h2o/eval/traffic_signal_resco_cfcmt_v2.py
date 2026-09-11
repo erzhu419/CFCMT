@@ -48,6 +48,11 @@ from cf_h2o.traffic_signal.mechanism_world_model import (
     MechanismFitConfig,
     PriorMechanismWorldModel,
 )
+from cf_h2o.traffic_signal.occupancy_equations import (
+    OCCUPANCY_EQUATION_PROTOCOL,
+    analytic_mechanism_priors_fraction,
+    pressure_receiving_factor,
+)
 from cf_h2o.traffic_signal.safe_phase_controller import (
     SafePhaseExecutor,
     aggregate_phase_audits,
@@ -459,9 +464,8 @@ def _candidate_aggregates(state: LocalTransitionState, candidate: PhaseCandidate
         queue_share = state.q_by_lane.get(in_lane, 0.0) / max(movement_counts[in_lane], 1)
         downstream_q = movement_down_q[index] if index < movement_down_q.size else 0.0
         downstream_occ = movement_down_occ[index] if index < movement_down_occ.size else 0.0
-        movement_pressure += max(queue_share - downstream_q, 0.0) * max(
-            1.0 - downstream_occ / 120.0,
-            0.0,
+        movement_pressure += max(queue_share - downstream_q, 0.0) * float(
+            pressure_receiving_factor(downstream_occ)
         )
     aggregate = {
         "total_q": float(sum(state.q_by_lane.values())),
@@ -508,7 +512,7 @@ def _candidate_aggregates(state: LocalTransitionState, candidate: PhaseCandidate
     aggregate["service_pressure"] = max(
         aggregate["green_q"] - aggregate["green_down_q"],
         0.0,
-    ) * max(0.0, 1.0 - aggregate["green_down_occ"] / 120.0)
+    ) * float(pressure_receiving_factor(aggregate["green_down_occ"]))
     aggregate["red_pressure"] = aggregate["red_q"] * (1.0 - 0.5 * aggregate["green_lane_ratio"])
     return aggregate
 
@@ -565,72 +569,14 @@ def uncalibrated_mechanism_priors(
     *,
     control_interval_sec: int,
 ) -> dict[str, np.ndarray]:
-    """Generic non-target-calibrated mechanism equations."""
+    """Generic mechanism equations with fractional lane occupancy."""
 
-    x = np.asarray(features, dtype=float)
-    z = np.asarray(context, dtype=float)
-    idx = {name: i for i, name in enumerate(FEATURE_NAMES_V2)}
-    total_q = x[:, idx["total_q"]]
-    total_veh = x[:, idx["total_veh"]]
-    mean_speed = x[:, idx["mean_speed"]]
-    mean_occ = x[:, idx["mean_occ"]]
-    green_q = x[:, idx["green_q"]]
-    red_q = x[:, idx["red_q"]]
-    green_veh = x[:, idx["green_veh"]]
-    green_down = x[:, idx["green_down_occ"]]
-    green_down_q = x[:, idx["green_down_q"]]
-    green_link_ratio = x[:, idx["green_link_ratio"]]
-    green_lane_ratio = x[:, idx["green_lane_ratio"]]
-    red_pressure = x[:, idx["red_pressure"]]
-    clearance_fraction = np.clip(x[:, idx["clearance_fraction"]], 0.0, 1.0)
-
-    arrival = z[:, 0] + 0.18 * z[:, 1] + 0.025 * total_veh + 0.008 * red_pressure
-    available_green = np.clip(1.0 - clearance_fraction, 0.0, 1.0)
-    downstream_factor = np.clip(1.0 - green_down / 135.0, 0.15, 1.0)
-    capacity = (
-        0.09
-        * float(control_interval_sec)
-        * (1.0 + 3.0 * green_lane_ratio + 1.4 * green_link_ratio)
-        * available_green
-        * downstream_factor
+    return analytic_mechanism_priors_fraction(
+        features,
+        context,
+        feature_names=FEATURE_NAMES_V2,
+        control_interval_sec=control_interval_sec,
     )
-    service = np.minimum(np.maximum(green_q - 0.25 * green_down_q, 0.0) + 0.3 * green_veh, capacity)
-    next_green = np.clip(green_q + arrival * green_lane_ratio - service, 0.0, 500.0)
-    next_red = np.clip(
-        red_q + arrival * (1.0 - green_lane_ratio) - 0.015 * red_q * available_green,
-        0.0,
-        500.0,
-    )
-    next_total = np.clip(next_green + next_red, 0.0, 500.0)
-    next_down = np.clip(
-        green_down + 0.45 * service - 0.10 * mean_speed - 0.025 * np.maximum(100.0 - mean_occ, 0.0),
-        0.0,
-        100.0,
-    )
-    next_speed = np.clip(
-        mean_speed
-        + 0.12 * (13.0 - mean_speed)
-        - 0.035 * total_q / np.maximum(x[:, idx["lane_count_norm"]] * 12.0, 1.0)
-        - 0.012 * green_down,
-        0.0,
-        30.0,
-    )
-    interval_cost = np.clip(
-        0.5 * (total_q + next_total)
-        + 0.08 * red_pressure
-        + 0.04 * next_down
-        + 0.8 * float(control_interval_sec) * clearance_fraction,
-        0.0,
-        1000.0,
-    )
-    return {
-        "next_total_queue": next_total,
-        "next_green_queue": next_green,
-        "next_red_queue": next_red,
-        "next_downstream_occupancy": next_down,
-        "next_mean_speed": next_speed,
-        "interval_cost": interval_cost,
-    }
 
 
 def _candidate_for_state(info: TlsPhaseInfo, state: str) -> PhaseCandidate:
@@ -779,6 +725,7 @@ def collect_mechanism_transitions(
         targets={name: np.asarray(values, dtype=float) for name, values in rows_targets.items()},
         domains=np.asarray([scenario] * feature_array.shape[0]),
         metadata={
+            "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
             "scenario": scenario,
             "sumocfg": str(sumocfg),
             "seed": int(seed),
@@ -797,6 +744,12 @@ def merge_mechanism_datasets(datasets: Sequence[MechanismDataset]) -> MechanismD
     if not datasets:
         raise ValueError("cannot merge an empty dataset sequence")
     first = datasets[0]
+    if any(
+        item.metadata.get("occupancy_equation_protocol")
+        != first.metadata.get("occupancy_equation_protocol")
+        for item in datasets
+    ):
+        raise ValueError("cannot merge different occupancy equation contracts")
     if any(item.feature_names != first.feature_names or item.context_names != first.context_names for item in datasets):
         raise ValueError("all datasets must use the same feature and context schema")
     return MechanismDataset(
@@ -807,7 +760,10 @@ def merge_mechanism_datasets(datasets: Sequence[MechanismDataset]) -> MechanismD
         priors={name: np.concatenate([item.priors[name] for item in datasets]) for name in OUTPUT_NAMES_V2},
         targets={name: np.concatenate([item.targets[name] for item in datasets]) for name in OUTPUT_NAMES_V2},
         domains=np.concatenate([item.domains for item in datasets]),
-        metadata={"source_datasets": [dict(item.metadata) for item in datasets]},
+        metadata={
+            "occupancy_equation_protocol": first.metadata.get("occupancy_equation_protocol"),
+            "source_datasets": [dict(item.metadata) for item in datasets],
+        },
     )
 
 
@@ -959,7 +915,10 @@ def _candidate_dataset(
         priors=priors,
         targets={name: values.copy() for name, values in priors.items()},
         domains=np.asarray(["target"] * len(candidates)),
-        metadata={"information_budget": "target_static_plus_online_state_no_labels"},
+        metadata={
+            "information_budget": "target_static_plus_online_state_no_labels",
+            "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
+        },
     )
 
 

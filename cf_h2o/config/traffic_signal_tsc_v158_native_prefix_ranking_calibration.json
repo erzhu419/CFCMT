@@ -1,0 +1,205 @@
+{
+  "protocol": "tsc-v158-jinan-native-prefix-ranking-calibration-v1",
+  "scientific_status": "prepared_not_run",
+  "city": "jinan",
+  "purpose": "last_frozen_attempt_to_correct_native_prefix_action_ranking",
+  "parent_snapshot": {
+    "root": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/102b77f2df56f9400f85",
+    "sha256": "102b77f2df56f9400f85702f548fe849e0524ca0b7063f93ebc648c1e9f1be4c",
+    "source_tree_sha256": "5ff3c557b1dc442886020bf2e2fc38311296afca87c7282b83772b1ed9f604c2"
+  },
+  "network_manifest": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v39_external_la_jinan_v9_manifest.json",
+    "sha256": "636e09d8e2f47d5fefaa26b33b0552373b01f185e77e18896c97751c267c356c"
+  },
+  "v157b_runtime": {
+    "bundle_protocol": "cfcmt-v157b-feature-aligned-b100-runtime-arms-v2",
+    "bundle_sha256": "a6bdea34175f06a399dc00c1c1df06781e578035a2806c434e0f4eb9be61ad93",
+    "arm_manifest_protocol": "tsc-v157b-feature-aligned-b100-arm-manifest-v2",
+    "arm_manifest_sha256": "02419e1b9b2370978ed0fe4525c1d4600fd13470c7a76edd625d9c1d126ce52f",
+    "base_arms": [
+      "target_only",
+      "uniform_source",
+      "source_label_placebo"
+    ]
+  },
+  "development": {
+    "seeds": [
+      180314,
+      188625,
+      127178,
+      177524,
+      163775,
+      150945,
+      173412,
+      161481,
+      150744,
+      134310
+    ],
+    "seed_rule": "first_ten_preexisting_v157a_selector_seeds_plus_100000",
+    "scenario_time_bins_sec": {
+      "jinan_3x4_real": [
+        [
+          300,
+          600
+        ],
+        [
+          1050,
+          1350
+        ],
+        [
+          1800,
+          2100
+        ],
+        [
+          2550,
+          2850
+        ]
+      ],
+      "jinan_3x4_real_2000": [
+        [
+          300,
+          600
+        ],
+        [
+          1050,
+          1350
+        ],
+        [
+          1800,
+          2100
+        ]
+      ],
+      "jinan_3x4_real_2500": [
+        [
+          300,
+          600
+        ],
+        [
+          1050,
+          1350
+        ],
+        [
+          1800,
+          2100
+        ]
+      ]
+    },
+    "groups_per_seed": 10,
+    "action_groups": 100,
+    "candidate_actions_per_group": 8,
+    "expected_native_action_branches": 700,
+    "baseline_trajectories": 30
+  },
+  "crossfit": {
+    "folds": [
+      [
+        180314,
+        188625
+      ],
+      [
+        127178,
+        177524
+      ],
+      [
+        163775,
+        150945
+      ],
+      [
+        173412,
+        161481
+      ],
+      [
+        150744,
+        134310
+      ]
+    ],
+    "unit": "whole_seed",
+    "fold_count": 5,
+    "threshold": 0.0,
+    "threshold_selection": "fixed_before_native_outcomes"
+  },
+  "model": {
+    "family": "CausalReferenceResidualRegressor",
+    "config": {
+      "learning_rate": 0.05,
+      "max_iter": 100,
+      "max_leaf_nodes": 15,
+      "min_samples_leaf": 20,
+      "l2_regularization": 10.0,
+      "uncertainty_quantile": 0.9,
+      "random_state": 20260803
+    },
+    "state_feature_names": "PAIRWISE_CAUSAL_STATE_PARENTS",
+    "action_feature_names": "PAIRWISE_CAUSAL_ACTION_PARENTS_plus_six_frozen_base_prediction_features",
+    "arms": [
+      "target_native",
+      "source_native",
+      "placebo_native"
+    ],
+    "capacity_match": "all_arms_share_model_family_hyperparameters_and_six_prediction_columns;_unavailable_auxiliary_columns_are_zero"
+  },
+  "action_selection": {
+    "reference_policy": "phase_pressure",
+    "focal_tls_rule": "earliest_eligible_interval_in_each_frozen_bin_then_source_target_disagreement_else_max_predicted_advantage_then_lexicographic_tls",
+    "no_stay_override_of_pp_switch": true,
+    "comparison": "minimum_predicted_native_candidate_minus_pp_cost_with_fixed_zero_threshold"
+  },
+  "native_estimand": {
+    "construction": "fresh_t0_phase_pressure_prefix_for_every_nonreference_action",
+    "snapshot_restore_used": false,
+    "action_duration_sec": 10,
+    "continuation_policy": "phase_pressure",
+    "continuation_duration_sec": 440,
+    "horizon_sec": 450,
+    "samples": 450,
+    "cost": "mean_halted_vehicles_per_controlled_lane",
+    "collision_handling": "diagnostic_not_selection_or_primary_gate",
+    "invalidity": [
+      "prefix_physical_mismatch",
+      "candidate_roster_mismatch",
+      "teleport",
+      "incomplete_450_second_window",
+      "active_population_accounting_failure"
+    ]
+  },
+  "oof_gate": {
+    "unit": "equal_seed",
+    "source_minus_target_mean_maximum": -0.0005,
+    "source_minus_placebo_mean_maximum": -0.0005,
+    "source_minus_phase_pressure_mean_maximum": 0.0,
+    "paired_bootstrap_upper_95_maximum": 0.0,
+    "minimum_improved_seeds": 7,
+    "bootstrap_draws": 10000,
+    "bootstrap_seed": 20260911
+  },
+  "reserve": {
+    "authorized_only_if_oof_gate_passes": true,
+    "seeds": [
+      280314,
+      288625,
+      227178,
+      277524,
+      263775,
+      250945,
+      273412,
+      261481,
+      250744,
+      234310
+    ],
+    "seed_rule": "same_ten_preexisting_v157a_selector_seeds_plus_200000",
+    "scenario": "jinan_3x4_real",
+    "duration_sec": 3600,
+    "arms": [
+      "target_native",
+      "source_native",
+      "placebo_native",
+      "phase_pressure"
+    ],
+    "residual_coordination_mode": "sparse",
+    "residual_cooldown_intervals": 44,
+    "no_stay_override_of_pp_switch": true,
+    "primary_metric": "mean_queue_per_lane"
+  },
+  "claim_boundary": "A passing reserve supports Jinan closed-loop native-prefix ranking calibration and source-prediction contribution under the frozen sparse controller only; it is not unseen-city evidence. Any incomplete stage or failed gate closes this remediation route without retuning."
+}

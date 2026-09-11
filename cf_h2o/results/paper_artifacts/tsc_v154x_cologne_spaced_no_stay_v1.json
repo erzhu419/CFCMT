@@ -1,0 +1,2859 @@
+{
+  "protocol": "tsc-v154x-cologne-spaced-no-stay-closed-loop-v1",
+  "matrix_status": "COMPLETE",
+  "seeds": [
+    52282,
+    41242,
+    63792
+  ],
+  "geometry_development_seed": 41242,
+  "additional_seeds": [
+    52282,
+    63792
+  ],
+  "repaired_sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+  "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+  "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+  "frozen_threshold": {
+    "protocol": "tsc-v154l-cologne-rigid-oof-threshold-v1",
+    "calibration_protocol": "tsc-v154t-cologne-no-stay-oof-threshold-v1",
+    "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+    "fit_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/result.json",
+    "calibration_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154t_cologne_no_stay_oof_threshold_20260909/calibration_v1/result.json",
+    "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+    "ablation_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154s_cologne_no_stay_closed_loop_20260909/tooling_v1/no_stay_fraction_rigid.py",
+    "threshold": 0.20790450432178334,
+    "mode": "minimum_advantage",
+    "comparison": "predicted_advantage > threshold + 1e-12",
+    "selection_data": "Original 100 native B100 seed-OOF records with fixed post-selection stay veto",
+    "calibration_mean_cost": 0.7990718459100812
+  },
+  "spacing_contract": {
+    "control_interval_sec": 10,
+    "cooldown_intervals": 44,
+    "minimum_intervention_gap_sec": 450,
+    "model_action_sec": 10,
+    "pp_continuation_sec": 440
+  },
+  "baseline_source_bindings": {
+    "cf_h2o.eval.traffic_signal_cologne_collision_replay": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/85b2b43cd12832c5a1dd/cf_h2o/eval/traffic_signal_cologne_collision_replay.py",
+    "cf_h2o.eval.traffic_signal_resco_cfcmt_v3": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/85b2b43cd12832c5a1dd/cf_h2o/eval/traffic_signal_resco_cfcmt_v3.py",
+    "cf_h2o.eval.traffic_signal_state_conditioned_source_closed_loop": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/85b2b43cd12832c5a1dd/cf_h2o/eval/traffic_signal_state_conditioned_source_closed_loop.py",
+    "cf_h2o.traffic_signal.action_ranker": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/85b2b43cd12832c5a1dd/cf_h2o/traffic_signal/action_ranker.py"
+  },
+  "baseline_executor_source": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154i_cologne_priority_yellow_comparison_20260909/tooling_v1/safe_phase_controller.py",
+  "threshold_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154m_cologne_threshold_closed_loop_20260909/tooling_v1/thresholded_fraction_rigid.py",
+  "ablation_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154s_cologne_no_stay_closed_loop_20260909/tooling_v1/no_stay_fraction_rigid.py",
+  "cells": [
+    {
+      "seed": 52282,
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154x_cologne_spaced_no_stay_20260910/evaluation/seed_52282/rigid_thresholded/result.json",
+      "task_id": "t91944",
+      "elapsed_sec": 4.022109427955002,
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+      "occupancy_equation_protocol": "sumo-lane-occupancy-fraction-equations-v1",
+      "validity_checks": {
+        "runner_completed": true,
+        "full_3600_one_second_steps": true,
+        "uncapped_events_match_native_total": true,
+        "uncapped_incidents_match_native_total": true,
+        "collision_event_steps_match_native_total": true,
+        "no_teleports": true,
+        "fixed_due_demand_population": true,
+        "departed_equals_arrived_plus_active": true,
+        "due_equals_departed_plus_pending": true,
+        "tripinfo_covers_all_departed": true,
+        "tripinfo_completed_matches_arrivals": true,
+        "tripinfo_unfinished_matches_active": true,
+        "complete_3541_post_warmup_samples": true,
+        "spacing_runtime_configuration": true,
+        "spacing_complete_executed_trace": true,
+        "spacing_effective_switches": true,
+        "spacing_at_least_450_seconds": true
+      },
+      "arm": "spaced_no_stay_rigid",
+      "source_arm": "rigid_thresholded",
+      "source_protocol": "tsc-v154x-cologne-spaced-no-stay-closed-loop-v1",
+      "reused": false,
+      "metrics": {
+        "mean_tripinfo_waiting_time": 12.650620347394542,
+        "system_vehicle_hours": 32.23166666666667,
+        "active_vehicle_hours": 28.174722222222222,
+        "pending_vehicle_hours": 4.0569444444444445,
+        "mean_tripinfo_depart_delay": 7.265012406947891,
+        "mean_queue": 6.746681728325332,
+        "departed": 2015,
+        "arrived": 1999,
+        "active_vehicles_at_horizon": 16,
+        "pending_vehicles_at_horizon": 0,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": []
+    },
+    {
+      "seed": 52282,
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154u_cologne_recalibrated_no_stay_20260910/evaluation/seed_52282/rigid_thresholded/result.json",
+      "task_id": "t91893",
+      "elapsed_sec": 4.096614805050194,
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+      "occupancy_equation_protocol": "sumo-lane-occupancy-fraction-equations-v1",
+      "validity_checks": {
+        "runner_completed": true,
+        "full_3600_one_second_steps": true,
+        "uncapped_events_match_native_total": true,
+        "uncapped_incidents_match_native_total": true,
+        "collision_event_steps_match_native_total": true,
+        "no_teleports": true,
+        "fixed_due_demand_population": true,
+        "departed_equals_arrived_plus_active": true,
+        "due_equals_departed_plus_pending": true,
+        "tripinfo_covers_all_departed": true,
+        "tripinfo_completed_matches_arrivals": true,
+        "tripinfo_unfinished_matches_active": true,
+        "complete_3541_post_warmup_samples": true
+      },
+      "arm": "recalibrated_no_stay_rigid",
+      "source_arm": "rigid_thresholded",
+      "source_protocol": "tsc-v154u-cologne-recalibrated-no-stay-closed-loop-v1",
+      "reused": true,
+      "metrics": {
+        "mean_tripinfo_waiting_time": 15.574055666003977,
+        "system_vehicle_hours": 35.6725,
+        "active_vehicle_hours": 30.569166666666668,
+        "pending_vehicle_hours": 5.1033333333333335,
+        "mean_tripinfo_depart_delay": 9.14314115308151,
+        "mean_queue": 8.379836204462016,
+        "departed": 2012,
+        "arrived": 1990,
+        "active_vehicles_at_horizon": 22,
+        "pending_vehicles_at_horizon": 3,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": []
+    },
+    {
+      "seed": 52282,
+      "arm": "phase_pressure",
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154i_cologne_priority_yellow_comparison_20260909/seed_52282/phase_pressure/result.json",
+      "task_id": "t91636",
+      "elapsed_sec": 3.9953158411663026,
+      "reused": true,
+      "source_protocol": "tsc-v154i-cologne-priority-yellow-comparison-v1",
+      "metrics": {
+        "mean_tripinfo_waiting_time": 12.634739454094293,
+        "system_vehicle_hours": 31.953611111111112,
+        "active_vehicle_hours": 28.04277777777778,
+        "pending_vehicle_hours": 3.910833333333333,
+        "mean_tripinfo_depart_delay": 7.003970223325062,
+        "mean_queue": 6.538266026546173,
+        "departed": 2015,
+        "arrived": 1997,
+        "active_vehicles_at_horizon": 18,
+        "pending_vehicles_at_horizon": 0,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": [],
+      "source_arm": "phase_pressure"
+    },
+    {
+      "seed": 41242,
+      "run_valid": true,
+      "status": "FAIL",
+      "zero_incident_status": "FAIL",
+      "source_result": "cf_h2o/results/cluster/tsc_v154x_cologne_spaced_no_stay_20260910/evaluation/seed_41242/rigid_thresholded/result.json",
+      "task_id": "t91945",
+      "elapsed_sec": 4.406969690928236,
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+      "occupancy_equation_protocol": "sumo-lane-occupancy-fraction-equations-v1",
+      "validity_checks": {
+        "runner_completed": true,
+        "full_3600_one_second_steps": true,
+        "uncapped_events_match_native_total": true,
+        "uncapped_incidents_match_native_total": true,
+        "collision_event_steps_match_native_total": true,
+        "no_teleports": true,
+        "fixed_due_demand_population": true,
+        "departed_equals_arrived_plus_active": true,
+        "due_equals_departed_plus_pending": true,
+        "tripinfo_covers_all_departed": true,
+        "tripinfo_completed_matches_arrivals": true,
+        "tripinfo_unfinished_matches_active": true,
+        "complete_3541_post_warmup_samples": true,
+        "spacing_runtime_configuration": true,
+        "spacing_complete_executed_trace": true,
+        "spacing_effective_switches": true,
+        "spacing_at_least_450_seconds": true
+      },
+      "arm": "spaced_no_stay_rigid",
+      "source_arm": "rigid_thresholded",
+      "source_protocol": "tsc-v154x-cologne-spaced-no-stay-closed-loop-v1",
+      "reused": false,
+      "metrics": {
+        "mean_tripinfo_waiting_time": 16.10322580645161,
+        "system_vehicle_hours": 34.903888888888886,
+        "active_vehicle_hours": 30.839444444444446,
+        "pending_vehicle_hours": 4.064444444444445,
+        "mean_tripinfo_depart_delay": 7.278908188585608,
+        "mean_queue": 8.18610561988139,
+        "departed": 2015,
+        "arrived": 1997,
+        "active_vehicles_at_horizon": 18,
+        "pending_vehicles_at_horizon": 0,
+        "collision_incidents": 1,
+        "collision_events": 13,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": [
+        {
+          "lane_pair": [
+            "28198821#3_1",
+            "28198821#3_1"
+          ],
+          "unavailable_roles": [],
+          "incident_count": 1
+        }
+      ]
+    },
+    {
+      "seed": 41242,
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154u_cologne_recalibrated_no_stay_20260910/evaluation/seed_41242/rigid_thresholded/result.json",
+      "task_id": "t91894",
+      "elapsed_sec": 4.546454641036689,
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+      "occupancy_equation_protocol": "sumo-lane-occupancy-fraction-equations-v1",
+      "validity_checks": {
+        "runner_completed": true,
+        "full_3600_one_second_steps": true,
+        "uncapped_events_match_native_total": true,
+        "uncapped_incidents_match_native_total": true,
+        "collision_event_steps_match_native_total": true,
+        "no_teleports": true,
+        "fixed_due_demand_population": true,
+        "departed_equals_arrived_plus_active": true,
+        "due_equals_departed_plus_pending": true,
+        "tripinfo_covers_all_departed": true,
+        "tripinfo_completed_matches_arrivals": true,
+        "tripinfo_unfinished_matches_active": true,
+        "complete_3541_post_warmup_samples": true
+      },
+      "arm": "recalibrated_no_stay_rigid",
+      "source_arm": "rigid_thresholded",
+      "source_protocol": "tsc-v154u-cologne-recalibrated-no-stay-closed-loop-v1",
+      "reused": true,
+      "metrics": {
+        "mean_tripinfo_waiting_time": 15.16832174776564,
+        "system_vehicle_hours": 35.26694444444445,
+        "active_vehicle_hours": 30.49388888888889,
+        "pending_vehicle_hours": 4.773055555555556,
+        "mean_tripinfo_depart_delay": 8.54865938430983,
+        "mean_queue": 8.115504094888449,
+        "departed": 2014,
+        "arrived": 1993,
+        "active_vehicles_at_horizon": 21,
+        "pending_vehicles_at_horizon": 1,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": []
+    },
+    {
+      "seed": 41242,
+      "arm": "phase_pressure",
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154i_cologne_priority_yellow_comparison_20260909/seed_41242/phase_pressure/result.json",
+      "task_id": "t91638",
+      "elapsed_sec": 4.088408139999956,
+      "reused": true,
+      "source_protocol": "tsc-v154i-cologne-priority-yellow-comparison-v1",
+      "metrics": {
+        "mean_tripinfo_waiting_time": 14.831761786600497,
+        "system_vehicle_hours": 33.528055555555554,
+        "active_vehicle_hours": 29.704444444444444,
+        "pending_vehicle_hours": 3.823611111111111,
+        "mean_tripinfo_depart_delay": 6.84863523573201,
+        "mean_queue": 7.571025134142897,
+        "departed": 2015,
+        "arrived": 1998,
+        "active_vehicles_at_horizon": 17,
+        "pending_vehicles_at_horizon": 0,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": [],
+      "source_arm": "phase_pressure"
+    },
+    {
+      "seed": 63792,
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154x_cologne_spaced_no_stay_20260910/evaluation/seed_63792/rigid_thresholded/result.json",
+      "task_id": "t91946",
+      "elapsed_sec": 4.093272760044783,
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+      "occupancy_equation_protocol": "sumo-lane-occupancy-fraction-equations-v1",
+      "validity_checks": {
+        "runner_completed": true,
+        "full_3600_one_second_steps": true,
+        "uncapped_events_match_native_total": true,
+        "uncapped_incidents_match_native_total": true,
+        "collision_event_steps_match_native_total": true,
+        "no_teleports": true,
+        "fixed_due_demand_population": true,
+        "departed_equals_arrived_plus_active": true,
+        "due_equals_departed_plus_pending": true,
+        "tripinfo_covers_all_departed": true,
+        "tripinfo_completed_matches_arrivals": true,
+        "tripinfo_unfinished_matches_active": true,
+        "complete_3541_post_warmup_samples": true,
+        "spacing_runtime_configuration": true,
+        "spacing_complete_executed_trace": true,
+        "spacing_effective_switches": true,
+        "spacing_at_least_450_seconds": true
+      },
+      "arm": "spaced_no_stay_rigid",
+      "source_arm": "rigid_thresholded",
+      "source_protocol": "tsc-v154x-cologne-spaced-no-stay-closed-loop-v1",
+      "reused": false,
+      "metrics": {
+        "mean_tripinfo_waiting_time": 13.000993048659383,
+        "system_vehicle_hours": 32.824444444444445,
+        "active_vehicle_hours": 28.52888888888889,
+        "pending_vehicle_hours": 4.295555555555556,
+        "mean_tripinfo_depart_delay": 7.696623634558093,
+        "mean_queue": 6.9158429822084155,
+        "departed": 2014,
+        "arrived": 1997,
+        "active_vehicles_at_horizon": 17,
+        "pending_vehicles_at_horizon": 1,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": []
+    },
+    {
+      "seed": 63792,
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154u_cologne_recalibrated_no_stay_20260910/evaluation/seed_63792/rigid_thresholded/result.json",
+      "task_id": "t91895",
+      "elapsed_sec": 4.0521178839262575,
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+      "occupancy_equation_protocol": "sumo-lane-occupancy-fraction-equations-v1",
+      "validity_checks": {
+        "runner_completed": true,
+        "full_3600_one_second_steps": true,
+        "uncapped_events_match_native_total": true,
+        "uncapped_incidents_match_native_total": true,
+        "collision_event_steps_match_native_total": true,
+        "no_teleports": true,
+        "fixed_due_demand_population": true,
+        "departed_equals_arrived_plus_active": true,
+        "due_equals_departed_plus_pending": true,
+        "tripinfo_covers_all_departed": true,
+        "tripinfo_completed_matches_arrivals": true,
+        "tripinfo_unfinished_matches_active": true,
+        "complete_3541_post_warmup_samples": true
+      },
+      "arm": "recalibrated_no_stay_rigid",
+      "source_arm": "rigid_thresholded",
+      "source_protocol": "tsc-v154u-cologne-recalibrated-no-stay-closed-loop-v1",
+      "reused": true,
+      "metrics": {
+        "mean_tripinfo_waiting_time": 18.99106699751861,
+        "system_vehicle_hours": 39.29527777777778,
+        "active_vehicle_hours": 33.56861111111111,
+        "pending_vehicle_hours": 5.726666666666667,
+        "mean_tripinfo_depart_delay": 10.250124069478908,
+        "mean_queue": 9.857949731714205,
+        "departed": 2015,
+        "arrived": 1992,
+        "active_vehicles_at_horizon": 23,
+        "pending_vehicles_at_horizon": 0,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": []
+    },
+    {
+      "seed": 63792,
+      "arm": "phase_pressure",
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154i_cologne_priority_yellow_comparison_20260909/seed_63792/phase_pressure/result.json",
+      "task_id": "t91640",
+      "elapsed_sec": 4.05875718803145,
+      "reused": true,
+      "source_protocol": "tsc-v154i-cologne-priority-yellow-comparison-v1",
+      "metrics": {
+        "mean_tripinfo_waiting_time": 14.645657568238214,
+        "system_vehicle_hours": 34.18555555555555,
+        "active_vehicle_hours": 29.68777777777778,
+        "pending_vehicle_hours": 4.497777777777777,
+        "mean_tripinfo_depart_delay": 8.054590570719602,
+        "mean_queue": 7.591640779440836,
+        "departed": 2015,
+        "arrived": 1998,
+        "active_vehicles_at_horizon": 17,
+        "pending_vehicles_at_horizon": 0,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": [],
+      "source_arm": "phase_pressure"
+    }
+  ],
+  "safety_by_arm": {
+    "spaced_no_stay_rigid": {
+      "all_seed_runs_valid": true,
+      "zero_incident_seed_count": 2,
+      "zero_incident_status": "FAIL",
+      "collision_incidents_total": 1,
+      "collision_events_total": 13,
+      "starting_teleports_total": 0,
+      "ending_teleports_total": 0
+    },
+    "recalibrated_no_stay_rigid": {
+      "all_seed_runs_valid": true,
+      "zero_incident_seed_count": 3,
+      "zero_incident_status": "PASS",
+      "collision_incidents_total": 0,
+      "collision_events_total": 0,
+      "starting_teleports_total": 0,
+      "ending_teleports_total": 0
+    },
+    "phase_pressure": {
+      "all_seed_runs_valid": true,
+      "zero_incident_seed_count": 3,
+      "zero_incident_status": "PASS",
+      "collision_incidents_total": 0,
+      "collision_events_total": 0,
+      "starting_teleports_total": 0,
+      "ending_teleports_total": 0
+    }
+  },
+  "all_seed_service": {
+    "seeds": [
+      52282,
+      41242,
+      63792
+    ],
+    "weighting": "equal_seed",
+    "means_by_arm": {
+      "spaced_no_stay_rigid": {
+        "mean_tripinfo_waiting_time": 13.918279734168513,
+        "system_vehicle_hours": 33.32,
+        "active_vehicle_hours": 29.18101851851852,
+        "pending_vehicle_hours": 4.138981481481482,
+        "mean_tripinfo_depart_delay": 7.413514743363864,
+        "mean_queue": 7.282876776805046,
+        "departed": 2014.6666666666667,
+        "arrived": 1997.6666666666667,
+        "active_vehicles_at_horizon": 17,
+        "pending_vehicles_at_horizon": 0.3333333333333333
+      },
+      "recalibrated_no_stay_rigid": {
+        "mean_tripinfo_waiting_time": 16.57781480376274,
+        "system_vehicle_hours": 36.74490740740741,
+        "active_vehicle_hours": 31.54388888888889,
+        "pending_vehicle_hours": 5.201018518518518,
+        "mean_tripinfo_depart_delay": 9.31397486895675,
+        "mean_queue": 8.78443001035489,
+        "departed": 2013.6666666666667,
+        "arrived": 1991.6666666666667,
+        "active_vehicles_at_horizon": 22,
+        "pending_vehicles_at_horizon": 1.3333333333333333
+      },
+      "phase_pressure": {
+        "mean_tripinfo_waiting_time": 14.037386269644335,
+        "system_vehicle_hours": 33.2224074074074,
+        "active_vehicle_hours": 29.145,
+        "pending_vehicle_hours": 4.077407407407407,
+        "mean_tripinfo_depart_delay": 7.302398676592225,
+        "mean_queue": 7.233643980043302,
+        "departed": 2015,
+        "arrived": 1997.6666666666667,
+        "active_vehicles_at_horizon": 17.333333333333332,
+        "pending_vehicles_at_horizon": 0
+      }
+    },
+    "spaced_vs_continuous": {
+      "mean_tripinfo_waiting_time": {
+        "difference_mean": -2.659535069594229,
+        "relative_difference_of_means_percent": -16.042736036540727,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -2.9234353186094353
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": 0.9349040586859712
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -5.990073948859228
+          }
+        ]
+      },
+      "system_vehicle_hours": {
+        "difference_mean": -3.42490740740741,
+        "relative_difference_of_means_percent": -9.320767554082831,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -3.4408333333333303
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": -0.3630555555555617
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -6.470833333333331
+          }
+        ]
+      },
+      "active_vehicle_hours": {
+        "difference_mean": -2.36287037037037,
+        "relative_difference_of_means_percent": -7.490738946911124,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -2.3944444444444457
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": 0.3455555555555563
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -5.03972222222222
+          }
+        ]
+      },
+      "pending_vehicle_hours": {
+        "difference_mean": -1.0620370370370367,
+        "relative_difference_of_means_percent": -20.41978957113101,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -1.046388888888889
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": -0.7086111111111109
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -1.431111111111111
+          }
+        ]
+      },
+      "mean_tripinfo_depart_delay": {
+        "difference_mean": -1.9004601255928861,
+        "relative_difference_of_means_percent": -20.404393959952294,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -1.8781287461336191
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": -1.269751195724223
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -2.5535004349208146
+          }
+        ]
+      },
+      "mean_queue": {
+        "difference_mean": -1.5015532335498447,
+        "relative_difference_of_means_percent": -17.09334847884094,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -1.633154476136684
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": 0.07060152499294148
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -2.9421067495057898
+          }
+        ]
+      },
+      "departed": {
+        "difference_mean": 1.0,
+        "relative_difference_of_means_percent": 0.04966065220990412,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 3
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": 1
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -1
+          }
+        ]
+      },
+      "arrived": {
+        "difference_mean": 6.0,
+        "relative_difference_of_means_percent": 0.3012552301255189,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 9
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": 4
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": 5
+          }
+        ]
+      },
+      "active_vehicles_at_horizon": {
+        "difference_mean": -5,
+        "relative_difference_of_means_percent": -22.72727272727273,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -6
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": -3
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -6
+          }
+        ]
+      },
+      "pending_vehicles_at_horizon": {
+        "difference_mean": -1.0,
+        "relative_difference_of_means_percent": -75.0,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -3
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": -1
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": 1
+          }
+        ]
+      }
+    },
+    "spaced_vs_phase_pressure": {
+      "mean_tripinfo_waiting_time": {
+        "difference_mean": -0.11910653547582228,
+        "relative_difference_of_means_percent": -0.8484951057689982,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0.015880893300249
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": 1.2714640198511145
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -1.6446645195788303
+          }
+        ]
+      },
+      "system_vehicle_hours": {
+        "difference_mean": 0.09759259259259778,
+        "relative_difference_of_means_percent": 0.29375533023785483,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0.2780555555555573
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": 1.3758333333333326
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -1.3611111111111072
+          }
+        ]
+      },
+      "active_vehicle_hours": {
+        "difference_mean": 0.03601851851852089,
+        "relative_difference_of_means_percent": 0.12358386865163329,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0.13194444444444287
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": 1.1350000000000016
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -1.1588888888888889
+          }
+        ]
+      },
+      "pending_vehicle_hours": {
+        "difference_mean": 0.061574074074074225,
+        "relative_difference_of_means_percent": 1.5101280770278835,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0.1461111111111113
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": 0.24083333333333368
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -0.20222222222222186
+          }
+        ]
+      },
+      "mean_tripinfo_depart_delay": {
+        "difference_mean": 0.11111606677163888,
+        "relative_difference_of_means_percent": 1.5216379123180523,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0.2610421836228287
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": 0.43027295285359823
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -0.35796693616150943
+          }
+        ]
+      },
+      "mean_queue": {
+        "difference_mean": 0.049232796761743636,
+        "relative_difference_of_means_percent": 0.6806085134625217,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0.2084157017791588
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": 0.6150804857384928
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -0.6757977972324207
+          }
+        ]
+      },
+      "departed": {
+        "difference_mean": -0.33333333333325754,
+        "relative_difference_of_means_percent": -0.016542597187751973,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": 0
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -1
+          }
+        ]
+      },
+      "arrived": {
+        "difference_mean": 0.0,
+        "relative_difference_of_means_percent": 0.0,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 2
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": -1
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -1
+          }
+        ]
+      },
+      "active_vehicles_at_horizon": {
+        "difference_mean": -0.33333333333333215,
+        "relative_difference_of_means_percent": -1.9230769230769162,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -2
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": 1
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": 0
+          }
+        ]
+      },
+      "pending_vehicles_at_horizon": {
+        "difference_mean": 0.3333333333333333,
+        "relative_difference_of_means_percent": null,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0
+          },
+          {
+            "seed": 41242,
+            "spaced_minus_reference": 0
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": 1
+          }
+        ]
+      }
+    }
+  },
+  "additional_seed_service": {
+    "seeds": [
+      52282,
+      63792
+    ],
+    "weighting": "equal_seed",
+    "means_by_arm": {
+      "spaced_no_stay_rigid": {
+        "mean_tripinfo_waiting_time": 12.825806698026962,
+        "system_vehicle_hours": 32.528055555555554,
+        "active_vehicle_hours": 28.351805555555558,
+        "pending_vehicle_hours": 4.17625,
+        "mean_tripinfo_depart_delay": 7.4808180207529915,
+        "mean_queue": 6.831262355266874,
+        "departed": 2014.5,
+        "arrived": 1998,
+        "active_vehicles_at_horizon": 16.5,
+        "pending_vehicles_at_horizon": 0.5
+      },
+      "recalibrated_no_stay_rigid": {
+        "mean_tripinfo_waiting_time": 17.282561331761293,
+        "system_vehicle_hours": 37.483888888888885,
+        "active_vehicle_hours": 32.06888888888889,
+        "pending_vehicle_hours": 5.415,
+        "mean_tripinfo_depart_delay": 9.696632611280208,
+        "mean_queue": 9.118892968088112,
+        "departed": 2013.5,
+        "arrived": 1991,
+        "active_vehicles_at_horizon": 22.5,
+        "pending_vehicles_at_horizon": 1.5
+      },
+      "phase_pressure": {
+        "mean_tripinfo_waiting_time": 13.640198511166254,
+        "system_vehicle_hours": 33.069583333333334,
+        "active_vehicle_hours": 28.865277777777777,
+        "pending_vehicle_hours": 4.204305555555555,
+        "mean_tripinfo_depart_delay": 7.529280397022332,
+        "mean_queue": 7.064953402993504,
+        "departed": 2015,
+        "arrived": 1997.5,
+        "active_vehicles_at_horizon": 17.5,
+        "pending_vehicles_at_horizon": 0
+      }
+    },
+    "spaced_vs_continuous": {
+      "mean_tripinfo_waiting_time": {
+        "difference_mean": -4.456754633734331,
+        "relative_difference_of_means_percent": -25.787581760487445,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -2.9234353186094353
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -5.990073948859228
+          }
+        ]
+      },
+      "system_vehicle_hours": {
+        "difference_mean": -4.955833333333331,
+        "relative_difference_of_means_percent": -13.221235790191333,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -3.4408333333333303
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -6.470833333333331
+          }
+        ]
+      },
+      "active_vehicle_hours": {
+        "difference_mean": -3.717083333333335,
+        "relative_difference_of_means_percent": -11.59093271429562,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -2.3944444444444457
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -5.03972222222222
+          }
+        ]
+      },
+      "pending_vehicle_hours": {
+        "difference_mean": -1.2387500000000005,
+        "relative_difference_of_means_percent": -22.876269621421986,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -1.046388888888889
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -1.431111111111111
+          }
+        ]
+      },
+      "mean_tripinfo_depart_delay": {
+        "difference_mean": -2.2158145905272164,
+        "relative_difference_of_means_percent": -22.851382323689695,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -1.8781287461336191
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -2.5535004349208146
+          }
+        ]
+      },
+      "mean_queue": {
+        "difference_mean": -2.2876306128212374,
+        "relative_difference_of_means_percent": -25.08671415298854,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -1.633154476136684
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -2.9421067495057898
+          }
+        ]
+      },
+      "departed": {
+        "difference_mean": 1.0,
+        "relative_difference_of_means_percent": 0.04966476285075405,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 3
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -1
+          }
+        ]
+      },
+      "arrived": {
+        "difference_mean": 7,
+        "relative_difference_of_means_percent": 0.35158211953791874,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 9
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": 5
+          }
+        ]
+      },
+      "active_vehicles_at_horizon": {
+        "difference_mean": -6.0,
+        "relative_difference_of_means_percent": -26.66666666666667,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -6
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -6
+          }
+        ]
+      },
+      "pending_vehicles_at_horizon": {
+        "difference_mean": -1.0,
+        "relative_difference_of_means_percent": -66.66666666666667,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -3
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": 1
+          }
+        ]
+      }
+    },
+    "spaced_vs_phase_pressure": {
+      "mean_tripinfo_waiting_time": {
+        "difference_mean": -0.8143918131392915,
+        "relative_difference_of_means_percent": -5.970527573133245,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0.015880893300249
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -1.6446645195788303
+          }
+        ]
+      },
+      "system_vehicle_hours": {
+        "difference_mean": -0.5415277777777803,
+        "relative_difference_of_means_percent": -1.6375403715230163,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0.2780555555555573
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -1.3611111111111072
+          }
+        ]
+      },
+      "active_vehicle_hours": {
+        "difference_mean": -0.5134722222222194,
+        "relative_difference_of_means_percent": -1.778857720252125,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0.13194444444444287
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -1.1588888888888889
+          }
+        ]
+      },
+      "pending_vehicle_hours": {
+        "difference_mean": -0.0280555555555555,
+        "relative_difference_of_means_percent": -0.6673053417462271,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0.1461111111111113
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -0.20222222222222186
+          }
+        ]
+      },
+      "mean_tripinfo_depart_delay": {
+        "difference_mean": -0.0484623762693408,
+        "relative_difference_of_means_percent": -0.64365216480059,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0.2610421836228287
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -0.35796693616150943
+          }
+        ]
+      },
+      "mean_queue": {
+        "difference_mean": -0.23369104772663007,
+        "relative_difference_of_means_percent": -3.307750729503922,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0.2084157017791588
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -0.6757977972324207
+          }
+        ]
+      },
+      "departed": {
+        "difference_mean": -0.5,
+        "relative_difference_of_means_percent": -0.02481389578163906,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -1
+          }
+        ]
+      },
+      "arrived": {
+        "difference_mean": 0.5,
+        "relative_difference_of_means_percent": 0.02503128911139907,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 2
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": -1
+          }
+        ]
+      },
+      "active_vehicles_at_horizon": {
+        "difference_mean": -1.0,
+        "relative_difference_of_means_percent": -5.714285714285716,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": -2
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": 0
+          }
+        ]
+      },
+      "pending_vehicles_at_horizon": {
+        "difference_mean": 0.5,
+        "relative_difference_of_means_percent": null,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "spaced_minus_reference": 0
+          },
+          {
+            "seed": 63792,
+            "spaced_minus_reference": 1
+          }
+        ]
+      }
+    }
+  },
+  "execution_diagnosis": {
+    "per_seed": [
+      {
+        "seed": 52282,
+        "decisions": 308,
+        "raw_model_proposals": 236,
+        "threshold_rejected_proposals": 68,
+        "stay_veto_count": 79,
+        "originator_passed_proposals": 89,
+        "actual_accepted_overrides": 8,
+        "cooldown_rejected_proposals": 81,
+        "executed_switch_overrides": 8,
+        "executed_stay_overrides": 0,
+        "rejected_executor": 0,
+        "phase_switches": 261
+      },
+      {
+        "seed": 41242,
+        "decisions": 309,
+        "raw_model_proposals": 242,
+        "threshold_rejected_proposals": 82,
+        "stay_veto_count": 84,
+        "originator_passed_proposals": 76,
+        "actual_accepted_overrides": 8,
+        "cooldown_rejected_proposals": 68,
+        "executed_switch_overrides": 8,
+        "executed_stay_overrides": 0,
+        "rejected_executor": 0,
+        "phase_switches": 256
+      },
+      {
+        "seed": 63792,
+        "decisions": 312,
+        "raw_model_proposals": 240,
+        "threshold_rejected_proposals": 75,
+        "stay_veto_count": 85,
+        "originator_passed_proposals": 80,
+        "actual_accepted_overrides": 8,
+        "cooldown_rejected_proposals": 72,
+        "executed_switch_overrides": 8,
+        "executed_stay_overrides": 0,
+        "rejected_executor": 0,
+        "phase_switches": 257
+      }
+    ],
+    "totals": {
+      "decisions": 929,
+      "raw_model_proposals": 718,
+      "threshold_rejected_proposals": 225,
+      "stay_veto_count": 248,
+      "originator_passed_proposals": 245,
+      "actual_accepted_overrides": 24,
+      "cooldown_rejected_proposals": 221,
+      "executed_switch_overrides": 24,
+      "executed_stay_overrides": 0,
+      "rejected_executor": 0,
+      "phase_switches": 774
+    },
+    "spacing_by_seed": [
+      {
+        "seed": 52282,
+        "accepted_times_sec": [
+          25280.0,
+          25860.0,
+          26360.0,
+          26830.0,
+          27280.0,
+          27780.0,
+          28260.0,
+          28710.0
+        ],
+        "minimum_intervention_gap_sec": 450.0,
+        "accepted_intervention_trace": [
+          {
+            "time_sec": 25280.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "rrrrrGGGGGrrrrrsrrrr",
+            "selected_phase_state": "GGGggrrrrrGGGggrrrrr",
+            "priority": 0.25241589118669666,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 4,
+              "proposed_index": 2,
+              "selected_index": 2,
+              "rigid_selected_index": 2,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.25241589118669666,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.25241589118669666,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.25241589118669666,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "rrrrrGGGGGrrrrrsrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 5.509013122146799,
+            "total_vehicles": 10.0,
+            "mean_speed": 13.125208806678193,
+            "mean_occupancy": 0.04506561073399534
+          },
+          {
+            "time_sec": 25860.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "srrrrrrrrrGGGGGrrrrr",
+            "selected_phase_state": "rrrrrGGGggrrrrrGGGgg",
+            "priority": 0.43945896830201475,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 0,
+              "proposed_index": 6,
+              "selected_index": 6,
+              "rigid_selected_index": 6,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.43945896830201475,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.43945896830201475,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.43945896830201475,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "rrrrrsrrrrrrrrrGGGGG",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 21.692833397379662,
+            "total_vehicles": 19.0,
+            "mean_speed": 8.530477253724474,
+            "mean_occupancy": 0.21416698689829686
+          },
+          {
+            "time_sec": 26360.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "GGGGGrrrrrsrrrrrrrrr",
+            "selected_phase_state": "rrrrrrrrGGrrrrrrrrGG",
+            "priority": 0.6878270926978404,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 1,
+              "proposed_index": 7,
+              "selected_index": 7,
+              "rigid_selected_index": 7,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.6878270926978404,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.6878270926978404,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.6878270926978404,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "rrrrrGGGggrrrrrGGGgg",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 4.505959539534484,
+            "total_vehicles": 10.0,
+            "mean_speed": 13.900898358257631,
+            "mean_occupancy": 0.02979769767242149
+          },
+          {
+            "time_sec": 26830.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "rrrrrGGGggrrrrrGGGgg",
+            "selected_phase_state": "rrrrrGGGGGrrrrrsrrrr",
+            "priority": 0.21074964198547852,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 6,
+              "proposed_index": 4,
+              "selected_index": 4,
+              "rigid_selected_index": 4,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.21074964198547852,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.21074964198547852,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.21074964198547852,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "rrrrrGGGggrrrrrGGGgg",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 28.52520652031113,
+            "total_vehicles": 30.0,
+            "mean_speed": 9.528794058365863,
+            "mean_occupancy": 0.1260326015556464
+          },
+          {
+            "time_sec": 27280.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "rrrrrGGGggrrrrrGGGgg",
+            "selected_phase_state": "rrrrrGGGGGrrrrrsrrrr",
+            "priority": 0.5618743608356042,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 6,
+              "proposed_index": 4,
+              "selected_index": 4,
+              "rigid_selected_index": 4,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.5618743608356042,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.5618743608356042,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.5618743608356042,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "srrrrrrrrrGGGGGrrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 26.0,
+            "total_queue": 3.8103026898526546,
+            "total_vehicles": 8.0,
+            "mean_speed": 11.482769357166895,
+            "mean_occupancy": 0.05151344926327241
+          },
+          {
+            "time_sec": 27780.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "GGGggrrrrrGGGggrrrrr",
+            "selected_phase_state": "srrrrrrrrrGGGGGrrrrr",
+            "priority": 0.3613025312961152,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 2,
+              "proposed_index": 0,
+              "selected_index": 0,
+              "rigid_selected_index": 0,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.3613025312961152,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.3613025312961152,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.3613025312961152,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "GGGggrrrrrGGGggrrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 26.0,
+            "total_queue": 21.43079708972875,
+            "total_vehicles": 24.0,
+            "mean_speed": 8.483359094837247,
+            "mean_occupancy": 0.15398544864375646
+          },
+          {
+            "time_sec": 28260.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "GGGggrrrrrGGGggrrrrr",
+            "selected_phase_state": "GGGGGrrrrrsrrrrrrrrr",
+            "priority": 0.37656997885235804,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 2,
+              "proposed_index": 1,
+              "selected_index": 1,
+              "rigid_selected_index": 1,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.37656997885235804,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.37656997885235804,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.37656997885235804,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "GGGggrrrrrGGGggrrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 5.20936436630374,
+            "total_vehicles": 12.0,
+            "mean_speed": 12.339552698787724,
+            "mean_occupancy": 0.04682183151870206
+          },
+          {
+            "time_sec": 28710.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "rrrrrGGGggrrrrrGGGgg",
+            "selected_phase_state": "rrrrrGGGGGrrrrrsrrrr",
+            "priority": 0.3126611262157993,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 6,
+              "proposed_index": 4,
+              "selected_index": 4,
+              "rigid_selected_index": 4,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.3126611262157993,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.3126611262157993,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.3126611262157993,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "GGGGGrrrrrsrrrrrrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 6.214565010979821,
+            "total_vehicles": 12.0,
+            "mean_speed": 10.965824144510453,
+            "mean_occupancy": 0.0728250548991026
+          }
+        ],
+        "maximum_green_elapsed_sec_by_tls": {
+          "cluster_357187_359543": 46.0
+        }
+      },
+      {
+        "seed": 41242,
+        "accepted_times_sec": [
+          25280.0,
+          25850.0,
+          26400.0,
+          26860.0,
+          27310.0,
+          27780.0,
+          28270.0,
+          28730.0
+        ],
+        "minimum_intervention_gap_sec": 450.0,
+        "accepted_intervention_trace": [
+          {
+            "time_sec": 25280.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "rrrrrGGGGGrrrrrsrrrr",
+            "selected_phase_state": "GGGggrrrrrGGGggrrrrr",
+            "priority": 0.27267296643955335,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 4,
+              "proposed_index": 2,
+              "selected_index": 2,
+              "rigid_selected_index": 2,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.27267296643955335,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.27267296643955335,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.27267296643955335,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "rrrrrGGGGGrrrrrsrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 5.5085741705609355,
+            "total_vehicles": 10.0,
+            "mean_speed": 12.35644084876741,
+            "mean_occupancy": 0.04287085280467741
+          },
+          {
+            "time_sec": 25850.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "rrrrrsrrrrrrrrrGGGGG",
+            "selected_phase_state": "rrrGGrrrrrrrrGGrrrrr",
+            "priority": 0.6434278742066531,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 5,
+              "proposed_index": 3,
+              "selected_index": 3,
+              "rigid_selected_index": 3,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.6434278742066531,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.6434278742066531,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.6434278742066531,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "GGGggrrrrrGGGggrrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 15.042249255159593,
+            "total_vehicles": 20.0,
+            "mean_speed": 9.266023586817136,
+            "mean_occupancy": 0.2112462757979773
+          },
+          {
+            "time_sec": 26400.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "GGGggrrrrrGGGggrrrrr",
+            "selected_phase_state": "GGGGGrrrrrsrrrrrrrrr",
+            "priority": 0.31696602682989033,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 2,
+              "proposed_index": 1,
+              "selected_index": 1,
+              "rigid_selected_index": 1,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.31696602682989033,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.31696602682989033,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.31696602682989033,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "rrrrrGGGggrrrrrGGGgg",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 8.206860668787877,
+            "total_vehicles": 12.0,
+            "mean_speed": 11.606467163600056,
+            "mean_occupancy": 0.034303343939384195
+          },
+          {
+            "time_sec": 26860.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "rrrrrGGGGGrrrrrsrrrr",
+            "selected_phase_state": "rrrrrGGGggrrrrrGGGgg",
+            "priority": 0.588072295533269,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 4,
+              "proposed_index": 6,
+              "selected_index": 6,
+              "rigid_selected_index": 6,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.588072295533269,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.588072295533269,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.588072295533269,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "rrrrrGGGGGrrrrrsrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 26.821694277428225,
+            "total_vehicles": 28.0,
+            "mean_speed": 10.38806820964803,
+            "mean_occupancy": 0.10847138714113409
+          },
+          {
+            "time_sec": 27310.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "GGGggrrrrrGGGggrrrrr",
+            "selected_phase_state": "GGGGGrrrrrsrrrrrrrrr",
+            "priority": 0.4963222501839761,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 2,
+              "proposed_index": 1,
+              "selected_index": 1,
+              "rigid_selected_index": 1,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.4963222501839761,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.4963222501839761,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.4963222501839761,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "GGGggrrrrrGGGggrrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 16.0,
+            "total_queue": 3.105695578660301,
+            "total_vehicles": 6.0,
+            "mean_speed": 12.389724672444512,
+            "mean_occupancy": 0.028477893301504787
+          },
+          {
+            "time_sec": 27780.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "GGGggrrrrrGGGggrrrrr",
+            "selected_phase_state": "srrrrrrrrrGGGGGrrrrr",
+            "priority": 0.6219994708089377,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 2,
+              "proposed_index": 0,
+              "selected_index": 0,
+              "rigid_selected_index": 0,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.6219994708089377,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.6219994708089377,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.6219994708089377,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "GGGggrrrrrGGGggrrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 26.0,
+            "total_queue": 26.840291298278842,
+            "total_vehicles": 28.0,
+            "mean_speed": 9.280020560516261,
+            "mean_occupancy": 0.20145649139420949
+          },
+          {
+            "time_sec": 28270.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "GGGggrrrrrGGGggrrrrr",
+            "selected_phase_state": "GGGGGrrrrrsrrrrrrrrr",
+            "priority": 0.6139112044614979,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 2,
+              "proposed_index": 1,
+              "selected_index": 1,
+              "rigid_selected_index": 1,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.6139112044614979,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.6139112044614979,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.6139112044614979,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "GGGggrrrrrGGGggrrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 5.907798650754455,
+            "total_vehicles": 14.0,
+            "mean_speed": 13.607540096151963,
+            "mean_occupancy": 0.03899325377227977
+          },
+          {
+            "time_sec": 28730.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "rrrrrGGGggrrrrrGGGgg",
+            "selected_phase_state": "rrrrrGGGGGrrrrrsrrrr",
+            "priority": 0.2542853351920058,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 6,
+              "proposed_index": 4,
+              "selected_index": 4,
+              "rigid_selected_index": 4,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.2542853351920058,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.2542853351920058,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.2542853351920058,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "GGGGGrrrrrsrrrrrrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 5.811862313715305,
+            "total_vehicles": 8.0,
+            "mean_speed": 11.095438885633921,
+            "mean_occupancy": 0.05931156857652385
+          }
+        ],
+        "maximum_green_elapsed_sec_by_tls": {
+          "cluster_357187_359543": 46.0
+        }
+      },
+      {
+        "seed": 63792,
+        "accepted_times_sec": [
+          25270.0,
+          25780.0,
+          26400.0,
+          26860.0,
+          27310.0,
+          27760.0,
+          28280.0,
+          28730.0
+        ],
+        "minimum_intervention_gap_sec": 450.0,
+        "accepted_intervention_trace": [
+          {
+            "time_sec": 25270.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "rrrrrGGGGGrrrrrsrrrr",
+            "selected_phase_state": "rrrrrrrrGGrrrrrrrrGG",
+            "priority": 0.7127129057376553,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 4,
+              "proposed_index": 7,
+              "selected_index": 7,
+              "rigid_selected_index": 7,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.7127129057376553,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.7127129057376553,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.7127129057376553,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "GGGGGrrrrrsrrrrrrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 4.808098342283035,
+            "total_vehicles": 8.0,
+            "mean_speed": 11.21820784469137,
+            "mean_occupancy": 0.04049171141517546
+          },
+          {
+            "time_sec": 25780.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "rrrrrGGGggrrrrrGGGgg",
+            "selected_phase_state": "GGGggrrrrrGGGggrrrrr",
+            "priority": 0.36543776686200935,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 6,
+              "proposed_index": 2,
+              "selected_index": 2,
+              "rigid_selected_index": 2,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.36543776686200935,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.36543776686200935,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.36543776686200935,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "rrrrrGGGggrrrrrGGGgg",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 16.093330856126933,
+            "total_vehicles": 23.0,
+            "mean_speed": 6.063082402574627,
+            "mean_occupancy": 0.2166542806346598
+          },
+          {
+            "time_sec": 26400.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "GGGggrrrrrGGGggrrrrr",
+            "selected_phase_state": "GGGGGrrrrrsrrrrrrrrr",
+            "priority": 0.3876380943104894,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 2,
+              "proposed_index": 1,
+              "selected_index": 1,
+              "rigid_selected_index": 1,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.3876380943104894,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.3876380943104894,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.3876380943104894,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "GGGggrrrrrGGGggrrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 5.506904645988882,
+            "total_vehicles": 10.0,
+            "mean_speed": 12.431362934527698,
+            "mean_occupancy": 0.034523229944417005
+          },
+          {
+            "time_sec": 26860.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "rrrrrGGGGGrrrrrsrrrr",
+            "selected_phase_state": "GGGggrrrrrGGGggrrrrr",
+            "priority": 0.2777112468260492,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 4,
+              "proposed_index": 2,
+              "selected_index": 2,
+              "rigid_selected_index": 2,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.2777112468260492,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.2777112468260492,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.2777112468260492,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "rrrrrGGGGGrrrrrsrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 17.769921599740993,
+            "total_vehicles": 25.0,
+            "mean_speed": 10.300451612483013,
+            "mean_occupancy": 0.099607998704972
+          },
+          {
+            "time_sec": 27310.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "GGGggrrrrrGGGggrrrrr",
+            "selected_phase_state": "GGGGGrrrrrsrrrrrrrrr",
+            "priority": 0.7069702521063977,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 2,
+              "proposed_index": 1,
+              "selected_index": 1,
+              "rigid_selected_index": 1,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.7069702521063977,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.7069702521063977,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.7069702521063977,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "GGGggrrrrrGGGggrrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 16.0,
+            "total_queue": 1.7531039682456433,
+            "total_vehicles": 5.0,
+            "mean_speed": 15.178518683675374,
+            "mean_occupancy": 0.015519841228216456
+          },
+          {
+            "time_sec": 27760.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "GGGggrrrrrGGGggrrrrr",
+            "selected_phase_state": "rrrrrGGGggrrrrrGGGgg",
+            "priority": 0.29239377845885495,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 2,
+              "proposed_index": 6,
+              "selected_index": 6,
+              "rigid_selected_index": 6,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.29239377845885495,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.29239377845885495,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.29239377845885495,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "GGGggrrrrrGGGggrrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 17.490855999524538,
+            "total_vehicles": 27.0,
+            "mean_speed": 10.890033667329828,
+            "mean_occupancy": 0.2042799976226935
+          },
+          {
+            "time_sec": 28280.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "GGGggrrrrrGGGggrrrrr",
+            "selected_phase_state": "GGGGGrrrrrsrrrrrrrrr",
+            "priority": 0.8229057005504622,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 2,
+              "proposed_index": 1,
+              "selected_index": 1,
+              "rigid_selected_index": 1,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.8229057005504622,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.8229057005504622,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.8229057005504622,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "GGGggrrrrrGGGggrrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 4.206311162189673,
+            "total_vehicles": 12.0,
+            "mean_speed": 13.453495301732982,
+            "mean_occupancy": 0.031555810948363114
+          },
+          {
+            "time_sec": 28730.0,
+            "tls_id": "cluster_357187_359543",
+            "prior_phase_state": "rrrrrGGGggrrrrrGGGgg",
+            "selected_phase_state": "rrrrrGGGGGrrrrrsrrrr",
+            "priority": 0.6214987066450804,
+            "selection_layer": "state_conditioned_source_utility",
+            "target_veto": null,
+            "target_originator": {
+              "reference_index": 6,
+              "proposed_index": 4,
+              "selected_index": 4,
+              "rigid_selected_index": 4,
+              "learned_differs": true,
+              "eligible": true,
+              "priority": 0.6214987066450804,
+              "rejection": null,
+              "arm": "rigid_target_only",
+              "source_city_admitted": false,
+              "utility_gate_selected": false,
+              "selected_candidate_key": null,
+              "source_changed_rigid_action": false,
+              "predicted_score": -0.6214987066450804,
+              "reference_score": 0.0,
+              "rigid_predicted_score": -0.6214987066450804,
+              "candidate_score_constraint": null,
+              "candidate_changed_rigid_group_count": 0,
+              "candidate_pressure_aligned_change_group_count": 0,
+              "candidate_off_reference_rejected_group_count": 0,
+              "source_changed_to_reference_action": false,
+              "source_changed_off_reference_action": false
+            },
+            "request_accepted": true,
+            "execution_effective": true,
+            "override_kind": "switch",
+            "executor_mode_before": "green",
+            "current_green_state_before": "GGGGGrrrrrsrrrrrrrrr",
+            "global_cooldown_active_before": false,
+            "stay_bypass_remaining_before": 0,
+            "green_elapsed_sec_before": 6.0,
+            "total_queue": 4.460749131567639,
+            "total_vehicles": 7.0,
+            "mean_speed": 11.229851729230948,
+            "mean_occupancy": 0.053745657838199325
+          }
+        ],
+        "maximum_green_elapsed_sec_by_tls": {
+          "cluster_357187_359543": 46.0
+        }
+      }
+    ],
+    "continuous_baseline": {
+      "per_seed": [
+        {
+          "seed": 52282,
+          "decisions": 304,
+          "ungated_rigid_proposals_on_no_stay_trajectory": 245,
+          "accepted_overrides": 70,
+          "threshold_rejected_proposals": 95,
+          "stay_veto_count": 80,
+          "executed_stay_overrides": 0,
+          "phase_switches": 288
+        },
+        {
+          "seed": 41242,
+          "decisions": 312,
+          "ungated_rigid_proposals_on_no_stay_trajectory": 252,
+          "accepted_overrides": 75,
+          "threshold_rejected_proposals": 85,
+          "stay_veto_count": 92,
+          "executed_stay_overrides": 0,
+          "phase_switches": 290
+        },
+        {
+          "seed": 63792,
+          "decisions": 300,
+          "ungated_rigid_proposals_on_no_stay_trajectory": 237,
+          "accepted_overrides": 64,
+          "threshold_rejected_proposals": 81,
+          "stay_veto_count": 92,
+          "executed_stay_overrides": 0,
+          "phase_switches": 286
+        }
+      ],
+      "totals": {
+        "decisions": 916,
+        "ungated_rigid_proposals_on_no_stay_trajectory": 734,
+        "accepted_overrides": 209,
+        "threshold_rejected_proposals": 261,
+        "stay_veto_count": 264,
+        "executed_stay_overrides": 0,
+        "phase_switches": 864
+      },
+      "maximum_green_elapsed_sec_by_seed": [
+        {
+          "seed": 52282,
+          "by_tls": {
+            "cluster_357187_359543": 30.0
+          }
+        },
+        {
+          "seed": 41242,
+          "by_tls": {
+            "cluster_357187_359543": 35.0
+          }
+        },
+        {
+          "seed": 63792,
+          "by_tls": {
+            "cluster_357187_359543": 26.0
+          }
+        }
+      ]
+    },
+    "description": "Uncapped raw proposals first pass threshold and stay filters, then coordinator cooldown. Cooldown-rejected proposals are distinct from all PP decisions. Complete accepted traces verify actual switch spacing."
+  },
+  "new_task_ids": [
+    "t91944",
+    "t91945",
+    "t91946"
+  ],
+  "reused_task_ids": {
+    "recalibrated_no_stay_rigid": [
+      "t91893",
+      "t91894",
+      "t91895"
+    ],
+    "phase_pressure": [
+      "t91636",
+      "t91638",
+      "t91640"
+    ]
+  },
+  "new_simulation_count": 3,
+  "reused_cell_count": 6,
+  "new_model_fit_count": 0,
+  "threshold_retuned": false,
+  "new_simulation_elapsed_seconds_sum": 12.52235187892802,
+  "interpretation": "Only residual cooldown changes from U: an accepted model action reserves 10 seconds, followed by 440 seconds of PP continuation. Complete colliding runs remain in means; invalid runs disable means. These previously inspected seeds provide development evidence; the additional-two-seed summary excludes geometry-development seed41242.",
+  "retrieved_result_bytes": 201760,
+  "refs": {
+    "baseline_summary": "cf_h2o/results/paper_artifacts/tsc_v154u_cologne_recalibrated_no_stay_v1.json",
+    "launch_record": "cf_h2o/results/cluster/tsc_v154x_cologne_spaced_no_stay_20260910/launch_v1.json",
+    "protocol": "cf_h2o/results/cluster/tsc_v154x_cologne_spaced_no_stay_20260910/protocol_v1.json"
+  },
+  "outcome": {
+    "efficiency_status": "IMPROVED_VERSUS_CONTINUOUS_MODEL_WITHOUT_ESTABLISHED_PP_GAIN",
+    "primary_objective": "Existing halted_queue scalar cost: stopped-vehicle queue averaged over time and controlled lanes. The shared fixed network has eight controlled lanes.",
+    "mean_queue_by_arm": {
+      "spaced_no_stay_rigid": 7.282876776805046,
+      "recalibrated_no_stay_rigid": 8.78443001035489,
+      "phase_pressure": 7.233643980043302
+    },
+    "spaced_vs_continuous_percent": -17.09334847884094,
+    "spaced_vs_phase_pressure_percent": 0.6806085134625217,
+    "description": "All three full runs satisfy the frozen execution protocol and remain in the efficiency comparison. Spacing lowers the existing queue cost by17.09% versus continuous U deployment, while queue cost is0.68% above PP on the equal-seed mean.",
+    "interpretation": "The algorithm now approaches PP on the existing efficiency objective; a consistent gain over PP remains unestablished. Waiting, arrivals and vehicle hours describe service rather than defining additional optimization objectives.",
+    "collision_role": "Simulator diagnostic; the zero-incident diagnostic does not gate the efficiency conclusion or further model work. Investigate collision behavior when it changes the validity or interpretation of cost accounting.",
+    "collision_execution_evidence": {
+      "collision_action": "warn",
+      "starting_teleports_total": 0,
+      "ending_teleports_total": 0,
+      "collision_incidents_total": 1,
+      "collision_events_total": 13
+    }
+  },
+  "collision_diagnosis": {
+    "source_result": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154x_cologne_spaced_no_stay_20260910/evaluation/seed_41242/rigid_thresholded/result.json",
+    "seed": 41242,
+    "task_id": "t91945",
+    "incident": {
+      "incident_key": [
+        "154682_420_0",
+        "173017_426_0",
+        "collision",
+        "28198821#3_1"
+      ],
+      "first_time_sec": 26142.0,
+      "last_time_sec": 26154.0,
+      "event_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "first_participant_lanes": {
+        "collider": "28198821#3_1",
+        "victim": "28198821#3_1"
+      },
+      "first_participant_speeds_mps": {
+        "collider": 0.433469370503207,
+        "victim": 0.2705346812381668
+      },
+      "first_unavailable_participant_poses": {},
+      "participant_movements": {
+        "collider": null,
+        "victim": null
+      }
+    },
+    "first_event_observation_stage": "after_simulation_step_before_executor",
+    "first_event_participant_poses": {
+      "collider": {
+        "id": "154682_420_0",
+        "type_id": "pkw",
+        "lane_id": "28198821#3_1",
+        "lane_position_m": 51.333600744295794,
+        "speed_mps": 0.433469370503207,
+        "acceleration_mps2": 0.433469370503207,
+        "length_m": 4.3,
+        "route": [
+          "28198821#3",
+          "32038051#0"
+        ],
+        "next_tls": [
+          [
+            "cluster_357187_359543",
+            13,
+            5.856399255704204,
+            "y"
+          ]
+        ]
+      },
+      "victim": {
+        "id": "173017_426_0",
+        "type_id": "pkw",
+        "lane_id": "28198821#3_1",
+        "lane_position_m": 57.089,
+        "speed_mps": 0.2705346812381668,
+        "acceleration_mps2": -4.5598479202948505,
+        "length_m": 4.3,
+        "route": [
+          "28198821#3",
+          "32038051#0"
+        ],
+        "next_tls": [
+          [
+            "cluster_357187_359543",
+            13,
+            0.10099999999999909,
+            "y"
+          ]
+        ]
+      }
+    },
+    "same_lane_bumper_gap_m": 1.455399255704208,
+    "event_series": [
+      {
+        "time_sec": 26142.0,
+        "collider_speed_mps": 0.433469370503207,
+        "victim_speed_mps": 0.2705346812381668,
+        "link13_state": "y"
+      },
+      {
+        "time_sec": 26143.0,
+        "collider_speed_mps": 0.0,
+        "victim_speed_mps": 0.0,
+        "link13_state": "y"
+      },
+      {
+        "time_sec": 26144.0,
+        "collider_speed_mps": 0.0,
+        "victim_speed_mps": 0.0,
+        "link13_state": "r"
+      },
+      {
+        "time_sec": 26145.0,
+        "collider_speed_mps": 0.0,
+        "victim_speed_mps": 0.0,
+        "link13_state": "r"
+      },
+      {
+        "time_sec": 26146.0,
+        "collider_speed_mps": 0.0,
+        "victim_speed_mps": 0.0,
+        "link13_state": "r"
+      },
+      {
+        "time_sec": 26147.0,
+        "collider_speed_mps": 0.0,
+        "victim_speed_mps": 0.0,
+        "link13_state": "r"
+      },
+      {
+        "time_sec": 26148.0,
+        "collider_speed_mps": 0.0,
+        "victim_speed_mps": 0.0,
+        "link13_state": "r"
+      },
+      {
+        "time_sec": 26149.0,
+        "collider_speed_mps": 0.0,
+        "victim_speed_mps": 0.0,
+        "link13_state": "r"
+      },
+      {
+        "time_sec": 26150.0,
+        "collider_speed_mps": 0.0,
+        "victim_speed_mps": 0.0,
+        "link13_state": "r"
+      },
+      {
+        "time_sec": 26151.0,
+        "collider_speed_mps": 0.0,
+        "victim_speed_mps": 0.0,
+        "link13_state": "r"
+      },
+      {
+        "time_sec": 26152.0,
+        "collider_speed_mps": 0.0,
+        "victim_speed_mps": 0.0,
+        "link13_state": "r"
+      },
+      {
+        "time_sec": 26153.0,
+        "collider_speed_mps": 0.0,
+        "victim_speed_mps": 0.0,
+        "link13_state": "r"
+      },
+      {
+        "time_sec": 26154.0,
+        "collider_speed_mps": 0.0,
+        "victim_speed_mps": 0.0,
+        "link13_state": "r"
+      }
+    ],
+    "last_accepted_model_time_sec": 25850,
+    "next_accepted_model_time_sec": 26400,
+    "control_context": "The event occurs within the PP continuation after the t25850 accepted model switch. This timing does not assign cause to PP.",
+    "root_cause_status": "UNRESOLVED",
+    "missing_evidence": "Pre-event trajectories, runtime minimum-gap/following settings, and the relevant TLS/executor transitions are absent from this event inventory."
+  },
+  "validation": {
+    "focused_tests_passed": 35,
+    "test_files": [
+      "tests/test_no_stay_fraction_rigid.py",
+      "tests/test_thresholded_fraction_rigid.py",
+      "tests/test_cologne_spaced_no_stay_timing.py",
+      "tests/test_cologne_spaced_no_stay_summary.py"
+    ],
+    "runtime_spacing": "Each seed executes exactly eight model switches with minimum adjacent gap 450 seconds; zero executed model stays and zero executor rejections."
+  },
+  "next_step": {
+    "description": "Compare every accepted X action with a complete450-second window against PP from the same native state, using the existing halted_queue scalar cost.",
+    "fixed": [
+      "native P model",
+      "T threshold 0.20790450432178334",
+      "S stay veto",
+      "X 44-interval cooldown",
+      "repaired network",
+      "common executor",
+      "original demand and seed"
+    ],
+    "window_selection_rule": "All accepted intervention times with time+450<=28800; selection does not depend on predicted score or observed benefit.",
+    "native_prefix": "Replay the unchanged X policy from25200 to each selected time; no save/load restoration.",
+    "branches": [
+      "one10-second model action followed by440 seconds PP",
+      "PP throughout450 seconds"
+    ],
+    "complete_window_count": 21,
+    "complete_windows": [
+      {
+        "seed": 52282,
+        "time_sec": 25280.0,
+        "window_end_sec": 25730.0
+      },
+      {
+        "seed": 52282,
+        "time_sec": 25860.0,
+        "window_end_sec": 26310.0
+      },
+      {
+        "seed": 52282,
+        "time_sec": 26360.0,
+        "window_end_sec": 26810.0
+      },
+      {
+        "seed": 52282,
+        "time_sec": 26830.0,
+        "window_end_sec": 27280.0
+      },
+      {
+        "seed": 52282,
+        "time_sec": 27280.0,
+        "window_end_sec": 27730.0
+      },
+      {
+        "seed": 52282,
+        "time_sec": 27780.0,
+        "window_end_sec": 28230.0
+      },
+      {
+        "seed": 52282,
+        "time_sec": 28260.0,
+        "window_end_sec": 28710.0
+      },
+      {
+        "seed": 41242,
+        "time_sec": 25280.0,
+        "window_end_sec": 25730.0
+      },
+      {
+        "seed": 41242,
+        "time_sec": 25850.0,
+        "window_end_sec": 26300.0
+      },
+      {
+        "seed": 41242,
+        "time_sec": 26400.0,
+        "window_end_sec": 26850.0
+      },
+      {
+        "seed": 41242,
+        "time_sec": 26860.0,
+        "window_end_sec": 27310.0
+      },
+      {
+        "seed": 41242,
+        "time_sec": 27310.0,
+        "window_end_sec": 27760.0
+      },
+      {
+        "seed": 41242,
+        "time_sec": 27780.0,
+        "window_end_sec": 28230.0
+      },
+      {
+        "seed": 41242,
+        "time_sec": 28270.0,
+        "window_end_sec": 28720.0
+      },
+      {
+        "seed": 63792,
+        "time_sec": 25270.0,
+        "window_end_sec": 25720.0
+      },
+      {
+        "seed": 63792,
+        "time_sec": 25780.0,
+        "window_end_sec": 26230.0
+      },
+      {
+        "seed": 63792,
+        "time_sec": 26400.0,
+        "window_end_sec": 26850.0
+      },
+      {
+        "seed": 63792,
+        "time_sec": 26860.0,
+        "window_end_sec": 27310.0
+      },
+      {
+        "seed": 63792,
+        "time_sec": 27310.0,
+        "window_end_sec": 27760.0
+      },
+      {
+        "seed": 63792,
+        "time_sec": 27760.0,
+        "window_end_sec": 28210.0
+      },
+      {
+        "seed": 63792,
+        "time_sec": 28280.0,
+        "window_end_sec": 28730.0
+      }
+    ],
+    "incomplete_end_windows": [
+      {
+        "seed": 52282,
+        "time_sec": 28710.0,
+        "window_end_sec": 29160.0
+      },
+      {
+        "seed": 41242,
+        "time_sec": 28730.0,
+        "window_end_sec": 29180.0
+      },
+      {
+        "seed": 63792,
+        "time_sec": 28730.0,
+        "window_end_sec": 29180.0
+      }
+    ],
+    "primary_measure": "Model-branch mean halted_queue cost minus same-state PP-branch cost; retain all selected outcomes.",
+    "analysis": "Compare predicted advantage with native measured advantage, reporting equal-seed mean gain and beneficial/harmful counts.",
+    "purpose": "Determine whether remaining efficiency losses arise from model action ranking on the deployed X state distribution.",
+    "limitation": "These local action comparisons do not constitute a causal decomposition of the full-run difference from a PP trajectory with a different prefix."
+  }
+}

@@ -1,18 +1,28 @@
 \begin{abstract}
-Controllers transferred between traffic networks must rank actions under simultaneous changes in topology, demand and signal programs.
-Dense simulator-residual models can predict source transitions accurately while carrying action-common domain error into the target decision.
-We introduce anchored Causal-Factored Cross-City Model Transfer (CFCMT), a target-adapted action-ranking method that learns only matched counterfactual contrasts.
-For every restored simulator state, a rigid model predicts candidate-minus-reference cost from a declared local parent set and an all-action model predicts antisymmetric pairwise cost differences.
-A seed-blocked target selector chooses a constant or confidence-capped interpolation between the two, after which one model is refitted on all available adaptation groups.
-The pressure reference defines the contrast coordinate but is not a deployment fallback.
-
-Development used 18 SUMO networks from seven city groups.
-On an evaluation seed excluded from fitting and selection, leave-one-city-out normalized action regret decreased from 0.241 to 0.218 (9.84\%; six of seven city groups improved).
-We then froze the method before collecting labels from two external city-derived networks.
-Using uncalibrated target simulation from two adaptation seeds, the untouched-seed city-macro regret was 0.269, compared with 0.292 for the rigid anchor and 0.310 for a target-label-only comparator.
-In 56 matched 3,600-s closed-loop rollouts, CFCMT reduced all-departed waiting time from 159.15 to 149.17 s relative to an H2O$^+$-style dense residual baseline, a 6.27\% gain with a descriptive paired interval of [2.01, 17.19] s.
-A preregistered source-contribution test then paired the frozen CFCMT and target-label-only controllers on 64 new seeds and 512 rollouts.
-CFCMT improved Jinan by 3.04\% but regressed Los Angeles by 7.87\%; the equal-city relative difference was $+4.25\%$ (95\% interval $[-0.77,13.21]\%$), so the joint confirmation was rejected.
-MaxPressure and phase pressure also remained stronger in the original matrix.
-The evidence supports matched action contrast over dense residual transfer on these benchmarks, while showing that source data can induce target-network-specific negative transfer; it does not establish zero-shot transfer, field causal identification or universal benefit from cross-city data.
+Controllers transferred between traffic networks must rank actions under changes
+in topology, demand and signal programs.  We introduce anchored Causal-Factored
+Cross-City Model Transfer (CFCMT), a target-offline method that learns matched
+counterfactual action contrasts.  From each restored state, a parent-restricted
+rigid anchor and an antisymmetric all-pair model predict candidate-relative
+costs; a seed-blocked target selector freezes their blend before deployment.
+Target simulator labels make the setting calibration-light rather than
+zero-shot.  Development on 18 SUMO networks from seven city groups reduced
+leave-one-city-out normalized action regret by 9.84\% on an excluded seed, with
+six of seven groups improving.  After method freeze, the untouched-seed regret
+across two external networks was 0.269, compared with 0.292 for the
+rigid anchor and 0.310 for a legacy near-target-only comparator.  In 56 matched
+3,600-s rollouts, CFCMT reduced all-departed waiting by 6.27\% relative to a
+same-information dense residual baseline.  A preregistered 64-seed comparison
+then found a 3.04\% Jinan gain on all seed-level city contrasts but a 7.87\% Los
+Angeles regression, rejecting joint two-city source benefit.  A post-V91
+target-offline selector returned target-only control for Los
+Angeles and admitted a Hangzhou source component for Jinan before fresh
+rollouts.  On 56 further Jinan seeds, the admitted controller reduced waiting
+by 4.53\% relative to a strict zero-source-row target model (95\% paired
+interval, 4.28--4.79\%; 56/56 seeds improved).  Pressure policies
+remained stronger.  These results support matched action contrast over dense
+residual transfer and a protocol-specific V98 controller-pair gain in Jinan.
+Because the V98 comparator is a lower-capacity zero-source-row target model,
+that comparison does not isolate source-row contribution or establish universal
+cross-city benefit or superiority to pressure control.
 \end{abstract}

@@ -512,7 +512,8 @@ class PairwiseActionAdvantageRegressor:
         }
 
     def _features(self, dataset: MechanismDataset) -> np.ndarray:
-        features = np.asarray(dataset.features[:, self.feature_indices], dtype=float)
+        indices = _feature_indices(dataset.feature_names, self.feature_names)
+        features = np.asarray(dataset.features[:, indices], dtype=float)
         if self.include_context:
             features = np.concatenate([features, np.asarray(dataset.context, dtype=float)], axis=1)
         return features

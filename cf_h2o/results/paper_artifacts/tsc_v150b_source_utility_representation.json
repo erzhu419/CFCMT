@@ -1,0 +1,2833 @@
+{
+  "city_groups": [
+    "atlanta",
+    "cologne",
+    "hangzhou",
+    "ingolstadt",
+    "new_york",
+    "resco_synthetic",
+    "salt_lake_city"
+  ],
+  "claim_boundary": "V150B tests whether a fixed low-complexity representation predicts historical V144 source utility under city exclusion. It is neither closed-loop evidence nor fresh-city confirmation.",
+  "created_at_utc": "2026-09-07T19:32:33.436182+00:00",
+  "development_gate": {
+    "checks": {
+      "lower_pair_mae_than_existing": false,
+      "null_aware_improves_at_least_five_cities": false,
+      "null_aware_mean_improvement_at_least_0_0005": false,
+      "source_rank_above_placebo_median_by_0_10": true,
+      "source_rank_gain_at_least_0_10": true
+    },
+    "decision": "do_not_promote_right_of_way_representation",
+    "passed": false
+  },
+  "estimand": "v144_source_arm_minus_same_architecture_target_only_normalized_cost",
+  "feature_schema": {
+    "added_city_features": [
+      "right_of_way_mean:protected_green_ratio",
+      "right_of_way_mean:permissive_green_ratio",
+      "right_of_way_mean:green_shared_receiver_ratio",
+      "right_of_way_mean:green_uncontrolled_major_merge_ratio",
+      "right_of_way_mean:protected_uncontrolled_major_merge_ratio",
+      "right_of_way_mean:permissive_uncontrolled_major_merge_ratio",
+      "right_of_way_mean:green_receiver_competition_mean",
+      "right_of_way_mean:neighbor_phase_observation_ratio",
+      "right_of_way_mean:neighbor_current_protected_ratio_mean",
+      "right_of_way_mean:neighbor_current_permissive_ratio_mean",
+      "right_of_way_mean:neighbor_current_green_elapsed_norm_mean",
+      "right_of_way_mean:neighbor_switching_fraction",
+      "right_of_way_mean:neighbor_clearance_fraction_mean",
+      "right_of_way_std:protected_green_ratio",
+      "right_of_way_std:permissive_green_ratio",
+      "right_of_way_std:green_shared_receiver_ratio",
+      "right_of_way_std:green_uncontrolled_major_merge_ratio",
+      "right_of_way_std:protected_uncontrolled_major_merge_ratio",
+      "right_of_way_std:permissive_uncontrolled_major_merge_ratio",
+      "right_of_way_std:green_receiver_competition_mean",
+      "right_of_way_std:neighbor_phase_observation_ratio",
+      "right_of_way_std:neighbor_current_protected_ratio_mean",
+      "right_of_way_std:neighbor_current_permissive_ratio_mean",
+      "right_of_way_std:neighbor_current_green_elapsed_norm_mean",
+      "right_of_way_std:neighbor_switching_fraction",
+      "right_of_way_std:neighbor_clearance_fraction_mean"
+    ],
+    "existing_city_features": [
+      "context_mean:demand_per_tls",
+      "context_mean:demand_per_lane",
+      "context_mean:candidate_count_mean_norm",
+      "context_mean:green_ratio_mean",
+      "context_mean:phase_duration_mean_norm",
+      "context_mean:incoming_lane_cv",
+      "context_mean:controlled_link_cv",
+      "context_mean:signal_degree_mean_norm",
+      "context_mean:signal_graph_density",
+      "context_mean:signal_graph_reciprocity",
+      "context_mean:route_entropy_norm",
+      "context_mean:route_max_share",
+      "feature_mean:green_link_ratio",
+      "feature_mean:green_lane_ratio",
+      "feature_mean:current_phase_overlap",
+      "feature_mean:current_green_elapsed_norm",
+      "feature_mean:queue_concentration",
+      "feature_mean:graph_in_degree_norm",
+      "feature_mean:graph_out_degree_norm",
+      "feature_mean:graph_focal_to_neighbor_q_ratio",
+      "feature_std:green_link_ratio",
+      "feature_std:green_lane_ratio",
+      "feature_std:current_phase_overlap",
+      "feature_std:current_green_elapsed_norm",
+      "feature_std:queue_concentration",
+      "feature_std:graph_in_degree_norm",
+      "feature_std:graph_out_degree_norm",
+      "feature_std:graph_focal_to_neighbor_q_ratio"
+    ],
+    "pair_transform": "target_concat_source_minus_target_concat_absolute_difference",
+    "ridge_alphas_nested_selected": [
+      0.1,
+      1.0,
+      10.0,
+      100.0,
+      1000.0
+    ]
+  },
+  "information_boundary": {
+    "future_or_outcome_features_used": false,
+    "independent_confirmation": false,
+    "outer_evaluation_city_labels_used_for_fit": false,
+    "outer_evaluation_city_used_as_source": false,
+    "right_of_way_inputs": "network_topology_candidate_states_and_same-time-observed-neighbor_execution_only",
+    "v144_outcomes_used_as_training_labels_on_other_cities": true
+  },
+  "matched_cyclic_placebos": [
+    {
+      "cities": {
+        "atlanta": {
+          "null_aware_actual_effect": 0.025293723782444173,
+          "null_aware_selected_source": "hangzhou",
+          "selected_actual_effect": 0.025293723782444173,
+          "selected_predicted_effect": -0.003993805918234965,
+          "selected_source": "hangzhou",
+          "source_predictions": {
+            "cologne": {
+              "actual_effect": -0.018859547468897342,
+              "predicted_effect": -0.0035207269830432207
+            },
+            "hangzhou": {
+              "actual_effect": 0.025293723782444173,
+              "predicted_effect": -0.003993805918234965
+            },
+            "ingolstadt": {
+              "actual_effect": -0.016862125143300228,
+              "predicted_effect": 0.0004927425589085024
+            },
+            "new_york": {
+              "actual_effect": -0.026870838369878764,
+              "predicted_effect": -0.0004968348887054975
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.02951208206133275,
+              "predicted_effect": -0.001899441139038689
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.027335401911930717,
+              "predicted_effect": -0.002368983101352891
+            }
+          },
+          "source_rank_spearman": -0.3714285714285715
+        },
+        "cologne": {
+          "null_aware_actual_effect": 0.03750355730953648,
+          "null_aware_selected_source": "ingolstadt",
+          "selected_actual_effect": 0.03750355730953648,
+          "selected_predicted_effect": -0.0073913432905445935,
+          "selected_source": "ingolstadt",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.044356599069846674,
+              "predicted_effect": -0.0016183992660062838
+            },
+            "hangzhou": {
+              "actual_effect": 0.028103527946514315,
+              "predicted_effect": -0.006955752342155604
+            },
+            "ingolstadt": {
+              "actual_effect": 0.03750355730953648,
+              "predicted_effect": -0.0073913432905445935
+            },
+            "new_york": {
+              "actual_effect": 0.03314328920936405,
+              "predicted_effect": -0.006918402976006616
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.046327226606158366,
+              "predicted_effect": -0.00601732733995438
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.003563953947781916,
+              "predicted_effect": -0.006313440569410704
+            }
+          },
+          "source_rank_spearman": 0.4285714285714286
+        },
+        "hangzhou": {
+          "null_aware_actual_effect": -0.009550410493919494,
+          "null_aware_selected_source": "cologne",
+          "selected_actual_effect": -0.009550410493919494,
+          "selected_predicted_effect": -0.00015251279693349532,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0018201475156018742,
+              "predicted_effect": 0.005100130184846517
+            },
+            "cologne": {
+              "actual_effect": -0.009550410493919494,
+              "predicted_effect": -0.00015251279693349532
+            },
+            "ingolstadt": {
+              "actual_effect": -0.019066939632640376,
+              "predicted_effect": 0.0010685003585756622
+            },
+            "new_york": {
+              "actual_effect": -0.0012923260720947658,
+              "predicted_effect": 0.0010094600029198137
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.010163854606097741,
+              "predicted_effect": 0.0017194544028524322
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.012465836293358805,
+              "predicted_effect": 0.00024176840485230837
+            }
+          },
+          "source_rank_spearman": 0.14285714285714288
+        },
+        "ingolstadt": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.0256168617364243,
+          "selected_predicted_effect": 0.0030572681223046566,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.039152995616155664,
+              "predicted_effect": 0.007737681181188607
+            },
+            "cologne": {
+              "actual_effect": -0.0256168617364243,
+              "predicted_effect": 0.0030572681223046566
+            },
+            "hangzhou": {
+              "actual_effect": -0.06452239484801035,
+              "predicted_effect": 0.0055293339016141965
+            },
+            "new_york": {
+              "actual_effect": -0.008664127308854117,
+              "predicted_effect": 0.005398337177336531
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.009758383156278189,
+              "predicted_effect": 0.006300238200890212
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.04888838966375103,
+              "predicted_effect": 0.004596436388561117
+            }
+          },
+          "source_rank_spearman": 0.48571428571428577
+        },
+        "new_york": {
+          "null_aware_actual_effect": 0.0035257293939946793,
+          "null_aware_selected_source": "hangzhou",
+          "selected_actual_effect": 0.0035257293939946793,
+          "selected_predicted_effect": -0.00558867505460482,
+          "selected_source": "hangzhou",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0057617523709432225,
+              "predicted_effect": -0.00011007705349624073
+            },
+            "cologne": {
+              "actual_effect": 0.0026457900163841743,
+              "predicted_effect": -0.005041643845901524
+            },
+            "hangzhou": {
+              "actual_effect": 0.0035257293939946793,
+              "predicted_effect": -0.00558867505460482
+            },
+            "ingolstadt": {
+              "actual_effect": 0.017658932434672623,
+              "predicted_effect": -0.002878265118387194
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.003347948770142032,
+              "predicted_effect": -0.004685813639624704
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.007903698956570351,
+              "predicted_effect": -0.005403078713986504
+            }
+          },
+          "source_rank_spearman": 0.5428571428571429
+        },
+        "resco_synthetic": {
+          "null_aware_actual_effect": 0.00899752092748702,
+          "null_aware_selected_source": "new_york",
+          "selected_actual_effect": 0.00899752092748702,
+          "selected_predicted_effect": -0.0017108135531585175,
+          "selected_source": "new_york",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.024247901192808684,
+              "predicted_effect": 0.0008521546884276685
+            },
+            "cologne": {
+              "actual_effect": -0.0039667911312199116,
+              "predicted_effect": -0.0007566832776177732
+            },
+            "hangzhou": {
+              "actual_effect": -0.0004241534286071186,
+              "predicted_effect": -0.00039853298616559195
+            },
+            "ingolstadt": {
+              "actual_effect": -0.014474225106910633,
+              "predicted_effect": -0.00036118397574042243
+            },
+            "new_york": {
+              "actual_effect": 0.00899752092748702,
+              "predicted_effect": -0.0017108135531585175
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.00010221793456066085,
+              "predicted_effect": 0.0007487898087647662
+            }
+          },
+          "source_rank_spearman": 0.2571428571428572
+        },
+        "salt_lake_city": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.011411666945377895,
+          "selected_predicted_effect": 0.005194146945767647,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": -0.0043062261316379954,
+              "predicted_effect": 0.011605642670992776
+            },
+            "cologne": {
+              "actual_effect": -0.011411666945377895,
+              "predicted_effect": 0.005194146945767647
+            },
+            "hangzhou": {
+              "actual_effect": -0.014669328787585381,
+              "predicted_effect": 0.0074130968006494245
+            },
+            "ingolstadt": {
+              "actual_effect": -0.015563658380043926,
+              "predicted_effect": 0.006661596122090803
+            },
+            "new_york": {
+              "actual_effect": -0.013034894025774943,
+              "predicted_effect": 0.008775826349374634
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.012207040447731353,
+              "predicted_effect": 0.009555516662534963
+            }
+          },
+          "source_rank_spearman": 0.4285714285714286
+        }
+      },
+      "feature_width": 54,
+      "folds": [
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "atlanta",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "cologne",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "hangzhou",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "ingolstadt",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "new_york",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "resco_synthetic",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "salt_lake_city",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        }
+      ],
+      "forced_selected_improving_city_count": 3,
+      "forced_selected_mean_effect": 0.004105941748248666,
+      "mean_source_rank_spearman": 0.27346938775510204,
+      "median_source_rank_spearman": 0.4285714285714286,
+      "name": "cyclic_right_of_way_placebo_shift_1",
+      "null_aware_improving_city_count": 1,
+      "null_aware_mean_effect": 0.009395731559934695,
+      "outer_fold_count": 7,
+      "pair_count": 42,
+      "pair_design_width": 162,
+      "pair_mae": 0.0203818968469522,
+      "pair_pearson": -0.4282839938787113,
+      "pair_sign_accuracy": 0.35714285714285715
+    },
+    {
+      "cities": {
+        "atlanta": {
+          "null_aware_actual_effect": 0.027335401911930717,
+          "null_aware_selected_source": "salt_lake_city",
+          "selected_actual_effect": 0.027335401911930717,
+          "selected_predicted_effect": -0.005129679207065729,
+          "selected_source": "salt_lake_city",
+          "source_predictions": {
+            "cologne": {
+              "actual_effect": -0.018859547468897342,
+              "predicted_effect": -0.0038858785829129256
+            },
+            "hangzhou": {
+              "actual_effect": 0.025293723782444173,
+              "predicted_effect": -0.002060724792914956
+            },
+            "ingolstadt": {
+              "actual_effect": -0.016862125143300228,
+              "predicted_effect": 0.000838509985446996
+            },
+            "new_york": {
+              "actual_effect": -0.026870838369878764,
+              "predicted_effect": -0.0001811811389908725
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.02951208206133275,
+              "predicted_effect": 0.0003876668611377575
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.027335401911930717,
+              "predicted_effect": -0.005129679207065729
+            }
+          },
+          "source_rank_spearman": -0.5428571428571429
+        },
+        "cologne": {
+          "null_aware_actual_effect": 0.028103527946514315,
+          "null_aware_selected_source": "hangzhou",
+          "selected_actual_effect": 0.028103527946514315,
+          "selected_predicted_effect": -0.0068620104950898615,
+          "selected_source": "hangzhou",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.044356599069846674,
+              "predicted_effect": -0.004541147652242834
+            },
+            "hangzhou": {
+              "actual_effect": 0.028103527946514315,
+              "predicted_effect": -0.0068620104950898615
+            },
+            "ingolstadt": {
+              "actual_effect": 0.03750355730953648,
+              "predicted_effect": -0.005432968495622996
+            },
+            "new_york": {
+              "actual_effect": 0.03314328920936405,
+              "predicted_effect": -0.006253158972796044
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.046327226606158366,
+              "predicted_effect": -0.006774555203427209
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.003563953947781916,
+              "predicted_effect": -0.005302151807664461
+            }
+          },
+          "source_rank_spearman": 0.028571428571428574
+        },
+        "hangzhou": {
+          "null_aware_actual_effect": 0.012465836293358805,
+          "null_aware_selected_source": "salt_lake_city",
+          "selected_actual_effect": 0.012465836293358805,
+          "selected_predicted_effect": -0.005153064675258986,
+          "selected_source": "salt_lake_city",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0018201475156018742,
+              "predicted_effect": 0.0004680149561629292
+            },
+            "cologne": {
+              "actual_effect": -0.009550410493919494,
+              "predicted_effect": -0.0031058143869002667
+            },
+            "ingolstadt": {
+              "actual_effect": -0.019066939632640376,
+              "predicted_effect": -0.002067056734828089
+            },
+            "new_york": {
+              "actual_effect": -0.0012923260720947658,
+              "predicted_effect": -0.003100606570507855
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.010163854606097741,
+              "predicted_effect": -0.0024636046317572185
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.012465836293358805,
+              "predicted_effect": -0.005153064675258986
+            }
+          },
+          "source_rank_spearman": -0.3142857142857143
+        },
+        "ingolstadt": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.0256168617364243,
+          "selected_predicted_effect": 0.0041749133160565045,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.039152995616155664,
+              "predicted_effect": 0.00570024060097344
+            },
+            "cologne": {
+              "actual_effect": -0.0256168617364243,
+              "predicted_effect": 0.0041749133160565045
+            },
+            "hangzhou": {
+              "actual_effect": -0.06452239484801035,
+              "predicted_effect": 0.005428707994385029
+            },
+            "new_york": {
+              "actual_effect": -0.008664127308854117,
+              "predicted_effect": 0.004495371541657333
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.009758383156278189,
+              "predicted_effect": 0.004840782619660761
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.04888838966375103,
+              "predicted_effect": 0.004644963614027566
+            }
+          },
+          "source_rank_spearman": 0.14285714285714288
+        },
+        "new_york": {
+          "null_aware_actual_effect": -0.003347948770142032,
+          "null_aware_selected_source": "resco_synthetic",
+          "selected_actual_effect": -0.003347948770142032,
+          "selected_predicted_effect": -0.0036365504371709987,
+          "selected_source": "resco_synthetic",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0057617523709432225,
+              "predicted_effect": 0.000674628151381615
+            },
+            "cologne": {
+              "actual_effect": 0.0026457900163841743,
+              "predicted_effect": -0.002213419213573419
+            },
+            "hangzhou": {
+              "actual_effect": 0.0035257293939946793,
+              "predicted_effect": -0.0024384676725812664
+            },
+            "ingolstadt": {
+              "actual_effect": 0.017658932434672623,
+              "predicted_effect": -0.0016336708985795843
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.003347948770142032,
+              "predicted_effect": -0.0036365504371709987
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.007903698956570351,
+              "predicted_effect": -0.0032332581288934846
+            }
+          },
+          "source_rank_spearman": 0.8285714285714287
+        },
+        "resco_synthetic": {
+          "null_aware_actual_effect": 0.00899752092748702,
+          "null_aware_selected_source": "new_york",
+          "selected_actual_effect": 0.00899752092748702,
+          "selected_predicted_effect": -0.0033184606035081238,
+          "selected_source": "new_york",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.024247901192808684,
+              "predicted_effect": 0.0013013088298237147
+            },
+            "cologne": {
+              "actual_effect": -0.0039667911312199116,
+              "predicted_effect": -0.0007843870846170706
+            },
+            "hangzhou": {
+              "actual_effect": -0.0004241534286071186,
+              "predicted_effect": -8.543373039497301e-05
+            },
+            "ingolstadt": {
+              "actual_effect": -0.014474225106910633,
+              "predicted_effect": -0.0014133961447965009
+            },
+            "new_york": {
+              "actual_effect": 0.00899752092748702,
+              "predicted_effect": -0.0033184606035081238
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.00010221793456066085,
+              "predicted_effect": -0.0015128525845534767
+            }
+          },
+          "source_rank_spearman": 0.08571428571428573
+        },
+        "salt_lake_city": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.011411666945377895,
+          "selected_predicted_effect": 0.011831466845084177,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": -0.0043062261316379954,
+              "predicted_effect": 0.014293656769715661
+            },
+            "cologne": {
+              "actual_effect": -0.011411666945377895,
+              "predicted_effect": 0.011831466845084177
+            },
+            "hangzhou": {
+              "actual_effect": -0.014669328787585381,
+              "predicted_effect": 0.01429601999592413
+            },
+            "ingolstadt": {
+              "actual_effect": -0.015563658380043926,
+              "predicted_effect": 0.0133932280363222
+            },
+            "new_york": {
+              "actual_effect": -0.013034894025774943,
+              "predicted_effect": 0.014129281874606797
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.012207040447731353,
+              "predicted_effect": 0.014825522637714705
+            }
+          },
+          "source_rank_spearman": 0.028571428571428574
+        }
+      },
+      "feature_width": 54,
+      "folds": [
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "atlanta",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "cologne",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "hangzhou",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "ingolstadt",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "new_york",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "resco_synthetic",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "salt_lake_city",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        }
+      ],
+      "forced_selected_improving_city_count": 3,
+      "forced_selected_mean_effect": 0.005217972803906662,
+      "mean_source_rank_spearman": 0.03673469387755105,
+      "median_source_rank_spearman": 0.028571428571428574,
+      "name": "cyclic_right_of_way_placebo_shift_2",
+      "null_aware_improving_city_count": 1,
+      "null_aware_mean_effect": 0.010507762615592688,
+      "outer_fold_count": 7,
+      "pair_count": 42,
+      "pair_design_width": 162,
+      "pair_mae": 0.021162802624734408,
+      "pair_pearson": -0.44864129907611944,
+      "pair_sign_accuracy": 0.38095238095238093
+    },
+    {
+      "cities": {
+        "atlanta": {
+          "null_aware_actual_effect": 0.027335401911930717,
+          "null_aware_selected_source": "salt_lake_city",
+          "selected_actual_effect": 0.027335401911930717,
+          "selected_predicted_effect": -0.013046314000390805,
+          "selected_source": "salt_lake_city",
+          "source_predictions": {
+            "cologne": {
+              "actual_effect": -0.018859547468897342,
+              "predicted_effect": -0.01233819084775032
+            },
+            "hangzhou": {
+              "actual_effect": 0.025293723782444173,
+              "predicted_effect": -0.012325424820949876
+            },
+            "ingolstadt": {
+              "actual_effect": -0.016862125143300228,
+              "predicted_effect": -0.008217188777803752
+            },
+            "new_york": {
+              "actual_effect": -0.026870838369878764,
+              "predicted_effect": -0.010213639134523828
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.02951208206133275,
+              "predicted_effect": -0.009328209098899629
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.027335401911930717,
+              "predicted_effect": -0.013046314000390805
+            }
+          },
+          "source_rank_spearman": -0.5428571428571429
+        },
+        "cologne": {
+          "null_aware_actual_effect": 0.046327226606158366,
+          "null_aware_selected_source": "resco_synthetic",
+          "selected_actual_effect": 0.046327226606158366,
+          "selected_predicted_effect": -0.006034704196686562,
+          "selected_source": "resco_synthetic",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.044356599069846674,
+              "predicted_effect": -0.0023890430686811194
+            },
+            "hangzhou": {
+              "actual_effect": 0.028103527946514315,
+              "predicted_effect": -0.005776789059220935
+            },
+            "ingolstadt": {
+              "actual_effect": 0.03750355730953648,
+              "predicted_effect": -0.004950832856914473
+            },
+            "new_york": {
+              "actual_effect": 0.03314328920936405,
+              "predicted_effect": -0.006009498761770539
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.046327226606158366,
+              "predicted_effect": -0.006034704196686562
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.003563953947781916,
+              "predicted_effect": -0.0035385967413881394
+            }
+          },
+          "source_rank_spearman": -0.2571428571428572
+        },
+        "hangzhou": {
+          "null_aware_actual_effect": -0.009550410493919494,
+          "null_aware_selected_source": "cologne",
+          "selected_actual_effect": -0.009550410493919494,
+          "selected_predicted_effect": -0.00010157385091450274,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0018201475156018742,
+              "predicted_effect": 0.003981376749830811
+            },
+            "cologne": {
+              "actual_effect": -0.009550410493919494,
+              "predicted_effect": -0.00010157385091450274
+            },
+            "ingolstadt": {
+              "actual_effect": -0.019066939632640376,
+              "predicted_effect": 0.001862934110317382
+            },
+            "new_york": {
+              "actual_effect": -0.0012923260720947658,
+              "predicted_effect": 0.0008199890640441377
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.010163854606097741,
+              "predicted_effect": 0.001801434696608253
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.012465836293358805,
+              "predicted_effect": -5.713728403618543e-05
+            }
+          },
+          "source_rank_spearman": -0.08571428571428573
+        },
+        "ingolstadt": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.0256168617364243,
+          "selected_predicted_effect": 0.0037165141607219867,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.039152995616155664,
+              "predicted_effect": 0.0056288193178356235
+            },
+            "cologne": {
+              "actual_effect": -0.0256168617364243,
+              "predicted_effect": 0.0037165141607219867
+            },
+            "hangzhou": {
+              "actual_effect": -0.06452239484801035,
+              "predicted_effect": 0.005148283491351702
+            },
+            "new_york": {
+              "actual_effect": -0.008664127308854117,
+              "predicted_effect": 0.003976416391423539
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.009758383156278189,
+              "predicted_effect": 0.004864115077518697
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.04888838966375103,
+              "predicted_effect": 0.004709846192004741
+            }
+          },
+          "source_rank_spearman": 0.14285714285714288
+        },
+        "new_york": {
+          "null_aware_actual_effect": -0.007903698956570351,
+          "null_aware_selected_source": "salt_lake_city",
+          "selected_actual_effect": -0.007903698956570351,
+          "selected_predicted_effect": -0.00016141855037093934,
+          "selected_source": "salt_lake_city",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0057617523709432225,
+              "predicted_effect": 0.004762694835771603
+            },
+            "cologne": {
+              "actual_effect": 0.0026457900163841743,
+              "predicted_effect": 0.00017675616886316187
+            },
+            "hangzhou": {
+              "actual_effect": 0.0035257293939946793,
+              "predicted_effect": 0.0009524063098862944
+            },
+            "ingolstadt": {
+              "actual_effect": 0.017658932434672623,
+              "predicted_effect": 0.002980210827640751
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.003347948770142032,
+              "predicted_effect": 0.0006559676776473136
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.007903698956570351,
+              "predicted_effect": -0.00016141855037093934
+            }
+          },
+          "source_rank_spearman": 0.8857142857142858
+        },
+        "resco_synthetic": {
+          "null_aware_actual_effect": 0.00899752092748702,
+          "null_aware_selected_source": "new_york",
+          "selected_actual_effect": 0.00899752092748702,
+          "selected_predicted_effect": -0.010978982597173543,
+          "selected_source": "new_york",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.024247901192808684,
+              "predicted_effect": -0.005381253676356305
+            },
+            "cologne": {
+              "actual_effect": -0.0039667911312199116,
+              "predicted_effect": -0.009337350309023657
+            },
+            "hangzhou": {
+              "actual_effect": -0.0004241534286071186,
+              "predicted_effect": -0.007408338113547264
+            },
+            "ingolstadt": {
+              "actual_effect": -0.014474225106910633,
+              "predicted_effect": -0.006642755203857979
+            },
+            "new_york": {
+              "actual_effect": 0.00899752092748702,
+              "predicted_effect": -0.010978982597173543
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.00010221793456066085,
+              "predicted_effect": -0.008250881377155756
+            }
+          },
+          "source_rank_spearman": 0.028571428571428574
+        },
+        "salt_lake_city": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.011411666945377895,
+          "selected_predicted_effect": 0.008401869933360596,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": -0.0043062261316379954,
+              "predicted_effect": 0.011856498762777223
+            },
+            "cologne": {
+              "actual_effect": -0.011411666945377895,
+              "predicted_effect": 0.008401869933360596
+            },
+            "hangzhou": {
+              "actual_effect": -0.014669328787585381,
+              "predicted_effect": 0.01112908921724091
+            },
+            "ingolstadt": {
+              "actual_effect": -0.015563658380043926,
+              "predicted_effect": 0.010943315762305759
+            },
+            "new_york": {
+              "actual_effect": -0.013034894025774943,
+              "predicted_effect": 0.010160120208724793
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.012207040447731353,
+              "predicted_effect": 0.0123087991520078
+            }
+          },
+          "source_rank_spearman": 0.14285714285714288
+        }
+      },
+      "feature_width": 54,
+      "folds": [
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "atlanta",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "cologne",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "hangzhou",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "ingolstadt",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "new_york",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "resco_synthetic",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "salt_lake_city",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        }
+      ],
+      "forced_selected_improving_city_count": 4,
+      "forced_selected_mean_effect": 0.004025358759040579,
+      "mean_source_rank_spearman": 0.04489795918367349,
+      "median_source_rank_spearman": 0.028571428571428574,
+      "name": "cyclic_right_of_way_placebo_shift_3",
+      "null_aware_improving_city_count": 2,
+      "null_aware_mean_effect": 0.009315148570726609,
+      "outer_fold_count": 7,
+      "pair_count": 42,
+      "pair_design_width": 162,
+      "pair_mae": 0.020475123520088467,
+      "pair_pearson": -0.28155871948519706,
+      "pair_sign_accuracy": 0.42857142857142855
+    },
+    {
+      "cities": {
+        "atlanta": {
+          "null_aware_actual_effect": 0.027335401911930717,
+          "null_aware_selected_source": "salt_lake_city",
+          "selected_actual_effect": 0.027335401911930717,
+          "selected_predicted_effect": -0.00452661369704082,
+          "selected_source": "salt_lake_city",
+          "source_predictions": {
+            "cologne": {
+              "actual_effect": -0.018859547468897342,
+              "predicted_effect": -0.003710460818123398
+            },
+            "hangzhou": {
+              "actual_effect": 0.025293723782444173,
+              "predicted_effect": -0.0037025958680237774
+            },
+            "ingolstadt": {
+              "actual_effect": -0.016862125143300228,
+              "predicted_effect": 0.00048230683600658823
+            },
+            "new_york": {
+              "actual_effect": -0.026870838369878764,
+              "predicted_effect": 0.0007814739862076875
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.02951208206133275,
+              "predicted_effect": -0.0010569083091106983
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.027335401911930717,
+              "predicted_effect": -0.00452661369704082
+            }
+          },
+          "source_rank_spearman": -0.6
+        },
+        "cologne": {
+          "null_aware_actual_effect": 0.028103527946514315,
+          "null_aware_selected_source": "hangzhou",
+          "selected_actual_effect": 0.028103527946514315,
+          "selected_predicted_effect": -0.005974051155471718,
+          "selected_source": "hangzhou",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.044356599069846674,
+              "predicted_effect": -0.0030192573119676366
+            },
+            "hangzhou": {
+              "actual_effect": 0.028103527946514315,
+              "predicted_effect": -0.005974051155471718
+            },
+            "ingolstadt": {
+              "actual_effect": 0.03750355730953648,
+              "predicted_effect": -0.004776548876978201
+            },
+            "new_york": {
+              "actual_effect": 0.03314328920936405,
+              "predicted_effect": -0.005733521739245716
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.046327226606158366,
+              "predicted_effect": -0.0056681874719685475
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.003563953947781916,
+              "predicted_effect": -0.004483603338689567
+            }
+          },
+          "source_rank_spearman": 0.2
+        },
+        "hangzhou": {
+          "null_aware_actual_effect": 0.012465836293358805,
+          "null_aware_selected_source": "salt_lake_city",
+          "selected_actual_effect": 0.012465836293358805,
+          "selected_predicted_effect": -0.0011729433742045051,
+          "selected_source": "salt_lake_city",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0018201475156018742,
+              "predicted_effect": 0.0028101520536524885
+            },
+            "cologne": {
+              "actual_effect": -0.009550410493919494,
+              "predicted_effect": 0.0001785005442675476
+            },
+            "ingolstadt": {
+              "actual_effect": -0.019066939632640376,
+              "predicted_effect": 0.00022634091353667432
+            },
+            "new_york": {
+              "actual_effect": -0.0012923260720947658,
+              "predicted_effect": -0.00039625672662146335
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.010163854606097741,
+              "predicted_effect": -0.00024694788682089213
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.012465836293358805,
+              "predicted_effect": -0.0011729433742045051
+            }
+          },
+          "source_rank_spearman": -0.5428571428571429
+        },
+        "ingolstadt": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.0256168617364243,
+          "selected_predicted_effect": 0.005645439789525385,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.039152995616155664,
+              "predicted_effect": 0.0069566201857456985
+            },
+            "cologne": {
+              "actual_effect": -0.0256168617364243,
+              "predicted_effect": 0.005645439789525385
+            },
+            "hangzhou": {
+              "actual_effect": -0.06452239484801035,
+              "predicted_effect": 0.006378017856980412
+            },
+            "new_york": {
+              "actual_effect": -0.008664127308854117,
+              "predicted_effect": 0.005796441320841388
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.009758383156278189,
+              "predicted_effect": 0.0063089146170873835
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.04888838966375103,
+              "predicted_effect": 0.006205339362869421
+            }
+          },
+          "source_rank_spearman": 0.14285714285714288
+        },
+        "new_york": {
+          "null_aware_actual_effect": -0.007903698956570351,
+          "null_aware_selected_source": "salt_lake_city",
+          "selected_actual_effect": -0.007903698956570351,
+          "selected_predicted_effect": -0.0014347900268788915,
+          "selected_source": "salt_lake_city",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0057617523709432225,
+              "predicted_effect": 0.004269163861915106
+            },
+            "cologne": {
+              "actual_effect": 0.0026457900163841743,
+              "predicted_effect": 0.0014917154253338183
+            },
+            "hangzhou": {
+              "actual_effect": 0.0035257293939946793,
+              "predicted_effect": 9.727046685958495e-05
+            },
+            "ingolstadt": {
+              "actual_effect": 0.017658932434672623,
+              "predicted_effect": 0.000985978560085741
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.003347948770142032,
+              "predicted_effect": -0.00028173057513122845
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.007903698956570351,
+              "predicted_effect": -0.0014347900268788915
+            }
+          },
+          "source_rank_spearman": 0.7142857142857143
+        },
+        "resco_synthetic": {
+          "null_aware_actual_effect": 0.00899752092748702,
+          "null_aware_selected_source": "new_york",
+          "selected_actual_effect": 0.00899752092748702,
+          "selected_predicted_effect": -0.0023873123024318356,
+          "selected_source": "new_york",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.024247901192808684,
+              "predicted_effect": 0.002106163501502725
+            },
+            "cologne": {
+              "actual_effect": -0.0039667911312199116,
+              "predicted_effect": 0.0003479593182642985
+            },
+            "hangzhou": {
+              "actual_effect": -0.0004241534286071186,
+              "predicted_effect": -0.0003060792768043236
+            },
+            "ingolstadt": {
+              "actual_effect": -0.014474225106910633,
+              "predicted_effect": -5.084176721824253e-05
+            },
+            "new_york": {
+              "actual_effect": 0.00899752092748702,
+              "predicted_effect": -0.0023873123024318356
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.00010221793456066085,
+              "predicted_effect": -2.7706229070369615e-05
+            }
+          },
+          "source_rank_spearman": 0.14285714285714288
+        },
+        "salt_lake_city": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.011411666945377895,
+          "selected_predicted_effect": 0.01186480872025749,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": -0.0043062261316379954,
+              "predicted_effect": 0.014095333940208241
+            },
+            "cologne": {
+              "actual_effect": -0.011411666945377895,
+              "predicted_effect": 0.01186480872025749
+            },
+            "hangzhou": {
+              "actual_effect": -0.014669328787585381,
+              "predicted_effect": 0.013187706179529862
+            },
+            "ingolstadt": {
+              "actual_effect": -0.015563658380043926,
+              "predicted_effect": 0.012031733199407074
+            },
+            "new_york": {
+              "actual_effect": -0.013034894025774943,
+              "predicted_effect": 0.012558731576383939
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.012207040447731353,
+              "predicted_effect": 0.014100158541786785
+            }
+          },
+          "source_rank_spearman": 0.2571428571428572
+        }
+      },
+      "feature_width": 54,
+      "folds": [
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "atlanta",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "cologne",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "hangzhou",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "ingolstadt",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "new_york",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "resco_synthetic",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "salt_lake_city",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        }
+      ],
+      "forced_selected_improving_city_count": 3,
+      "forced_selected_mean_effect": 0.004567151348702616,
+      "mean_source_rank_spearman": 0.04489795918367349,
+      "median_source_rank_spearman": 0.14285714285714288,
+      "name": "cyclic_right_of_way_placebo_shift_4",
+      "null_aware_improving_city_count": 1,
+      "null_aware_mean_effect": 0.009856941160388643,
+      "outer_fold_count": 7,
+      "pair_count": 42,
+      "pair_design_width": 162,
+      "pair_mae": 0.020802263554169337,
+      "pair_pearson": -0.464170197363621,
+      "pair_sign_accuracy": 0.38095238095238093
+    },
+    {
+      "cities": {
+        "atlanta": {
+          "null_aware_actual_effect": 0.027335401911930717,
+          "null_aware_selected_source": "salt_lake_city",
+          "selected_actual_effect": 0.027335401911930717,
+          "selected_predicted_effect": -0.005273787827896725,
+          "selected_source": "salt_lake_city",
+          "source_predictions": {
+            "cologne": {
+              "actual_effect": -0.018859547468897342,
+              "predicted_effect": -0.0042249564172157274
+            },
+            "hangzhou": {
+              "actual_effect": 0.025293723782444173,
+              "predicted_effect": -0.0051340960559117
+            },
+            "ingolstadt": {
+              "actual_effect": -0.016862125143300228,
+              "predicted_effect": -0.00233757729248874
+            },
+            "new_york": {
+              "actual_effect": -0.026870838369878764,
+              "predicted_effect": -0.0017604398728929584
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.02951208206133275,
+              "predicted_effect": -0.002802794756920606
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.027335401911930717,
+              "predicted_effect": -0.005273787827896725
+            }
+          },
+          "source_rank_spearman": -0.7142857142857143
+        },
+        "cologne": {
+          "null_aware_actual_effect": 0.03314328920936405,
+          "null_aware_selected_source": "new_york",
+          "selected_actual_effect": 0.03314328920936405,
+          "selected_predicted_effect": -0.007089850297045935,
+          "selected_source": "new_york",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.044356599069846674,
+              "predicted_effect": -0.0033621806866622863
+            },
+            "hangzhou": {
+              "actual_effect": 0.028103527946514315,
+              "predicted_effect": -0.006769055388311733
+            },
+            "ingolstadt": {
+              "actual_effect": 0.03750355730953648,
+              "predicted_effect": -0.004851829508679158
+            },
+            "new_york": {
+              "actual_effect": 0.03314328920936405,
+              "predicted_effect": -0.007089850297045935
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.046327226606158366,
+              "predicted_effect": -0.006519295076750082
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.003563953947781916,
+              "predicted_effect": -0.004622301375753488
+            }
+          },
+          "source_rank_spearman": 0.14285714285714288
+        },
+        "hangzhou": {
+          "null_aware_actual_effect": 0.010163854606097741,
+          "null_aware_selected_source": "resco_synthetic",
+          "selected_actual_effect": 0.010163854606097741,
+          "selected_predicted_effect": -0.00299980433476263,
+          "selected_source": "resco_synthetic",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0018201475156018742,
+              "predicted_effect": -4.027736194655944e-06
+            },
+            "cologne": {
+              "actual_effect": -0.009550410493919494,
+              "predicted_effect": -0.0029587560223198342
+            },
+            "ingolstadt": {
+              "actual_effect": -0.019066939632640376,
+              "predicted_effect": -0.0026337112135226
+            },
+            "new_york": {
+              "actual_effect": -0.0012923260720947658,
+              "predicted_effect": -0.001307282079479139
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.010163854606097741,
+              "predicted_effect": -0.00299980433476263
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.012465836293358805,
+              "predicted_effect": -0.0023875322853790706
+            }
+          },
+          "source_rank_spearman": 0.08571428571428573
+        },
+        "ingolstadt": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.0256168617364243,
+          "selected_predicted_effect": 0.009818130581434263,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.039152995616155664,
+              "predicted_effect": 0.012200994505523612
+            },
+            "cologne": {
+              "actual_effect": -0.0256168617364243,
+              "predicted_effect": 0.009818130581434263
+            },
+            "hangzhou": {
+              "actual_effect": -0.06452239484801035,
+              "predicted_effect": 0.01354469577061215
+            },
+            "new_york": {
+              "actual_effect": -0.008664127308854117,
+              "predicted_effect": 0.01319635287145019
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.009758383156278189,
+              "predicted_effect": 0.011514936473010676
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.04888838966375103,
+              "predicted_effect": 0.012866672207994954
+            }
+          },
+          "source_rank_spearman": -0.3142857142857143
+        },
+        "new_york": {
+          "null_aware_actual_effect": 0.017658932434672623,
+          "null_aware_selected_source": "ingolstadt",
+          "selected_actual_effect": 0.017658932434672623,
+          "selected_predicted_effect": -0.006074197429679963,
+          "selected_source": "ingolstadt",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0057617523709432225,
+              "predicted_effect": -0.002113943479551725
+            },
+            "cologne": {
+              "actual_effect": 0.0026457900163841743,
+              "predicted_effect": -0.0054901507737997075
+            },
+            "hangzhou": {
+              "actual_effect": 0.0035257293939946793,
+              "predicted_effect": -0.0029525040060738583
+            },
+            "ingolstadt": {
+              "actual_effect": 0.017658932434672623,
+              "predicted_effect": -0.006074197429679963
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.003347948770142032,
+              "predicted_effect": -0.004459320355637642
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.007903698956570351,
+              "predicted_effect": -0.0039494899130817504
+            }
+          },
+          "source_rank_spearman": -0.08571428571428573
+        },
+        "resco_synthetic": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.0039667911312199116,
+          "selected_predicted_effect": 0.006667521635613368,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.024247901192808684,
+              "predicted_effect": 0.008317881581297652
+            },
+            "cologne": {
+              "actual_effect": -0.0039667911312199116,
+              "predicted_effect": 0.006667521635613368
+            },
+            "hangzhou": {
+              "actual_effect": -0.0004241534286071186,
+              "predicted_effect": 0.008010716248060608
+            },
+            "ingolstadt": {
+              "actual_effect": -0.014474225106910633,
+              "predicted_effect": 0.0074695300842968155
+            },
+            "new_york": {
+              "actual_effect": 0.00899752092748702,
+              "predicted_effect": 0.0071628110296979046
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.00010221793456066085,
+              "predicted_effect": 0.007953640970085153
+            }
+          },
+          "source_rank_spearman": 0.48571428571428577
+        },
+        "salt_lake_city": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.015563658380043926,
+          "selected_predicted_effect": 0.007741851290670921,
+          "selected_source": "ingolstadt",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": -0.0043062261316379954,
+              "predicted_effect": 0.010821747240388221
+            },
+            "cologne": {
+              "actual_effect": -0.011411666945377895,
+              "predicted_effect": 0.008256064124238864
+            },
+            "hangzhou": {
+              "actual_effect": -0.014669328787585381,
+              "predicted_effect": 0.011427730247182273
+            },
+            "ingolstadt": {
+              "actual_effect": -0.015563658380043926,
+              "predicted_effect": 0.007741851290670921
+            },
+            "new_york": {
+              "actual_effect": -0.013034894025774943,
+              "predicted_effect": 0.010949295355846723
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.012207040447731353,
+              "predicted_effect": 0.010116670579757838
+            }
+          },
+          "source_rank_spearman": 0.028571428571428574
+        }
+      },
+      "feature_width": 54,
+      "folds": [
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "atlanta",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "cologne",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "hangzhou",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "ingolstadt",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "new_york",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "resco_synthetic",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "salt_lake_city",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        }
+      ],
+      "forced_selected_improving_city_count": 3,
+      "forced_selected_mean_effect": 0.006164880987768141,
+      "mean_source_rank_spearman": -0.0530612244897959,
+      "median_source_rank_spearman": 0.028571428571428574,
+      "name": "cyclic_right_of_way_placebo_shift_5",
+      "null_aware_improving_city_count": 0,
+      "null_aware_mean_effect": 0.012614496880295019,
+      "outer_fold_count": 7,
+      "pair_count": 42,
+      "pair_design_width": 162,
+      "pair_mae": 0.021665544293948544,
+      "pair_pearson": -0.45860937017249576,
+      "pair_sign_accuracy": 0.30952380952380953
+    },
+    {
+      "cities": {
+        "atlanta": {
+          "null_aware_actual_effect": 0.027335401911930717,
+          "null_aware_selected_source": "salt_lake_city",
+          "selected_actual_effect": 0.027335401911930717,
+          "selected_predicted_effect": -0.003765283357461271,
+          "selected_source": "salt_lake_city",
+          "source_predictions": {
+            "cologne": {
+              "actual_effect": -0.018859547468897342,
+              "predicted_effect": -0.00364709588107915
+            },
+            "hangzhou": {
+              "actual_effect": 0.025293723782444173,
+              "predicted_effect": -0.0034979345159324698
+            },
+            "ingolstadt": {
+              "actual_effect": -0.016862125143300228,
+              "predicted_effect": 0.000654030061314884
+            },
+            "new_york": {
+              "actual_effect": -0.026870838369878764,
+              "predicted_effect": -0.0002034191773795449
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.02951208206133275,
+              "predicted_effect": -0.0021901569468741017
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.027335401911930717,
+              "predicted_effect": -0.003765283357461271
+            }
+          },
+          "source_rank_spearman": -0.48571428571428577
+        },
+        "cologne": {
+          "null_aware_actual_effect": 0.028103527946514315,
+          "null_aware_selected_source": "hangzhou",
+          "selected_actual_effect": 0.028103527946514315,
+          "selected_predicted_effect": -0.007263037123039041,
+          "selected_source": "hangzhou",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.044356599069846674,
+              "predicted_effect": -0.003807178476199708
+            },
+            "hangzhou": {
+              "actual_effect": 0.028103527946514315,
+              "predicted_effect": -0.007263037123039041
+            },
+            "ingolstadt": {
+              "actual_effect": 0.03750355730953648,
+              "predicted_effect": -0.005948920188128055
+            },
+            "new_york": {
+              "actual_effect": 0.03314328920936405,
+              "predicted_effect": -0.005967290148182584
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.046327226606158366,
+              "predicted_effect": -0.00634724710123849
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.003563953947781916,
+              "predicted_effect": -0.004436693404144951
+            }
+          },
+          "source_rank_spearman": 0.028571428571428574
+        },
+        "hangzhou": {
+          "null_aware_actual_effect": -0.009550410493919494,
+          "null_aware_selected_source": "cologne",
+          "selected_actual_effect": -0.009550410493919494,
+          "selected_predicted_effect": -0.006661817577335745,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0018201475156018742,
+              "predicted_effect": -0.0024237489098854694
+            },
+            "cologne": {
+              "actual_effect": -0.009550410493919494,
+              "predicted_effect": -0.006661817577335745
+            },
+            "ingolstadt": {
+              "actual_effect": -0.019066939632640376,
+              "predicted_effect": -0.004587182043627051
+            },
+            "new_york": {
+              "actual_effect": -0.0012923260720947658,
+              "predicted_effect": -0.003951211974056883
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.010163854606097741,
+              "predicted_effect": -0.006542880270017003
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.012465836293358805,
+              "predicted_effect": -0.006127531464318587
+            }
+          },
+          "source_rank_spearman": -0.028571428571428574
+        },
+        "ingolstadt": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.0256168617364243,
+          "selected_predicted_effect": 0.004073682099328543,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.039152995616155664,
+              "predicted_effect": 0.00613023435789877
+            },
+            "cologne": {
+              "actual_effect": -0.0256168617364243,
+              "predicted_effect": 0.004073682099328543
+            },
+            "hangzhou": {
+              "actual_effect": -0.06452239484801035,
+              "predicted_effect": 0.006378929144376183
+            },
+            "new_york": {
+              "actual_effect": -0.008664127308854117,
+              "predicted_effect": 0.005159873665197486
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.009758383156278189,
+              "predicted_effect": 0.0044848558398413296
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.04888838966375103,
+              "predicted_effect": 0.005164501113331749
+            }
+          },
+          "source_rank_spearman": -0.2
+        },
+        "new_york": {
+          "null_aware_actual_effect": -0.003347948770142032,
+          "null_aware_selected_source": "resco_synthetic",
+          "selected_actual_effect": -0.003347948770142032,
+          "selected_predicted_effect": -0.00677915546352821,
+          "selected_source": "resco_synthetic",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0057617523709432225,
+              "predicted_effect": -0.0024681961566326983
+            },
+            "cologne": {
+              "actual_effect": 0.0026457900163841743,
+              "predicted_effect": -0.0054189696375184756
+            },
+            "hangzhou": {
+              "actual_effect": 0.0035257293939946793,
+              "predicted_effect": -0.005135442174555558
+            },
+            "ingolstadt": {
+              "actual_effect": 0.017658932434672623,
+              "predicted_effect": -0.0038333511235055396
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.003347948770142032,
+              "predicted_effect": -0.00677915546352821
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.007903698956570351,
+              "predicted_effect": -0.00587916439080204
+            }
+          },
+          "source_rank_spearman": 0.8857142857142858
+        },
+        "resco_synthetic": {
+          "null_aware_actual_effect": -0.0004241534286071186,
+          "null_aware_selected_source": "hangzhou",
+          "selected_actual_effect": -0.0004241534286071186,
+          "selected_predicted_effect": -0.00037949514505559697,
+          "selected_source": "hangzhou",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.024247901192808684,
+              "predicted_effect": 0.001376475948011736
+            },
+            "cologne": {
+              "actual_effect": -0.0039667911312199116,
+              "predicted_effect": -0.00021921422720059852
+            },
+            "hangzhou": {
+              "actual_effect": -0.0004241534286071186,
+              "predicted_effect": -0.00037949514505559697
+            },
+            "ingolstadt": {
+              "actual_effect": -0.014474225106910633,
+              "predicted_effect": 0.0007724196452903959
+            },
+            "new_york": {
+              "actual_effect": 0.00899752092748702,
+              "predicted_effect": -0.00012235543906135681
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.00010221793456066085,
+              "predicted_effect": 0.0010492076207195189
+            }
+          },
+          "source_rank_spearman": 0.48571428571428577
+        },
+        "salt_lake_city": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.011411666945377895,
+          "selected_predicted_effect": 0.007727220485636742,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": -0.0043062261316379954,
+              "predicted_effect": 0.010868486800132965
+            },
+            "cologne": {
+              "actual_effect": -0.011411666945377895,
+              "predicted_effect": 0.007727220485636742
+            },
+            "hangzhou": {
+              "actual_effect": -0.014669328787585381,
+              "predicted_effect": 0.010211922531754247
+            },
+            "ingolstadt": {
+              "actual_effect": -0.015563658380043926,
+              "predicted_effect": 0.009202590829911005
+            },
+            "new_york": {
+              "actual_effect": -0.013034894025774943,
+              "predicted_effect": 0.011331757526279485
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.012207040447731353,
+              "predicted_effect": 0.009595084774451444
+            }
+          },
+          "source_rank_spearman": 0.08571428571428573
+        }
+      },
+      "feature_width": 54,
+      "folds": [
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "atlanta",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "cologne",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "hangzhou",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "ingolstadt",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "new_york",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "resco_synthetic",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "salt_lake_city",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        }
+      ],
+      "forced_selected_improving_city_count": 5,
+      "forced_selected_mean_effect": 0.0007268412119963127,
+      "mean_source_rank_spearman": 0.11020408163265308,
+      "median_source_rank_spearman": 0.028571428571428574,
+      "name": "cyclic_right_of_way_placebo_shift_6",
+      "null_aware_improving_city_count": 3,
+      "null_aware_mean_effect": 0.006016631023682341,
+      "outer_fold_count": 7,
+      "pair_count": 42,
+      "pair_design_width": 162,
+      "pair_mae": 0.020851721236721323,
+      "pair_pearson": -0.4476297911537348,
+      "pair_sign_accuracy": 0.30952380952380953
+    }
+  ],
+  "pair_count": 42,
+  "placebo_median_mean_source_rank_spearman": 0.04489795918367349,
+  "protocol": "tsc-v150b-source-utility-representation-diagnostic-v1",
+  "representations": {
+    "existing": {
+      "cities": {
+        "atlanta": {
+          "null_aware_actual_effect": 0.027335401911930717,
+          "null_aware_selected_source": "salt_lake_city",
+          "selected_actual_effect": 0.027335401911930717,
+          "selected_predicted_effect": -0.006112406348805936,
+          "selected_source": "salt_lake_city",
+          "source_predictions": {
+            "cologne": {
+              "actual_effect": -0.018859547468897342,
+              "predicted_effect": -0.00512203454784222
+            },
+            "hangzhou": {
+              "actual_effect": 0.025293723782444173,
+              "predicted_effect": -0.005647498666829516
+            },
+            "ingolstadt": {
+              "actual_effect": -0.016862125143300228,
+              "predicted_effect": -0.002233468385435773
+            },
+            "new_york": {
+              "actual_effect": -0.026870838369878764,
+              "predicted_effect": -0.0028031395484016557
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.02951208206133275,
+              "predicted_effect": -0.004438082937583303
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.027335401911930717,
+              "predicted_effect": -0.006112406348805936
+            }
+          },
+          "source_rank_spearman": -0.6
+        },
+        "cologne": {
+          "null_aware_actual_effect": 0.046327226606158366,
+          "null_aware_selected_source": "resco_synthetic",
+          "selected_actual_effect": 0.046327226606158366,
+          "selected_predicted_effect": -0.006122766467937863,
+          "selected_source": "resco_synthetic",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.044356599069846674,
+              "predicted_effect": -0.003805124527742152
+            },
+            "hangzhou": {
+              "actual_effect": 0.028103527946514315,
+              "predicted_effect": -0.0061025028985866245
+            },
+            "ingolstadt": {
+              "actual_effect": 0.03750355730953648,
+              "predicted_effect": -0.0048614598843037225
+            },
+            "new_york": {
+              "actual_effect": 0.03314328920936405,
+              "predicted_effect": -0.00570590898442999
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.046327226606158366,
+              "predicted_effect": -0.006122766467937863
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.003563953947781916,
+              "predicted_effect": -0.004279050210380751
+            }
+          },
+          "source_rank_spearman": -0.2
+        },
+        "hangzhou": {
+          "null_aware_actual_effect": 0.012465836293358805,
+          "null_aware_selected_source": "salt_lake_city",
+          "selected_actual_effect": 0.012465836293358805,
+          "selected_predicted_effect": -0.0018194850468820586,
+          "selected_source": "salt_lake_city",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0018201475156018742,
+              "predicted_effect": 0.0010297275431382165
+            },
+            "cologne": {
+              "actual_effect": -0.009550410493919494,
+              "predicted_effect": -0.0010184165523204887
+            },
+            "ingolstadt": {
+              "actual_effect": -0.019066939632640376,
+              "predicted_effect": -0.000759159763636965
+            },
+            "new_york": {
+              "actual_effect": -0.0012923260720947658,
+              "predicted_effect": -0.0007076654368275723
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.010163854606097741,
+              "predicted_effect": -0.0013904536401812056
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.012465836293358805,
+              "predicted_effect": -0.0018194850468820586
+            }
+          },
+          "source_rank_spearman": -0.48571428571428577
+        },
+        "ingolstadt": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.0256168617364243,
+          "selected_predicted_effect": 0.0044340830597532745,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.039152995616155664,
+              "predicted_effect": 0.005428082458654518
+            },
+            "cologne": {
+              "actual_effect": -0.0256168617364243,
+              "predicted_effect": 0.0044340830597532745
+            },
+            "hangzhou": {
+              "actual_effect": -0.06452239484801035,
+              "predicted_effect": 0.005393233885527409
+            },
+            "new_york": {
+              "actual_effect": -0.008664127308854117,
+              "predicted_effect": 0.004879831376403152
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.009758383156278189,
+              "predicted_effect": 0.004720767571335839
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.04888838966375103,
+              "predicted_effect": 0.00484686408432607
+            }
+          },
+          "source_rank_spearman": 0.2571428571428572
+        },
+        "new_york": {
+          "null_aware_actual_effect": -0.003347948770142032,
+          "null_aware_selected_source": "resco_synthetic",
+          "selected_actual_effect": -0.003347948770142032,
+          "selected_predicted_effect": -0.003826060139443123,
+          "selected_source": "resco_synthetic",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0057617523709432225,
+              "predicted_effect": -0.0002588031570711841
+            },
+            "cologne": {
+              "actual_effect": 0.0026457900163841743,
+              "predicted_effect": -0.0018134943523487883
+            },
+            "hangzhou": {
+              "actual_effect": 0.0035257293939946793,
+              "predicted_effect": -0.002356992872024125
+            },
+            "ingolstadt": {
+              "actual_effect": 0.017658932434672623,
+              "predicted_effect": -0.0013405377451481712
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.003347948770142032,
+              "predicted_effect": -0.003826060139443123
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.007903698956570351,
+              "predicted_effect": -0.003696410915395319
+            }
+          },
+          "source_rank_spearman": 0.8285714285714287
+        },
+        "resco_synthetic": {
+          "null_aware_actual_effect": 0.00899752092748702,
+          "null_aware_selected_source": "new_york",
+          "selected_actual_effect": 0.00899752092748702,
+          "selected_predicted_effect": -0.00036759397022813724,
+          "selected_source": "new_york",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.024247901192808684,
+              "predicted_effect": 0.0017331826975421434
+            },
+            "cologne": {
+              "actual_effect": -0.0039667911312199116,
+              "predicted_effect": 0.0012774501431409558
+            },
+            "hangzhou": {
+              "actual_effect": -0.0004241534286071186,
+              "predicted_effect": 0.001352239558547402
+            },
+            "ingolstadt": {
+              "actual_effect": -0.014474225106910633,
+              "predicted_effect": 0.0006963105895334872
+            },
+            "new_york": {
+              "actual_effect": 0.00899752092748702,
+              "predicted_effect": -0.00036759397022813724
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.00010221793456066085,
+              "predicted_effect": 0.00133427798883801
+            }
+          },
+          "source_rank_spearman": 0.3714285714285715
+        },
+        "salt_lake_city": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.011411666945377895,
+          "selected_predicted_effect": 0.009830993231181176,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": -0.0043062261316379954,
+              "predicted_effect": 0.011423837773625285
+            },
+            "cologne": {
+              "actual_effect": -0.011411666945377895,
+              "predicted_effect": 0.009830993231181176
+            },
+            "hangzhou": {
+              "actual_effect": -0.014669328787585381,
+              "predicted_effect": 0.01137824449648832
+            },
+            "ingolstadt": {
+              "actual_effect": -0.015563658380043926,
+              "predicted_effect": 0.010407101249821452
+            },
+            "new_york": {
+              "actual_effect": -0.013034894025774943,
+              "predicted_effect": 0.01157934060470728
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.012207040447731353,
+              "predicted_effect": 0.011421663742112623
+            }
+          },
+          "source_rank_spearman": 0.2
+        }
+      },
+      "feature_width": 28,
+      "folds": [
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "atlanta",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "cologne",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "hangzhou",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "ingolstadt",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "new_york",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "resco_synthetic",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "salt_lake_city",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        }
+      ],
+      "forced_selected_improving_city_count": 3,
+      "forced_selected_mean_effect": 0.007821358326712954,
+      "mean_source_rank_spearman": 0.05306122448979594,
+      "median_source_rank_spearman": 0.2,
+      "name": "existing_deploy_observable_covariates",
+      "null_aware_improving_city_count": 1,
+      "null_aware_mean_effect": 0.01311114813839898,
+      "outer_fold_count": 7,
+      "pair_count": 42,
+      "pair_design_width": 84,
+      "pair_mae": 0.020498505195182953,
+      "pair_pearson": -0.4327239857569628,
+      "pair_sign_accuracy": 0.30952380952380953
+    },
+    "right_of_way_enriched": {
+      "cities": {
+        "atlanta": {
+          "null_aware_actual_effect": 0.025293723782444173,
+          "null_aware_selected_source": "hangzhou",
+          "selected_actual_effect": 0.025293723782444173,
+          "selected_predicted_effect": -0.004698925177187877,
+          "selected_source": "hangzhou",
+          "source_predictions": {
+            "cologne": {
+              "actual_effect": -0.018859547468897342,
+              "predicted_effect": -0.002856236801575292
+            },
+            "hangzhou": {
+              "actual_effect": 0.025293723782444173,
+              "predicted_effect": -0.004698925177187877
+            },
+            "ingolstadt": {
+              "actual_effect": -0.016862125143300228,
+              "predicted_effect": -0.0011544780029246497
+            },
+            "new_york": {
+              "actual_effect": -0.026870838369878764,
+              "predicted_effect": -0.0015851133032241177
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.02951208206133275,
+              "predicted_effect": -0.0030009331440547845
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.027335401911930717,
+              "predicted_effect": -0.00436666672175608
+            }
+          },
+          "source_rank_spearman": -0.4285714285714286
+        },
+        "cologne": {
+          "null_aware_actual_effect": 0.028103527946514315,
+          "null_aware_selected_source": "hangzhou",
+          "selected_actual_effect": 0.028103527946514315,
+          "selected_predicted_effect": -0.008416841520325511,
+          "selected_source": "hangzhou",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.044356599069846674,
+              "predicted_effect": -0.004525477926281251
+            },
+            "hangzhou": {
+              "actual_effect": 0.028103527946514315,
+              "predicted_effect": -0.008416841520325511
+            },
+            "ingolstadt": {
+              "actual_effect": 0.03750355730953648,
+              "predicted_effect": -0.007533368565589842
+            },
+            "new_york": {
+              "actual_effect": 0.03314328920936405,
+              "predicted_effect": -0.0076688041878455165
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.046327226606158366,
+              "predicted_effect": -0.008280541871959313
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.003563953947781916,
+              "predicted_effect": -0.006622394551973745
+            }
+          },
+          "source_rank_spearman": 0.028571428571428574
+        },
+        "hangzhou": {
+          "null_aware_actual_effect": -0.009550410493919494,
+          "null_aware_selected_source": "cologne",
+          "selected_actual_effect": -0.009550410493919494,
+          "selected_predicted_effect": -0.03432776430826728,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0018201475156018742,
+              "predicted_effect": -0.006946243122605205
+            },
+            "cologne": {
+              "actual_effect": -0.009550410493919494,
+              "predicted_effect": -0.03432776430826728
+            },
+            "ingolstadt": {
+              "actual_effect": -0.019066939632640376,
+              "predicted_effect": -0.027672908039559047
+            },
+            "new_york": {
+              "actual_effect": -0.0012923260720947658,
+              "predicted_effect": -0.02681672050174881
+            },
+            "resco_synthetic": {
+              "actual_effect": 0.010163854606097741,
+              "predicted_effect": -0.01764195842672496
+            },
+            "salt_lake_city": {
+              "actual_effect": 0.012465836293358805,
+              "predicted_effect": -0.022293094298724003
+            }
+          },
+          "source_rank_spearman": 0.7142857142857143
+        },
+        "ingolstadt": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.0256168617364243,
+          "selected_predicted_effect": 0.0013395133630180489,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.039152995616155664,
+              "predicted_effect": 0.00413531901421485
+            },
+            "cologne": {
+              "actual_effect": -0.0256168617364243,
+              "predicted_effect": 0.0013395133630180489
+            },
+            "hangzhou": {
+              "actual_effect": -0.06452239484801035,
+              "predicted_effect": 0.0030248062146075866
+            },
+            "new_york": {
+              "actual_effect": -0.008664127308854117,
+              "predicted_effect": 0.0031986005292922864
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.009758383156278189,
+              "predicted_effect": 0.0025704631978047277
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.04888838966375103,
+              "predicted_effect": 0.0028864095951331046
+            }
+          },
+          "source_rank_spearman": 0.48571428571428577
+        },
+        "new_york": {
+          "null_aware_actual_effect": -0.003347948770142032,
+          "null_aware_selected_source": "resco_synthetic",
+          "selected_actual_effect": -0.003347948770142032,
+          "selected_predicted_effect": -0.0060455519065156,
+          "selected_source": "resco_synthetic",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.0057617523709432225,
+              "predicted_effect": -0.0010229308783544075
+            },
+            "cologne": {
+              "actual_effect": 0.0026457900163841743,
+              "predicted_effect": -0.003216432119051863
+            },
+            "hangzhou": {
+              "actual_effect": 0.0035257293939946793,
+              "predicted_effect": -0.004410700000714391
+            },
+            "ingolstadt": {
+              "actual_effect": 0.017658932434672623,
+              "predicted_effect": -0.0033078574959037365
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.003347948770142032,
+              "predicted_effect": -0.0060455519065156
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.007903698956570351,
+              "predicted_effect": -0.005202915059827239
+            }
+          },
+          "source_rank_spearman": 0.6571428571428573
+        },
+        "resco_synthetic": {
+          "null_aware_actual_effect": 0.00899752092748702,
+          "null_aware_selected_source": "new_york",
+          "selected_actual_effect": 0.00899752092748702,
+          "selected_predicted_effect": -0.0012799344904176643,
+          "selected_source": "new_york",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": 0.024247901192808684,
+              "predicted_effect": 0.002096364097828176
+            },
+            "cologne": {
+              "actual_effect": -0.0039667911312199116,
+              "predicted_effect": 9.451350691707804e-05
+            },
+            "hangzhou": {
+              "actual_effect": -0.0004241534286071186,
+              "predicted_effect": 0.001248085932605093
+            },
+            "ingolstadt": {
+              "actual_effect": -0.014474225106910633,
+              "predicted_effect": -4.857886155180675e-05
+            },
+            "new_york": {
+              "actual_effect": 0.00899752092748702,
+              "predicted_effect": -0.0012799344904176643
+            },
+            "salt_lake_city": {
+              "actual_effect": -0.00010221793456066085,
+              "predicted_effect": -4.612738752832646e-05
+            }
+          },
+          "source_rank_spearman": 0.2571428571428572
+        },
+        "salt_lake_city": {
+          "null_aware_actual_effect": 0.0,
+          "null_aware_selected_source": null,
+          "selected_actual_effect": -0.011411666945377895,
+          "selected_predicted_effect": 0.007426467607203554,
+          "selected_source": "cologne",
+          "source_predictions": {
+            "atlanta": {
+              "actual_effect": -0.0043062261316379954,
+              "predicted_effect": 0.012827178691299915
+            },
+            "cologne": {
+              "actual_effect": -0.011411666945377895,
+              "predicted_effect": 0.007426467607203554
+            },
+            "hangzhou": {
+              "actual_effect": -0.014669328787585381,
+              "predicted_effect": 0.011788156613725991
+            },
+            "ingolstadt": {
+              "actual_effect": -0.015563658380043926,
+              "predicted_effect": 0.009691678278658127
+            },
+            "new_york": {
+              "actual_effect": -0.013034894025774943,
+              "predicted_effect": 0.011759034461617773
+            },
+            "resco_synthetic": {
+              "actual_effect": -0.012207040447731353,
+              "predicted_effect": 0.010407528080195537
+            }
+          },
+          "source_rank_spearman": 0.2
+        }
+      },
+      "feature_width": 54,
+      "folds": [
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "atlanta",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "cologne",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "hangzhou",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "ingolstadt",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "new_york",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "resco_synthetic",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        },
+        {
+          "evaluation_pair_count": 6,
+          "heldout_city": "salt_lake_city",
+          "heldout_city_absent_as_source_and_target": true,
+          "selected_ridge_alpha": 1000.0,
+          "training_city_count": 6,
+          "training_pair_count": 30
+        }
+      ],
+      "forced_selected_improving_city_count": 4,
+      "forced_selected_mean_effect": 0.0017811263872259686,
+      "mean_source_rank_spearman": 0.27346938775510204,
+      "median_source_rank_spearman": 0.2571428571428572,
+      "name": "existing_plus_right_of_way_and_neighbor_execution",
+      "null_aware_improving_city_count": 2,
+      "null_aware_mean_effect": 0.007070916198911996,
+      "outer_fold_count": 7,
+      "pair_count": 42,
+      "pair_design_width": 162,
+      "pair_mae": 0.022488865353102943,
+      "pair_pearson": -0.20016735838264085,
+      "pair_sign_accuracy": 0.3333333333333333
+    }
+  },
+  "scientific_role": "post-v150a-seven-city-development-diagnostic",
+  "seed_effects_per_pair": {
+    "atlanta->cologne": [
+      -0.018238802655017483,
+      -0.01797347300617891,
+      -0.020366366745495634
+    ],
+    "atlanta->hangzhou": [
+      0.029642083478030046,
+      0.058107808773350644,
+      -0.011868720904048169
+    ],
+    "atlanta->ingolstadt": [
+      -0.0177707421941507,
+      -0.014490151004051044,
+      -0.018325482231698942
+    ],
+    "atlanta->new_york": [
+      -0.01872676552660485,
+      -0.013292562524962692,
+      -0.048593187058068754
+    ],
+    "atlanta->resco_synthetic": [
+      -0.017208404437498992,
+      -0.01930755445988419,
+      -0.05202028728661506
+    ],
+    "atlanta->salt_lake_city": [
+      0.03216664178197459,
+      0.0623305803838492,
+      -0.012491016430031643
+    ],
+    "cologne->atlanta": [
+      0.0457860072040265,
+      0.054622311161536,
+      0.03266147884397752
+    ],
+    "cologne->hangzhou": [
+      0.012860791785842748,
+      0.04955545001892213,
+      0.021894342034778063
+    ],
+    "cologne->ingolstadt": [
+      0.026461063898332374,
+      0.058544282793298305,
+      0.027505325236978767
+    ],
+    "cologne->new_york": [
+      0.028951957438200563,
+      0.04795349218613161,
+      0.022524418003759983
+    ],
+    "cologne->resco_synthetic": [
+      0.07258673015755375,
+      0.030091698525503034,
+      0.036303251135418296
+    ],
+    "cologne->salt_lake_city": [
+      -0.02366391790732927,
+      0.006979816200233684,
+      0.005992239863749839
+    ],
+    "hangzhou->atlanta": [
+      0.002094995274417151,
+      0.01153128673420673,
+      -0.008165839461818258
+    ],
+    "hangzhou->cologne": [
+      -0.026100764678731958,
+      0.02487312978070762,
+      -0.027423596583734146
+    ],
+    "hangzhou->ingolstadt": [
+      -0.033161197317547846,
+      0.0070671077824703745,
+      -0.031106729362843658
+    ],
+    "hangzhou->new_york": [
+      -0.008688075063587073,
+      0.008544448518369488,
+      -0.003733351671066712
+    ],
+    "hangzhou->resco_synthetic": [
+      -0.017394993892550458,
+      0.051918789838486905,
+      -0.004032232127643226
+    ],
+    "hangzhou->salt_lake_city": [
+      0.024328961997347184,
+      0.0125053520097684,
+      0.0005631948729608316
+    ],
+    "ingolstadt->atlanta": [
+      0.04528110990470842,
+      0.03298847091619446,
+      0.039189406027564114
+    ],
+    "ingolstadt->cologne": [
+      -0.04889919453189984,
+      -0.005476575585506058,
+      -0.022474815091867013
+    ],
+    "ingolstadt->hangzhou": [
+      -0.08909034053433412,
+      -0.07857863082363907,
+      -0.025898213186057825
+    ],
+    "ingolstadt->new_york": [
+      0.0007780465214249632,
+      -0.034581082070423694,
+      0.007810653622436381
+    ],
+    "ingolstadt->resco_synthetic": [
+      -0.012719452971496806,
+      -0.01890309327313071,
+      0.0023473967757929454
+    ],
+    "ingolstadt->salt_lake_city": [
+      -0.07086354203477574,
+      -0.046070973641100535,
+      -0.02973065331537682
+    ],
+    "new_york->atlanta": [
+      0.002435006303415624,
+      -0.003585008161611454,
+      0.0184352589710255
+    ],
+    "new_york->cologne": [
+      0.00444866713526707,
+      -0.011252033229804084,
+      0.014740736143689537
+    ],
+    "new_york->hangzhou": [
+      0.013247589895298862,
+      -0.021282109897640854,
+      0.01861170818432603
+    ],
+    "new_york->ingolstadt": [
+      0.002296891547839651,
+      0.003357654293548413,
+      0.047322251462629805
+    ],
+    "new_york->resco_synthetic": [
+      0.00514973184264104,
+      -0.02275873657398525,
+      0.007565158420918115
+    ],
+    "new_york->salt_lake_city": [
+      -0.001106059543764278,
+      -0.01570825975287267,
+      -0.006896777573074109
+    ],
+    "resco_synthetic->atlanta": [
+      0.02683492215435951,
+      0.020988292189026397,
+      0.024920489235040144
+    ],
+    "resco_synthetic->cologne": [
+      0.008824738454096148,
+      -0.018245572829222553,
+      -0.0024795390185333305
+    ],
+    "resco_synthetic->hangzhou": [
+      0.001570340356189373,
+      -0.0017701334569887317,
+      -0.001072667185021997
+    ],
+    "resco_synthetic->ingolstadt": [
+      -0.004087166906439746,
+      -0.026906006758752397,
+      -0.012429501655539757
+    ],
+    "resco_synthetic->new_york": [
+      0.011109150102051851,
+      0.005242266087816604,
+      0.010641146592592604
+    ],
+    "resco_synthetic->salt_lake_city": [
+      -0.0004105108590470863,
+      0.00010175567219929474,
+      2.10138316580899e-06
+    ],
+    "salt_lake_city->atlanta": [
+      -0.020798126205916034,
+      0.006573433671607773,
+      0.001306014139394275
+    ],
+    "salt_lake_city->cologne": [
+      -0.03989068322043165,
+      0.014069564537207993,
+      -0.00841388215291003
+    ],
+    "salt_lake_city->hangzhou": [
+      -0.03470266473128458,
+      0.0026382279765738287,
+      -0.011943549608045393
+    ],
+    "salt_lake_city->ingolstadt": [
+      -0.031042802453762133,
+      -0.00929252655478334,
+      -0.006355646131586304
+    ],
+    "salt_lake_city->new_york": [
+      -0.022915541466581604,
+      -0.008225856857618487,
+      -0.007963283753124738
+    ],
+    "salt_lake_city->resco_synthetic": [
+      -0.03154642547412433,
+      0.0009798816305252728,
+      -0.006054577499594996
+    ]
+  }
+}

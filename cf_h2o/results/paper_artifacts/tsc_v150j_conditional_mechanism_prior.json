@@ -1,0 +1,3052 @@
+{
+  "admitted_cities": {
+    "atlanta": false,
+    "cologne": false,
+    "hangzhou": false,
+    "ingolstadt": false,
+    "new_york": false,
+    "resco_synthetic": false,
+    "salt_lake_city": false
+  },
+  "city_count": 7,
+  "claim_boundary": "V150J tests one deterministic conditional mechanism representation on seven development cities. Passing cannot establish fresh-city or closed-loop efficacy.",
+  "conditional_state_features": {
+    "execution": [
+      "current_green_elapsed_norm",
+      "neighbor_switching_fraction",
+      "neighbor_clearance_fraction_mean"
+    ],
+    "mobility": [
+      "mean_speed"
+    ],
+    "network_propagation": [
+      "graph_focal_to_neighbor_q_ratio",
+      "neighbor_current_protected_ratio_mean",
+      "neighbor_current_permissive_ratio_mean",
+      "neighbor_switching_fraction"
+    ],
+    "queue_service": [
+      "queue_concentration"
+    ],
+    "right_of_way": [
+      "neighbor_phase_observation_ratio",
+      "neighbor_current_protected_ratio_mean",
+      "neighbor_current_permissive_ratio_mean",
+      "neighbor_current_green_elapsed_norm_mean",
+      "neighbor_switching_fraction",
+      "neighbor_clearance_fraction_mean"
+    ],
+    "spillback": [
+      "mean_occ"
+    ]
+  },
+  "created_at_utc": "2026-09-08T00:12:52.560733+00:00",
+  "development_gate": {
+    "checks": {
+      "at_least_two_cities_admit_crossfitted_source": false,
+      "every_admitted_city_beats_matched_placebo": true,
+      "every_admitted_city_improves_rigid": true,
+      "every_rejected_city_exactly_falls_back": true,
+      "mean_selected_effect_beats_matched_placebo": false,
+      "mean_selected_effect_improves_rigid": false,
+      "no_city_regresses_rigid": true
+    },
+    "decision": "retain_sample_coherent_rigid_cfcmt_and_reject_source_claim",
+    "inference_unit": "city",
+    "passed": false
+  },
+  "mechanism_design_protocol": "deterministic-local-right-of-way-execution-interactions-v1",
+  "protocol": "tsc-v150j-conditional-mechanism-prior-aggregate-v1",
+  "scientific_status": "development_gate_reject",
+  "selected_candidates": {
+    "atlanta": {
+      "admitted": false,
+      "candidate": "salt_lake_city|network_propagation",
+      "candidate_diagnostics": {
+        "cologne|execution": {
+          "candidate_mean": -0.537528480007858,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.006103202765608495,
+          "gain_vs_target_only": 0.04160000000000025,
+          "matched_placebo_mean": -0.5314252772422495,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "cologne|mobility": {
+          "candidate_mean": -0.4959284800078578,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.4959284800078578,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "cologne|network_propagation": {
+          "candidate_mean": -0.527528480007858,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.03160000000000024,
+          "matched_placebo_mean": -0.527528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "cologne|queue_service": {
+          "candidate_mean": -0.5293986500233142,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.01812982998454382,
+          "gain_vs_target_only": 0.033470170015456435,
+          "matched_placebo_mean": -0.547528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "cologne|right_of_way": {
+          "candidate_mean": -0.547528480007858,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.05160000000000026,
+          "matched_placebo_mean": -0.547528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "cologne|spillback": {
+          "candidate_mean": -0.4959284800078578,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.4959284800078578,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "hangzhou|execution": {
+          "candidate_mean": -0.5214252772422495,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.026103202765608513,
+          "gain_vs_target_only": 0.025496797234391744,
+          "matched_placebo_mean": -0.547528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|mobility": {
+          "candidate_mean": -0.4959284800078578,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0018701700154561962,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.49779865002331397,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "hangzhou|network_propagation": {
+          "candidate_mean": -0.5193986500233142,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.008129829984543813,
+          "gain_vs_target_only": 0.023470170015456426,
+          "matched_placebo_mean": -0.527528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|queue_service": {
+          "candidate_mean": -0.5393986500233142,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.008129829984543813,
+          "gain_vs_target_only": 0.043470170015456444,
+          "matched_placebo_mean": -0.547528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|right_of_way": {
+          "candidate_mean": -0.547528480007858,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.05160000000000026,
+          "matched_placebo_mean": -0.547528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|spillback": {
+          "candidate_mean": -0.4959284800078578,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.4959284800078578,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "ingolstadt|execution": {
+          "candidate_mean": -0.49443788666487637,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0035172205619166674,
+          "gain_vs_target_only": -0.0014905933429814056,
+          "matched_placebo_mean": -0.49795510722679304,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "ingolstadt|mobility": {
+          "candidate_mean": -0.4959284800078578,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0018701700154561962,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.49779865002331397,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "ingolstadt|network_propagation": {
+          "candidate_mean": -0.547528480007858,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.05160000000000026,
+          "matched_placebo_mean": -0.547528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "ingolstadt|queue_service": {
+          "candidate_mean": -0.507528480007858,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.040000000000000036,
+          "gain_vs_target_only": 0.011600000000000221,
+          "matched_placebo_mean": -0.547528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "ingolstadt|right_of_way": {
+          "candidate_mean": -0.547528480007858,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.05160000000000026,
+          "matched_placebo_mean": -0.547528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "ingolstadt|spillback": {
+          "candidate_mean": -0.4959284800078578,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.4959284800078578,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "new_york|execution": {
+          "candidate_mean": -0.5293986500233142,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.010000000000000009,
+          "gain_vs_target_only": 0.033470170015456435,
+          "matched_placebo_mean": -0.5393986500233142,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "new_york|mobility": {
+          "candidate_mean": -0.4959284800078578,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0018701700154561962,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.49779865002331397,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "new_york|network_propagation": {
+          "candidate_mean": -0.527528480007858,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.008129829984543813,
+          "gain_vs_target_only": 0.03160000000000024,
+          "matched_placebo_mean": -0.5193986500233142,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "new_york|queue_service": {
+          "candidate_mean": -0.537528480007858,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.010000000000000009,
+          "gain_vs_target_only": 0.04160000000000025,
+          "matched_placebo_mean": -0.547528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "new_york|right_of_way": {
+          "candidate_mean": -0.547528480007858,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.05160000000000026,
+          "matched_placebo_mean": -0.547528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "new_york|spillback": {
+          "candidate_mean": -0.4959284800078578,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.4959284800078578,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "resco_synthetic|execution": {
+          "candidate_mean": -0.5293986500233142,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.033470170015456435,
+          "matched_placebo_mean": -0.5293986500233142,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|mobility": {
+          "candidate_mean": -0.4959284800078578,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0018701700154561962,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.49779865002331397,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "resco_synthetic|network_propagation": {
+          "candidate_mean": -0.5193986500233142,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.008129829984543813,
+          "gain_vs_target_only": 0.023470170015456426,
+          "matched_placebo_mean": -0.527528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|queue_service": {
+          "candidate_mean": -0.527528480007858,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.020000000000000018,
+          "gain_vs_target_only": 0.03160000000000024,
+          "matched_placebo_mean": -0.547528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|right_of_way": {
+          "candidate_mean": -0.547528480007858,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.05160000000000026,
+          "matched_placebo_mean": -0.547528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|spillback": {
+          "candidate_mean": -0.4959284800078578,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0014905933429814056,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.49443788666487637,
+          "passes_identity_gain": true,
+          "passes_target_gain": false
+        },
+        "salt_lake_city|execution": {
+          "candidate_mean": -0.5214252772422495,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.007973372781064691,
+          "gain_vs_target_only": 0.025496797234391744,
+          "matched_placebo_mean": -0.5293986500233142,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|mobility": {
+          "candidate_mean": -0.4959284800078578,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0018701700154561962,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.49779865002331397,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "salt_lake_city|network_propagation": {
+          "candidate_mean": -0.5393986500233142,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.031600000000000183,
+          "gain_vs_target_only": 0.043470170015456444,
+          "matched_placebo_mean": -0.507798650023314,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|queue_service": {
+          "candidate_mean": -0.547528480007858,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.05160000000000026,
+          "matched_placebo_mean": -0.547528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|right_of_way": {
+          "candidate_mean": -0.547528480007858,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.05160000000000026,
+          "matched_placebo_mean": -0.547528480007858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|spillback": {
+          "candidate_mean": -0.4959284800078578,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.4959284800078578,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        }
+      },
+      "candidate_mean": -0.5393986500233142,
+      "crossfitted_selection_audit": {
+        "fold_count": 5,
+        "folds": [
+          {
+            "heldout_fold_index": 0,
+            "heldout_gain_vs_matched_placebo": -0.04999999999999993,
+            "heldout_gain_vs_target_only": 0.008000000000001228,
+            "selected_candidate": "cologne|execution",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 1,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.009350850077280981,
+            "selected_candidate": "salt_lake_city|network_propagation",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 2,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.0,
+            "selected_candidate": "salt_lake_city|network_propagation",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 3,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.0,
+            "selected_candidate": "new_york|network_propagation",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              2,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 4,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.04999999999999999,
+            "selected_candidate": "salt_lake_city|network_propagation",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              2,
+              3
+            ]
+          }
+        ],
+        "heldout_mean_gain_vs_matched_placebo": -0.009999999999999986,
+        "heldout_mean_gain_vs_target_only": 0.01347017001545644,
+        "minimum_nondegrading_folds": 4,
+        "nondegrading_fold_count_vs_matched_placebo": 4,
+        "nondegrading_fold_count_vs_target_only": 5,
+        "passed": false
+      },
+      "eligible": true,
+      "eligible_candidate_count": 3,
+      "full_data_candidate_admitted": true,
+      "gain_vs_matched_placebo": 0.031600000000000183,
+      "gain_vs_target_only": 0.043470170015456444,
+      "matched_placebo_mean": -0.507798650023314,
+      "mechanism_block": "network_propagation",
+      "minimum_identity_gain": 0.0005,
+      "minimum_target_gain": 0.0005,
+      "passes_identity_gain": true,
+      "passes_target_gain": true,
+      "source_city": "salt_lake_city",
+      "target_only_mean": -0.4959284800078578
+    },
+    "cologne": {
+      "admitted": false,
+      "candidate": "ingolstadt|spillback",
+      "candidate_diagnostics": {
+        "atlanta|execution": {
+          "candidate_mean": 0.10287833004337504,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.01717540363439843,
+          "gain_vs_target_only": 0.0035730408903788535,
+          "matched_placebo_mean": 0.12005373367777347,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "atlanta|mobility": {
+          "candidate_mean": 0.10945651336677856,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.00300514243302466,
+          "matched_placebo_mean": 0.10945651336677856,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "atlanta|network_propagation": {
+          "candidate_mean": 0.10728180629027104,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.0008304353565171396,
+          "matched_placebo_mean": 0.10728180629027104,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "atlanta|queue_service": {
+          "candidate_mean": 0.10653858023607947,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0019298245614035037,
+          "gain_vs_target_only": -8.720930232557211e-05,
+          "matched_placebo_mean": 0.10460875567467597,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "atlanta|right_of_way": {
+          "candidate_mean": 0.10558091421889998,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.00011764705882352788,
+          "gain_vs_target_only": 0.0008704567148539177,
+          "matched_placebo_mean": 0.10546326716007645,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "atlanta|spillback": {
+          "candidate_mean": 0.09771734448761324,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.006929824561403508,
+          "gain_vs_target_only": 0.008734026446140658,
+          "matched_placebo_mean": 0.09078751992620973,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|execution": {
+          "candidate_mean": 0.09659835607936511,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0002325581395348636,
+          "gain_vs_target_only": 0.009853014854388789,
+          "matched_placebo_mean": 0.09683091421889997,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|mobility": {
+          "candidate_mean": 0.09895990071284391,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.005648854961832053,
+          "gain_vs_target_only": 0.007491470220909985,
+          "matched_placebo_mean": 0.10460875567467597,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "hangzhou|network_propagation": {
+          "candidate_mean": 0.10728180629027104,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.0008304353565171396,
+          "matched_placebo_mean": 0.10728180629027104,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "hangzhou|queue_service": {
+          "candidate_mean": 0.11061930406445299,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.001162790697674429,
+          "gain_vs_target_only": -0.004167933130699089,
+          "matched_placebo_mean": 0.10945651336677856,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "hangzhou|right_of_way": {
+          "candidate_mean": 0.10558091421889998,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0008704567148539177,
+          "matched_placebo_mean": 0.10558091421889998,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|spillback": {
+          "candidate_mean": 0.09350451466441595,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0018604651162790753,
+          "gain_vs_target_only": 0.012946856269337947,
+          "matched_placebo_mean": 0.09164404954813687,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "ingolstadt|execution": {
+          "candidate_mean": 0.10596979194757282,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.009138877728672848,
+          "gain_vs_target_only": 0.00048157898618107764,
+          "matched_placebo_mean": 0.09683091421889997,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "ingolstadt|mobility": {
+          "candidate_mean": 0.09895990071284391,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.009439144639514632,
+          "gain_vs_target_only": 0.007491470220909985,
+          "matched_placebo_mean": 0.10839904535235854,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "ingolstadt|network_propagation": {
+          "candidate_mean": 0.09728180629027104,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.003750000000000017,
+          "gain_vs_target_only": 0.009169564643482855,
+          "matched_placebo_mean": 0.10103180629027106,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "ingolstadt|queue_service": {
+          "candidate_mean": 0.10653858023607947,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0019298245614035037,
+          "gain_vs_target_only": -8.720930232557211e-05,
+          "matched_placebo_mean": 0.10460875567467597,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "ingolstadt|right_of_way": {
+          "candidate_mean": 0.10365108965749649,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.005648854961832067,
+          "gain_vs_target_only": 0.0028002812762574075,
+          "matched_placebo_mean": 0.10929994461932856,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "ingolstadt|spillback": {
+          "candidate_mean": 0.09164404954813687,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.0018604651162790753,
+          "gain_vs_target_only": 0.014807321385617023,
+          "matched_placebo_mean": 0.09350451466441595,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "new_york|execution": {
+          "candidate_mean": 0.09683091421889997,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.009620456714853926,
+          "matched_placebo_mean": 0.09683091421889997,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "new_york|mobility": {
+          "candidate_mean": 0.10082036582912299,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.003788389845552978,
+          "gain_vs_target_only": 0.0056310051046309095,
+          "matched_placebo_mean": 0.10460875567467597,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "new_york|network_propagation": {
+          "candidate_mean": 0.10728180629027104,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.0008304353565171396,
+          "matched_placebo_mean": 0.10728180629027104,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "new_york|queue_service": {
+          "candidate_mean": 0.10460875567467597,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0018426152590779316,
+          "matched_placebo_mean": 0.10460875567467597,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "new_york|right_of_way": {
+          "candidate_mean": 0.10558091421889998,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0008704567148539177,
+          "matched_placebo_mean": 0.10558091421889998,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "new_york|spillback": {
+          "candidate_mean": 0.09164404954813687,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.0018604651162790753,
+          "gain_vs_target_only": 0.014807321385617023,
+          "matched_placebo_mean": 0.09350451466441595,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|execution": {
+          "candidate_mean": 0.09683091421889997,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.009620456714853926,
+          "matched_placebo_mean": 0.09683091421889997,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|mobility": {
+          "candidate_mean": 0.11131697848305762,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.004847757692102578,
+          "gain_vs_target_only": -0.0048656075493037215,
+          "matched_placebo_mean": 0.10646922079095504,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "resco_synthetic|network_propagation": {
+          "candidate_mean": 0.11103180629027105,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.003750000000000017,
+          "gain_vs_target_only": -0.004580435356517157,
+          "matched_placebo_mean": 0.10728180629027104,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "resco_synthetic|queue_service": {
+          "candidate_mean": 0.10653858023607947,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0009881085692955843,
+          "gain_vs_target_only": -8.720930232557211e-05,
+          "matched_placebo_mean": 0.10752668880537505,
+          "passes_identity_gain": true,
+          "passes_target_gain": false
+        },
+        "resco_synthetic|right_of_way": {
+          "candidate_mean": 0.10365108965749649,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.0019298245614034898,
+          "gain_vs_target_only": 0.0028002812762574075,
+          "matched_placebo_mean": 0.10558091421889998,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|spillback": {
+          "candidate_mean": 0.09164404954813687,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.014807321385617023,
+          "matched_placebo_mean": 0.09164404954813687,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|execution": {
+          "candidate_mean": 0.09683091421889997,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.009620456714853926,
+          "matched_placebo_mean": 0.09683091421889997,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|mobility": {
+          "candidate_mean": 0.10012269141051833,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0011627906976744151,
+          "gain_vs_target_only": 0.00632867952323557,
+          "matched_placebo_mean": 0.09895990071284391,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|network_propagation": {
+          "candidate_mean": 0.11103180629027105,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.003750000000000017,
+          "gain_vs_target_only": -0.004580435356517157,
+          "matched_placebo_mean": 0.10728180629027104,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "salt_lake_city|queue_service": {
+          "candidate_mean": 0.10460875567467597,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0018426152590779316,
+          "matched_placebo_mean": 0.10460875567467597,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|right_of_way": {
+          "candidate_mean": 0.10365108965749649,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0028002812762574075,
+          "matched_placebo_mean": 0.10365108965749649,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|spillback": {
+          "candidate_mean": 0.09539404954813689,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.003750000000000017,
+          "gain_vs_target_only": 0.011057321385617006,
+          "matched_placebo_mean": 0.09164404954813687,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        }
+      },
+      "candidate_mean": 0.09164404954813687,
+      "crossfitted_selection_audit": {
+        "fold_count": 5,
+        "folds": [
+          {
+            "heldout_fold_index": 0,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": -0.0062500000000000056,
+            "selected_candidate": "ingolstadt|network_propagation",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 1,
+            "heldout_gain_vs_matched_placebo": -0.049999999999999996,
+            "heldout_gain_vs_target_only": -0.009302325581395335,
+            "selected_candidate": "salt_lake_city|execution",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 2,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.028244274809160322,
+            "selected_candidate": "ingolstadt|spillback",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 3,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.011768663479871488,
+            "selected_candidate": "ingolstadt|spillback",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              2,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 4,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.0,
+            "selected_candidate": "ingolstadt|spillback",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              2,
+              3
+            ]
+          }
+        ],
+        "heldout_mean_gain_vs_matched_placebo": -0.009999999999999998,
+        "heldout_mean_gain_vs_target_only": 0.004892122541527294,
+        "minimum_nondegrading_folds": 4,
+        "nondegrading_fold_count_vs_matched_placebo": 4,
+        "nondegrading_fold_count_vs_target_only": 3,
+        "passed": false
+      },
+      "eligible": true,
+      "eligible_candidate_count": 9,
+      "full_data_candidate_admitted": true,
+      "gain_vs_matched_placebo": 0.0018604651162790753,
+      "gain_vs_target_only": 0.014807321385617023,
+      "matched_placebo_mean": 0.09350451466441595,
+      "mechanism_block": "spillback",
+      "minimum_identity_gain": 0.0005,
+      "minimum_target_gain": 0.0005,
+      "passes_identity_gain": true,
+      "passes_target_gain": true,
+      "source_city": "ingolstadt",
+      "target_only_mean": 0.1064513709337539
+    },
+    "hangzhou": {
+      "admitted": false,
+      "candidate": "atlanta|queue_service",
+      "candidate_diagnostics": {
+        "atlanta|execution": {
+          "candidate_mean": 0.09754296744121113,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.004005160255751303,
+          "gain_vs_target_only": -0.01891278506990557,
+          "matched_placebo_mean": 0.09353780718545983,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "atlanta|mobility": {
+          "candidate_mean": 0.07452361110135589,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0050707070707071145,
+          "gain_vs_target_only": 0.004106571269949677,
+          "matched_placebo_mean": 0.06945290403064877,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "atlanta|network_propagation": {
+          "candidate_mean": 0.07089346360216921,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.007736718769136355,
+          "matched_placebo_mean": 0.07089346360216921,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "atlanta|queue_service": {
+          "candidate_mean": 0.06312497037177103,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.006998867497168729,
+          "gain_vs_target_only": 0.01550521199953453,
+          "matched_placebo_mean": 0.07012383786893976,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "atlanta|right_of_way": {
+          "candidate_mean": 0.07863018237130556,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": 0.07863018237130556,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "atlanta|spillback": {
+          "candidate_mean": 0.07761873910247523,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.014180528418593977,
+          "gain_vs_target_only": 0.0010114432688303338,
+          "matched_placebo_mean": 0.06343821068388125,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "cologne|execution": {
+          "candidate_mean": 0.08136411141903606,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.002733929047730496,
+          "matched_placebo_mean": 0.08136411141903606,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "cologne|mobility": {
+          "candidate_mean": 0.06945290403064877,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.0050707070707071145,
+          "gain_vs_target_only": 0.009177278340656791,
+          "matched_placebo_mean": 0.07452361110135589,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "cologne|network_propagation": {
+          "candidate_mean": 0.07196074898499984,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0010672853828306295,
+          "gain_vs_target_only": 0.006669433386305726,
+          "matched_placebo_mean": 0.07089346360216921,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "cologne|queue_service": {
+          "candidate_mean": 0.07266858495065182,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.004632982375829722,
+          "gain_vs_target_only": 0.005961597420653747,
+          "matched_placebo_mean": 0.0680356025748221,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "cologne|right_of_way": {
+          "candidate_mean": 0.07863018237130556,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": 0.07863018237130556,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "cologne|spillback": {
+          "candidate_mean": 0.07343821068388125,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.00012126461671720101,
+          "gain_vs_target_only": 0.0051919716874243155,
+          "matched_placebo_mean": 0.07355947530059845,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "ingolstadt|execution": {
+          "candidate_mean": 0.08136411141903606,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0010672853828306156,
+          "gain_vs_target_only": -0.002733929047730496,
+          "matched_placebo_mean": 0.08243139680186667,
+          "passes_identity_gain": true,
+          "passes_target_gain": false
+        },
+        "ingolstadt|mobility": {
+          "candidate_mean": 0.07452361110135589,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.004106571269949677,
+          "matched_placebo_mean": 0.07452361110135589,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "ingolstadt|network_propagation": {
+          "candidate_mean": 0.07089346360216921,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.00254474708171204,
+          "gain_vs_target_only": 0.007736718769136355,
+          "matched_placebo_mean": 0.07343821068388125,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "ingolstadt|queue_service": {
+          "candidate_mean": 0.07312497037177103,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.007911764705882326,
+          "gain_vs_target_only": 0.0055052119995345344,
+          "matched_placebo_mean": 0.08103673507765335,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "ingolstadt|right_of_way": {
+          "candidate_mean": 0.07863018237130556,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": 0.07863018237130556,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "ingolstadt|spillback": {
+          "candidate_mean": 0.07343821068388125,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.0010672853828306295,
+          "gain_vs_target_only": 0.0051919716874243155,
+          "matched_placebo_mean": 0.07450549606671188,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "new_york|execution": {
+          "candidate_mean": 0.08136411141903606,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.002733929047730496,
+          "matched_placebo_mean": 0.08136411141903606,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "new_york|mobility": {
+          "candidate_mean": 0.06605320455656913,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.008470406544786757,
+          "gain_vs_target_only": 0.012576977814736434,
+          "matched_placebo_mean": 0.07452361110135589,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "new_york|network_propagation": {
+          "candidate_mean": 0.07089346360216921,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.007736718769136355,
+          "matched_placebo_mean": 0.07089346360216921,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "new_york|queue_service": {
+          "candidate_mean": 0.06312497037177103,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.006998867497168729,
+          "gain_vs_target_only": 0.01550521199953453,
+          "matched_placebo_mean": 0.07012383786893976,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "new_york|right_of_way": {
+          "candidate_mean": 0.07863018237130556,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": 0.07863018237130556,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "new_york|spillback": {
+          "candidate_mean": 0.07450549606671188,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.004124686304593686,
+          "matched_placebo_mean": 0.07450549606671188,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|execution": {
+          "candidate_mean": 0.08136411141903606,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.002733929047730496,
+          "matched_placebo_mean": 0.08136411141903606,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "resco_synthetic|mobility": {
+          "candidate_mean": 0.06605320455656913,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.008470406544786757,
+          "gain_vs_target_only": 0.012576977814736434,
+          "matched_placebo_mean": 0.07452361110135589,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|network_propagation": {
+          "candidate_mean": 0.07450549606671188,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.004124686304593686,
+          "matched_placebo_mean": 0.07450549606671188,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|queue_service": {
+          "candidate_mean": 0.07012383786893976,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0085063445023658,
+          "matched_placebo_mean": 0.07012383786893976,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|right_of_way": {
+          "candidate_mean": 0.07863018237130556,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": 0.07863018237130556,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "resco_synthetic|spillback": {
+          "candidate_mean": 0.07450549606671188,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.004124686304593686,
+          "matched_placebo_mean": 0.07450549606671188,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|execution": {
+          "candidate_mean": 0.08136411141903606,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.002733929047730496,
+          "matched_placebo_mean": 0.08136411141903606,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "salt_lake_city|mobility": {
+          "candidate_mean": 0.069576203137419,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.0049474079639368895,
+          "gain_vs_target_only": 0.009053979233886567,
+          "matched_placebo_mean": 0.07452361110135589,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|network_propagation": {
+          "candidate_mean": 0.07450549606671188,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.004124686304593686,
+          "matched_placebo_mean": 0.07450549606671188,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|queue_service": {
+          "candidate_mean": 0.07519454493964689,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.005070707070707128,
+          "gain_vs_target_only": 0.0034356374316586724,
+          "matched_placebo_mean": 0.07012383786893976,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|right_of_way": {
+          "candidate_mean": 0.07863018237130556,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": 0.07863018237130556,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "salt_lake_city|spillback": {
+          "candidate_mean": 0.07450549606671188,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.004124686304593686,
+          "matched_placebo_mean": 0.07450549606671188,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        }
+      },
+      "candidate_mean": 0.06312497037177103,
+      "crossfitted_selection_audit": {
+        "fold_count": 5,
+        "folds": [
+          {
+            "heldout_fold_index": 0,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.0,
+            "selected_candidate": "ingolstadt|network_propagation",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 1,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.0006063230835859912,
+            "selected_candidate": "new_york|mobility",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 2,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.02535353535353556,
+            "selected_candidate": "atlanta|queue_service",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 3,
+            "heldout_gain_vs_matched_placebo": -0.015005662514156276,
+            "heldout_gain_vs_target_only": -0.03799262196886054,
+            "selected_candidate": "atlanta|queue_service",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              2,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 4,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.0,
+            "selected_candidate": "atlanta|queue_service",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              2,
+              3
+            ]
+          }
+        ],
+        "heldout_mean_gain_vs_matched_placebo": -0.003001132502831255,
+        "heldout_mean_gain_vs_target_only": -0.0024065527063477977,
+        "minimum_nondegrading_folds": 4,
+        "nondegrading_fold_count_vs_matched_placebo": 4,
+        "nondegrading_fold_count_vs_target_only": 4,
+        "passed": false
+      },
+      "eligible": true,
+      "eligible_candidate_count": 9,
+      "full_data_candidate_admitted": true,
+      "gain_vs_matched_placebo": 0.006998867497168729,
+      "gain_vs_target_only": 0.01550521199953453,
+      "matched_placebo_mean": 0.07012383786893976,
+      "mechanism_block": "queue_service",
+      "minimum_identity_gain": 0.0005,
+      "minimum_target_gain": 0.0005,
+      "passes_identity_gain": true,
+      "passes_target_gain": true,
+      "source_city": "atlanta",
+      "target_only_mean": 0.07863018237130556
+    },
+    "ingolstadt": {
+      "admitted": false,
+      "candidate": "new_york|execution",
+      "candidate_diagnostics": {
+        "atlanta|execution": {
+          "candidate_mean": 0.1818594945103794,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.009434936158652568,
+          "gain_vs_target_only": 0.018833903026470866,
+          "matched_placebo_mean": 0.17242455835172682,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "atlanta|mobility": {
+          "candidate_mean": 0.2019544818254374,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.0012610842885871498,
+          "matched_placebo_mean": 0.2019544818254374,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "atlanta|network_propagation": {
+          "candidate_mean": 0.18189238013390505,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.018801017402945208,
+          "matched_placebo_mean": 0.18189238013390505,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "atlanta|queue_service": {
+          "candidate_mean": 0.19598509407033535,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.00499049171420804,
+          "gain_vs_target_only": 0.004708303466514907,
+          "matched_placebo_mean": 0.1909946023561273,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "atlanta|right_of_way": {
+          "candidate_mean": 0.17322570804210166,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.007564532345878866,
+          "gain_vs_target_only": 0.027467689494748593,
+          "matched_placebo_mean": 0.18079024038798053,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "atlanta|spillback": {
+          "candidate_mean": 0.17824809260535607,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.009999999999999981,
+          "gain_vs_target_only": 0.022445304931494187,
+          "matched_placebo_mean": 0.18824809260535605,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "cologne|execution": {
+          "candidate_mean": 0.17963727228815712,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0028251121076233177,
+          "gain_vs_target_only": 0.02105612524869313,
+          "matched_placebo_mean": 0.1768121601805338,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "cologne|mobility": {
+          "candidate_mean": 0.2079061114732806,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.007212713936430359,
+          "matched_placebo_mean": 0.2079061114732806,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "cologne|network_propagation": {
+          "candidate_mean": 0.18112775247433055,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.019565645062519704,
+          "matched_placebo_mean": 0.18112775247433055,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "cologne|queue_service": {
+          "candidate_mean": 0.19598509407033535,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.004708303466514907,
+          "matched_placebo_mean": 0.19598509407033535,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "cologne|right_of_way": {
+          "candidate_mean": 0.1746588053690731,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.007770011797933657,
+          "gain_vs_target_only": 0.02603459216777715,
+          "matched_placebo_mean": 0.18242881716700676,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "cologne|spillback": {
+          "candidate_mean": 0.19242881716700677,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.008264580369843483,
+          "matched_placebo_mean": 0.19242881716700677,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|execution": {
+          "candidate_mean": 0.17963727228815712,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.007212713936430304,
+          "gain_vs_target_only": 0.02105612524869313,
+          "matched_placebo_mean": 0.17242455835172682,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|mobility": {
+          "candidate_mean": 0.20820731629255765,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.00030120481927703446,
+          "gain_vs_target_only": -0.007513918755707394,
+          "matched_placebo_mean": 0.2079061114732806,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "hangzhou|network_propagation": {
+          "candidate_mean": 0.18189238013390505,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.018801017402945208,
+          "matched_placebo_mean": 0.18189238013390505,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|queue_service": {
+          "candidate_mean": 0.19598509407033535,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.002222222222222292,
+          "gain_vs_target_only": 0.004708303466514907,
+          "matched_placebo_mean": 0.19820731629255764,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "hangzhou|right_of_way": {
+          "candidate_mean": 0.1810914452072576,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.019601952329592665,
+          "matched_placebo_mean": 0.1810914452072576,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|spillback": {
+          "candidate_mean": 0.19069339753685025,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.0017354196301565261,
+          "gain_vs_target_only": 0.010000000000000009,
+          "matched_placebo_mean": 0.19242881716700677,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "new_york|execution": {
+          "candidate_mean": 0.1695994462441035,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.010037826044053622,
+          "gain_vs_target_only": 0.031093951292746752,
+          "matched_placebo_mean": 0.17963727228815712,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "new_york|mobility": {
+          "candidate_mean": 0.20820731629255765,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.00030120481927703446,
+          "gain_vs_target_only": -0.007513918755707394,
+          "matched_placebo_mean": 0.2079061114732806,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "new_york|network_propagation": {
+          "candidate_mean": 0.18189238013390505,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.018801017402945208,
+          "matched_placebo_mean": 0.18189238013390505,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "new_york|queue_service": {
+          "candidate_mean": 0.18877238013390507,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.0022222222222222365,
+          "gain_vs_target_only": 0.011921017402945183,
+          "matched_placebo_mean": 0.1909946023561273,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "new_york|right_of_way": {
+          "candidate_mean": 0.1810914452072576,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.019601952329592665,
+          "matched_placebo_mean": 0.1810914452072576,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "new_york|spillback": {
+          "candidate_mean": 0.19069339753685025,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.010000000000000009,
+          "matched_placebo_mean": 0.19069339753685025,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|execution": {
+          "candidate_mean": 0.17963727228815712,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.02105612524869313,
+          "matched_placebo_mean": 0.17963727228815712,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|mobility": {
+          "candidate_mean": 0.20417670404765967,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.006270592574379064,
+          "gain_vs_target_only": -0.003483306510809414,
+          "matched_placebo_mean": 0.1979061114732806,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "resco_synthetic|network_propagation": {
+          "candidate_mean": 0.18189238013390505,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.018801017402945208,
+          "matched_placebo_mean": 0.18189238013390505,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|queue_service": {
+          "candidate_mean": 0.19598509407033535,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.00499049171420804,
+          "gain_vs_target_only": 0.004708303466514907,
+          "matched_placebo_mean": 0.1909946023561273,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|right_of_way": {
+          "candidate_mean": 0.1827300219862838,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0016385767790262074,
+          "gain_vs_target_only": 0.017963375550566457,
+          "matched_placebo_mean": 0.1810914452072576,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|spillback": {
+          "candidate_mean": 0.19069339753685025,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.0017354196301565261,
+          "gain_vs_target_only": 0.010000000000000009,
+          "matched_placebo_mean": 0.19242881716700677,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|execution": {
+          "candidate_mean": 0.1712648508516694,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.008372421436487726,
+          "gain_vs_target_only": 0.029428546685180856,
+          "matched_placebo_mean": 0.17963727228815712,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|mobility": {
+          "candidate_mean": 0.20417670404765967,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.006270592574379064,
+          "gain_vs_target_only": -0.003483306510809414,
+          "matched_placebo_mean": 0.1979061114732806,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "salt_lake_city|network_propagation": {
+          "candidate_mean": 0.19598509407033535,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.014092713936430301,
+          "gain_vs_target_only": 0.004708303466514907,
+          "matched_placebo_mean": 0.18189238013390505,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|queue_service": {
+          "candidate_mean": 0.19820731629255764,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.007212713936430332,
+          "gain_vs_target_only": 0.002486081244292615,
+          "matched_placebo_mean": 0.1909946023561273,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|right_of_way": {
+          "candidate_mean": 0.18079024038798053,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.019903157148869727,
+          "matched_placebo_mean": 0.18079024038798053,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|spillback": {
+          "candidate_mean": 0.19242881716700677,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0017354196301565261,
+          "gain_vs_target_only": 0.008264580369843483,
+          "matched_placebo_mean": 0.19069339753685025,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        }
+      },
+      "candidate_mean": 0.1695994462441035,
+      "crossfitted_selection_audit": {
+        "fold_count": 5,
+        "folds": [
+          {
+            "heldout_fold_index": 0,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": -0.036063569682151575,
+            "selected_candidate": "atlanta|spillback",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 1,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.0,
+            "selected_candidate": "atlanta|right_of_way",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 2,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.0,
+            "selected_candidate": "new_york|execution",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 3,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.0,
+            "selected_candidate": "atlanta|right_of_way",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              2,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 4,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.04849397590361476,
+            "selected_candidate": "new_york|execution",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              2,
+              3
+            ]
+          }
+        ],
+        "heldout_mean_gain_vs_matched_placebo": 0.0,
+        "heldout_mean_gain_vs_target_only": 0.002486081244292637,
+        "minimum_nondegrading_folds": 4,
+        "nondegrading_fold_count_vs_matched_placebo": 5,
+        "nondegrading_fold_count_vs_target_only": 4,
+        "passed": false
+      },
+      "eligible": true,
+      "eligible_candidate_count": 9,
+      "full_data_candidate_admitted": true,
+      "gain_vs_matched_placebo": 0.010037826044053622,
+      "gain_vs_target_only": 0.031093951292746752,
+      "matched_placebo_mean": 0.17963727228815712,
+      "mechanism_block": "execution",
+      "minimum_identity_gain": 0.0005,
+      "minimum_target_gain": 0.0005,
+      "passes_identity_gain": true,
+      "passes_target_gain": true,
+      "source_city": "new_york",
+      "target_only_mean": 0.20069339753685025
+    },
+    "new_york": {
+      "admitted": false,
+      "candidate": "atlanta|execution",
+      "candidate_diagnostics": {
+        "atlanta|execution": {
+          "candidate_mean": -0.05300240342692317,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.01515151515151865,
+          "gain_vs_target_only": 0.022844243240184095,
+          "matched_placebo_mean": -0.03785088827540452,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "atlanta|mobility": {
+          "candidate_mean": -0.01710678936458071,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.009999999999999998,
+          "gain_vs_target_only": -0.013051370822158362,
+          "matched_placebo_mean": -0.02710678936458071,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "atlanta|network_propagation": {
+          "candidate_mean": -0.007874528150118156,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.004571699198101405,
+          "gain_vs_target_only": -0.022283632036620916,
+          "matched_placebo_mean": -0.012446227348219562,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "atlanta|queue_service": {
+          "candidate_mean": -0.042446227348219547,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.002365967365962174,
+          "gain_vs_target_only": 0.012288067161480475,
+          "matched_placebo_mean": -0.04008025998225737,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "atlanta|right_of_way": {
+          "candidate_mean": -0.030158160186739072,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.030158160186739072,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "atlanta|spillback": {
+          "candidate_mean": -0.02931252119671994,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.009999999999999988,
+          "gain_vs_target_only": -0.0008456389900191319,
+          "matched_placebo_mean": -0.03931252119671993,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "cologne|execution": {
+          "candidate_mean": -0.037850888275404525,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.007692728088665453,
+          "matched_placebo_mean": -0.037850888275404525,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "cologne|mobility": {
+          "candidate_mean": -0.02931252119671994,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0022057318321392315,
+          "gain_vs_target_only": -0.0008456389900191319,
+          "matched_placebo_mean": -0.02710678936458071,
+          "passes_identity_gain": true,
+          "passes_target_gain": false
+        },
+        "cologne|network_propagation": {
+          "candidate_mean": -0.012446227348219562,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.01771193283851951,
+          "matched_placebo_mean": -0.012446227348219562,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "cologne|queue_service": {
+          "candidate_mean": -0.04008025998225737,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0099220997955183,
+          "matched_placebo_mean": -0.04008025998225737,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "cologne|right_of_way": {
+          "candidate_mean": -0.030158160186739072,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.030158160186739072,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "cologne|spillback": {
+          "candidate_mean": -0.02931252119671994,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.010000000000000005,
+          "gain_vs_target_only": -0.0008456389900191319,
+          "matched_placebo_mean": -0.019312521196719935,
+          "passes_identity_gain": true,
+          "passes_target_gain": false
+        },
+        "hangzhou|execution": {
+          "candidate_mean": -0.037850888275404525,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.007692728088665453,
+          "matched_placebo_mean": -0.037850888275404525,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|mobility": {
+          "candidate_mean": -0.03787452815011815,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.010767738785537443,
+          "gain_vs_target_only": 0.00771636796337908,
+          "matched_placebo_mean": -0.02710678936458071,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "hangzhou|network_propagation": {
+          "candidate_mean": -0.01024049551608033,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.019917664670658742,
+          "matched_placebo_mean": -0.01024049551608033,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "hangzhou|queue_service": {
+          "candidate_mean": -0.03244622734821955,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.0023659673659621704,
+          "gain_vs_target_only": 0.0022880671614804796,
+          "matched_placebo_mean": -0.03008025998225738,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "hangzhou|right_of_way": {
+          "candidate_mean": -0.030158160186739072,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.030158160186739072,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "hangzhou|spillback": {
+          "candidate_mean": -0.02931252119671994,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.002365967365962174,
+          "gain_vs_target_only": -0.0008456389900191319,
+          "matched_placebo_mean": -0.026946553830757766,
+          "passes_identity_gain": true,
+          "passes_target_gain": false
+        },
+        "ingolstadt|execution": {
+          "candidate_mean": -0.0499327908518675,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.014287634408602201,
+          "gain_vs_target_only": 0.019774630665128426,
+          "matched_placebo_mean": -0.0356451564432653,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "ingolstadt|mobility": {
+          "candidate_mean": -0.024740821998618535,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.002365967365962174,
+          "gain_vs_target_only": -0.005417338188120537,
+          "matched_placebo_mean": -0.02710678936458071,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "ingolstadt|network_propagation": {
+          "candidate_mean": -0.010080259982257388,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.007026529382323322,
+          "gain_vs_target_only": -0.020077900204481684,
+          "matched_placebo_mean": -0.01710678936458071,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "ingolstadt|queue_service": {
+          "candidate_mean": -0.04008025998225737,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.009999999999999992,
+          "gain_vs_target_only": 0.0099220997955183,
+          "matched_placebo_mean": -0.03008025998225738,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "ingolstadt|right_of_way": {
+          "candidate_mean": -0.030158160186739072,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.030158160186739072,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "ingolstadt|spillback": {
+          "candidate_mean": -0.02931252119671994,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.00991766467065875,
+          "gain_vs_target_only": -0.0008456389900191319,
+          "matched_placebo_mean": -0.03923018586737869,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "resco_synthetic|execution": {
+          "candidate_mean": -0.037850888275404525,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.004287634408602192,
+          "gain_vs_target_only": 0.007692728088665453,
+          "matched_placebo_mean": -0.04213852268400672,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|mobility": {
+          "candidate_mean": -0.01710678936458071,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.01220573183213923,
+          "gain_vs_target_only": -0.013051370822158362,
+          "matched_placebo_mean": -0.02931252119671994,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "resco_synthetic|network_propagation": {
+          "candidate_mean": -0.02008025998225738,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.002365967365962174,
+          "gain_vs_target_only": -0.010077900204481693,
+          "matched_placebo_mean": -0.022446227348219553,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "resco_synthetic|queue_service": {
+          "candidate_mean": -0.04008025998225737,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0099220997955183,
+          "matched_placebo_mean": -0.04008025998225737,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|right_of_way": {
+          "candidate_mean": -0.030158160186739072,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.030158160186739072,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "resco_synthetic|spillback": {
+          "candidate_mean": -0.026946553830757766,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.01007790020448169,
+          "gain_vs_target_only": -0.0032116063559813057,
+          "matched_placebo_mean": -0.037024454035239455,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "salt_lake_city|execution": {
+          "candidate_mean": -0.04213852268400672,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.004287634408602192,
+          "gain_vs_target_only": 0.011980362497267645,
+          "matched_placebo_mean": -0.037850888275404525,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|mobility": {
+          "candidate_mean": -0.024740821998618535,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.004571699198101405,
+          "gain_vs_target_only": -0.005417338188120537,
+          "matched_placebo_mean": -0.02931252119671994,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "salt_lake_city|network_propagation": {
+          "candidate_mean": -0.017874528150118155,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.002365967365962174,
+          "gain_vs_target_only": -0.012283632036620917,
+          "matched_placebo_mean": -0.02024049551608033,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "salt_lake_city|queue_service": {
+          "candidate_mean": -0.022446227348219553,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.01763403263403782,
+          "gain_vs_target_only": -0.007711932838519519,
+          "matched_placebo_mean": -0.04008025998225737,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "salt_lake_city|right_of_way": {
+          "candidate_mean": -0.030158160186739072,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": -0.030158160186739072,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "salt_lake_city|spillback": {
+          "candidate_mean": -0.019312521196719935,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.010000000000000005,
+          "gain_vs_target_only": -0.010845638990019137,
+          "matched_placebo_mean": -0.02931252119671994,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        }
+      },
+      "candidate_mean": -0.05300240342692317,
+      "crossfitted_selection_audit": {
+        "fold_count": 5,
+        "folds": [
+          {
+            "heldout_fold_index": 0,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": -0.010735181887558037,
+            "selected_candidate": "atlanta|execution",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 1,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": -0.04958832335329374,
+            "selected_candidate": "atlanta|queue_service",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 2,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.0,
+            "selected_candidate": "ingolstadt|execution",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 3,
+            "heldout_gain_vs_matched_placebo": 0.025757575757593187,
+            "heldout_gain_vs_target_only": 0.013927738927782318,
+            "selected_candidate": "atlanta|execution",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              2,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 4,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.0,
+            "selected_candidate": "atlanta|execution",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              2,
+              3
+            ]
+          }
+        ],
+        "heldout_mean_gain_vs_matched_placebo": 0.005151515151518638,
+        "heldout_mean_gain_vs_target_only": -0.00927915326261389,
+        "minimum_nondegrading_folds": 4,
+        "nondegrading_fold_count_vs_matched_placebo": 5,
+        "nondegrading_fold_count_vs_target_only": 3,
+        "passed": false
+      },
+      "eligible": true,
+      "eligible_candidate_count": 7,
+      "full_data_candidate_admitted": true,
+      "gain_vs_matched_placebo": 0.01515151515151865,
+      "gain_vs_target_only": 0.022844243240184095,
+      "matched_placebo_mean": -0.03785088827540452,
+      "mechanism_block": "execution",
+      "minimum_identity_gain": 0.0005,
+      "minimum_target_gain": 0.0005,
+      "passes_identity_gain": true,
+      "passes_target_gain": true,
+      "source_city": "atlanta",
+      "target_only_mean": -0.030158160186739072
+    },
+    "resco_synthetic": {
+      "admitted": false,
+      "candidate": "atlanta|queue_service",
+      "candidate_diagnostics": {
+        "atlanta|execution": {
+          "candidate_mean": 0.02923758641742033,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.007411792577727602,
+          "gain_vs_target_only": -0.007890618390032439,
+          "matched_placebo_mean": 0.03664937899514793,
+          "passes_identity_gain": true,
+          "passes_target_gain": false
+        },
+        "atlanta|mobility": {
+          "candidate_mean": 0.018410573024998683,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.0029363950023892083,
+          "matched_placebo_mean": 0.018410573024998683,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "atlanta|network_propagation": {
+          "candidate_mean": 0.05246979354135732,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.03112282551396943,
+          "matched_placebo_mean": 0.05246979354135732,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "atlanta|queue_service": {
+          "candidate_mean": 0.005094895058896989,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.009999999999999998,
+          "gain_vs_target_only": 0.0162520729684909,
+          "matched_placebo_mean": 0.015094895058896989,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "atlanta|right_of_way": {
+          "candidate_mean": 0.03841057302499869,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.010000000000000002,
+          "gain_vs_target_only": -0.017063604997610796,
+          "matched_placebo_mean": 0.028410573024998685,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "atlanta|spillback": {
+          "candidate_mean": 0.028410573024998685,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0029363950023892083,
+          "gain_vs_target_only": -0.007063604997610794,
+          "matched_placebo_mean": 0.03134696802738789,
+          "passes_identity_gain": true,
+          "passes_target_gain": false
+        },
+        "cologne|execution": {
+          "candidate_mean": 0.03466264599348959,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0033156779661016947,
+          "gain_vs_target_only": -0.013315677966101697,
+          "matched_placebo_mean": 0.03134696802738789,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "cologne|mobility": {
+          "candidate_mean": 0.015785471507459015,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.009999999999999998,
+          "gain_vs_target_only": 0.005561496519928877,
+          "matched_placebo_mean": 0.025785471507459013,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "cologne|network_propagation": {
+          "candidate_mean": 0.04246979354135732,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.010000000000000002,
+          "gain_vs_target_only": -0.021122825513969427,
+          "matched_placebo_mean": 0.05246979354135732,
+          "passes_identity_gain": true,
+          "passes_target_gain": false
+        },
+        "cologne|queue_service": {
+          "candidate_mean": 0.02134696802738789,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0162520729684909,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": 0.005094895058896989,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "cologne|right_of_way": {
+          "candidate_mean": 0.028410573024998685,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.010000000000000002,
+          "gain_vs_target_only": -0.007063604997610794,
+          "matched_placebo_mean": 0.03841057302499869,
+          "passes_identity_gain": true,
+          "passes_target_gain": false
+        },
+        "cologne|spillback": {
+          "candidate_mean": 0.050292422572842416,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.028945454545454524,
+          "matched_placebo_mean": 0.050292422572842416,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "hangzhou|execution": {
+          "candidate_mean": 0.03134696802738789,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0033156779661016947,
+          "gain_vs_target_only": -0.010000000000000002,
+          "matched_placebo_mean": 0.03466264599348959,
+          "passes_identity_gain": true,
+          "passes_target_gain": false
+        },
+        "hangzhou|mobility": {
+          "candidate_mean": 0.019533398538968114,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.0062520729684908995,
+          "gain_vs_target_only": 0.0018135694884197778,
+          "matched_placebo_mean": 0.025785471507459013,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "hangzhou|network_propagation": {
+          "candidate_mean": 0.05246979354135732,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.03112282551396943,
+          "matched_placebo_mean": 0.05246979354135732,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "hangzhou|queue_service": {
+          "candidate_mean": 0.02134696802738789,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0162520729684909,
+          "gain_vs_target_only": 0.0,
+          "matched_placebo_mean": 0.005094895058896989,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "hangzhou|right_of_way": {
+          "candidate_mean": 0.028410573024998685,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.007063604997610794,
+          "matched_placebo_mean": 0.028410573024998685,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "hangzhou|spillback": {
+          "candidate_mean": 0.050292422572842416,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.009999999999999995,
+          "gain_vs_target_only": -0.028945454545454524,
+          "matched_placebo_mean": 0.04029242257284242,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "ingolstadt|execution": {
+          "candidate_mean": 0.03466264599348959,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.013315677966101697,
+          "matched_placebo_mean": 0.03466264599348959,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "ingolstadt|mobility": {
+          "candidate_mean": 0.019533398538968114,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.0062520729684908995,
+          "gain_vs_target_only": 0.0018135694884197778,
+          "matched_placebo_mean": 0.025785471507459013,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "ingolstadt|network_propagation": {
+          "candidate_mean": 0.04246979354135732,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.021122825513969427,
+          "matched_placebo_mean": 0.04246979354135732,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "ingolstadt|queue_service": {
+          "candidate_mean": 0.005094895058896989,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.009999999999999998,
+          "gain_vs_target_only": 0.0162520729684909,
+          "matched_placebo_mean": 0.015094895058896989,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "ingolstadt|right_of_way": {
+          "candidate_mean": 0.028410573024998685,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.007063604997610794,
+          "matched_placebo_mean": 0.028410573024998685,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "ingolstadt|spillback": {
+          "candidate_mean": 0.050292422572842416,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.009999999999999995,
+          "gain_vs_target_only": -0.028945454545454524,
+          "matched_placebo_mean": 0.04029242257284242,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "new_york|execution": {
+          "candidate_mean": 0.03466264599348959,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.013315677966101697,
+          "matched_placebo_mean": 0.03466264599348959,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "new_york|mobility": {
+          "candidate_mean": 0.015785471507459015,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.009999999999999998,
+          "gain_vs_target_only": 0.005561496519928877,
+          "matched_placebo_mean": 0.025785471507459013,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "new_york|network_propagation": {
+          "candidate_mean": 0.05246979354135732,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.03112282551396943,
+          "matched_placebo_mean": 0.05246979354135732,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "new_york|queue_service": {
+          "candidate_mean": 0.015094895058896989,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.006252072968490903,
+          "matched_placebo_mean": 0.015094895058896989,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "new_york|right_of_way": {
+          "candidate_mean": 0.028410573024998685,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.007063604997610794,
+          "matched_placebo_mean": 0.028410573024998685,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "new_york|spillback": {
+          "candidate_mean": 0.03134696802738789,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.008945454545454527,
+          "gain_vs_target_only": -0.010000000000000002,
+          "matched_placebo_mean": 0.04029242257284242,
+          "passes_identity_gain": true,
+          "passes_target_gain": false
+        },
+        "salt_lake_city|execution": {
+          "candidate_mean": 0.03578547150745901,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0011228255139694235,
+          "gain_vs_target_only": -0.01443850348007112,
+          "matched_placebo_mean": 0.03466264599348959,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "salt_lake_city|mobility": {
+          "candidate_mean": 0.019533398538968114,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.003747927031509099,
+          "gain_vs_target_only": 0.0018135694884197778,
+          "matched_placebo_mean": 0.015785471507459015,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|network_propagation": {
+          "candidate_mean": 0.05246979354135732,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.03112282551396943,
+          "matched_placebo_mean": 0.05246979354135732,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "salt_lake_city|queue_service": {
+          "candidate_mean": 0.015094895058896989,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.006252072968490903,
+          "matched_placebo_mean": 0.015094895058896989,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "salt_lake_city|right_of_way": {
+          "candidate_mean": 0.03841057302499869,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.010000000000000002,
+          "gain_vs_target_only": -0.017063604997610796,
+          "matched_placebo_mean": 0.028410573024998685,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "salt_lake_city|spillback": {
+          "candidate_mean": 0.050292422572842416,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.028945454545454524,
+          "matched_placebo_mean": 0.050292422572842416,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        }
+      },
+      "candidate_mean": 0.005094895058896989,
+      "crossfitted_selection_audit": {
+        "fold_count": 5,
+        "folds": [
+          {
+            "heldout_fold_index": 0,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.0,
+            "selected_candidate": "atlanta|queue_service",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 1,
+            "heldout_gain_vs_matched_placebo": -0.016578389830508466,
+            "heldout_gain_vs_target_only": -0.06657838983050847,
+            "selected_candidate": "atlanta|spillback",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 2,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.0,
+            "selected_candidate": "atlanta|queue_service",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 3,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.03126036484245449,
+            "selected_candidate": "atlanta|queue_service",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              2,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 4,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.0,
+            "selected_candidate": "atlanta|queue_service",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              2,
+              3
+            ]
+          }
+        ],
+        "heldout_mean_gain_vs_matched_placebo": -0.0033156779661016934,
+        "heldout_mean_gain_vs_target_only": -0.007063604997610796,
+        "minimum_nondegrading_folds": 4,
+        "nondegrading_fold_count_vs_matched_placebo": 4,
+        "nondegrading_fold_count_vs_target_only": 4,
+        "passed": false
+      },
+      "eligible": true,
+      "eligible_candidate_count": 6,
+      "full_data_candidate_admitted": true,
+      "gain_vs_matched_placebo": 0.009999999999999998,
+      "gain_vs_target_only": 0.0162520729684909,
+      "matched_placebo_mean": 0.015094895058896989,
+      "mechanism_block": "queue_service",
+      "minimum_identity_gain": 0.0005,
+      "minimum_target_gain": 0.0005,
+      "passes_identity_gain": true,
+      "passes_target_gain": true,
+      "source_city": "atlanta",
+      "target_only_mean": 0.02134696802738789
+    },
+    "salt_lake_city": {
+      "admitted": false,
+      "candidate": "resco_synthetic|right_of_way",
+      "candidate_diagnostics": {
+        "atlanta|execution": {
+          "candidate_mean": 0.12140254129874578,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.005134793825866263,
+          "gain_vs_target_only": 0.012069941771670811,
+          "matched_placebo_mean": 0.12653733512461204,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "atlanta|mobility": {
+          "candidate_mean": 0.1276692069669721,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.005803276103444499,
+          "matched_placebo_mean": 0.1276692069669721,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "atlanta|network_propagation": {
+          "candidate_mean": 0.12496051538132244,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0020996441281138922,
+          "gain_vs_target_only": 0.008511967689094152,
+          "matched_placebo_mean": 0.12286087125320855,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "atlanta|queue_service": {
+          "candidate_mean": 0.11227076424915106,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.021201718821265536,
+          "matched_placebo_mean": 0.11227076424915106,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "atlanta|right_of_way": {
+          "candidate_mean": 0.13117860694126027,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.027086858922574467,
+          "gain_vs_target_only": 0.0022938761291563248,
+          "matched_placebo_mean": 0.1040917480186858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "atlanta|spillback": {
+          "candidate_mean": 0.10667955847352857,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.012391603364132156,
+          "gain_vs_target_only": 0.02679292459688802,
+          "matched_placebo_mean": 0.11907116183766073,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "cologne|execution": {
+          "candidate_mean": 0.13481403481571475,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.001341551745298153,
+          "matched_placebo_mean": 0.13481403481571475,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "cologne|mobility": {
+          "candidate_mean": 0.10731043751270995,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.015476506688765448,
+          "gain_vs_target_only": 0.02616204555770664,
+          "matched_placebo_mean": 0.1227869442014754,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "cologne|network_propagation": {
+          "candidate_mean": 0.13469587115015283,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.006253624114719497,
+          "gain_vs_target_only": -0.0012233880797362373,
+          "matched_placebo_mean": 0.12844224703543333,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "cologne|queue_service": {
+          "candidate_mean": 0.12069498561722121,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.008424221368070153,
+          "gain_vs_target_only": 0.012777497453195383,
+          "matched_placebo_mean": 0.11227076424915106,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "cologne|right_of_way": {
+          "candidate_mean": 0.12407611693952508,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.01901758363021057,
+          "gain_vs_target_only": 0.00939636613089151,
+          "matched_placebo_mean": 0.10505853330931451,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "cologne|spillback": {
+          "candidate_mean": 0.12227761795008962,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.011194865120326969,
+          "matched_placebo_mean": 0.12227761795008962,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|execution": {
+          "candidate_mean": 0.13481403481571475,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.001341551745298153,
+          "matched_placebo_mean": 0.13481403481571475,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "hangzhou|mobility": {
+          "candidate_mean": 0.10880480339684957,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.013982140804625828,
+          "gain_vs_target_only": 0.02466767967356702,
+          "matched_placebo_mean": 0.1227869442014754,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "hangzhou|network_propagation": {
+          "candidate_mean": 0.12496051538132244,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.008511967689094152,
+          "matched_placebo_mean": 0.12496051538132244,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|queue_service": {
+          "candidate_mean": 0.11471937586112364,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.002448611611972587,
+          "gain_vs_target_only": 0.01875310720929295,
+          "matched_placebo_mean": 0.11227076424915106,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|right_of_way": {
+          "candidate_mean": 0.1040917480186858,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.02938073505173079,
+          "matched_placebo_mean": 0.1040917480186858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "hangzhou|spillback": {
+          "candidate_mean": 0.12580290513493225,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0035252871848426293,
+          "gain_vs_target_only": 0.00766957793548434,
+          "matched_placebo_mean": 0.12227761795008962,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "ingolstadt|execution": {
+          "candidate_mean": 0.12369913216552242,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.005290000006207857,
+          "gain_vs_target_only": 0.009773350904894174,
+          "matched_placebo_mean": 0.12898913217173028,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "ingolstadt|mobility": {
+          "candidate_mean": 0.11681133444537785,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0005817233546142053,
+          "gain_vs_target_only": 0.016661148625038744,
+          "matched_placebo_mean": 0.11622961109076364,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "ingolstadt|network_propagation": {
+          "candidate_mean": 0.13679834513558092,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.01020843026224108,
+          "gain_vs_target_only": -0.003325862065164331,
+          "matched_placebo_mean": 0.12658991487333984,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "ingolstadt|queue_service": {
+          "candidate_mean": 0.12128882498003474,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.009018060730883681,
+          "gain_vs_target_only": 0.012183658090381855,
+          "matched_placebo_mean": 0.11227076424915106,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "ingolstadt|right_of_way": {
+          "candidate_mean": 0.13102059865437185,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.01230304908969658,
+          "gain_vs_target_only": 0.0024518844160447417,
+          "matched_placebo_mean": 0.11871754956467527,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "ingolstadt|spillback": {
+          "candidate_mean": 0.12603619643379732,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0037585784837076974,
+          "gain_vs_target_only": 0.0074362866366192715,
+          "matched_placebo_mean": 0.12227761795008962,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "new_york|execution": {
+          "candidate_mean": 0.13481403481571475,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": -0.001341551745298153,
+          "matched_placebo_mean": 0.13481403481571475,
+          "passes_identity_gain": false,
+          "passes_target_gain": false
+        },
+        "new_york|mobility": {
+          "candidate_mean": 0.1085715120979845,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.013982140804625814,
+          "gain_vs_target_only": 0.024900970972432088,
+          "matched_placebo_mean": 0.12255365290261032,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "new_york|network_propagation": {
+          "candidate_mean": 0.12496051538132244,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0020996441281138922,
+          "gain_vs_target_only": 0.008511967689094152,
+          "matched_placebo_mean": 0.12286087125320855,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "new_york|queue_service": {
+          "candidate_mean": 0.11227076424915106,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.021201718821265536,
+          "matched_placebo_mean": 0.11227076424915106,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "new_york|right_of_way": {
+          "candidate_mean": 0.1040917480186858,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.02938073505173079,
+          "matched_placebo_mean": 0.1040917480186858,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "new_york|spillback": {
+          "candidate_mean": 0.12227761795008962,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.0035252871848426293,
+          "gain_vs_target_only": 0.011194865120326969,
+          "matched_placebo_mean": 0.12580290513493225,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|execution": {
+          "candidate_mean": 0.12898913217173028,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.00582490264398447,
+          "gain_vs_target_only": 0.004483350898686317,
+          "matched_placebo_mean": 0.13481403481571475,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|mobility": {
+          "candidate_mean": 0.12826892343411964,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.005481979232644235,
+          "gain_vs_target_only": 0.005203559636296956,
+          "matched_placebo_mean": 0.1227869442014754,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|network_propagation": {
+          "candidate_mean": 0.1271110351151222,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.004856499105153733,
+          "gain_vs_target_only": 0.0063614479552943914,
+          "matched_placebo_mean": 0.13196753422027593,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|queue_service": {
+          "candidate_mean": 0.11227076424915106,
+          "eligible": false,
+          "gain_vs_matched_placebo": 0.0,
+          "gain_vs_target_only": 0.021201718821265536,
+          "matched_placebo_mean": 0.11227076424915106,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|right_of_way": {
+          "candidate_mean": 0.09900583618040097,
+          "eligible": true,
+          "gain_vs_matched_placebo": 0.005273109243697449,
+          "gain_vs_target_only": 0.03446664689001562,
+          "matched_placebo_mean": 0.10427894542409842,
+          "passes_identity_gain": true,
+          "passes_target_gain": true
+        },
+        "resco_synthetic|spillback": {
+          "candidate_mean": 0.12467125117357586,
+          "eligible": false,
+          "gain_vs_matched_placebo": -0.0023936332234862356,
+          "gain_vs_target_only": 0.008801231896840733,
+          "matched_placebo_mean": 0.12227761795008962,
+          "passes_identity_gain": false,
+          "passes_target_gain": true
+        }
+      },
+      "candidate_mean": 0.09900583618040097,
+      "crossfitted_selection_audit": {
+        "fold_count": 5,
+        "folds": [
+          {
+            "heldout_fold_index": 0,
+            "heldout_gain_vs_matched_placebo": -0.02738235294117662,
+            "heldout_gain_vs_target_only": 0.0,
+            "selected_candidate": "new_york|mobility",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 1,
+            "heldout_gain_vs_matched_placebo": 0.008950348432055735,
+            "heldout_gain_vs_target_only": -0.02608474576271188,
+            "selected_candidate": "resco_synthetic|network_propagation",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 2,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": -0.010801709623105782,
+            "selected_candidate": "atlanta|spillback",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              3,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 3,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.01870598357680847,
+            "selected_candidate": "resco_synthetic|right_of_way",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              2,
+              4
+            ]
+          },
+          {
+            "heldout_fold_index": 4,
+            "heldout_gain_vs_matched_placebo": 0.0,
+            "heldout_gain_vs_target_only": 0.0,
+            "selected_candidate": "resco_synthetic|right_of_way",
+            "training_candidate_admitted": true,
+            "training_fold_indices": [
+              0,
+              1,
+              2,
+              3
+            ]
+          }
+        ],
+        "heldout_mean_gain_vs_matched_placebo": -0.0036864009018241772,
+        "heldout_mean_gain_vs_target_only": -0.003636094361801838,
+        "minimum_nondegrading_folds": 4,
+        "nondegrading_fold_count_vs_matched_placebo": 4,
+        "nondegrading_fold_count_vs_target_only": 3,
+        "passed": false
+      },
+      "eligible": true,
+      "eligible_candidate_count": 10,
+      "full_data_candidate_admitted": true,
+      "gain_vs_matched_placebo": 0.005273109243697449,
+      "gain_vs_target_only": 0.03446664689001562,
+      "matched_placebo_mean": 0.10427894542409842,
+      "mechanism_block": "right_of_way",
+      "minimum_identity_gain": 0.0005,
+      "minimum_target_gain": 0.0005,
+      "passes_identity_gain": true,
+      "passes_target_gain": true,
+      "source_city": "resco_synthetic",
+      "target_only_mean": 0.1334724830704166
+    }
+  },
+  "selected_effect_vs_rigid_target_only": {
+    "city_unit": {
+      "city_means": {
+        "atlanta": 0.0,
+        "cologne": 0.0,
+        "hangzhou": 0.0,
+        "ingolstadt": 0.0,
+        "new_york": 0.0,
+        "resco_synthetic": 0.0,
+        "salt_lake_city": 0.0
+      },
+      "improving_seed_fraction": 0.0,
+      "lower_95": 0.0,
+      "mean": 0.0,
+      "upper_95": 0.0
+    },
+    "seed_unit": {
+      "improving_seed_fraction": 0.0,
+      "lower_95": 0.0,
+      "mean": 0.0,
+      "upper_95": 0.0
+    }
+  },
+  "selected_effect_vs_same_candidate_placebo": {
+    "city_unit": {
+      "city_means": {
+        "atlanta": 0.0,
+        "cologne": 0.0,
+        "hangzhou": 0.0,
+        "ingolstadt": 0.0,
+        "new_york": 0.0,
+        "resco_synthetic": 0.0,
+        "salt_lake_city": 0.0
+      },
+      "improving_seed_fraction": 0.0,
+      "lower_95": 0.0,
+      "mean": 0.0,
+      "upper_95": 0.0
+    },
+    "seed_unit": {
+      "improving_seed_fraction": 0.0,
+      "lower_95": 0.0,
+      "mean": 0.0,
+      "upper_95": 0.0
+    }
+  },
+  "source_admission_count": 0,
+  "source_prior_strength": 0.025,
+  "target_budget": 100
+}

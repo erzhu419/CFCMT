@@ -1,0 +1,81 @@
+{
+  "bad_counts": {},
+  "created_at_utc": "2026-09-10T13:02:53.584106+00:00",
+  "expected": {
+    "analysis_protocol": "tsc-v93-source-city-causal-selection-development-v1",
+    "arm_counts": {
+      "offline_selector": 168,
+      "target_only": 168
+    },
+    "model_hashes": {
+      "jinan_component_bundle": "ad39425f0520bee7a403dcdb680d7835dac37bab93eb2adc02fcc059af433828",
+      "jinan_main_model": "d605661445b92b4e29c20214385f7d93239a633e07ca6027bc760f398f29242a",
+      "strict_target_only": "3424307a5399c4fbed63bc3158001adaf53eaa8ef04d53daf56c5eef744fdd13"
+    },
+    "result_count": 336,
+    "result_protocol": "tsc-v93-source-city-causal-component-rollout-v1",
+    "scenario_count": 3,
+    "scenario_result_counts": {
+      "jinan_3x4_real": 112,
+      "jinan_3x4_real_2000": 112,
+      "jinan_3x4_real_2500": 112
+    },
+    "seed_count": 56,
+    "target_model_family": "causal_target_only_v2",
+    "target_model_protocol": "cfcmt-strict-target-only-action-model-v1",
+    "target_source_rows_consumed": 0,
+    "unique_identity_count": 336
+  },
+  "inputs": {
+    "candidate_spec": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v98_strict_target_fresh_confirmation_v2.json",
+    "candidate_spec_protocol": "tsc-v93-source-city-candidate-grid-v1",
+    "launch": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v98_target_offline_source_selection_20260831/strict_fresh_confirmation_v2/launch.json",
+    "numerical_audit": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v98_target_offline_source_selection_20260831/strict_fresh_confirmation_v2/audit_v2.json",
+    "numerical_audit_protocol": "tsc-v98-target-offline-source-fresh-confirmation-audit-v2"
+  },
+  "limitations": [
+    "This retrospective audit checks result identity and frozen model provenance; it does not recompute rollout metrics or the V98 statistical analysis.",
+    "Freshness is limited to simulator seeds on the same Jinan network and three demand scenarios; this is not unseen-city evidence.",
+    "The shared pressure guard inherited its risk multiplier from V93 target closed-loop development.",
+    "The V98 strict target-only estimator consumed zero source rows but had lower capacity than the source-augmented model, so V98 alone does not isolate source-row value from architecture.",
+    "This audit does not compare either V98 arm directly with PhasePressure."
+  ],
+  "observed": {
+    "analysis_protocols": {
+      "tsc-v93-source-city-causal-selection-development-v1": 336
+    },
+    "arms": {
+      "offline_selector": 168,
+      "target_only": 168
+    },
+    "component_bundle_hashes": {
+      "ad39425f0520bee7a403dcdb680d7835dac37bab93eb2adc02fcc059af433828": 336
+    },
+    "main_model_hashes": {
+      "d605661445b92b4e29c20214385f7d93239a633e07ca6027bc760f398f29242a": 336
+    },
+    "result_count": 336,
+    "result_protocols": {
+      "tsc-v93-source-city-causal-component-rollout-v1": 336
+    },
+    "scenarios": {
+      "jinan_3x4_real": 112,
+      "jinan_3x4_real_2000": 112,
+      "jinan_3x4_real_2500": 112
+    },
+    "target_model_hashes": {
+      "3424307a5399c4fbed63bc3158001adaf53eaa8ef04d53daf56c5eef744fdd13": 336
+    },
+    "unique_identity_count": 336
+  },
+  "passed": true,
+  "protocol": "tsc-v98-strict-target-anchor-remote-integrity-audit-v1",
+  "scan": {
+    "execution_node": "node001",
+    "file_pattern": "*/seed_*/*/result.json",
+    "mode": "remote_in_place_json_metadata_only",
+    "raw_results_copied_to_local": false,
+    "remote_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v98_target_offline_source_selection_20260831/strict_fresh_confirmation_v2"
+  },
+  "scientific_status": "retrospective_remote_provenance_integrity_audit"
+}

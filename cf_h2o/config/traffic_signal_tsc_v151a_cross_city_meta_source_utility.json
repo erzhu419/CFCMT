@@ -1,0 +1,50 @@
+{
+  "protocol": "tsc-v151a-cross-city-meta-source-utility-v1",
+  "redeveloped_after": "tsc-v150o-dense-pressure-pairwise-source-utility-aggregate-v1",
+  "target_city_groups": [
+    "atlanta",
+    "cologne",
+    "hangzhou",
+    "ingolstadt",
+    "new_york",
+    "resco_synthetic",
+    "salt_lake_city"
+  ],
+  "target_budget": 100,
+  "target_utility_label_count": 0,
+  "source_prior_strength": 0.025,
+  "action_pair": "phase_pressure_reference_vs_rigid_target_only",
+  "utility_record_protocol": "dense-phase-vs-rigid-source-evidence-records-v1",
+  "utility_gate": {
+    "protocol": "equal-city-ridge-upper-cost-bound-v1",
+    "ridge_alpha": 10.0,
+    "error_quantile": 0.75,
+    "minimum_records": 48,
+    "minimum_predicted_gain": 0.0005,
+    "weighting": "equal_pseudo_target_city_then_equal_action_group",
+    "source_identity_feature": false
+  },
+  "meta_training": {
+    "pseudo_target_city_count": 6,
+    "candidate_source_city_count_per_pseudo_target": 5,
+    "target_excluded_from_utility_labels": true,
+    "target_excluded_from_candidate_sources": true,
+    "target_excluded_from_feature_scaling_statistics": true,
+    "leave_one_pseudo_target_city_out_calibration": true,
+    "minimum_mean_gain_each_comparison": 0.0005,
+    "minimum_nondegrading_pseudo_target_cities_each_comparison": 5,
+    "minimum_intervention_groups": 6
+  },
+  "source_null_fallback": "bitwise_exact_rigid_cfcmt",
+  "matched_placebo_pipeline": "same_meta_training_with_group_permuted_source_labels",
+  "source_blind_pipeline": "same_meta_target_labels_state_features_and_capacity_without_source_evidence",
+  "development_gate": {
+    "minimum_admitted_target_cities": 2,
+    "require_no_target_city_regression": true,
+    "require_every_admitted_target_improve_rigid": true,
+    "require_every_admitted_target_beat_matched_placebo": true,
+    "require_every_admitted_target_beat_source_blind": true,
+    "require_exact_fallback_for_rejected_targets": true
+  },
+  "claim_boundary": "Seven-city sequential B100 development test of a leave-target-city-out source utility relation; not closed-loop or untouched-city confirmation."
+}

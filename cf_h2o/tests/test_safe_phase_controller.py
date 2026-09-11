@@ -53,7 +53,7 @@ def test_switch_executes_yellow_all_red_then_target_green():
     api, executor = _executor()
 
     assert executor.request("rrGG")
-    assert api.trafficlight.writes == [("J0", "yyrr")]
+    assert api.trafficlight.writes == [("J0", "YYrr")]
     executor.advance(3.0)
     assert api.trafficlight.writes[-1] == ("J0", "rrrr")
     executor.advance(1.0)
@@ -62,6 +62,47 @@ def test_switch_executes_yellow_all_red_then_target_green():
     assert executor.audit.switches == 1
     assert executor.audit.yellow_seconds == pytest.approx(3.0)
     assert executor.audit.all_red_seconds == pytest.approx(1.0)
+
+
+def test_mixed_green_priority_is_retained_through_yellow_clearance():
+    api = _Sumo()
+    current = "rrrrrGGGggrrrrrGGGgg"
+    target = "GGGGGrrrrrsrrrrrrrrr"
+    yellow = "rrrrrYYYyyrrrrrYYYyy"
+    executor = SafePhaseExecutor(
+        sumo_api=api,
+        tls_id="J0",
+        timings=(
+            PhaseTiming(current, min_green_sec=5.0, yellow_sec=3.0, all_red_sec=1.0),
+            PhaseTiming(target, min_green_sec=5.0, yellow_sec=3.0, all_red_sec=1.0),
+        ),
+        initial_state=current,
+        initial_green_elapsed_sec=6.0,
+    )
+
+    assert executor.request(target)
+    assert executor.current_state == yellow
+    assert executor.current_state[17] == "Y"  # Prioritized straight movement.
+    assert executor.current_state[9] == "y"  # Yielding U-turn movement.
+    for remaining in (2.0, 1.0):
+        executor.advance(1.0)
+        assert executor.current_state == yellow
+        assert executor.mode == "yellow"
+        assert executor.remaining_sec == remaining
+        assert executor.green_elapsed_sec == 6.0
+        assert executor.target_green_state == target
+
+    executor.advance(1.0)
+    assert executor.mode == "all_red"
+    assert executor.remaining_sec == 1.0
+    executor.advance(1.0)
+    assert executor.mode == "green"
+    assert executor.green_elapsed_sec == 0.0
+    assert api.trafficlight.writes == [
+        ("J0", yellow), ("J0", "r" * len(current)), ("J0", target),
+    ]
+    assert executor.audit.yellow_seconds == 3.0
+    assert executor.audit.all_red_seconds == 1.0
 
 
 def test_minimum_green_and_busy_requests_are_rejected():

@@ -61,6 +61,7 @@ from cf_h2o.eval.traffic_signal_resco_phase_benchmark import (
     _scenario_sumocfg,
 )
 from cf_h2o.traffic_signal.mechanism_world_model import MechanismDataset, MechanismFitConfig
+from cf_h2o.traffic_signal.occupancy_equations import OCCUPANCY_EQUATION_PROTOCOL
 from cf_h2o.traffic_signal.action_contrast import (
     build_action_contrast_dataset,
     select_contextual_policy_from_domain_costs,
@@ -86,15 +87,23 @@ from cf_h2o.traffic_signal.benchmark_manifest import load_traffic_signal_manifes
 LEGACY_COUNTERFACTUAL_CACHE_VERSION_V18 = (
     "v18-benchmark-aware-symmetric-safety-censor-least-covered-two-pass-20260808"
 )
-COUNTERFACTUAL_CACHE_VERSION = (
+LEGACY_COUNTERFACTUAL_CACHE_VERSION_V19 = (
     "v19-policy-consistent-one-step-mechanisms-two-pass-20260809"
 )
-MULTIHORIZON_COUNTERFACTUAL_CACHE_VERSION = (
+LEGACY_MULTIHORIZON_COUNTERFACTUAL_CACHE_VERSION_V20 = (
     "v20-policy-consistent-multihorizon-prefix-costs-two-pass-20260830"
+)
+COUNTERFACTUAL_CACHE_VERSION = (
+    "v21-occupancy-fraction-one-step-mechanisms-two-pass-20260909"
+)
+MULTIHORIZON_COUNTERFACTUAL_CACHE_VERSION = (
+    "v22-occupancy-fraction-multihorizon-prefix-costs-two-pass-20260909"
 )
 SUPPORTED_COUNTERFACTUAL_CACHE_VERSIONS = frozenset(
     {
         LEGACY_COUNTERFACTUAL_CACHE_VERSION_V18,
+        LEGACY_COUNTERFACTUAL_CACHE_VERSION_V19,
+        LEGACY_MULTIHORIZON_COUNTERFACTUAL_CACHE_VERSION_V20,
         COUNTERFACTUAL_CACHE_VERSION,
         MULTIHORIZON_COUNTERFACTUAL_CACHE_VERSION,
     }
@@ -386,6 +395,11 @@ def _validate_counterfactual_cache_dataset(
     actual_identity = dataset.metadata.get("counterfactual_cache_identity")
     if actual_identity != dict(expected_identity):
         raise ValueError(f"counterfactual cache identity mismatch at {location}")
+    if (
+        expected_identity.get("occupancy_equation_protocol") != OCCUPANCY_EQUATION_PROTOCOL
+        or dataset.metadata.get("occupancy_equation_protocol") != OCCUPANCY_EQUATION_PROTOCOL
+    ):
+        raise ValueError(f"counterfactual cache occupancy equation contract mismatch at {location}")
     output_names = tuple(
         str(name)
         for name in dataset.metadata.get(
@@ -684,6 +698,7 @@ def _counterfactual_cache_identity(
             else COUNTERFACTUAL_CACHE_VERSION
         ),
         "libsumo_version": libsumo_version(),
+        "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
         "scenario": str(scenario),
         "input": _scenario_input_fingerprint(Path(sumocfg)),
         "duration_sec": float(duration_sec),
@@ -1981,6 +1996,7 @@ def _source_rule_cache_identity_v3(
 ) -> dict[str, Any]:
     return {
         "version": SOURCE_RULE_CACHE_VERSION,
+        "occupancy_equation_protocol": OCCUPANCY_EQUATION_PROTOCOL,
         "sumo_version": str(sumo_version),
         "scenario": str(scenario),
         "input": _scenario_input_fingerprint(Path(sumocfg)),

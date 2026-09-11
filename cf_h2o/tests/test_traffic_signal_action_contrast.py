@@ -1,6 +1,11 @@
+from dataclasses import replace
+
 import numpy as np
 import pytest
 
+from cf_h2o.eval.traffic_signal_external_closed_loop_confirmation import (
+    FrozenAnchoredBlendModel,
+)
 from cf_h2o.traffic_signal.action_contrast import (
     build_action_contrast_dataset,
     rule_reference_indices,
@@ -205,6 +210,95 @@ def test_pairwise_advantage_regressor_keeps_reference_score_zero():
     assert set(diagnostics["domain_target_scales"]) == {"a", "b"}
     assert np.allclose(prediction["mean"][reference], 0.0)
     assert np.allclose(prediction["uncertainty"][reference], 0.0)
+
+
+@pytest.fixture
+def extended_contrast_and_anchor():
+    base = _dataset()
+    absolute = replace(
+        base,
+        feature_names=(*base.feature_names, "total_q", "protected_green_ratio"),
+        features=np.column_stack(
+            [base.features, [15.0] * 3 + [16.0] * 3, [0.1, 0.4, 0.9] * 2]
+        ),
+    )
+    original = build_action_contrast_dataset(
+        absolute,
+        reference_policy="max_pressure",
+        contrast_features=base.feature_names,
+    )
+    expanded = build_action_contrast_dataset(
+        absolute,
+        reference_policy="max_pressure",
+        contrast_features=(*base.feature_names, "protected_green_ratio"),
+    )
+    anchor = PairwiseActionAdvantageRegressor(
+        causal=True,
+        causal_feature_names=("delta_green_q", "delta_service_pressure"),
+        config=ActionAdvantageConfig(
+            max_iter=20, min_samples_leaf=1, l2_regularization=0.1,
+        ),
+    )
+    anchor.fit(original)
+    assert anchor.model is not None
+    return original, expanded, anchor
+
+
+def test_advantage_prediction_resolves_names_after_contrast_extension(
+    extended_contrast_and_anchor,
+):
+    original, expanded, anchor = extended_contrast_and_anchor
+    reference = np.asarray(original.metadata["is_reference"], dtype=bool)
+    legacy_original_score = anchor.model.predict(
+        original.features[:, anchor.feature_indices]
+    )
+    legacy_original_score[reference] = 0.0
+    legacy_expanded_score = anchor.model.predict(
+        expanded.features[:, anchor.feature_indices]
+    )
+    legacy_expanded_score[reference] = 0.0
+
+    # Adding reference columns shifts the delta block, even though all named
+    # feature values and reference actions remain identical.
+    assert not np.allclose(legacy_expanded_score, legacy_original_score)
+    original_prediction = anchor.predict(original)["control_cost"]
+    expanded_prediction = anchor.predict(expanded)["control_cost"]
+    np.testing.assert_array_equal(original_prediction["mean"], legacy_original_score)
+    for name, values in original_prediction.items():
+        np.testing.assert_array_equal(expanded_prediction[name], values)
+
+
+def test_frozen_zero_alpha_blend_resolves_both_models_after_contrast_extension(
+    extended_contrast_and_anchor,
+):
+    original, expanded, anchor = extended_contrast_and_anchor
+    correction = AntisymmetricPairwiseActionRegressor(
+        config=PairwisePreferenceConfig(
+            max_iter=20, min_samples_leaf=1, l2_regularization=0.1,
+        ),
+        state_feature_names=("total_q",),
+        action_feature_names=("delta_green_q", "delta_service_pressure"),
+    )
+    correction.fit(original)
+    correction_original = correction.predict(original)["control_cost"]
+    correction_expanded = correction.predict(expanded)["control_cost"]
+    for name, values in correction_original.items():
+        np.testing.assert_array_equal(correction_expanded[name], values)
+    blend = FrozenAnchoredBlendModel(
+        anchor_model=anchor,
+        correction_model=correction,
+        candidate="constant_alpha_0",
+        anchor_objective_mode="control_only",
+        correction_objective_mode="control_only",
+    )
+    original_prediction = blend.predict(original)["control_cost"]
+    expanded_prediction = blend.predict(expanded)["control_cost"]
+    for name, values in original_prediction.items():
+        np.testing.assert_array_equal(expanded_prediction[name], values)
+    np.testing.assert_array_equal(
+        correction.action_feature_indices,
+        [expanded.feature_names.index(name) for name in correction.action_feature_names],
+    )
 
 
 def test_balanced_advantage_excludes_reference_rows_and_balances_signs():

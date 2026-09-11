@@ -154,6 +154,162 @@ def test_validate_package_dispatches_boston_v11_manifest(
     assert observed == [route_admission.BOSTON_V11_PACKAGE_PROTOCOL]
 
 
+def test_validate_package_dispatches_boston_v12_manifest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    manifest_path, _ = _write_package(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["protocol"] = route_admission.BOSTON_V12_PACKAGE_PROTOCOL
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    observed: list[str] = []
+    monkeypatch.setattr(
+        route_admission,
+        "validate_joined_tls_uncontrolled_merge_manifest",
+        lambda value: observed.append(str(value["protocol"])),
+    )
+    validate_package(
+        tmp_path,
+        expected_manifest_sha256=hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+        expected_city_code="BOS",
+    )
+    assert observed == [route_admission.BOSTON_V12_PACKAGE_PROTOCOL]
+
+
+def test_validate_package_dispatches_boston_v13_manifest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    manifest_path, _ = _write_package(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["protocol"] = route_admission.BOSTON_V13_PACKAGE_PROTOCOL
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    observed: list[str] = []
+    monkeypatch.setattr(
+        route_admission,
+        "validate_systemic_right_of_way_manifest",
+        lambda value: observed.append(str(value["protocol"])),
+    )
+    validate_package(
+        tmp_path,
+        expected_manifest_sha256=hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+        expected_city_code="BOS",
+    )
+    assert observed == [route_admission.BOSTON_V13_PACKAGE_PROTOCOL]
+
+
+def test_validate_package_dispatches_boston_v14_manifest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    manifest_path, _ = _write_package(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["protocol"] = route_admission.BOSTON_V14_PACKAGE_PROTOCOL
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    observed: list[str] = []
+    monkeypatch.setattr(
+        route_admission,
+        "validate_systemic_uncontrolled_major_manifest",
+        lambda value: observed.append(str(value["protocol"])),
+    )
+    validate_package(
+        tmp_path,
+        expected_manifest_sha256=hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+        expected_city_code="BOS",
+    )
+    assert observed == [route_admission.BOSTON_V14_PACKAGE_PROTOCOL]
+
+
+def test_validate_package_dispatches_boston_v15_manifest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    manifest_path, _ = _write_package(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["protocol"] = route_admission.BOSTON_V15_PACKAGE_PROTOCOL
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    observed: list[str] = []
+    monkeypatch.setattr(
+        route_admission,
+        "validate_tls_yellow_clearance_manifest",
+        lambda value: observed.append(str(value["protocol"])),
+    )
+    validate_package(
+        tmp_path,
+        expected_manifest_sha256=hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+        expected_city_code="BOS",
+    )
+    assert observed == [route_admission.BOSTON_V15_PACKAGE_PROTOCOL]
+
+
+def test_validate_package_dispatches_boston_v16_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    manifest_path, _ = _write_package(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["protocol"] = route_admission.BOSTON_V16_PACKAGE_PROTOCOL
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    observed = []
+    monkeypatch.setattr(
+        route_admission,
+        "validate_implicit_no_tls_major_manifest",
+        lambda value: observed.append(value["protocol"]),
+    )
+
+    route_admission.validate_package(
+        tmp_path,
+        expected_manifest_sha256=route_admission._sha256(manifest_path),
+        expected_city_code="BOS",
+    )
+
+    assert observed == [route_admission.BOSTON_V16_PACKAGE_PROTOCOL]
+
+
+def test_validate_package_dispatches_boston_v17_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    manifest_path, _ = _write_package(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["protocol"] = route_admission.BOSTON_V17_PACKAGE_PROTOCOL
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    observed = []
+    monkeypatch.setattr(
+        route_admission,
+        "validate_no_tls_major_response_manifest",
+        lambda value: observed.append(value["protocol"]),
+    )
+
+    route_admission.validate_package(
+        tmp_path,
+        expected_manifest_sha256=route_admission._sha256(manifest_path),
+        expected_city_code="BOS",
+    )
+
+    assert observed == [route_admission.BOSTON_V17_PACKAGE_PROTOCOL]
+
+
+def test_validate_package_dispatches_boston_v18_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    manifest_path, _ = _write_package(tmp_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["protocol"] = route_admission.BOSTON_V18_PACKAGE_PROTOCOL
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    observed = []
+    monkeypatch.setattr(
+        route_admission,
+        "validate_controlled_shared_receiving_yield_manifest",
+        lambda value: observed.append(value["protocol"]),
+    )
+
+    route_admission.validate_package(
+        tmp_path,
+        expected_manifest_sha256=route_admission._sha256(manifest_path),
+        expected_city_code="BOS",
+    )
+
+    assert observed == [route_admission.BOSTON_V18_PACKAGE_PROTOCOL]
+
+
 def test_validate_package_rejects_config_network_mismatch(tmp_path: Path) -> None:
     manifest_path, _ = _write_package(tmp_path)
     config_path = tmp_path / "microscopic.sumo.cfg"

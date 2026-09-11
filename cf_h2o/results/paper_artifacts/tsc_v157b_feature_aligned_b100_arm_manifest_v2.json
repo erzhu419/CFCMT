@@ -1,0 +1,46 @@
+{
+  "arm_order": [
+    "target_only",
+    "uniform_source",
+    "source_label_placebo",
+    "phase_pressure"
+  ],
+  "arms": {
+    "phase_pressure": {
+      "bundle_key": "phase_pressure",
+      "kind": "reference_policy",
+      "policy": "phase_pressure"
+    },
+    "source_label_placebo": {
+      "bundle_key": "source_label_placebo",
+      "kind": "learned_model",
+      "predict_interface": "model.predict(action_contrast_dataset)",
+      "source_component_count": 7,
+      "source_labels_permuted": true,
+      "target_city_labels_permuted": false
+    },
+    "target_only": {
+      "bundle_key": "target_only",
+      "kind": "learned_model",
+      "predict_interface": "model.predict(action_contrast_dataset)",
+      "training_domain_handling": "relabel_all_b100_rows_to_jinan",
+      "v157a_exact_target_refit_used_at_runtime": false
+    },
+    "uniform_source": {
+      "bundle_key": "uniform_source",
+      "kind": "learned_model",
+      "predict_interface": "model.predict(action_contrast_dataset)",
+      "source_component_count": 7,
+      "training_path": "exact_v157a_source_component_refits"
+    }
+  },
+  "city": "jinan",
+  "protocol": "tsc-v157b-feature-aligned-b100-arm-manifest-v2",
+  "runtime_bundle": {
+    "path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v157b_feature_aligned_b100_runtime_freeze_20260911/freeze_v2/runtime_models.pkl",
+    "protocol": "cfcmt-v157b-feature-aligned-b100-runtime-arms-v2",
+    "sha256": "a6bdea34175f06a399dc00c1c1df06781e578035a2806c434e0f4eb9be61ad93",
+    "size_bytes": 7377567
+  },
+  "scope": "one_frozen_focal_tls_action_then_phase_pressure_continuation"
+}

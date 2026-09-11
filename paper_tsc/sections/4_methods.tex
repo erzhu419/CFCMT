@@ -243,18 +243,18 @@ Official RESCO and LibSignal controllers retain their upstream state, reward,
 timing and training definitions.  They are native-protocol execution audits,
 not paired estimates of the CFCMT treatment contrast.
 
-\subsection{Target-label-only source-contribution test}
+\subsection{Legacy near-target-only source-contribution test}
 
-The source contribution is isolated with the pre-existing
+The original source contribution is compared with the pre-existing
 \texttt{causal\_target\_only} model family.  This comparator has the same causal
 action-advantage features, target domain and target adaptation groups as the
 corresponding baseline artifact.  It sets prior group strength to zero and the
 maximum target weight to one.  Both external artifacts had more than four
 target groups and selected target weights numerically equal to one.  A source
-submodel is still fitted and retained for diagnostics, but its coefficient in
-the deployed mean, uncertainty and trust predictions is zero.  The comparator
-is therefore target-label-only prediction with shared source-defined feature
-semantics, rather than an independently redesigned target controller.
+submodel is still fitted and retained; its coefficient in the deployed mean,
+uncertainty and trust predictions is zero, but its prior can resolve exact
+action ties.  We therefore retain this frozen arm as a legacy near-target-only
+comparator rather than describing it as a strict zero-source-row estimator.
 
 The first deployment of this frozen comparator, v90, reused the eight v43
 scenario--seed cells and was specified only after the original seven-policy
@@ -285,6 +285,35 @@ non-positive means in both cities, at most 5\% worst-seed regression, at least
 50\% improved seeds, one-sided exact sign-test \(p\leq0.05\), no excess
 teleports or collision incidents, all identities and no failed-seed exclusion.
 Failure of any component rejects the source-contribution confirmation.
+
+\subsection{Post-V91 target-offline conditional source selection}
+
+V98 is a separate post-v91 successor and is not part of the frozen v43 method.
+Target models were refitted after repairing topology context, with one candidate
+component for each of seven source-city groups.  Five scenario-and-seed-blocked
+folds evaluated source masses $\{0,0.25,0.5,0.75,1\}$ on a balanced B100 subset
+of target counterfactual groups.  A source component was admitted only when its
+mean normalized-regret improvement exceeded 0.5\%, its one-sided 95\% upper
+confidence bound was below zero and its worst fold regressed by less than 1\%.
+Failure of any gate selected the exact target-only model.  This rule returned
+source mass zero for Los Angeles and Hangzhou source mass one for Jinan before
+the fresh confirmation rollouts were observed.
+
+The strict comparator uses the corrected
+\texttt{causal\_target\_only\_v2} estimator and fits target rows only.  The fresh
+Jinan confirmation used 56 deterministic PCG64 seeds excluded from v93 and the
+earlier v98 confirmation.  Three demand scenarios and two policies gave 336
+completed rollouts.  Waiting was averaged equally across the three scenarios
+within each seed; uncertainty used a paired-seed bootstrap, and the paired
+Wilcoxon statistic was computed over the 56 seed means.
+
+The selector itself reads no target closed-loop outcome.  The complete v98
+protocol is nevertheless not target-closed-loop-free: both Jinan arms share a
+pressure-guard risk multiplier of 0.5 inherited from earlier Jinan closed-loop
+development.  Moreover, the strict zero-source-row comparator has lower model
+capacity than the source-aware estimator.  V98 therefore tests the frozen
+conditional protocol, not architecture-held-fixed causal attribution to source
+rows.
 
 \subsection{Separate post-freeze execution-layer stress test}
 

@@ -93,22 +93,25 @@ from 0.4361 to 0.3921 (10.10\%) and optimal-action accuracy increased from
 Equal weighting of the two cities gives a regret reduction from 0.2922 to
 0.2685, or 8.09\%, and both city point estimates improve.
 
-The freeze also contained a target-label-only comparator from the same causal
-action-advantage family.  It used the same feature semantics and target
-adaptation groups, but its target prediction weight was numerically one, so
-source-labelled groups did not contribute to its deployed score.  Its
+The freeze also contained a legacy near-target-only comparator from the same
+causal action-advantage family.  It used the same feature semantics and target
+adaptation groups, and its target prediction weight was numerically one.
+Source-labelled groups did not enter its deployed weighted mean, although a
+retained source prior could still resolve exact action ties.  Its
 seed-8171 regret was 0.2172 in Los Angeles and 0.4036 in Jinan.  CFCMT therefore
 reduced the equal-city point estimate from 0.3104 to 0.2685 (13.48\%).
 The paired action-group improvement was 0.07219 in Los Angeles (95\% interval
 $[0.01671,0.13512]$, two-sided bootstrap probability value 0.011) and 0.01150
 in Jinan (interval $[-0.02250,0.04524]$, probability value 0.5196).  Offline
-source contribution was therefore supported in Los Angeles but inconclusive in
-Jinan, despite both point estimates favouring CFCMT.
+The source-aware advantage over this legacy comparator was therefore supported
+offline in Los Angeles but inconclusive in Jinan, despite both point estimates
+favouring CFCMT.
 
 \begin{table}[t]
 \caption{External seed-8171 offline confirmation after city-specific method
-freeze.  Target only uses the same causal action-ranking family and target
-groups but zero deployed source weight.  Adaptation groups are target
+freeze.  The legacy near-target-only arm uses the same causal action-ranking
+family and target groups with zero deployed source weight in its weighted
+mean, but retains a source prior for exact ties.  Adaptation groups are target
 counterfactuals from seeds 5057 and 6067; held-out groups are never used for
 fitting or selection.  Gains in the table compare CFCMT with target only.}
 \label{tab:external-offline}
@@ -189,43 +192,103 @@ inference.}
 \resizebox{\textwidth}{!}{\input{tables/external_closed_loop_comparisons.tex}}
 \end{table}
 
-\subsection{Fresh target-only comparison exposed network-dependent negative transfer}
+\subsection{A fresh near-target-only comparison exposed network-dependent transfer}
 
-The seven-policy v43 matrix did not deploy its frozen target-label-only
-baseline.  We first added that comparator to the same eight scenario--seed
-cells after seeing the main outcomes.  This post-hoc v90 ablation left both
-models unchanged: CFCMT had 149.17 s city-macro waiting and target only had
-149.04 s, a 0.12-s disadvantage.  Los Angeles favoured target only by 2.45 s,
+The seven-policy v43 matrix did not deploy its frozen near-target-only
+baseline.  Its target prediction weight is numerically one, but a retained
+source prior can resolve exact action ties; it is therefore a legacy
+near-target-only arm rather than a strict zero-source-row estimator.  We first
+added that comparator to the same eight scenario--seed cells after seeing the
+main outcomes.  This post-hoc v90 ablation left both models unchanged: CFCMT
+had 149.17 s city-macro waiting and the comparator had 149.04 s, a 0.12-s
+disadvantage.  Los Angeles favoured the comparator by 2.45 s,
 whereas Jinan favoured CFCMT by 2.20 s.  Because the comparator was added after
 the original result, this matrix is descriptive rather than confirmatory.
 
 We then froze a v91 protocol before generating 64 further simulator seeds,
-disjoint from all v43, v89 and v90 roles.  Each seed paired CFCMT and target
-only on the Los Angeles scenario and all three Jinan demands, giving 256 paired
-cells and 512 completed rollouts.  The primary relative difference averaged
+disjoint from all v43, v89 and v90 roles.  Each seed paired CFCMT and the legacy
+comparator on the Los Angeles scenario and all three Jinan demands, giving 256
+paired cells and 512 completed rollouts.  The primary relative difference averaged
 scenarios within city, weighted Los Angeles and Jinan equally within seed and
 then averaged seeds; negative values favour CFCMT.
 
-Target only achieved 149.09 s and CFCMT 155.14 s.  The equal-seed relative
+The comparator achieved 149.09 s and CFCMT 155.14 s.  The equal-seed relative
 difference was $+4.254\%$ (paired 95\% interval $[-0.775,13.211]\%$), and only
 29/64 seeds improved (one-sided exact sign-test probability 0.809).  The city
-effects had opposite signs: CFCMT improved Jinan by 3.045\% but regressed Los
-Angeles by 7.865\%.  The worst seed regressed by 267.56\%, collision incidents
-were 25 for CFCMT and 15 for target only, and both had zero teleports.  The
+effects had opposite signs: CFCMT improved Jinan by 3.045\%, with all 64
+seed-level Jinan city contrasts favouring CFCMT, but regressed Los Angeles by
+7.865\%, where 22/64 seed-level city contrasts improved.  The worst seed
+regressed by 267.56\%, collision incidents were 25 for CFCMT and 15 for the
+comparator, and both had zero teleports.  The
 predeclared mean, interval, both-city, worst-seed, improved-fraction, sign-test
 and collision gates therefore did not jointly pass, and the fresh source-
 contribution confirmation was rejected (\Cref{tab:source-contribution}).
 
 \begin{table}[t]
 \caption{Closed-loop source-contribution ablation.  Both policies use identical
-target adaptation groups, features, action executor and target scenarios;
-target only removes source-labelled samples from deployed prediction.  Positive
-$\Delta$ denotes higher waiting for CFCMT.  V90 is post-hoc; only V91 is a
-fresh-seed preregistered confirmation.  Incident entries are CFCMT/target only.}
+target adaptation groups, features, action executor and target scenarios.  In
+this legacy comparator, ``target only'' denotes target weight numerically one,
+with a retained source prior able to resolve exact ties.  Positive $\Delta$
+denotes higher waiting for CFCMT.  V90 is post-hoc; only V91 is a fresh-seed
+preregistered confirmation.  Incident entries are CFCMT/target only.}
 \label{tab:source-contribution}
 \centering
 \scriptsize
 \resizebox{\textwidth}{!}{\input{tables/external_source_contribution_closed_loop.tex}}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{tsc_source_contribution_diagnostic.pdf}
+\caption{Network dependence in the fresh v91 comparison.  \textbf{a}, Mean
+waiting differences for Los Angeles, Jinan and the equal-city primary
+estimand; negative values favour CFCMT, and the line is the paired 95\% interval
+for the equal-city mean.  \textbf{b}, Seed-level city and equal-city differences
+for all 64 fresh seeds.  Every Jinan city contrast favours CFCMT, whereas the
+Los Angeles distribution contains a long harmful tail.  The comparator is the
+frozen legacy near-target-only arm, not a strict zero-source-row estimator.}
+\label{fig:source-contribution-diagnostic}
+\end{figure}
+\FloatBarrier
+
+\subsection{A post-V91 selector retained a Jinan-specific controller-pair gain}
+
+V98 asks a different question from the frozen v43/v91 experiment.  After the
+v91 outcomes were available, target models were refitted with repaired topology
+context and separate source-city components.  Five scenario-and-seed-blocked
+folds evaluated seven source groups and source masses in
+$\{0,0.25,0.5,0.75,1\}$ using only a balanced B100 target-counterfactual subset.
+Failure of the offline improvement and fold-stability gates returned the exact
+target-only model.  Before any fresh closed-loop result was observed, the
+selector returned source mass zero for Los Angeles and selected Hangzhou with
+source mass one for Jinan.
+
+The selected Jinan controller was then compared with a strict target model
+fitted with zero source rows on 56 further seeds.  Three demand scenarios and
+two policies produced 336 completed rollouts.  Equal-scenario waiting decreased
+by 4.527\% (paired-seed 95\% bootstrap interval, 4.279--4.787\%); all 56 seeds
+improved and the two-sided paired Wilcoxon probability was
+$7.55\times10^{-11}$ (\Cref{tab:jinan-conditional-source-transfer}).
+
+This is a positive controller-pair result under the frozen v98 protocol, not a
+re-estimate obtained by deleting Los Angeles after evaluation.  It is not
+pooled with v91: v98 uses a post-v91 topology-repaired model and a pressure
+guard shared by both arms.  The result establishes reproducible benefit for the
+preselected controller relative to its declared comparator.  Because that
+zero-source-row target estimator has lower capacity than the selected
+controller, the comparison does not isolate source-row contribution or
+establish superiority over phase pressure.
+
+\begin{table}[t]
+\caption{Jinan-specific controller comparisons under two separate frozen protocols.
+V91 compares the original v43 controller with its legacy near-target-only arm;
+V98 compares a post-v91 selected controller with a strict zero-source-row target
+model of lower capacity.  The protocols are not pooled, and the V98 contrast
+does not isolate source-row contribution.}
+\label{tab:jinan-conditional-source-transfer}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{tables/jinan_conditional_source_transfer.tex}}
 \end{table}
 \FloatBarrier
 

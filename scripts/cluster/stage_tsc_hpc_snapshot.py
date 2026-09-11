@@ -57,17 +57,17 @@ def _load_scheduler(path: Path):
     return scheduler
 
 
-def _run_remote(scheduler, command: str) -> str:
-    code, stdout, stderr = scheduler.run_on("node001", command, timeout=120, check=True)
+def _run_remote(scheduler, node: str, command: str) -> str:
+    code, stdout, stderr = scheduler.run_on(node, command, timeout=120, check=True)
     if int(code) != 0:
         raise RuntimeError(f"remote command failed ({code}): {stderr}")
     return str(stdout)
 
 
-def _rsync_tree(scheduler, source: Path, destination: str) -> None:
-    target = scheduler._ssh_target_for_node("node001")
+def _rsync_tree(scheduler, node: str, source: Path, destination: str) -> None:
+    target = scheduler._ssh_target_for_node(node)
     for attempt in range(1, 5):
-        ssh_shell = scheduler._ssh_rsync_shell_for_node("node001")
+        ssh_shell = scheduler._ssh_rsync_shell_for_node(node)
         result = subprocess.run(
             [
                 "rsync",
@@ -95,6 +95,7 @@ def stage_snapshot(
     scheduler_dir: Path,
     remote_snapshot_base: Path,
     remote_data_root: Path,
+    node: str = "node001",
 ) -> dict[str, object]:
     scheduler = _load_scheduler(scheduler_dir)
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -106,6 +107,7 @@ def stage_snapshot(
     marker_path = snapshot_root / ".cfcmt_snapshot.json"
     existing = _run_remote(
         scheduler,
+        node,
         f"if test -f {shlex.quote(str(marker_path))}; then cat {shlex.quote(str(marker_path))}; fi",
     ).strip()
     if existing:
@@ -117,6 +119,7 @@ def stage_snapshot(
     staging_root = Path(f"{snapshot_root}.staging-{os.getpid()}")
     _run_remote(
         scheduler,
+        node,
         "mkdir -p "
         + " ".join(
             shlex.quote(str(path))
@@ -128,19 +131,24 @@ def stage_snapshot(
             )
         ),
     )
-    _rsync_tree(scheduler, PROJECT_ROOT / "cf_h2o", str(staging_root / "cf_h2o"))
+    _rsync_tree(
+        scheduler, node, PROJECT_ROOT / "cf_h2o", str(staging_root / "cf_h2o")
+    )
     _rsync_tree(
         scheduler,
+        node,
         PROJECT_ROOT / "scripts/cluster",
         str(staging_root / "scripts/cluster"),
     )
     _rsync_tree(
         scheduler,
+        node,
         PROJECT_ROOT / "scripts/data",
         str(staging_root / "scripts/data"),
     )
     _run_remote(
         scheduler,
+        node,
         "ln -s "
         f"{shlex.quote(str(remote_data_root))} "
         f"{shlex.quote(str(staging_root / 'H2Oplus/downloads'))}",
@@ -163,9 +171,10 @@ def stage_snapshot(
     with tempfile.TemporaryDirectory(prefix="cfcmt-stage-", dir="/tmp") as temporary:
         marker = Path(temporary) / ".cfcmt_snapshot.json"
         marker.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        _rsync_tree(scheduler, Path(temporary), str(staging_root))
+        _rsync_tree(scheduler, node, Path(temporary), str(staging_root))
     _run_remote(
         scheduler,
+        node,
         "if test -e "
         f"{shlex.quote(str(snapshot_root))}; then exit 17; "
         f"else mv {shlex.quote(str(staging_root))} {shlex.quote(str(snapshot_root))}; fi",
@@ -191,11 +200,17 @@ def main() -> None:
         type=Path,
         default=PROJECT_ROOT / "cf_h2o/results/cluster/latest_snapshot.json",
     )
+    parser.add_argument(
+        "--node",
+        default="node001",
+        help="Connected HPC node used to reach the shared snapshot filesystem.",
+    )
     args = parser.parse_args()
     payload = stage_snapshot(
         scheduler_dir=args.scheduler_dir,
         remote_snapshot_base=args.remote_snapshot_base,
         remote_data_root=args.remote_data_root,
+        node=str(args.node),
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")

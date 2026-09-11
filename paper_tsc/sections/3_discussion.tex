@@ -9,16 +9,32 @@ offline regret and closed-loop waiting relative to a same-information dense
 residual.  Because the dense comparison also receives matched action
 contrasts, the gain cannot be explained by reference subtraction alone.
 
-A distinct claim about transferred data did not survive fresh confirmation.
-The target-label-only comparator shares the target labels, feature semantics,
-model family and executor, but source-labelled samples have zero deployed
-weight.  Source-plus-target CFCMT looked better in the seed-8171 offline
-action-regret comparison, yet on 64 new closed-loop seeds it helped Jinan and
-harmed Los Angeles.  The equal-city mean favoured target only, the interval
-crossed zero and the collision count increased.  Cross-network evaluation is
-therefore not evidence that source-city labels improve a target controller.
-The experiment instead identifies network-dependent negative transfer as a
-central failure mode of the present fitting rule.
+A distinct claim about transferred data is conditional rather than uniformly
+positive or negative.  The v91 comparator shares the target labels, feature
+semantics, model family and executor with CFCMT, and assigns source-labelled
+samples zero weight in deployed scoring.  However, its retained source prior
+can resolve exact prediction ties, so it is a legacy near-target-only
+comparator rather than a strict source-free arm.  Across 64 fresh closed-loop
+seeds, CFCMT reduced Jinan waiting by 3.045\%, with all 64 seed-level city
+contrasts favourable, but increased Los Angeles waiting by 7.865\%, with only
+22 of 64 contrasts favourable.  The equal-city mean therefore rejected a
+general cross-city source-contribution claim and exposed negative transfer as
+a network-dependent failure mode.
+
+A separate post-v91 target-offline selector then made the network dependence
+operational before its fresh rollouts: it returned exact target-only control
+for Los Angeles and admitted a Hangzhou source component at mass one for
+Jinan.  On 56 further Jinan seeds (336 rollouts), the admitted controller
+reduced waiting by 4.527\% relative to a strict zero-source-row target model
+(paired 95\% interval, 4.279--4.787\%); all 56 contrasts were favourable
+($p=7.5475\times10^{-11}$, Wilcoxon signed-rank test).  Because the abstention
+and admission decisions preceded these rollouts, this is evidence for a
+preselected Jinan controller-pair gain rather than a post-hoc deletion of Los
+Angeles.
+The comparison still does not isolate source rows at fixed architecture: the
+strict target comparator has lower capacity, and both arms use the same risk
+multiplier of 0.5 inherited from earlier Jinan closed-loop development.  It
+also does not establish superiority over phase pressure.
 
 The experiments also explain why the earlier full mechanism-world-model route
 was not retained as the final controller.  MC-WM decomposed queue propagation,
@@ -66,17 +82,24 @@ closed-loop claim.  Conversely, field loop-detector or trajectory data could
 adapt passive state representations without supplying the counterfactual
 outcome of an unexecuted phase.
 
-The target-only result also changes how the adaptation budget should be used.
+The source-comparison results also change how the adaptation budget should be
+used.
 More source data is not monotonically beneficial after target labels are
-available.  Three subsequent frozen gates tested whether source inclusion could
-be made a target-seed-blocked decision across the seven development city groups
-(Supplementary Table~\ref{tab:source-gate-development}).  Robust-history and
-out-of-fold action-agreement gates selected sources in six and seven cities,
-respectively, but each retained a worst-city regression above 0.02 and failed
-its target-only upper-bound criterion.  A labeled five-mechanism compatibility
-gate removed these regressions only by selecting target only in all seven
-cities.  Thus the additional experiments validate abstention as a safety
-fallback, not a source selector with positive transfer value.
+available.  Initial target-seed-blocked gates either retained city regressions
+or removed them by selecting target only in all seven development cities
+(Supplementary Table~\ref{tab:source-gate-development}).  A subsequent remedy
+ladder tested mechanism-specific priors, inverse-budget shrinkage, local
+right-of-way context, state-conditioned downstream utility, leave-city-out
+meta-utility and source-only or target-calibrated hierarchical priors
+(Supplementary Table~\ref{tab:source-remedy-ladder}).  Forced source arms still
+showed useful headroom, including improvement in five of seven city means for
+the final target-calibrated prior, but its city interval crossed zero and no
+source survived the complete source-identity controls.  The only state-level
+utility gate that passed offline development produced a large Cologne
+closed-loop regression before matrix expansion.  These experiments validate
+exact abstention as a fallback and expose source-benefit identification as the
+unresolved multicity problem; they do not extend the separate Jinan-specific
+v98 result into a general deployable selector.
 
 Several limitations constrain generalization.  First, the formal external
 unit count is two cities.  Multiple Jinan demand files improve within-city
@@ -86,11 +109,12 @@ networks converted and semantically audited for SUMO; they are not calibrated
 city-wide digital twins.  Third, training counterfactuals share the same SUMO
 physics family as evaluation.  Cross-network transfer is real at the topology,
 demand and phase-program levels, but sim-to-real transfer is not tested.
-Fourth, the seven-policy closed-loop matrix uses two seeds, whereas the later
-source-contribution comparison uses 64 seeds but the same two target
-geometries.  Both use a fixed 3,600-s horizon.  Unfinished vehicles are
-included, yet longer incidents, non-recurrent demand and detector failure
-remain outside the experiment.
+Fourth, the seven-policy closed-loop matrix uses two seeds, whereas v91 uses 64
+seeds over the same two target geometries and v98 uses 56 further seeds on
+Jinan only.  These protocols are reported separately rather than pooled.  All
+use a fixed 3,600-s horizon.  Unfinished vehicles are included, yet longer
+incidents, non-recurrent demand and detector failure remain outside the
+experiment.
 
 The sequential development record is another limitation and a strength.  A
 diagnostic external seed exposed a one-city regression and motivated removal
@@ -111,24 +135,65 @@ anchored all-pair comparison.  It does show why adaptive search and independent
 confirmation must not be pooled, and why the present evidence cannot support
 learned-policy superiority over phase pressure.
 
-The fresh target-only test is more directly damaging to a cross-city source
-benefit claim.  Unlike the execution-layer programme, it holds the CFCMT model,
-target adaptation budget and executor fixed and changes only whether source
-labels enter deployed prediction.  Its rejection cannot be dismissed as a
-different policy class.  Offline regret and short-horizon action ranking did
-not reliably predict the closed-loop value of source data, particularly in the
-Los Angeles corridor where one seed produced a large congestion cascade.
+The fresh v91 near-target-only test more directly rejects a uniform cross-city
+source-benefit claim.  Unlike the execution-layer programme, it holds the
+CFCMT model family, target adaptation budget and executor fixed.  Its retained
+source-prior tie-break prevents a strict source-row causal interpretation, but
+the opposite city effects cannot be dismissed as a different policy class.
+Offline regret and short-horizon action ranking did not reliably predict the
+closed-loop value of source data, particularly in the Los Angeles corridor
+where one seed produced a large congestion cascade.
 
-The next decisive experiment is not a relaxed threshold or another unrestricted
-sweep on the same outcomes.  It requires a new compatibility representation
-whose link to downstream action ranking is developed only on the current seven
-groups, then frozen and replicated on additional external cities and a
-calibrated digital twin or prospective signal intervention.  Such a study could
+The post-v91 evidence narrows but does not close that attribution gap.  V98
+shows that a frozen target-offline rule can abstain for Los Angeles and retain a
+repeatable Jinan-specific controller gain against its declared lower-capacity
+zero-source-row target model.
+The development-only v123/v157a analysis reported favourable model-path
+differences at five target-label budgets, but the target and source paths used
+different Jinan domain handling.  These historical contrasts therefore do not
+isolate source-row value.  V157B corrected the comparator at B100 only: on the
+reused 22-seed Jinan selector, source minus target was $-0.01357$ (paired 95\%
+interval $[-0.01784,-0.00935]$), with 20/22 seeds improving.  The source arm
+still cost $+0.02534$ relative to phase pressure.  V157C then ran the fixed
+three-seed Jinan native one-action protocol.  Seeds 80314 and 88625 completed,
+but seed 27178 remained invalid because its fixed 480-s checkpoint had no
+eligible, scorable traffic light; the seed was neither dropped nor replaced.
+Across the two valid seeds, the descriptive source-minus-target mean was
+$+0.00236$ (one of two seeds improved), source minus matched placebo was
+$-0.00232$, target minus PhasePressure was $+0.00125$, and source minus
+PhasePressure was $+0.00362$, with source worse in both seeds.  Recorded
+collision counts were zero.  PhasePressure is the reference heuristic, not a
+learned arm.  Because the fixed roster was incomplete, these values do not
+support a three-seed inference or confirm the reused-selector advantage.
+Moreover, only two of five effective source overrides improved their native
+PhasePressure continuation, and the predicted source--target ordering agreed
+with the native outcome in only one of four different-action windows.  The
+limitation therefore extends beyond the missing seed to action-benefit ranking
+on native continuations.  V158 made one final frozen attempt to address that
+ranking mismatch.  It collected 100 native-prefix action groups from ten fixed
+Jinan development seeds and fitted native residual calibrators in five
+whole-seed folds.  Source minus target was $-0.00113$ (paired 95\% interval
+$[-0.00240,+0.00019]$; 6/10 seeds improved), source minus matched placebo was
+$-0.00072$ ($[-0.00219,+0.00091]$; 7/10), and source minus PhasePressure was
+$+0.00014$ ($[-0.00239,+0.00261]$; 5/10).  All three preregistered OOF
+comparisons failed, so the reserve was withheld.  This result authorizes no
+controller adoption, unseen-city claim or post-hoc retuning; it closes the
+native-prefix ranking-remediation route under the frozen Jinan sparse
+controller.  No single experiment therefore combines
+fixed architecture, strict source removal, fresh multicity closed-loop
+confirmation and pressure-policy superiority.
+
+Any future study would require a new precommitted design and independent city
+units rather than a relaxed threshold or another sweep on the V158 outcomes.
+It would need to freeze the link between compatibility and downstream action
+ranking before evaluation on additional external cities and a calibrated
+digital twin or prospective signal intervention.  Such a study could
 test whether the local pairwise advantage survives simulator
 mismatch and whether source mechanisms add value in objectives where pressure
 is incomplete, including multimodal priority, spillback risk, emissions or
 network-level coordination.  Until then, the supported claim is narrower:
 causal parent restrictions and antisymmetric action ranking improve a
-simulation-assisted residual relative to dense modelling, while source-data
-benefit is network dependent and classical pressure remains the stronger
+simulation-assisted residual relative to dense modelling, while a
+predeployment rule retained a Jinan-specific controller-pair gain that does not
+isolate source-row contribution.  Classical pressure remains the stronger
 controller on the reported targets.

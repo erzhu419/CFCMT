@@ -44,9 +44,38 @@ from scripts.data.repair_eth_boston_protected_uncontrolled_merge_tls import (
     PACKAGE_PROTOCOL as BOSTON_V11_PACKAGE_PROTOCOL,
     validate_protected_uncontrolled_merge_manifest,
 )
+from scripts.data.repair_eth_boston_joined_tls_uncontrolled_merge import (
+    PACKAGE_PROTOCOL as BOSTON_V12_PACKAGE_PROTOCOL,
+    validate_joined_tls_uncontrolled_merge_manifest,
+)
+from scripts.data.repair_eth_boston_systemic_right_of_way import (
+    PACKAGE_PROTOCOL as BOSTON_V13_PACKAGE_PROTOCOL,
+    validate_systemic_right_of_way_manifest,
+)
+from scripts.data.repair_eth_boston_systemic_uncontrolled_major import (
+    PACKAGE_PROTOCOL as BOSTON_V14_PACKAGE_PROTOCOL,
+    validate_systemic_uncontrolled_major_manifest,
+)
+from scripts.data.repair_eth_boston_tls_yellow_clearance import (
+    PACKAGE_PROTOCOL as BOSTON_V15_PACKAGE_PROTOCOL,
+    validate_tls_yellow_clearance_manifest,
+)
+from scripts.data.repair_eth_boston_implicit_no_tls_major import (
+    PACKAGE_PROTOCOL as BOSTON_V16_PACKAGE_PROTOCOL,
+    validate_implicit_no_tls_major_manifest,
+)
+from scripts.data.repair_eth_boston_no_tls_major_response import (
+    PACKAGE_PROTOCOL as BOSTON_V17_PACKAGE_PROTOCOL,
+    validate_no_tls_major_response_manifest,
+)
+from scripts.data.repair_eth_boston_controlled_shared_receiving_yield import (
+    PACKAGE_PROTOCOL as BOSTON_V18_PACKAGE_PROTOCOL,
+    validate_controlled_shared_receiving_yield_manifest,
+)
 
 
 PROTOCOL = "eth-five-city-strict-libsumo-microscopic-admission-v1"
+DIAGNOSTIC_TRACE_PROTOCOL = "eth-city-read-only-vehicle-trace-v1"
 
 
 def _sha256(path: Path) -> str:
@@ -80,7 +109,21 @@ def _validate_package(
         )
     manifest = _read_json(manifest_path)
     package_protocol = manifest.get("protocol")
-    if package_protocol == BOSTON_V11_PACKAGE_PROTOCOL:
+    if package_protocol == BOSTON_V18_PACKAGE_PROTOCOL:
+        validate_controlled_shared_receiving_yield_manifest(manifest)
+    elif package_protocol == BOSTON_V17_PACKAGE_PROTOCOL:
+        validate_no_tls_major_response_manifest(manifest)
+    elif package_protocol == BOSTON_V16_PACKAGE_PROTOCOL:
+        validate_implicit_no_tls_major_manifest(manifest)
+    elif package_protocol == BOSTON_V15_PACKAGE_PROTOCOL:
+        validate_tls_yellow_clearance_manifest(manifest)
+    elif package_protocol == BOSTON_V14_PACKAGE_PROTOCOL:
+        validate_systemic_uncontrolled_major_manifest(manifest)
+    elif package_protocol == BOSTON_V13_PACKAGE_PROTOCOL:
+        validate_systemic_right_of_way_manifest(manifest)
+    elif package_protocol == BOSTON_V12_PACKAGE_PROTOCOL:
+        validate_joined_tls_uncontrolled_merge_manifest(manifest)
+    elif package_protocol == BOSTON_V11_PACKAGE_PROTOCOL:
         validate_protected_uncontrolled_merge_manifest(manifest)
     elif package_protocol == BOSTON_V10_PACKAGE_PROTOCOL:
         validate_permissive_merge_manifest(manifest)
@@ -183,6 +226,113 @@ def _vehicle_collision_snapshot(sumo_api: Any, vehicle_id: str) -> dict[str, Any
         }
     )
     return snapshot
+
+
+def _json_diagnostic_value(value: Any) -> Any:
+    if isinstance(value, (str, int, float, bool)) or value is None:
+        return value
+    if isinstance(value, dict):
+        return {
+            str(key): _json_diagnostic_value(item) for key, item in value.items()
+        }
+    if isinstance(value, (list, tuple)):
+        return [_json_diagnostic_value(item) for item in value]
+    return repr(value)
+
+
+def _diagnostic_vehicle_call(
+    vehicle_api: Any, method: str, vehicle_id: str, *args: Any
+) -> Any:
+    function = getattr(vehicle_api, method, None)
+    if function is None:
+        return {"unavailable": method}
+    try:
+        return _json_diagnostic_value(function(vehicle_id, *args))
+    except Exception as exc:
+        return {"error": f"{type(exc).__name__}: {exc}"}
+
+
+def _vehicle_diagnostic_snapshot(
+    sumo_api: Any, vehicle_id: str, *, present_ids: set[str]
+) -> dict[str, Any]:
+    if str(vehicle_id) not in present_ids:
+        return {"vehicle_id": str(vehicle_id), "present": False}
+    vehicle = sumo_api.vehicle
+    scalar_methods = (
+        "getAcceleration",
+        "getActionStepLength",
+        "getAllowedSpeed",
+        "getApparentDecel",
+        "getDecel",
+        "getEmergencyDecel",
+        "getLaneChangeMode",
+        "getLaneID",
+        "getLanePosition",
+        "getLateralLanePosition",
+        "getLength",
+        "getMinGap",
+        "getRoadID",
+        "getRouteIndex",
+        "getSignals",
+        "getSpeed",
+        "getSpeedMode",
+        "getSpeedWithoutTraCI",
+        "getTau",
+    )
+    values = {
+        method.removeprefix("get").replace("TraCI", "Traci"): (
+            _diagnostic_vehicle_call(vehicle, method, str(vehicle_id))
+        )
+        for method in scalar_methods
+    }
+    values.update(
+        {
+            "LeaderWithin100m": _diagnostic_vehicle_call(
+                vehicle, "getLeader", str(vehicle_id), 100.0
+            ),
+            "FollowerWithin100m": _diagnostic_vehicle_call(
+                vehicle, "getFollower", str(vehicle_id), 100.0
+            ),
+            "LaneChangeStateLeft": _diagnostic_vehicle_call(
+                vehicle, "getLaneChangeState", str(vehicle_id), 1
+            ),
+            "LaneChangeStateRight": _diagnostic_vehicle_call(
+                vehicle, "getLaneChangeState", str(vehicle_id), -1
+            ),
+            "NextTLS": _diagnostic_vehicle_call(
+                vehicle, "getNextTLS", str(vehicle_id)
+            ),
+        }
+    )
+    return {"vehicle_id": str(vehicle_id), "present": True, **values}
+
+
+def _diagnostic_trace_sample(
+    sumo_api: Any,
+    *,
+    time_sec: float,
+    vehicle_ids: Sequence[str],
+    lane_ids: Sequence[str],
+) -> dict[str, Any]:
+    present_ids = {str(value) for value in sumo_api.vehicle.getIDList()}
+    vehicles_by_lane: dict[str, list[str]] = {}
+    selected_ids = {str(value) for value in vehicle_ids}
+    for lane_id in lane_ids:
+        values = [
+            str(value) for value in sumo_api.lane.getLastStepVehicleIDs(str(lane_id))
+        ]
+        vehicles_by_lane[str(lane_id)] = values
+        selected_ids.update(values)
+    return {
+        "time_sec": float(time_sec),
+        "vehicle_ids_by_lane": vehicles_by_lane,
+        "vehicles": [
+            _vehicle_diagnostic_snapshot(
+                sumo_api, vehicle_id, present_ids=present_ids
+            )
+            for vehicle_id in sorted(selected_ids)
+        ],
+    }
 
 
 def _collision_lane_topology(network_path: Path, lane_id: str) -> dict[str, Any]:
@@ -356,6 +506,10 @@ def run_eth_city_admission(
     operational_horizon_sec: int | None = None,
     progress_interval_sec: int = 1800,
     state_sample_interval_sec: int = 60,
+    diagnostic_start_time_sec: float | None = None,
+    diagnostic_vehicle_ids: Sequence[str] = (),
+    diagnostic_lane_ids: Sequence[str] = (),
+    diagnostic_maximum_samples: int = 200,
 ) -> dict[str, Any]:
     started = time.perf_counter()
     config, package, package_manifest_sha256 = _validate_package(
@@ -374,6 +528,11 @@ def run_eth_city_admission(
     begin_time_sec = float(strict["begin_sec"])
     if operational_horizon_sec is not None and operational_horizon_sec <= 0:
         raise ValueError("operational horizon must be positive")
+    diagnostic_enabled = diagnostic_start_time_sec is not None
+    if diagnostic_enabled and int(diagnostic_maximum_samples) <= 0:
+        raise ValueError("diagnostic maximum samples must be positive")
+    if not diagnostic_enabled and (diagnostic_vehicle_ids or diagnostic_lane_ids):
+        raise ValueError("diagnostic vehicle/lane ids require a diagnostic start time")
     mode = (
         "operational_preflight"
         if operational_horizon_sec is not None
@@ -413,6 +572,7 @@ def run_eth_city_admission(
     summary: dict[str, Any] | None = None
     next_progress = begin_time_sec + float(progress_interval_sec)
     next_state_sample = begin_time_sec
+    diagnostic_trace: list[dict[str, Any]] = []
 
     with sumo_state_directory(prefix=f"cfcmt-eth-{expected_city_code.lower()}-{seed}-") as scratch:
         summary_path = scratch / "summary.xml"
@@ -462,6 +622,19 @@ def run_eth_city_admission(
                 ending_teleports += int(
                     sumo_api.simulation.getEndingTeleportNumber()
                 )
+                if (
+                    diagnostic_enabled
+                    and final_time_sec + 1e-9 >= float(diagnostic_start_time_sec)
+                    and len(diagnostic_trace) < int(diagnostic_maximum_samples)
+                ):
+                    diagnostic_trace.append(
+                        _diagnostic_trace_sample(
+                            sumo_api,
+                            time_sec=final_time_sec,
+                            vehicle_ids=diagnostic_vehicle_ids,
+                            lane_ids=diagnostic_lane_ids,
+                        )
+                    )
                 for collision in tuple(sumo_api.simulation.getCollisions()):
                     incident = _collision_incident_key(collision)
                     if incident not in collision_incidents:
@@ -546,6 +719,18 @@ def run_eth_city_admission(
         "final_time_sec": final_time_sec,
         "termination_reason": termination_reason,
         "summary": summary,
+        "diagnostic_trace": {
+            "protocol": DIAGNOSTIC_TRACE_PROTOCOL,
+            "enabled": diagnostic_enabled,
+            "read_only": True,
+            "start_time_sec": diagnostic_start_time_sec,
+            "requested_vehicle_ids": [str(value) for value in diagnostic_vehicle_ids],
+            "requested_lane_ids": [str(value) for value in diagnostic_lane_ids],
+            "maximum_samples": int(diagnostic_maximum_samples),
+            "sample_count": len(diagnostic_trace),
+            "truncated": len(diagnostic_trace) >= int(diagnostic_maximum_samples),
+            "samples": diagnostic_trace,
+        },
     }
     if operational_horizon_sec is None:
         checks = _full_admission_checks(
@@ -591,6 +776,7 @@ def run_eth_city_admission(
             "expected_traffic_light_count": expected_traffic_lights,
             "time_based_teleportation_disabled": True,
             "junction_collision_checks_enabled": True,
+            "read_only_diagnostic_trace_enabled": diagnostic_enabled,
         },
         "observed": observed,
         "package": {
@@ -618,6 +804,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--operational-horizon-sec", type=int)
     parser.add_argument("--progress-interval-sec", type=int, default=1800)
     parser.add_argument("--state-sample-interval-sec", type=int, default=60)
+    parser.add_argument("--diagnostic-start-time-sec", type=float)
+    parser.add_argument("--diagnostic-vehicle-id", action="append", default=[])
+    parser.add_argument("--diagnostic-lane-id", action="append", default=[])
+    parser.add_argument("--diagnostic-maximum-samples", type=int, default=200)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
     payload = run_eth_city_admission(
@@ -628,6 +818,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         operational_horizon_sec=args.operational_horizon_sec,
         progress_interval_sec=args.progress_interval_sec,
         state_sample_interval_sec=args.state_sample_interval_sec,
+        diagnostic_start_time_sec=args.diagnostic_start_time_sec,
+        diagnostic_vehicle_ids=args.diagnostic_vehicle_id,
+        diagnostic_lane_ids=args.diagnostic_lane_id,
+        diagnostic_maximum_samples=args.diagnostic_maximum_samples,
     )
     atomic_write_json(args.out, payload)
     execution_passed = (

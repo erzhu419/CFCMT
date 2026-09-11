@@ -57,23 +57,51 @@ opposite directions cannot be hidden by equal-city aggregation.
 
 \subsection{Fresh source-contribution diagnostics}
 
-The target-label-only artifacts were created in the v43 baseline freeze, before
-the original closed-loop outcomes.  Their selected target weights were within
-numerical precision of one in both cities.  V90 added these artifacts to the
-eight original scenario--seed cells only after the main comparison and is
-therefore not a confirmation.  V91 froze 64 unique seeds before execution,
-required 512 exact policy identities and completed all of them without seed
-exclusion.
+The comparator artifacts were created in the v43 baseline freeze, before the
+original closed-loop outcomes.  Their deployed score assigns zero coefficient
+to source-labelled samples and their selected target weights were within
+numerical precision of one in both cities.  However, a retained source-trained
+prior can resolve exact prediction ties.  We therefore call this the legacy
+near-target-only comparator rather than a strict zero-source-row arm.  V90
+added these artifacts to the eight original scenario--seed cells only after
+the main comparison and is therefore not a confirmation.  V91 froze 64 unique
+seeds before execution, required 512 exact policy identities and completed all
+of them without seed exclusion.
 
 The largest v91 failure occurred at seed 7417817 in Los Angeles.  CFCMT waiting
 was 975.27 s with completion 0.270, compared with 194.74 s and completion 0.919
-for target only; neither policy teleported or recorded a collision in that
-cell.  This record is retained in the primary estimate.  The failure was not
-solely an outlier artifact: across the 64 Los Angeles cells, the median relative
-difference was $+2.75\%$, only 22 favoured CFCMT and 21 regressed by more than
-5\%.  Across 192 Jinan scenario--seed cells, 179 favoured CFCMT.  These
-diagnostics explain the opposite city means but do not change the preregistered
-seed-level analysis.
+for the legacy near-target-only comparator; neither policy teleported or
+recorded a collision in that cell.  This record is retained in the primary
+estimate.  The failure was not solely an outlier artifact: across the 64 Los
+Angeles cells, the median relative difference was $+2.75\%$, only 22 favoured
+CFCMT and 21 regressed by more than 5\%.  Across 192 Jinan scenario--seed cells,
+179 favoured CFCMT, and all 64 Jinan seed-level city contrasts favoured CFCMT.
+The city-mean waiting effects were $-3.045\%$ in Jinan and $+7.865\%$ in Los
+Angeles, where negative values favour CFCMT.  These diagnostics explain the
+opposite city means but do not change the preregistered seed-level analysis.
+
+\subsection{Post-v91 V98 controller-pair confirmation}
+
+V98 is a separate post-v91 protocol and is not pooled with the v91 estimate.
+Its target-offline selector returned exact target-only control for Los Angeles
+and selected a Hangzhou source component at mass one for Jinan before any fresh
+v98 rollout was opened.  Los Angeles was therefore an ex ante abstention, not
+a city removed after observing the confirmation outcomes.  The Jinan matrix
+used 56 further seeds, three demand files per seed and two controller arms, for
+336 rollouts in total.  Relative to the strict zero-source-row target model,
+the admitted controller reduced waiting by 4.527\% (paired 95\% interval,
+4.279--4.787\%); all 56 seed-level contrasts were favourable
+($p=7.5475\times10^{-11}$, Wilcoxon signed-rank test).  The two frozen protocols
+are juxtaposed, rather than combined, in
+\Cref{tab:jinan-conditional-source-transfer}.
+
+This confirmation supports a protocol-specific Jinan controller-pair gain.  The
+preselected controller outperformed its declared strict zero-source-row target
+comparator, but that comparator has lower capacity.  V98 therefore does not
+isolate source-row contribution at fixed architecture.  Both arms also share the
+risk multiplier of 0.5 inherited from earlier Jinan closed-loop development.
+The result therefore does not establish a general multicity selector or
+superiority over phase pressure.
 
 \subsection{Seven-city source-gate development}
 
@@ -104,8 +132,56 @@ source selector.  v145 and v146 retained source signal but allowed harmful city
 tails.  v148 removed those tails only by abstaining everywhere.  Its 7/7
 advantage over the dense residual is therefore inherited from the rigid
 target-only causal model and cannot be attributed to source-city labels or to a
-full mechanism world model.  No external source-gate confirmation was
-authorized after these failures.
+full mechanism world model.  No external confirmation of these v145--v148
+seven-city gate rules was authorized after their failures.
+
+We subsequently tested the alternative explanations raised by this result
+without weakening the frozen safety or source-identity criteria
+(\Cref{tab:source-remedy-ladder}).  Leave-one-seed diagnostics confirmed that
+beneficial source headroom exists after the fact.  Mechanism-block priors,
+budget-aware shrinkage, local right-of-way context, state-conditioned utility,
+leave-city-out meta-utility and hierarchical priors nevertheless failed to
+turn that headroom into a stable deployment rule.  Most conservative variants
+returned exact rigid fallback.  The one state-conditioned gate that passed its
+offline development screen caused a 37.9\% Cologne regression in the
+pre-expansion closed-loop smoke, so its full matrix was not launched.
+The later v123/v157a budget contrasts were also retained only as historical
+model-path comparisons after a Jinan domain-handling difference was found.
+V157B corrected B100 alone and passed its relative source-versus-target gate on
+the reused selector, while remaining worse than phase pressure.  The authorized
+V157C native one-action diagnostic completed seeds 80314 and 88625, but retained
+seed 27178 as invalid because the fixed 480-s checkpoint contained no eligible,
+scorable traffic light.  Its two-valid-seed descriptive means were $+0.00236$
+for source minus target, $-0.00232$ for source minus matched placebo, $+0.00125$
+for target minus PhasePressure and $+0.00362$ for source minus PhasePressure.
+Only one of two seeds improved versus target and neither improved versus the
+PhasePressure heuristic; all recorded collision counts were zero.  The fixed
+three-seed protocol is incomplete and supports no three-seed inference.
+V158 then froze the V157B predictors and collected 100 native-prefix groups
+(800 candidate rows and 700 non-reference branches) from ten fixed Jinan
+development seeds, with no simulator-state restoration.  Five whole-seed folds
+gave source-minus-target $-0.00113$ (paired 95\% interval
+$[-0.00240,+0.00019]$; 6/10 seeds improved), source-minus-placebo $-0.00072$
+($[-0.00219,+0.00091]$; 7/10) and source-minus-PhasePressure $+0.00014$
+($[-0.00239,+0.00261]$; 5/10).  Every preregistered OOF comparison failed;
+the reserve was therefore neither authorized nor run.  The failure closes this
+Jinan native-prefix ranking-remediation route and supports no controller
+adoption, unseen-city claim or post-hoc retuning.
+
+\begin{table}[htbp]
+\caption{Post-v148 source-remedy ladder.  Effects are normalized action-regret
+differences unless seconds or percentages are shown; negative values favour
+the source-aware arm.  B100 denotes 100 target adaptation action groups.  The
+V157C row reports descriptive means over two valid seeds because the fixed
+three-seed protocol was incomplete.  The V158 row reports the preregistered
+ten-seed OOF estimates; its gate failed and the reserve was withheld.  The
+versioned evidence identifiers are retained in the machine-readable source
+data, not in the displayed table.}
+\label{tab:source-remedy-ladder}
+\centering
+\footnotesize
+\input{tables/source_remedy_ladder.tex}
+\end{table}
 
 \subsection{Metric population and safety accounting}
 
@@ -205,6 +281,7 @@ python3 paper_tsc/figures/build_tsc_external_confirmation.py
 python3 paper_tsc/figures/build_tsc_causal_transfer_schematic.py
 python3 paper_tsc/figures/build_tsc_postfreeze_stress_test.py
 python3 paper_tsc/figures/build_tsc_source_gate_development.py
+python3 paper_tsc/figures/build_tsc_source_remedy_ladder.py
 \end{verbatim}
 These commands form the figure and source-table submission contract.  The
 unreferenced v16-era builder and its outputs are retained only as development
@@ -215,3 +292,9 @@ The third command separately requires all v86--v89 evidence-integrity audits
 to pass and the preregistered v89 scientific decision to remain rejected.  The
 fourth command requires the v145, v146 and v148 development decisions to remain
 rejected and does not promote them to external confirmation.
+The fifth command requires the canonical post-v148 remedy artifacts to retain
+their recorded cohorts and adjudications, including the failed closed-loop
+smoke, exact rigid fallbacks, the superseded V123/V157A comparison, the bounded
+V157B B100 branch authorization and the incomplete V157C three-seed native
+one-action diagnostic.  It also requires the V158 native-prefix OOF gate to
+remain failed and its reserve authorization to remain false.

@@ -13,11 +13,32 @@ recorded in the v8 conversion manifest.
 The manuscript source-data directory contains machine-readable CSV files for
 every new figure and table, together with a manifest linking the development
 audit, source and adaptation caches, deployment models, held-out result and
-closed-loop aggregate by SHA-256.  It also contains the target-label-only
-source-contribution table generated from the v90 and v91 audits.  The
+closed-loop aggregate by SHA-256.  It also contains the source-contribution
+table generated from the v90 and v91 audits, retaining the final-v43 legacy
+near-target-only comparator label.  A separate controller-comparison table is
+generated from the V91 and V98 audits; its rows are not pooled.  The V98 row
+compares a preselected controller with a lower-capacity target model fitted with
+zero source rows and therefore does not isolate source-row contribution.
+The manifest also links the metadata-only audit that verified all 336 remote
+v98 result identities without copying raw result files.  The
 seven-city source-gate CSV and LaTeX table are regenerated directly from the
 frozen v145, v146 and v148 aggregate JSON files; all three decisions remain
-rejected.  The 512 full v91 rollout records remain in the execution archive and
+rejected.  The post-v148 source-remedy CSV and table are regenerated from the
+canonical V150A, V150C, V150I--V150L, V151A--V153A and V156A--V158 result JSON
+files, plus the V157B bound arm manifest.  They preserve the
+failed source-identity and closed-loop adjudications, mark the V123/V157A
+all-budget comparison as domain-handling-confounded, and limit the corrected
+V157B B100 pass to its reused-selector estimand.  The V157C incomplete artifact
+retains seed 27178 as invalid at its fixed 480-s checkpoint and reports the
+remaining two seeds descriptively, without a three-seed inference.
+The V158 artifact records the completed ten-seed native-prefix OOF failure:
+source minus target was $-0.00113$ (95\% interval $[-0.00240,+0.00019]$),
+source minus placebo was $-0.00072$ ($[-0.00219,+0.00091]$), and source minus
+PhasePressure was $+0.00014$ ($[-0.00239,+0.00261]$).  Its reserve was not
+authorized or run, and it supports no controller adoption or unseen-city
+claim.
+The 512 full v91 rollout
+records remain in the execution archive and
 are represented locally by six complete shard summaries.  The current draft
 makes no claim of a public
 repository DOI.  Before submission, the code snapshot, converted networks,

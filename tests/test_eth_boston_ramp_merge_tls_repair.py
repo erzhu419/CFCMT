@@ -45,6 +45,19 @@ from scripts.data.repair_eth_boston_protected_uncontrolled_merge_tls import (
     repair_package as repair_v11_package,
     validate_protected_uncontrolled_merge_manifest,
 )
+from scripts.data.repair_eth_boston_joined_tls_uncontrolled_merge import (
+    CONTROLLED_STRAIGHT_CONNECTION as V12_CONTROLLED_STRAIGHT_CONNECTION,
+    DECLARED_CHANGES as V12_CHANGES,
+    EXPECTED_REQUESTS as V12_EXPECTED_REQUESTS,
+    JUNCTION_ID as V12_JUNCTION_ID,
+    MERGE_EDGE_ID as V12_MERGE_EDGE_ID,
+    MERGE_LANE_ID as V12_MERGE_LANE_ID,
+    PACKAGE_PROTOCOL as V12_PACKAGE_PROTOCOL,
+    TLS_ID as V12_TLS_ID,
+    UNCONTROLLED_STRAIGHT_CONNECTION as V12_UNCONTROLLED_STRAIGHT_CONNECTION,
+    repair_package as repair_v12_package,
+    validate_joined_tls_uncontrolled_merge_manifest,
+)
 from scripts.data.repair_eth_boston_uncontrolled_merge import (
     BEFORE_STATE,
     CONNECTION_IDENTITY,
@@ -115,6 +128,25 @@ def _original_package(root: Path) -> str:
             {"duration": "8", "state": state},
         )
 
+    joined_tls = ET.SubElement(
+        network,
+        "tlLogic",
+        {"id": V12_TLS_ID, "type": "actuated", "programID": "0", "offset": "0"},
+    )
+    for state in (
+        "Grrrrrrrssrrsrrr",
+        "yrrrrrrrssrrsrrr",
+        "GGGGGGrrssrrsrrr",
+        "yyyyyyrrssrrsrrr",
+        "rggGGGGgssrrrrrr",
+        "ryyyyyyyssrrrrrr",
+        "GrrrrrrrGGGGsrrr",
+        "yrrrrrrryyyysrrr",
+        "rrrGGGrrssrrGGGG",
+        "rrryyyrrssrryyyy",
+    ):
+        ET.SubElement(joined_tls, "phase", {"duration": "8", "state": state})
+
     ET.SubElement(
         network,
         "connection",
@@ -180,6 +212,33 @@ def _original_package(root: Path) -> str:
         network,
         "connection",
         {**V11_UNCONTROLLED_STRAIGHT_CONNECTION, "dir": "s"},
+    )
+    joined_tls_edge = ET.SubElement(
+        network,
+        "edge",
+        {"id": V12_MERGE_EDGE_ID, "from": V12_JUNCTION_ID, "to": "joined_tls_downstream"},
+    )
+    ET.SubElement(
+        joined_tls_edge,
+        "lane",
+        {"id": V12_MERGE_LANE_ID, "index": "0"},
+    )
+    joined_tls_junction = ET.SubElement(
+        network,
+        "junction",
+        {"id": V12_JUNCTION_ID, "type": "traffic_light", "intLanes": ""},
+    )
+    for request in V12_EXPECTED_REQUESTS:
+        ET.SubElement(joined_tls_junction, "request", dict(request))
+    ET.SubElement(
+        network,
+        "connection",
+        {**V12_CONTROLLED_STRAIGHT_CONNECTION, "dir": "s"},
+    )
+    ET.SubElement(
+        network,
+        "connection",
+        {**V12_UNCONTROLLED_STRAIGHT_CONNECTION, "dir": "s"},
     )
     ET.SubElement(network, "edge", {"id": "unchanged", "from": "a", "to": "b"})
     ET.ElementTree(network).write(
@@ -251,6 +310,32 @@ def _permissive_phase_state(path: Path) -> str:
         if row.get("id") == V10_TLS_ID
     )
     return program.findall("phase")[2].get("state", "")
+
+
+def _joined_tls_phase_service(path: Path) -> str:
+    program = next(
+        row
+        for row in ET.parse(path).getroot().iter("tlLogic")
+        if row.get("id") == V12_TLS_ID
+    )
+    return "".join(phase.get("state", "")[0] for phase in program.findall("phase"))
+
+
+def _v11_package(tmp_path: Path) -> Path:
+    v9 = _v9_package(tmp_path)
+    v10 = tmp_path / "v10"
+    repair_v10_package(
+        base_root=v9,
+        output_root=v10,
+        expected_base_manifest_sha256=_sha256(v9 / "package_manifest.json"),
+    )
+    v11 = tmp_path / "v11"
+    repair_v11_package(
+        base_root=v10,
+        output_root=v11,
+        expected_base_manifest_sha256=_sha256(v10 / "package_manifest.json"),
+    )
+    return v11
 
 
 def _protected_uncontrolled_phase_state(path: Path) -> str:
@@ -442,4 +527,56 @@ def test_v11_rejects_changed_uncontrolled_straight_connection(
             base_root=v10,
             output_root=tmp_path / "v11",
             expected_base_manifest_sha256=_sha256(v10 / "package_manifest.json"),
+        )
+
+
+def test_v12_yields_every_active_service_for_joined_tls_merge(
+    tmp_path: Path,
+) -> None:
+    v11 = _v11_package(tmp_path)
+    v12 = tmp_path / "v12"
+    payload = repair_v12_package(
+        base_root=v11,
+        output_root=v12,
+        expected_base_manifest_sha256=_sha256(v11 / "package_manifest.json"),
+    )
+    assert _joined_tls_phase_service(v11 / "microscopic_network.net.xml") == (
+        "GyGyrrGyrr"
+    )
+    assert _joined_tls_phase_service(v12 / "microscopic_network.net.xml") == (
+        "gygyrrgyrr"
+    )
+    assert payload["protocol"] == V12_PACKAGE_PROTOCOL
+    assert payload["passed"] is True
+    assert (v11 / "microscopic_trips.rou.xml").samefile(
+        v12 / "microscopic_trips.rou.xml"
+    )
+    assert _network_exact_except_declared_tls_changes(
+        v11 / "microscopic_network.net.xml",
+        v12 / "microscopic_network.net.xml",
+        tls_id=V12_TLS_ID,
+        declared_changes=V12_CHANGES,
+    )["passed"] is True
+    validate_joined_tls_uncontrolled_merge_manifest(payload)
+
+
+def test_v12_rejects_changed_foe_relation(tmp_path: Path) -> None:
+    v11 = _v11_package(tmp_path)
+    tree = ET.parse(v11 / "microscopic_network.net.xml")
+    junction = next(
+        row
+        for row in tree.getroot().iter("junction")
+        if row.get("id") == V12_JUNCTION_ID
+    )
+    junction.findall("request")[0].set("foes", "00")
+    tree.write(
+        v11 / "microscopic_network.net.xml",
+        encoding="utf-8",
+        xml_declaration=True,
+    )
+    with pytest.raises(ValueError, match="foe relation changed"):
+        repair_v12_package(
+            base_root=v11,
+            output_root=tmp_path / "v12",
+            expected_base_manifest_sha256=_sha256(v11 / "package_manifest.json"),
         )

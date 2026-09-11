@@ -28,7 +28,7 @@ Researchers in traffic-signal control, offline reinforcement learning, simulator
 
 ### Major concerns
 
-- Source contribution is the central transfer question, and V91 rejects it: CFCMT is worse in the equal-city mean, worse in Los Angeles and has more collision incidents than target-only.
+- The source-aware versus legacy-comparator contrast is the central transfer question, and V91 rejects a general controller gain: CFCMT is worse in the equal-city mean, worse in Los Angeles and has more collision incidents than the comparator.
 - The original favourable closed-loop comparison is against a dense residual, simulator-only and rigid variants, not against a target-only controller. It supports a structured model, not source-city transfer.
 - Only two independent external-city units are available. Three Jinan demands and 64 seeds do not increase the city-level sample size.
 - All counterfactual labels and closed-loop outcomes come from one simulator physics family. Network shift is tested; sim-to-real or field causal transfer is not.
@@ -44,21 +44,21 @@ Researchers in traffic-signal control, offline reinforcement learning, simulator
 
 ### Assessment against Nature-style criteria
 
-- **Originality:** The matched action-contrast formulation and auditable source-contribution falsification are original enough to merit attention, but the individual modelling ingredients are not shown to constitute a broadly new control paradigm.
+- **Originality:** The matched action-contrast formulation and auditable controller-pair falsification are original enough to merit attention, but the individual modelling ingredients are not shown to constitute a broadly new control paradigm.
 - **Scientific importance:** The negative-transfer result is scientifically useful; a generally effective cross-city controller is not established.
-- **Interdisciplinary readership:** The lesson that source data can hurt despite favourable offline validation may interest transfer-learning researchers beyond transportation, but the current empirical scope is narrow.
+- **Interdisciplinary readership:** The lesson that a source-aware controller can regress despite favourable offline validation may interest transfer-learning researchers beyond transportation, but the current empirical scope is narrow.
 - **Technical soundness:** The reported experiments are internally well controlled. The unsupported step is from structured-model advantage to source-transfer benefit.
 - **Readability for nonspecialists:** The causal boundary and information budget are now clear. Protocol-version density still imposes a high reading cost.
 
 ### Recommendation posture
 
-Technically careful and potentially publishable after major reframing, but the stronger cross-city source-transfer case is not established from the current evidence.
+Technically careful and potentially publishable after major reframing, but a source-row contribution is not established from the current evidence.
 
 ## Reviewer 2
 
 ### Overall assessment
 
-The strongest contribution is no longer the controller's absolute performance. It is the separation of three often-confounded claims: contrast structure can outperform a dense residual, source labels may or may not help, and neither result implies superiority over classical pressure control. This is a valuable scientific correction, but its significance depends on whether the paper embraces that correction as the main discovery rather than presenting it as a limitation around a transfer method.
+The strongest contribution is no longer the controller's absolute performance. It is the separation of three often-confounded claims: contrast structure can outperform a dense residual, source-aware controllers can have target-dependent outcomes, and neither result isolates source-row contribution or implies superiority over classical pressure control. This is a valuable scientific correction, but its significance depends on whether the paper embraces that correction as the main discovery rather than presenting it as a limitation around a transfer method.
 
 ### Who would be interested in the results, and why
 
@@ -69,8 +69,8 @@ The paper should interest readers studying negative transfer, domain adaptation 
 - The manuscript distinguishes zero-shot, target offline adaptation and field validation.
 - The action-contrast theory states exact algebraic properties rather than claiming an identified field causal graph.
 - The sequential record exposes failed development tracks and adaptive-to-confirmatory shrinkage.
-- Target-only is a particularly useful comparator because it holds the model family, feature semantics, target labels and executor fixed.
-- The paper reports that offline source benefit in Los Angeles did not translate to fresh closed-loop benefit, which is a nontrivial result.
+- The legacy near-target-only arm is useful for a controller comparison because it holds the model family, feature semantics, target labels and executor fixed, although its retained source prior prevents strict source-row attribution.
+- The paper reports that an offline source-aware controller advantage in Los Angeles did not translate to fresh closed-loop benefit, which is a nontrivial result.
 
 ### Major concerns
 
@@ -122,7 +122,7 @@ Traffic-control and reinforcement-learning readers will use the concrete benchma
 
 - The manuscript remains long and version-heavy for readers outside the immediate project. Labels such as v43, v89, v90 and v91 are useful for audit but should not carry the explanatory burden in the main text.
 - Two distinct 64-seed experiments can be confused: one tests an execution-layer successor against phase pressure; the other tests source-plus-target CFCMT against target-only.
-- The main title does not signal that source contribution is conditional and that the strongest result is a failure boundary.
+- The main title does not signal that controller-pair effects vary by target and that source-row attribution remains unresolved.
 - The Data and Code Availability section still describes a future deposit rather than an available archive.
 - The practical use case is uncertain because pressure control is stronger and no field or calibrated-twin result is shown.
 
@@ -130,7 +130,7 @@ Traffic-control and reinforcement-learning readers will use the concrete benchma
 
 1. Reduce main-text development chronology and move protocol identifiers to a compact evidence map in the supplement.
 2. Distinguish the two 64-seed experiments with stable descriptive names everywhere, not only version numbers.
-3. Align the title, abstract and conclusion around one supported claim: structured action contrast with network-dependent source contribution.
+3. Align the title, abstract and conclusion around one supported claim: structured action contrast with target-dependent controller outcomes and unresolved source-row contribution.
 4. Provide a public evidence package and a concise reproduction path.
 5. Add at least one further independent target-city replication before making a general cross-city statement.
 
@@ -178,7 +178,7 @@ The potentially broad result is not that CFCMT wins a traffic-control leaderboar
 
 1. Decide the paper's scientific identity: an honest structured-adaptation study with a negative-transfer finding, or a new source-selection method confirmed on untouched cities.
 2. Add independent-city evidence and at least one same-protocol nearest transfer baseline.
-3. Explain or predict the Los Angeles versus Jinan source-effect reversal without reusing V91 as development data.
+3. Explain or predict the Los Angeles versus Jinan controller-outcome reversal without reusing V91 as development data.
 4. Deposit a complete public evidence package with a persistent identifier.
 5. Simplify the main narrative so that the two separate 64-seed experiments cannot be conflated.
 

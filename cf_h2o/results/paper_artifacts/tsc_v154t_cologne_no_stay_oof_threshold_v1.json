@@ -1,0 +1,403 @@
+{
+  "protocol": "tsc-v154t-cologne-no-stay-oof-threshold-v1",
+  "status": "COMPLETE",
+  "created_at_utc": "2026-09-09T16:06:24.982013+00:00",
+  "task_id": "t91888",
+  "protocol_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154t_cologne_no_stay_oof_threshold_20260909/protocol_v1.json",
+  "result_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154t_cologne_no_stay_oof_threshold_20260909/calibration_v1/result.json",
+  "frozen_threshold_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154t_cologne_no_stay_oof_threshold_20260909/calibration_v1/frozen_threshold.json",
+  "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+  "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+  "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+  "frozen_threshold": {
+    "protocol": "tsc-v154l-cologne-rigid-oof-threshold-v1",
+    "calibration_protocol": "tsc-v154t-cologne-no-stay-oof-threshold-v1",
+    "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+    "fit_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/result.json",
+    "calibration_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154t_cologne_no_stay_oof_threshold_20260909/calibration_v1/result.json",
+    "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+    "ablation_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154s_cologne_no_stay_closed_loop_20260909/tooling_v1/no_stay_fraction_rigid.py",
+    "threshold": 0.20790450432178334,
+    "mode": "minimum_advantage",
+    "comparison": "predicted_advantage > threshold + 1e-12",
+    "selection_data": "Original 100 native B100 seed-OOF records with fixed post-selection stay veto",
+    "calibration_mean_cost": 0.7990718459100812
+  },
+  "training_group_count": 100,
+  "training_row_count": 800,
+  "folds": [
+    {
+      "heldout_seed": 2027,
+      "fit_group_count": 66,
+      "heldout_group_count": 34
+    },
+    {
+      "heldout_seed": 3037,
+      "fit_group_count": 67,
+      "heldout_group_count": 33
+    },
+    {
+      "heldout_seed": 4047,
+      "fit_group_count": 67,
+      "heldout_group_count": 33
+    }
+  ],
+  "mask": {
+    "groups": 100,
+    "candidate_rows": 800,
+    "raw_proposals": 78,
+    "model_stay_vetoed_groups": 27,
+    "remaining_switch_proposals": 51,
+    "per_seed": {
+      "2027": {
+        "groups": 34,
+        "candidate_rows": 272,
+        "raw_proposals": 30,
+        "model_stay_vetoed_groups": 9,
+        "remaining_switch_proposals": 21
+      },
+      "3037": {
+        "groups": 33,
+        "candidate_rows": 264,
+        "raw_proposals": 26,
+        "model_stay_vetoed_groups": 7,
+        "remaining_switch_proposals": 19
+      },
+      "4047": {
+        "groups": 33,
+        "candidate_rows": 264,
+        "raw_proposals": 22,
+        "model_stay_vetoed_groups": 11,
+        "remaining_switch_proposals": 11
+      }
+    }
+  },
+  "calibration": {
+    "selected": {
+      "threshold": 0.20790450432178334,
+      "mode": "minimum_advantage",
+      "groups": 100,
+      "weighting": "equal_seed",
+      "per_seed": {
+        "2027": {
+          "groups": 34,
+          "accepted_overrides": 19,
+          "beneficial": 8,
+          "harmful": 9,
+          "equal_cost": 2,
+          "mean_phase_pressure_cost": 0.6832598039215686,
+          "mean_cost": 0.707720588235294,
+          "mean_cost_minus_phase_pressure": 0.024460784313725496
+        },
+        "3037": {
+          "groups": 33,
+          "accepted_overrides": 18,
+          "beneficial": 11,
+          "harmful": 5,
+          "equal_cost": 2,
+          "mean_phase_pressure_cost": 0.8685185185185186,
+          "mean_cost": 0.8450841750841751,
+          "mean_cost_minus_phase_pressure": -0.02343434343434344
+        },
+        "4047": {
+          "groups": 33,
+          "accepted_overrides": 7,
+          "beneficial": 4,
+          "harmful": 1,
+          "equal_cost": 2,
+          "mean_phase_pressure_cost": 0.8569781144781144,
+          "mean_cost": 0.8444107744107744,
+          "mean_cost_minus_phase_pressure": -0.012567340067340067
+        }
+      },
+      "accepted_overrides": 44,
+      "beneficial": 23,
+      "harmful": 15,
+      "equal_cost": 6,
+      "mean_cost": 0.7990718459100812,
+      "mean_phase_pressure_cost": 0.8029188123060672,
+      "mean_cost_minus_phase_pressure": -0.0038469663959860034
+    },
+    "phase_pressure": {
+      "threshold": null,
+      "mode": "phase_pressure_only",
+      "groups": 100,
+      "weighting": "equal_seed",
+      "per_seed": {
+        "2027": {
+          "groups": 34,
+          "accepted_overrides": 0,
+          "beneficial": 0,
+          "harmful": 0,
+          "equal_cost": 0,
+          "mean_phase_pressure_cost": 0.6832598039215686,
+          "mean_cost": 0.6832598039215686,
+          "mean_cost_minus_phase_pressure": -0.0
+        },
+        "3037": {
+          "groups": 33,
+          "accepted_overrides": 0,
+          "beneficial": 0,
+          "harmful": 0,
+          "equal_cost": 0,
+          "mean_phase_pressure_cost": 0.8685185185185186,
+          "mean_cost": 0.8685185185185186,
+          "mean_cost_minus_phase_pressure": -0.0
+        },
+        "4047": {
+          "groups": 33,
+          "accepted_overrides": 0,
+          "beneficial": 0,
+          "harmful": 0,
+          "equal_cost": 0,
+          "mean_phase_pressure_cost": 0.8569781144781144,
+          "mean_cost": 0.8569781144781144,
+          "mean_cost_minus_phase_pressure": -0.0
+        }
+      },
+      "accepted_overrides": 0,
+      "beneficial": 0,
+      "harmful": 0,
+      "equal_cost": 0,
+      "mean_cost": 0.8029188123060672,
+      "mean_phase_pressure_cost": 0.8029188123060672,
+      "mean_cost_minus_phase_pressure": 0.0
+    },
+    "no_stay_threshold_zero": {
+      "threshold": 0.0,
+      "mode": "minimum_advantage",
+      "groups": 100,
+      "weighting": "equal_seed",
+      "per_seed": {
+        "2027": {
+          "groups": 34,
+          "accepted_overrides": 21,
+          "beneficial": 8,
+          "harmful": 11,
+          "equal_cost": 2,
+          "mean_phase_pressure_cost": 0.6832598039215686,
+          "mean_cost": 0.7120016339869281,
+          "mean_cost_minus_phase_pressure": 0.028741830065359488
+        },
+        "3037": {
+          "groups": 33,
+          "accepted_overrides": 19,
+          "beneficial": 12,
+          "harmful": 5,
+          "equal_cost": 2,
+          "mean_phase_pressure_cost": 0.8685185185185186,
+          "mean_cost": 0.8446212121212122,
+          "mean_cost_minus_phase_pressure": -0.023897306397306403
+        },
+        "4047": {
+          "groups": 33,
+          "accepted_overrides": 11,
+          "beneficial": 7,
+          "harmful": 2,
+          "equal_cost": 2,
+          "mean_phase_pressure_cost": 0.8569781144781144,
+          "mean_cost": 0.8427777777777777,
+          "mean_cost_minus_phase_pressure": -0.014200336700336703
+        }
+      },
+      "accepted_overrides": 51,
+      "beneficial": 27,
+      "harmful": 18,
+      "equal_cost": 6,
+      "mean_cost": 0.7998002079619727,
+      "mean_phase_pressure_cost": 0.8029188123060672,
+      "mean_cost_minus_phase_pressure": -0.0031186043440945394
+    },
+    "original_rigid_threshold_zero": {
+      "threshold": 0.0,
+      "mode": "minimum_advantage",
+      "groups": 100,
+      "weighting": "equal_seed",
+      "per_seed": {
+        "2027": {
+          "groups": 34,
+          "accepted_overrides": 30,
+          "beneficial": 13,
+          "harmful": 15,
+          "equal_cost": 2,
+          "mean_phase_pressure_cost": 0.6832598039215686,
+          "mean_cost": 0.7109477124183007,
+          "mean_cost_minus_phase_pressure": 0.027687908496732038
+        },
+        "3037": {
+          "groups": 33,
+          "accepted_overrides": 26,
+          "beneficial": 19,
+          "harmful": 5,
+          "equal_cost": 2,
+          "mean_phase_pressure_cost": 0.8685185185185186,
+          "mean_cost": 0.8093686868686869,
+          "mean_cost_minus_phase_pressure": -0.05914983164983166
+        },
+        "4047": {
+          "groups": 33,
+          "accepted_overrides": 22,
+          "beneficial": 15,
+          "harmful": 5,
+          "equal_cost": 2,
+          "mean_phase_pressure_cost": 0.8569781144781146,
+          "mean_cost": 0.8115656565656566,
+          "mean_cost_minus_phase_pressure": -0.045412457912457925
+        }
+      },
+      "accepted_overrides": 78,
+      "beneficial": 47,
+      "harmful": 25,
+      "equal_cost": 6,
+      "mean_cost": 0.7772940186175482,
+      "mean_phase_pressure_cost": 0.8029188123060672,
+      "mean_cost_minus_phase_pressure": -0.025624793688519183
+    },
+    "candidate_count": 53
+  },
+  "accounting": {
+    "selected": {
+      "groups": 100,
+      "raw_proposals": 78,
+      "original_reference_actions": 22,
+      "threshold_rejected": 13,
+      "stay_veto_count": 21,
+      "accepted_overrides": 44,
+      "per_seed": {
+        "2027": {
+          "groups": 34,
+          "raw_proposals": 30,
+          "original_reference_actions": 4,
+          "threshold_rejected": 4,
+          "stay_veto_count": 7,
+          "accepted_overrides": 19
+        },
+        "3037": {
+          "groups": 33,
+          "raw_proposals": 26,
+          "original_reference_actions": 7,
+          "threshold_rejected": 4,
+          "stay_veto_count": 4,
+          "accepted_overrides": 18
+        },
+        "4047": {
+          "groups": 33,
+          "raw_proposals": 22,
+          "original_reference_actions": 11,
+          "threshold_rejected": 5,
+          "stay_veto_count": 10,
+          "accepted_overrides": 7
+        }
+      }
+    },
+    "no_stay_threshold_zero": {
+      "groups": 100,
+      "raw_proposals": 78,
+      "original_reference_actions": 22,
+      "threshold_rejected": 0,
+      "stay_veto_count": 27,
+      "accepted_overrides": 51,
+      "per_seed": {
+        "2027": {
+          "groups": 34,
+          "raw_proposals": 30,
+          "original_reference_actions": 4,
+          "threshold_rejected": 0,
+          "stay_veto_count": 9,
+          "accepted_overrides": 21
+        },
+        "3037": {
+          "groups": 33,
+          "raw_proposals": 26,
+          "original_reference_actions": 7,
+          "threshold_rejected": 0,
+          "stay_veto_count": 7,
+          "accepted_overrides": 19
+        },
+        "4047": {
+          "groups": 33,
+          "raw_proposals": 22,
+          "original_reference_actions": 11,
+          "threshold_rejected": 0,
+          "stay_veto_count": 11,
+          "accepted_overrides": 11
+        }
+      }
+    },
+    "phase_pressure": {
+      "groups": 100,
+      "raw_proposals": 78,
+      "original_reference_actions": 22,
+      "threshold_rejected": 78,
+      "stay_veto_count": 0,
+      "accepted_overrides": 0,
+      "per_seed": {
+        "2027": {
+          "groups": 34,
+          "raw_proposals": 30,
+          "original_reference_actions": 4,
+          "threshold_rejected": 30,
+          "stay_veto_count": 0,
+          "accepted_overrides": 0
+        },
+        "3037": {
+          "groups": 33,
+          "raw_proposals": 26,
+          "original_reference_actions": 7,
+          "threshold_rejected": 26,
+          "stay_veto_count": 0,
+          "accepted_overrides": 0
+        },
+        "4047": {
+          "groups": 33,
+          "raw_proposals": 22,
+          "original_reference_actions": 11,
+          "threshold_rejected": 22,
+          "stay_veto_count": 0,
+          "accepted_overrides": 0
+        }
+      }
+    }
+  },
+  "improvement_percent_vs_pp": 0.4791227129100517,
+  "improvement_percent_vs_no_stay_zero": 0.0910679998130437,
+  "verdict": "POSITIVE_SWITCH_THRESHOLD_SELECTED",
+  "new_model_fits": 0,
+  "new_labels": 0,
+  "new_simulations": 0,
+  "validation": {
+    "focused_tests_passed": 28,
+    "result_json_files_retrieved": 2,
+    "retrieved_bytes": 10076,
+    "runner_elapsed_sec": 0.03332514106296003
+  },
+  "next_step": {
+    "status": "PROPOSED_NOT_EXECUTED",
+    "experiment": "Freeze the new threshold, native B100 model and S stay veto; compare closed-loop service and safety on the same three seeds.",
+    "seeds": [
+      52282,
+      41242,
+      63792
+    ],
+    "duration_sec": 3600,
+    "controls": [
+      "V154S unchanged no-stay model at threshold 0",
+      "V154I same-network PhasePressure"
+    ],
+    "metrics": [
+      "waiting time",
+      "system vehicle hours including pending insertions",
+      "arrivals",
+      "pending insertions",
+      "collisions",
+      "teleports",
+      "threshold and stay-veto accounting"
+    ],
+    "claim_scope": "Development comparison; no threshold retuning from these evaluation outcomes"
+  },
+  "limitations": [
+    "OOF cost is training calibration performance, not independent validation.",
+    "OOF native labels use a PP behavior prefix and one action followed byPP continuation; continuous model deployment remains to be tested.",
+    "Seed2027 remains worse than PP. The selected threshold improves the zero-threshold no-stay policy by only 0.0911 percent on calibration data."
+  ]
+}

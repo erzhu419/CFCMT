@@ -1,0 +1,1806 @@
+{
+  "claim_boundary": "V150A measures whether V144 source effects repeat across the three existing evaluation seeds. Source choices use outcomes from the other evaluation seeds, information unavailable to a deployed B25 target. The result may justify fresh development collection but cannot establish a deployable source-selection method.",
+  "created_at_utc": "2026-09-07T17:47:26.783702+00:00",
+  "evaluation_seed_count_per_city": 3,
+  "information_boundary": {
+    "deployable_target_gate": false,
+    "evaluation_outcomes_used_for_cross_validated_source_choice": true,
+    "fresh_city_confirmation": false,
+    "heldout_seed_outcome_used_for_its_own_source_choice": false
+  },
+  "predecessor_protocol": "tsc-v144-multicity-source-compatibility-inventory-target-v1",
+  "protocol": "tsc-v150a-source-benefit-repeatability-diagnostic-v1",
+  "repeatability_summary": {
+    "forced_source_leave_one_seed_out": {
+      "city_mean_effects_vs_matched_placebo": {
+        "atlanta": -0.20999342775633267,
+        "cologne": -0.0228044144326124,
+        "hangzhou": -0.028900978041109703,
+        "ingolstadt": -0.0688980513958467,
+        "new_york": -0.0018130176062004257,
+        "resco_synthetic": -0.011855238671692128,
+        "salt_lake_city": -0.01352855944743695
+      },
+      "city_mean_effects_vs_target_only": {
+        "atlanta": -0.02951208206133275,
+        "cologne": -0.003563953947781916,
+        "hangzhou": -0.019066939632640376,
+        "ingolstadt": -0.06452239484801035,
+        "new_york": -0.00308305362523961,
+        "resco_synthetic": -0.014474225106910633,
+        "salt_lake_city": -0.005067207686986638
+      },
+      "effect_vs_matched_placebo": {
+        "count": 21,
+        "improving_fraction": 0.8571428571428571,
+        "maximum": 0.011387477482973807,
+        "mean": -0.051113383907318705,
+        "median": -0.024691173841604668,
+        "minimum": -0.3224937162350951,
+        "nondegrading_fraction": 0.8571428571428571
+      },
+      "effect_vs_target_only": {
+        "count": 21,
+        "improving_fraction": 0.7619047619047619,
+        "maximum": 0.014069564537207993,
+        "mean": -0.019898550986986036,
+        "median": -0.017208404437498992,
+        "minimum": -0.08909034053433412,
+        "nondegrading_fraction": 0.7619047619047619
+      },
+      "improving_city_count_vs_matched_placebo": 7,
+      "improving_city_count_vs_target_only": 7
+    },
+    "fully_sign_stable_ordered_pair_fraction": 0.5,
+    "mean_ordered_pair_seed_sign_agreement": 0.6666666666666666,
+    "mean_within_target_source_rank_correlation": 0.4666666666666667,
+    "median_within_target_source_rank_correlation": 0.6,
+    "source_null_aware_leave_one_seed_out": {
+      "city_mean_effects_vs_matched_placebo": {
+        "atlanta": -0.20999342775633267,
+        "cologne": -0.007460095294826032,
+        "hangzhou": -0.028900978041109703,
+        "ingolstadt": -0.0688980513958467,
+        "new_york": -0.0018130176062004257,
+        "resco_synthetic": -0.011855238671692128,
+        "salt_lake_city": -0.01352855944743695
+      },
+      "city_mean_effects_vs_target_only": {
+        "atlanta": -0.02951208206133275,
+        "cologne": 0.0043240186879945075,
+        "hangzhou": -0.019066939632640376,
+        "ingolstadt": -0.06452239484801035,
+        "new_york": -0.00308305362523961,
+        "resco_synthetic": -0.014474225106910633,
+        "salt_lake_city": -0.005067207686986638
+      },
+      "effect_vs_matched_placebo": {
+        "count": 21,
+        "improving_fraction": 0.8095238095238095,
+        "maximum": 0.011387477482973807,
+        "mean": -0.04892133831620636,
+        "median": -0.022533889071111465,
+        "minimum": -0.3224937162350951,
+        "nondegrading_fraction": 0.8571428571428571
+      },
+      "effect_vs_target_only": {
+        "count": 21,
+        "improving_fraction": 0.7142857142857143,
+        "maximum": 0.014069564537207993,
+        "mean": -0.01877169775330369,
+        "median": -0.01570825975287267,
+        "minimum": -0.08909034053433412,
+        "nondegrading_fraction": 0.7619047619047619
+      },
+      "improving_city_count_vs_matched_placebo": 7,
+      "improving_city_count_vs_target_only": 6
+    }
+  },
+  "scientific_status": "post-v148-development-diagnostic-not-deployment-or-confirmation",
+  "target_budget": 25,
+  "target_city_groups": [
+    "atlanta",
+    "cologne",
+    "hangzhou",
+    "ingolstadt",
+    "new_york",
+    "resco_synthetic",
+    "salt_lake_city"
+  ],
+  "target_diagnostics": {
+    "atlanta": {
+      "evaluation_seeds": [
+        "2027",
+        "3037",
+        "4047"
+      ],
+      "forced_source_leave_one_seed_out": [
+        {
+          "heldout_effect_vs_matched_placebo": -0.18407753378953662,
+          "heldout_effect_vs_target_only": -0.017208404437498992,
+          "heldout_seed": "2027",
+          "selected_source": "resco_synthetic",
+          "training_mean_effect": -0.03566392087324963,
+          "training_seeds": [
+            "3037",
+            "4047"
+          ]
+        },
+        {
+          "heldout_effect_vs_matched_placebo": -0.3224937162350951,
+          "heldout_effect_vs_target_only": -0.01930755445988419,
+          "heldout_seed": "3037",
+          "selected_source": "resco_synthetic",
+          "training_mean_effect": -0.03461434586205703,
+          "training_seeds": [
+            "2027",
+            "4047"
+          ]
+        },
+        {
+          "heldout_effect_vs_matched_placebo": -0.1234090332443662,
+          "heldout_effect_vs_target_only": -0.05202028728661506,
+          "heldout_seed": "4047",
+          "selected_source": "resco_synthetic",
+          "training_mean_effect": -0.01825797944869159,
+          "training_seeds": [
+            "2027",
+            "3037"
+          ]
+        }
+      ],
+      "mean_seed_rank_correlation": 0.6190476190476191,
+      "rank_correlations": [
+        {
+          "left_seed": "2027",
+          "right_seed": "3037",
+          "spearman": 0.48571428571428577
+        },
+        {
+          "left_seed": "2027",
+          "right_seed": "4047",
+          "spearman": 0.6
+        },
+        {
+          "left_seed": "3037",
+          "right_seed": "4047",
+          "spearman": 0.7714285714285715
+        }
+      ],
+      "source_null_aware_leave_one_seed_out": [
+        {
+          "effective_source": "resco_synthetic",
+          "heldout_effect_vs_matched_placebo": -0.18407753378953662,
+          "heldout_effect_vs_target_only": -0.017208404437498992,
+          "heldout_seed": "2027",
+          "selected_source": "resco_synthetic",
+          "source_admitted": true,
+          "training_mean_effect": -0.03566392087324963,
+          "training_seeds": [
+            "3037",
+            "4047"
+          ]
+        },
+        {
+          "effective_source": "resco_synthetic",
+          "heldout_effect_vs_matched_placebo": -0.3224937162350951,
+          "heldout_effect_vs_target_only": -0.01930755445988419,
+          "heldout_seed": "3037",
+          "selected_source": "resco_synthetic",
+          "source_admitted": true,
+          "training_mean_effect": -0.03461434586205703,
+          "training_seeds": [
+            "2027",
+            "4047"
+          ]
+        },
+        {
+          "effective_source": "resco_synthetic",
+          "heldout_effect_vs_matched_placebo": -0.1234090332443662,
+          "heldout_effect_vs_target_only": -0.05202028728661506,
+          "heldout_seed": "4047",
+          "selected_source": "resco_synthetic",
+          "source_admitted": true,
+          "training_mean_effect": -0.01825797944869159,
+          "training_seeds": [
+            "2027",
+            "3037"
+          ]
+        }
+      ],
+      "sources": {
+        "cologne": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 1.0,
+            "maximum": -0.01797347300617891,
+            "mean": -0.018859547468897342,
+            "median": -0.018238802655017483,
+            "minimum": -0.020366366745495634,
+            "nondegrading_fraction": 1.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.24411491054048878,
+            "3037": -0.2405064137922578,
+            "4047": -0.09271288681170148
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.018238802655017483,
+            "3037": -0.01797347300617891,
+            "4047": -0.020366366745495634
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "hangzhou": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.3333333333333333,
+            "maximum": 0.058107808773350644,
+            "mean": 0.025293723782444173,
+            "median": 0.029642083478030046,
+            "minimum": -0.011868720904048169,
+            "nondegrading_fraction": 0.3333333333333333
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.13219163453794458,
+            "3037": -0.23589482002755824,
+            "4047": -0.0816142951749062
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.029642083478030046,
+            "3037": 0.058107808773350644,
+            "4047": -0.011868720904048169
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "ingolstadt": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 1.0,
+            "maximum": -0.014490151004051044,
+            "mean": -0.016862125143300228,
+            "median": -0.0177707421941507,
+            "minimum": -0.018325482231698942,
+            "nondegrading_fraction": 1.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.24388812030708318,
+            "3037": -0.23654157258471298,
+            "4047": -0.09007629436609604
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.0177707421941507,
+            "3037": -0.014490151004051044,
+            "4047": -0.018325482231698942
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "new_york": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 1.0,
+            "maximum": -0.013292562524962692,
+            "mean": -0.026870838369878764,
+            "median": -0.01872676552660485,
+            "minimum": -0.048593187058068754,
+            "nondegrading_fraction": 1.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.2470417263350766,
+            "3037": -0.2349169813920884,
+            "4047": -0.12189259269312425
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.01872676552660485,
+            "3037": -0.013292562524962692,
+            "4047": -0.048593187058068754
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "resco_synthetic": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 1.0,
+            "maximum": -0.017208404437498992,
+            "mean": -0.02951208206133275,
+            "median": -0.01930755445988419,
+            "minimum": -0.05202028728661506,
+            "nondegrading_fraction": 1.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.18407753378953662,
+            "3037": -0.3224937162350951,
+            "4047": -0.1234090332443662
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.017208404437498992,
+            "3037": -0.01930755445988419,
+            "4047": -0.05202028728661506
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "salt_lake_city": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.3333333333333333,
+            "maximum": 0.0623305803838492,
+            "mean": 0.027335401911930717,
+            "median": 0.03216664178197459,
+            "minimum": -0.012491016430031643,
+            "nondegrading_fraction": 0.3333333333333333
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.20423687893699422,
+            "3037": -0.17355375066796663,
+            "4047": -0.09050400266064429
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.03216664178197459,
+            "3037": 0.0623305803838492,
+            "4047": -0.012491016430031643
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        }
+      },
+      "target_city": "atlanta"
+    },
+    "cologne": {
+      "evaluation_seeds": [
+        "2027",
+        "3037",
+        "4047"
+      ],
+      "forced_source_leave_one_seed_out": [
+        {
+          "heldout_effect_vs_matched_placebo": -0.0460329574133591,
+          "heldout_effect_vs_target_only": -0.02366391790732927,
+          "heldout_seed": "2027",
+          "selected_source": "salt_lake_city",
+          "training_mean_effect": 0.006486028031991761,
+          "training_seeds": [
+            "3037",
+            "4047"
+          ]
+        },
+        {
+          "heldout_effect_vs_matched_placebo": -0.024691173841604668,
+          "heldout_effect_vs_target_only": 0.006979816200233684,
+          "heldout_seed": "3037",
+          "selected_source": "salt_lake_city",
+          "training_mean_effect": -0.008835839021789716,
+          "training_seeds": [
+            "2027",
+            "4047"
+          ]
+        },
+        {
+          "heldout_effect_vs_matched_placebo": 0.00231088795712657,
+          "heldout_effect_vs_target_only": 0.005992239863749839,
+          "heldout_seed": "4047",
+          "selected_source": "salt_lake_city",
+          "training_mean_effect": -0.008342050853547793,
+          "training_seeds": [
+            "2027",
+            "3037"
+          ]
+        }
+      ],
+      "mean_seed_rank_correlation": 0.46666666666666673,
+      "rank_correlations": [
+        {
+          "left_seed": "2027",
+          "right_seed": "3037",
+          "spearman": 0.14285714285714288
+        },
+        {
+          "left_seed": "2027",
+          "right_seed": "4047",
+          "spearman": 0.942857142857143
+        },
+        {
+          "left_seed": "3037",
+          "right_seed": "4047",
+          "spearman": 0.3142857142857143
+        }
+      ],
+      "source_null_aware_leave_one_seed_out": [
+        {
+          "effective_source": null,
+          "heldout_effect_vs_matched_placebo": 0.0,
+          "heldout_effect_vs_target_only": 0.0,
+          "heldout_seed": "2027",
+          "selected_source": "salt_lake_city",
+          "source_admitted": false,
+          "training_mean_effect": 0.006486028031991761,
+          "training_seeds": [
+            "3037",
+            "4047"
+          ]
+        },
+        {
+          "effective_source": "salt_lake_city",
+          "heldout_effect_vs_matched_placebo": -0.024691173841604668,
+          "heldout_effect_vs_target_only": 0.006979816200233684,
+          "heldout_seed": "3037",
+          "selected_source": "salt_lake_city",
+          "source_admitted": true,
+          "training_mean_effect": -0.008835839021789716,
+          "training_seeds": [
+            "2027",
+            "4047"
+          ]
+        },
+        {
+          "effective_source": "salt_lake_city",
+          "heldout_effect_vs_matched_placebo": 0.00231088795712657,
+          "heldout_effect_vs_target_only": 0.005992239863749839,
+          "heldout_seed": "4047",
+          "selected_source": "salt_lake_city",
+          "source_admitted": true,
+          "training_mean_effect": -0.008342050853547793,
+          "training_seeds": [
+            "2027",
+            "3037"
+          ]
+        }
+      ],
+      "sources": {
+        "atlanta": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.0,
+            "maximum": 0.054622311161536,
+            "mean": 0.044356599069846674,
+            "median": 0.0457860072040265,
+            "minimum": 0.03266147884397752,
+            "nondegrading_fraction": 0.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.02708523305339345,
+            "3037": 0.010126499396316928,
+            "4047": -0.023536501150176713
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.0457860072040265,
+            "3037": 0.054622311161536,
+            "4047": 0.03266147884397752
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "hangzhou": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.0,
+            "maximum": 0.04955545001892213,
+            "mean": 0.028103527946514315,
+            "median": 0.021894342034778063,
+            "minimum": 0.012860791785842748,
+            "nondegrading_fraction": 0.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.04956338980058124,
+            "3037": 0.0068226461335907165,
+            "4047": -0.04888617520992974
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.012860791785842748,
+            "3037": 0.04955545001892213,
+            "4047": 0.021894342034778063
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "ingolstadt": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.0,
+            "maximum": 0.058544282793298305,
+            "mean": 0.03750355730953648,
+            "median": 0.027505325236978767,
+            "minimum": 0.026461063898332374,
+            "nondegrading_fraction": 0.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.009351315831007428,
+            "3037": 0.002269625067948172,
+            "4047": -0.0018475812110061163
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.026461063898332374,
+            "3037": 0.058544282793298305,
+            "4047": 0.027505325236978767
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "new_york": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.0,
+            "maximum": 0.04795349218613161,
+            "mean": 0.03314328920936405,
+            "median": 0.028951957438200563,
+            "minimum": 0.022524418003759983,
+            "nondegrading_fraction": 0.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.03398604938498639,
+            "3037": 0.03828020541812355,
+            "4047": -0.04307585314729219
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.028951957438200563,
+            "3037": 0.04795349218613161,
+            "4047": 0.022524418003759983
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "resco_synthetic": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.0,
+            "maximum": 0.07258673015755375,
+            "mean": 0.046327226606158366,
+            "median": 0.036303251135418296,
+            "minimum": 0.030091698525503034,
+            "nondegrading_fraction": 0.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.041806832210296685,
+            "3037": -0.016124728614210222,
+            "4047": -0.01116323409924055
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.07258673015755375,
+            "3037": 0.030091698525503034,
+            "4047": 0.036303251135418296
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "salt_lake_city": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.3333333333333333,
+            "maximum": 0.006979816200233684,
+            "mean": -0.003563953947781916,
+            "median": 0.005992239863749839,
+            "minimum": -0.02366391790732927,
+            "nondegrading_fraction": 0.3333333333333333
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.0460329574133591,
+            "3037": -0.024691173841604668,
+            "4047": 0.00231088795712657
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.02366391790732927,
+            "3037": 0.006979816200233684,
+            "4047": 0.005992239863749839
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        }
+      },
+      "target_city": "cologne"
+    },
+    "hangzhou": {
+      "evaluation_seeds": [
+        "2027",
+        "3037",
+        "4047"
+      ],
+      "forced_source_leave_one_seed_out": [
+        {
+          "heldout_effect_vs_matched_placebo": -0.04254178431713557,
+          "heldout_effect_vs_target_only": -0.033161197317547846,
+          "heldout_seed": "2027",
+          "selected_source": "ingolstadt",
+          "training_mean_effect": -0.01201981079018664,
+          "training_seeds": [
+            "3037",
+            "4047"
+          ]
+        },
+        {
+          "heldout_effect_vs_matched_placebo": 0.00016739216620960048,
+          "heldout_effect_vs_target_only": 0.0070671077824703745,
+          "heldout_seed": "3037",
+          "selected_source": "ingolstadt",
+          "training_mean_effect": -0.03213396334019575,
+          "training_seeds": [
+            "2027",
+            "4047"
+          ]
+        },
+        {
+          "heldout_effect_vs_matched_placebo": -0.04432854197240314,
+          "heldout_effect_vs_target_only": -0.031106729362843658,
+          "heldout_seed": "4047",
+          "selected_source": "ingolstadt",
+          "training_mean_effect": -0.013047044767538735,
+          "training_seeds": [
+            "2027",
+            "3037"
+          ]
+        }
+      ],
+      "mean_seed_rank_correlation": 0.4095238095238096,
+      "rank_correlations": [
+        {
+          "left_seed": "2027",
+          "right_seed": "3037",
+          "spearman": 0.14285714285714288
+        },
+        {
+          "left_seed": "2027",
+          "right_seed": "4047",
+          "spearman": 0.8285714285714287
+        },
+        {
+          "left_seed": "3037",
+          "right_seed": "4047",
+          "spearman": 0.2571428571428572
+        }
+      ],
+      "source_null_aware_leave_one_seed_out": [
+        {
+          "effective_source": "ingolstadt",
+          "heldout_effect_vs_matched_placebo": -0.04254178431713557,
+          "heldout_effect_vs_target_only": -0.033161197317547846,
+          "heldout_seed": "2027",
+          "selected_source": "ingolstadt",
+          "source_admitted": true,
+          "training_mean_effect": -0.01201981079018664,
+          "training_seeds": [
+            "3037",
+            "4047"
+          ]
+        },
+        {
+          "effective_source": "ingolstadt",
+          "heldout_effect_vs_matched_placebo": 0.00016739216620960048,
+          "heldout_effect_vs_target_only": 0.0070671077824703745,
+          "heldout_seed": "3037",
+          "selected_source": "ingolstadt",
+          "source_admitted": true,
+          "training_mean_effect": -0.03213396334019575,
+          "training_seeds": [
+            "2027",
+            "4047"
+          ]
+        },
+        {
+          "effective_source": "ingolstadt",
+          "heldout_effect_vs_matched_placebo": -0.04432854197240314,
+          "heldout_effect_vs_target_only": -0.031106729362843658,
+          "heldout_seed": "4047",
+          "selected_source": "ingolstadt",
+          "source_admitted": true,
+          "training_mean_effect": -0.013047044767538735,
+          "training_seeds": [
+            "2027",
+            "3037"
+          ]
+        }
+      ],
+      "sources": {
+        "atlanta": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.3333333333333333,
+            "maximum": 0.01153128673420673,
+            "mean": 0.0018201475156018742,
+            "median": 0.002094995274417151,
+            "minimum": -0.008165839461818258,
+            "nondegrading_fraction": 0.3333333333333333
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.027167749181417383,
+            "3037": 0.020799706551896523,
+            "4047": -0.01157778815009275
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.002094995274417151,
+            "3037": 0.01153128673420673,
+            "4047": -0.008165839461818258
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "cologne": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.6666666666666666,
+            "maximum": 0.02487312978070762,
+            "mean": -0.009550410493919494,
+            "median": -0.026100764678731958,
+            "minimum": -0.027423596583734146,
+            "nondegrading_fraction": 0.6666666666666666
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.03564752662237824,
+            "3037": 0.012045290332261982,
+            "4047": -0.0028754726878878756
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.026100764678731958,
+            "3037": 0.02487312978070762,
+            "4047": -0.027423596583734146
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "ingolstadt": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.6666666666666666,
+            "maximum": 0.0070671077824703745,
+            "mean": -0.019066939632640376,
+            "median": -0.031106729362843658,
+            "minimum": -0.033161197317547846,
+            "nondegrading_fraction": 0.6666666666666666
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.04254178431713557,
+            "3037": 0.00016739216620960048,
+            "4047": -0.04432854197240314
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.033161197317547846,
+            "3037": 0.0070671077824703745,
+            "4047": -0.031106729362843658
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "new_york": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.6666666666666666,
+            "maximum": 0.008544448518369488,
+            "mean": -0.0012923260720947658,
+            "median": -0.003733351671066712,
+            "minimum": -0.008688075063587073,
+            "nondegrading_fraction": 0.6666666666666666
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.016177893394241062,
+            "3037": -0.016020013540692733,
+            "4047": -0.03984434698188706
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.008688075063587073,
+            "3037": 0.008544448518369488,
+            "4047": -0.003733351671066712
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "resco_synthetic": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.6666666666666666,
+            "maximum": 0.051918789838486905,
+            "mean": 0.010163854606097741,
+            "median": -0.004032232127643226,
+            "minimum": -0.017394993892550458,
+            "nondegrading_fraction": 0.6666666666666666
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.008217734235593539,
+            "3037": 0.03772281703005348,
+            "4047": 0.013657687639803483
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.017394993892550458,
+            "3037": 0.051918789838486905,
+            "4047": -0.004032232127643226
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "salt_lake_city": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.0,
+            "maximum": 0.024328961997347184,
+            "mean": 0.012465836293358805,
+            "median": 0.0125053520097684,
+            "minimum": 0.0005631948729608316,
+            "nondegrading_fraction": 0.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.014233001289201429,
+            "3037": -0.006348822538689451,
+            "4047": -0.007896744189828997
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.024328961997347184,
+            "3037": 0.0125053520097684,
+            "4047": 0.0005631948729608316
+          },
+          "seed_sign_agreement": 1.0
+        }
+      },
+      "target_city": "hangzhou"
+    },
+    "ingolstadt": {
+      "evaluation_seeds": [
+        "2027",
+        "3037",
+        "4047"
+      ],
+      "forced_source_leave_one_seed_out": [
+        {
+          "heldout_effect_vs_matched_placebo": -0.08516268469452955,
+          "heldout_effect_vs_target_only": -0.08909034053433412,
+          "heldout_seed": "2027",
+          "selected_source": "hangzhou",
+          "training_mean_effect": -0.05223842200484845,
+          "training_seeds": [
+            "3037",
+            "4047"
+          ]
+        },
+        {
+          "heldout_effect_vs_matched_placebo": -0.07182442731727515,
+          "heldout_effect_vs_target_only": -0.07857863082363907,
+          "heldout_seed": "3037",
+          "selected_source": "hangzhou",
+          "training_mean_effect": -0.057494276860195974,
+          "training_seeds": [
+            "2027",
+            "4047"
+          ]
+        },
+        {
+          "heldout_effect_vs_matched_placebo": -0.049707042175735405,
+          "heldout_effect_vs_target_only": -0.025898213186057825,
+          "heldout_seed": "4047",
+          "selected_source": "hangzhou",
+          "training_mean_effect": -0.0838344856789866,
+          "training_seeds": [
+            "2027",
+            "3037"
+          ]
+        }
+      ],
+      "mean_seed_rank_correlation": 0.8095238095238096,
+      "rank_correlations": [
+        {
+          "left_seed": "2027",
+          "right_seed": "3037",
+          "spearman": 0.7714285714285715
+        },
+        {
+          "left_seed": "2027",
+          "right_seed": "4047",
+          "spearman": 0.942857142857143
+        },
+        {
+          "left_seed": "3037",
+          "right_seed": "4047",
+          "spearman": 0.7142857142857143
+        }
+      ],
+      "source_null_aware_leave_one_seed_out": [
+        {
+          "effective_source": "hangzhou",
+          "heldout_effect_vs_matched_placebo": -0.08516268469452955,
+          "heldout_effect_vs_target_only": -0.08909034053433412,
+          "heldout_seed": "2027",
+          "selected_source": "hangzhou",
+          "source_admitted": true,
+          "training_mean_effect": -0.05223842200484845,
+          "training_seeds": [
+            "3037",
+            "4047"
+          ]
+        },
+        {
+          "effective_source": "hangzhou",
+          "heldout_effect_vs_matched_placebo": -0.07182442731727515,
+          "heldout_effect_vs_target_only": -0.07857863082363907,
+          "heldout_seed": "3037",
+          "selected_source": "hangzhou",
+          "source_admitted": true,
+          "training_mean_effect": -0.057494276860195974,
+          "training_seeds": [
+            "2027",
+            "4047"
+          ]
+        },
+        {
+          "effective_source": "hangzhou",
+          "heldout_effect_vs_matched_placebo": -0.049707042175735405,
+          "heldout_effect_vs_target_only": -0.025898213186057825,
+          "heldout_seed": "4047",
+          "selected_source": "hangzhou",
+          "source_admitted": true,
+          "training_mean_effect": -0.0838344856789866,
+          "training_seeds": [
+            "2027",
+            "3037"
+          ]
+        }
+      ],
+      "sources": {
+        "atlanta": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.0,
+            "maximum": 0.04528110990470842,
+            "mean": 0.039152995616155664,
+            "median": 0.039189406027564114,
+            "minimum": 0.03298847091619446,
+            "nondegrading_fraction": 0.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.07576204040225706,
+            "3037": 0.015150969164523298,
+            "4047": -0.011190593041810942
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.04528110990470842,
+            "3037": 0.03298847091619446,
+            "4047": 0.039189406027564114
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "cologne": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 1.0,
+            "maximum": -0.005476575585506058,
+            "mean": -0.0256168617364243,
+            "median": -0.022474815091867013,
+            "minimum": -0.04889919453189984,
+            "nondegrading_fraction": 1.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.001552891304428386,
+            "3037": -0.001881192336252821,
+            "4047": -0.043894630770239904
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.04889919453189984,
+            "3037": -0.005476575585506058,
+            "4047": -0.022474815091867013
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "hangzhou": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 1.0,
+            "maximum": -0.025898213186057825,
+            "mean": -0.06452239484801035,
+            "median": -0.07857863082363907,
+            "minimum": -0.08909034053433412,
+            "nondegrading_fraction": 1.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.08516268469452955,
+            "3037": -0.07182442731727515,
+            "4047": -0.049707042175735405
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.08909034053433412,
+            "3037": -0.07857863082363907,
+            "4047": -0.025898213186057825
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "new_york": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.3333333333333333,
+            "maximum": 0.007810653622436381,
+            "mean": -0.008664127308854117,
+            "median": 0.0007780465214249632,
+            "minimum": -0.034581082070423694,
+            "nondegrading_fraction": 0.3333333333333333
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.01985165390065899,
+            "3037": -0.024734821639084248,
+            "4047": -0.024457547271937677
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.0007780465214249632,
+            "3037": -0.034581082070423694,
+            "4047": 0.007810653622436381
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "resco_synthetic": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.6666666666666666,
+            "maximum": 0.0023473967757929454,
+            "mean": -0.009758383156278189,
+            "median": -0.012719452971496806,
+            "minimum": -0.01890309327313071,
+            "nondegrading_fraction": 0.6666666666666666
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.002081981561868257,
+            "3037": -0.03089753130024711,
+            "4047": -0.034696123189769806
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.012719452971496806,
+            "3037": -0.01890309327313071,
+            "4047": 0.0023473967757929454
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "salt_lake_city": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 1.0,
+            "maximum": -0.02973065331537682,
+            "mean": -0.04888838966375103,
+            "median": -0.046070973641100535,
+            "minimum": -0.07086354203477574,
+            "nondegrading_fraction": 1.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.06633540554392592,
+            "3037": -0.026772979582293743,
+            "4047": -0.048808021557496986
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.07086354203477574,
+            "3037": -0.046070973641100535,
+            "4047": -0.02973065331537682
+          },
+          "seed_sign_agreement": 1.0
+        }
+      },
+      "target_city": "ingolstadt"
+    },
+    "new_york": {
+      "evaluation_seeds": [
+        "2027",
+        "3037",
+        "4047"
+      ],
+      "forced_source_leave_one_seed_out": [
+        {
+          "heldout_effect_vs_matched_placebo": -0.00846663350130475,
+          "heldout_effect_vs_target_only": -0.001106059543764278,
+          "heldout_seed": "2027",
+          "selected_source": "salt_lake_city",
+          "training_mean_effect": -0.011302518662973389,
+          "training_seeds": [
+            "3037",
+            "4047"
+          ]
+        },
+        {
+          "heldout_effect_vs_matched_placebo": -0.008359896800270335,
+          "heldout_effect_vs_target_only": -0.01570825975287267,
+          "heldout_seed": "3037",
+          "selected_source": "salt_lake_city",
+          "training_mean_effect": -0.004001418558419193,
+          "training_seeds": [
+            "2027",
+            "4047"
+          ]
+        },
+        {
+          "heldout_effect_vs_matched_placebo": 0.011387477482973807,
+          "heldout_effect_vs_target_only": 0.007565158420918115,
+          "heldout_seed": "4047",
+          "selected_source": "resco_synthetic",
+          "training_mean_effect": -0.008804502365672106,
+          "training_seeds": [
+            "2027",
+            "3037"
+          ]
+        }
+      ],
+      "mean_seed_rank_correlation": 0.04761904761904765,
+      "rank_correlations": [
+        {
+          "left_seed": "2027",
+          "right_seed": "3037",
+          "spearman": -0.6
+        },
+        {
+          "left_seed": "2027",
+          "right_seed": "4047",
+          "spearman": 0.2
+        },
+        {
+          "left_seed": "3037",
+          "right_seed": "4047",
+          "spearman": 0.5428571428571429
+        }
+      ],
+      "source_null_aware_leave_one_seed_out": [
+        {
+          "effective_source": "salt_lake_city",
+          "heldout_effect_vs_matched_placebo": -0.00846663350130475,
+          "heldout_effect_vs_target_only": -0.001106059543764278,
+          "heldout_seed": "2027",
+          "selected_source": "salt_lake_city",
+          "source_admitted": true,
+          "training_mean_effect": -0.011302518662973389,
+          "training_seeds": [
+            "3037",
+            "4047"
+          ]
+        },
+        {
+          "effective_source": "salt_lake_city",
+          "heldout_effect_vs_matched_placebo": -0.008359896800270335,
+          "heldout_effect_vs_target_only": -0.01570825975287267,
+          "heldout_seed": "3037",
+          "selected_source": "salt_lake_city",
+          "source_admitted": true,
+          "training_mean_effect": -0.004001418558419193,
+          "training_seeds": [
+            "2027",
+            "4047"
+          ]
+        },
+        {
+          "effective_source": "resco_synthetic",
+          "heldout_effect_vs_matched_placebo": 0.011387477482973807,
+          "heldout_effect_vs_target_only": 0.007565158420918115,
+          "heldout_seed": "4047",
+          "selected_source": "resco_synthetic",
+          "source_admitted": true,
+          "training_mean_effect": -0.008804502365672106,
+          "training_seeds": [
+            "2027",
+            "3037"
+          ]
+        }
+      ],
+      "sources": {
+        "atlanta": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.3333333333333333,
+            "maximum": 0.0184352589710255,
+            "mean": 0.0057617523709432225,
+            "median": 0.002435006303415624,
+            "minimum": -0.003585008161611454,
+            "nondegrading_fraction": 0.3333333333333333
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.003001206836263825,
+            "3037": 0.00906258089747854,
+            "4047": -0.0036979221354090583
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.002435006303415624,
+            "3037": -0.003585008161611454,
+            "4047": 0.0184352589710255
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "cologne": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.3333333333333333,
+            "maximum": 0.014740736143689537,
+            "mean": 0.0026457900163841743,
+            "median": 0.00444866713526707,
+            "minimum": -0.011252033229804084,
+            "nondegrading_fraction": 0.3333333333333333
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.004495318634539495,
+            "3037": 0.0019496946286640046,
+            "4047": -0.00027699278912871744
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.00444866713526707,
+            "3037": -0.011252033229804084,
+            "4047": 0.014740736143689537
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "hangzhou": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.3333333333333333,
+            "maximum": 0.01861170818432603,
+            "mean": 0.0035257293939946793,
+            "median": 0.013247589895298862,
+            "minimum": -0.021282109897640854,
+            "nondegrading_fraction": 0.3333333333333333
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.008540678091186478,
+            "3037": -0.007938706986156448,
+            "4047": -0.004040461906468958
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.013247589895298862,
+            "3037": -0.021282109897640854,
+            "4047": 0.01861170818432603
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "ingolstadt": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.0,
+            "maximum": 0.047322251462629805,
+            "mean": 0.017658932434672623,
+            "median": 0.003357654293548413,
+            "minimum": 0.002296891547839651,
+            "nondegrading_fraction": 0.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.013980139017182404,
+            "3037": 0.0262965283697976,
+            "4047": 0.04161827781151515
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.002296891547839651,
+            "3037": 0.003357654293548413,
+            "4047": 0.047322251462629805
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "resco_synthetic": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.3333333333333333,
+            "maximum": 0.007565158420918115,
+            "mean": -0.003347948770142032,
+            "median": 0.00514973184264104,
+            "minimum": -0.02275873657398525,
+            "nondegrading_fraction": 0.3333333333333333
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.005268139839598934,
+            "3037": -0.01795377630936791,
+            "4047": 0.011387477482973807
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.00514973184264104,
+            "3037": -0.02275873657398525,
+            "4047": 0.007565158420918115
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "salt_lake_city": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 1.0,
+            "maximum": -0.001106059543764278,
+            "mean": -0.007903698956570351,
+            "median": -0.006896777573074109,
+            "minimum": -0.01570825975287267,
+            "nondegrading_fraction": 1.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.00846663350130475,
+            "3037": -0.008359896800270335,
+            "4047": -0.008244685428417838
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.001106059543764278,
+            "3037": -0.01570825975287267,
+            "4047": -0.006896777573074109
+          },
+          "seed_sign_agreement": 1.0
+        }
+      },
+      "target_city": "new_york"
+    },
+    "resco_synthetic": {
+      "evaluation_seeds": [
+        "2027",
+        "3037",
+        "4047"
+      ],
+      "forced_source_leave_one_seed_out": [
+        {
+          "heldout_effect_vs_matched_placebo": -0.004311725657689898,
+          "heldout_effect_vs_target_only": -0.004087166906439746,
+          "heldout_seed": "2027",
+          "selected_source": "ingolstadt",
+          "training_mean_effect": -0.019667754207146077,
+          "training_seeds": [
+            "3037",
+            "4047"
+          ]
+        },
+        {
+          "heldout_effect_vs_matched_placebo": -0.008720101286275015,
+          "heldout_effect_vs_target_only": -0.026906006758752397,
+          "heldout_seed": "3037",
+          "selected_source": "ingolstadt",
+          "training_mean_effect": -0.008258334280989751,
+          "training_seeds": [
+            "2027",
+            "4047"
+          ]
+        },
+        {
+          "heldout_effect_vs_matched_placebo": -0.022533889071111465,
+          "heldout_effect_vs_target_only": -0.012429501655539757,
+          "heldout_seed": "4047",
+          "selected_source": "ingolstadt",
+          "training_mean_effect": -0.015496586832596072,
+          "training_seeds": [
+            "2027",
+            "3037"
+          ]
+        }
+      ],
+      "mean_seed_rank_correlation": 0.8476190476190476,
+      "rank_correlations": [
+        {
+          "left_seed": "2027",
+          "right_seed": "3037",
+          "spearman": 0.7714285714285715
+        },
+        {
+          "left_seed": "2027",
+          "right_seed": "4047",
+          "spearman": 0.7714285714285715
+        },
+        {
+          "left_seed": "3037",
+          "right_seed": "4047",
+          "spearman": 1.0
+        }
+      ],
+      "source_null_aware_leave_one_seed_out": [
+        {
+          "effective_source": "ingolstadt",
+          "heldout_effect_vs_matched_placebo": -0.004311725657689898,
+          "heldout_effect_vs_target_only": -0.004087166906439746,
+          "heldout_seed": "2027",
+          "selected_source": "ingolstadt",
+          "source_admitted": true,
+          "training_mean_effect": -0.019667754207146077,
+          "training_seeds": [
+            "3037",
+            "4047"
+          ]
+        },
+        {
+          "effective_source": "ingolstadt",
+          "heldout_effect_vs_matched_placebo": -0.008720101286275015,
+          "heldout_effect_vs_target_only": -0.026906006758752397,
+          "heldout_seed": "3037",
+          "selected_source": "ingolstadt",
+          "source_admitted": true,
+          "training_mean_effect": -0.008258334280989751,
+          "training_seeds": [
+            "2027",
+            "4047"
+          ]
+        },
+        {
+          "effective_source": "ingolstadt",
+          "heldout_effect_vs_matched_placebo": -0.022533889071111465,
+          "heldout_effect_vs_target_only": -0.012429501655539757,
+          "heldout_seed": "4047",
+          "selected_source": "ingolstadt",
+          "source_admitted": true,
+          "training_mean_effect": -0.015496586832596072,
+          "training_seeds": [
+            "2027",
+            "3037"
+          ]
+        }
+      ],
+      "sources": {
+        "atlanta": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.0,
+            "maximum": 0.02683492215435951,
+            "mean": 0.024247901192808684,
+            "median": 0.024920489235040144,
+            "minimum": 0.020988292189026397,
+            "nondegrading_fraction": 0.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.020876172152862076,
+            "3037": 0.035208885983180484,
+            "4047": 0.017417222762073165
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.02683492215435951,
+            "3037": 0.020988292189026397,
+            "4047": 0.024920489235040144
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "cologne": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.6666666666666666,
+            "maximum": 0.008824738454096148,
+            "mean": -0.0039667911312199116,
+            "median": -0.0024795390185333305,
+            "minimum": -0.018245572829222553,
+            "nondegrading_fraction": 0.6666666666666666
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.01025717861900425,
+            "3037": -0.0014878645904865817,
+            "4047": -0.01425926791718364
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.008824738454096148,
+            "3037": -0.018245572829222553,
+            "4047": -0.0024795390185333305
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "hangzhou": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.6666666666666666,
+            "maximum": 0.001570340356189373,
+            "mean": -0.0004241534286071186,
+            "median": -0.001072667185021997,
+            "minimum": -0.0017701334569887317,
+            "nondegrading_fraction": 0.6666666666666666
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.014621004548955804,
+            "3037": 0.008458211059929305,
+            "4047": -0.003914996154421535
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.001570340356189373,
+            "3037": -0.0017701334569887317,
+            "4047": -0.001072667185021997
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "ingolstadt": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 1.0,
+            "maximum": -0.004087166906439746,
+            "mean": -0.014474225106910633,
+            "median": -0.012429501655539757,
+            "minimum": -0.026906006758752397,
+            "nondegrading_fraction": 1.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.004311725657689898,
+            "3037": -0.008720101286275015,
+            "4047": -0.022533889071111465
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.004087166906439746,
+            "3037": -0.026906006758752397,
+            "4047": -0.012429501655539757
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "new_york": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.0,
+            "maximum": 0.011109150102051851,
+            "mean": 0.00899752092748702,
+            "median": 0.010641146592592604,
+            "minimum": 0.005242266087816604,
+            "nondegrading_fraction": 0.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.0015086281607916696,
+            "3037": 0.01376469958676603,
+            "4047": -0.0028296690106537625
+          },
+          "seed_effects_vs_target_only": {
+            "2027": 0.011109150102051851,
+            "3037": 0.005242266087816604,
+            "4047": 0.010641146592592604
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "salt_lake_city": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.3333333333333333,
+            "maximum": 0.00010175567219929474,
+            "mean": -0.00010221793456066085,
+            "median": 2.10138316580899e-06,
+            "minimum": -0.0004105108590470863,
+            "nondegrading_fraction": 0.3333333333333333
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": 0.006625396463217598,
+            "3037": 0.011517603570769575,
+            "4047": -0.000328395442256324
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.0004105108590470863,
+            "3037": 0.00010175567219929474,
+            "4047": 2.10138316580899e-06
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        }
+      },
+      "target_city": "resco_synthetic"
+    },
+    "salt_lake_city": {
+      "evaluation_seeds": [
+        "2027",
+        "3037",
+        "4047"
+      ],
+      "forced_source_leave_one_seed_out": [
+        {
+          "heldout_effect_vs_matched_placebo": -0.013234638669674406,
+          "heldout_effect_vs_target_only": -0.022915541466581604,
+          "heldout_seed": "2027",
+          "selected_source": "new_york",
+          "training_mean_effect": -0.008094570305371612,
+          "training_seeds": [
+            "3037",
+            "4047"
+          ]
+        },
+        {
+          "heldout_effect_vs_matched_placebo": -9.998387112108986e-05,
+          "heldout_effect_vs_target_only": 0.014069564537207993,
+          "heldout_seed": "3037",
+          "selected_source": "cologne",
+          "training_mean_effect": -0.02415228268667084,
+          "training_seeds": [
+            "2027",
+            "4047"
+          ]
+        },
+        {
+          "heldout_effect_vs_matched_placebo": -0.02725105580151535,
+          "heldout_effect_vs_target_only": -0.006355646131586304,
+          "heldout_seed": "4047",
+          "selected_source": "ingolstadt",
+          "training_mean_effect": -0.020167664504272736,
+          "training_seeds": [
+            "2027",
+            "3037"
+          ]
+        }
+      ],
+      "mean_seed_rank_correlation": 0.06666666666666664,
+      "rank_correlations": [
+        {
+          "left_seed": "2027",
+          "right_seed": "3037",
+          "spearman": -0.3714285714285715
+        },
+        {
+          "left_seed": "2027",
+          "right_seed": "4047",
+          "spearman": 0.7142857142857143
+        },
+        {
+          "left_seed": "3037",
+          "right_seed": "4047",
+          "spearman": -0.14285714285714288
+        }
+      ],
+      "source_null_aware_leave_one_seed_out": [
+        {
+          "effective_source": "new_york",
+          "heldout_effect_vs_matched_placebo": -0.013234638669674406,
+          "heldout_effect_vs_target_only": -0.022915541466581604,
+          "heldout_seed": "2027",
+          "selected_source": "new_york",
+          "source_admitted": true,
+          "training_mean_effect": -0.008094570305371612,
+          "training_seeds": [
+            "3037",
+            "4047"
+          ]
+        },
+        {
+          "effective_source": "cologne",
+          "heldout_effect_vs_matched_placebo": -9.998387112108986e-05,
+          "heldout_effect_vs_target_only": 0.014069564537207993,
+          "heldout_seed": "3037",
+          "selected_source": "cologne",
+          "source_admitted": true,
+          "training_mean_effect": -0.02415228268667084,
+          "training_seeds": [
+            "2027",
+            "4047"
+          ]
+        },
+        {
+          "effective_source": "ingolstadt",
+          "heldout_effect_vs_matched_placebo": -0.02725105580151535,
+          "heldout_effect_vs_target_only": -0.006355646131586304,
+          "heldout_seed": "4047",
+          "selected_source": "ingolstadt",
+          "source_admitted": true,
+          "training_mean_effect": -0.020167664504272736,
+          "training_seeds": [
+            "2027",
+            "3037"
+          ]
+        }
+      ],
+      "sources": {
+        "atlanta": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.3333333333333333,
+            "maximum": 0.006573433671607773,
+            "mean": -0.0043062261316379954,
+            "median": 0.001306014139394275,
+            "minimum": -0.020798126205916034,
+            "nondegrading_fraction": 0.3333333333333333
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.008968547869717708,
+            "3037": -0.01436769125509893,
+            "4047": -0.029911769306693557
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.020798126205916034,
+            "3037": 0.006573433671607773,
+            "4047": 0.001306014139394275
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "cologne": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.6666666666666666,
+            "maximum": 0.014069564537207993,
+            "mean": -0.011411666945377895,
+            "median": -0.00841388215291003,
+            "minimum": -0.03989068322043165,
+            "nondegrading_fraction": 0.6666666666666666
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.0514864072324969,
+            "3037": -9.998387112108986e-05,
+            "4047": -0.04611227799868678
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.03989068322043165,
+            "3037": 0.014069564537207993,
+            "4047": -0.00841388215291003
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "hangzhou": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.6666666666666666,
+            "maximum": 0.0026382279765738287,
+            "mean": -0.014669328787585381,
+            "median": -0.011943549608045393,
+            "minimum": -0.03470266473128458,
+            "nondegrading_fraction": 0.6666666666666666
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.02108464508160179,
+            "3037": -0.004097147534149595,
+            "4047": -0.024138982529824996
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.03470266473128458,
+            "3037": 0.0026382279765738287,
+            "4047": -0.011943549608045393
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        },
+        "ingolstadt": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 1.0,
+            "maximum": -0.006355646131586304,
+            "mean": -0.015563658380043926,
+            "median": -0.00929252655478334,
+            "minimum": -0.031042802453762133,
+            "nondegrading_fraction": 1.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.03545456611729421,
+            "3037": -0.022214675278407994,
+            "4047": -0.02725105580151535
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.031042802453762133,
+            "3037": -0.00929252655478334,
+            "4047": -0.006355646131586304
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "new_york": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 1.0,
+            "maximum": -0.007963283753124738,
+            "mean": -0.013034894025774943,
+            "median": -0.008225856857618487,
+            "minimum": -0.022915541466581604,
+            "nondegrading_fraction": 1.0
+          },
+          "same_strict_sign_all_seeds": true,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.013234638669674406,
+            "3037": -0.009560345148971632,
+            "4047": -0.03305676247177467
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.022915541466581604,
+            "3037": -0.008225856857618487,
+            "4047": -0.007963283753124738
+          },
+          "seed_sign_agreement": 1.0
+        },
+        "resco_synthetic": {
+          "effect_vs_target_only": {
+            "count": 3,
+            "improving_fraction": 0.6666666666666666,
+            "maximum": 0.0009798816305252728,
+            "mean": -0.012207040447731353,
+            "median": -0.006054577499594996,
+            "minimum": -0.03154642547412433,
+            "nondegrading_fraction": 0.6666666666666666
+          },
+          "same_strict_sign_all_seeds": false,
+          "seed_effects_vs_matched_placebo": {
+            "2027": -0.025066877459889537,
+            "3037": 0.0015509601486582841,
+            "4047": -0.03478329121186656
+          },
+          "seed_effects_vs_target_only": {
+            "2027": -0.03154642547412433,
+            "3037": 0.0009798816305252728,
+            "4047": -0.006054577499594996
+          },
+          "seed_sign_agreement": 0.3333333333333333
+        }
+      },
+      "target_city": "salt_lake_city"
+    }
+  }
+}

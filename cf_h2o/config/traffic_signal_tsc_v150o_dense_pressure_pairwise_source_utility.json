@@ -1,0 +1,51 @@
+{
+  "protocol": "tsc-v150o-dense-pressure-pairwise-source-utility-v1",
+  "redeveloped_after": "tsc-v150n-pressure-pairwise-source-utility-aggregate-v1",
+  "offline_parent": "tsc-v150k-state-conditioned-source-utility-aggregate-v1",
+  "authorization_protocol": "tsc-v150c-mechanism-parameter-prior-aggregate-v1",
+  "target_city_groups": [
+    "atlanta",
+    "cologne",
+    "hangzhou",
+    "ingolstadt",
+    "new_york",
+    "resco_synthetic",
+    "salt_lake_city"
+  ],
+  "target_budget": 100,
+  "common_evaluation_reserve_budget": 100,
+  "source_prior_strength": 0.025,
+  "outer_fold_count": 5,
+  "inner_fold_count": 4,
+  "candidate_count_per_target": 36,
+  "candidate_representation": "single-state-conditioner-v1",
+  "action_pair": "phase_pressure_reference_vs_rigid_target_only",
+  "utility_record_protocol": "dense-phase-vs-rigid-source-evidence-records-v1",
+  "selector": "nested_dense_fixed_pair_source_mechanism_utility",
+  "utility_gate": {
+    "protocol": "ridge-upper-cost-bound-over-fixed-action-pair-records-v1",
+    "ridge_alpha": 10.0,
+    "error_quantile": 0.75,
+    "minimum_records": 48,
+    "minimum_predicted_gain": 0.0005,
+    "source_identity_feature": false
+  },
+  "minimum_target_oof_gain": 0.0005,
+  "minimum_identity_oof_gain": 0.0005,
+  "minimum_source_blind_oof_gain": 0.0005,
+  "minimum_nondegrading_outer_folds": 4,
+  "minimum_crossfitted_intervention_groups": 5,
+  "source_null_fallback": "bitwise_exact_rigid_cfcmt",
+  "matched_placebo_pipeline": "separately_nested_same_capacity_dense_pairwise_utility_gate",
+  "source_blind_pipeline": "same_target_labels_state_features_and_gate_without_source_evidence",
+  "inference_unit": "city",
+  "development_gate": {
+    "minimum_identity_verified_source_cities": 2,
+    "require_no_city_regression": true,
+    "require_every_admitted_city_improve_rigid": true,
+    "require_every_admitted_city_beat_matched_placebo": true,
+    "require_every_admitted_city_beat_source_blind": true,
+    "require_exact_fallback_for_rejected_cities": true
+  },
+  "claim_boundary": "B100 dense fixed-pair nested utility development test; not closed-loop or fresh-city confirmation."
+}
