@@ -1,0 +1,84 @@
+{
+  "name": "cfcmt-bus-native-action-replay-v1",
+  "training_seed": 75102,
+  "actors": {
+    "adapted": {
+      "folder": "source_dense_adapted_eval",
+      "filename": "policy.pt"
+    },
+    "masked": {
+      "folder": "free_execution_actor/td025",
+      "filename": "policy.pt"
+    }
+  },
+  "case": {
+    "case": 0,
+    "demand_seed": 72561,
+    "sumo_seed": 73561
+  },
+  "episode_seconds": 24000,
+  "minimum_remaining_seconds": 120,
+  "asset_folder": "native_action_replay",
+  "asset_selection": {
+    "start_hour": 7,
+    "service_hours": 4,
+    "max_directional_services": 12,
+    "minimum_departures_in_window": 2,
+    "ordering": "Original route, direction, pattern and service id, before any control outcomes",
+    "require_positive_apc": true,
+    "required_tables": [
+      "stop_news.xlsx",
+      "route_news.xlsx",
+      "time_table.xlsx",
+      "passenger_OD.xlsx"
+    ],
+    "network": "GTFS-derived route corridors; APC-apportioned demand, generated destinations; not a measured city road network",
+    "scheduled_service_date": "2026-05-19",
+    "calendar_rule": "Earliest weekday in the pinned GTFS feed with active weekday service and without a holiday exception; keep the original 12-service subset",
+    "calendar_provenance": "Actual trip_id/service_id and full stop signatures from GTFS; never merge mutually exclusive calendar services or clamp zero scheduled headways"
+  },
+  "evaluation": {
+    "episode_seconds": 24000,
+    "cases": [
+      {
+        "case": 0,
+        "demand_seed": 72561,
+        "sumo_seed": 73561
+      }
+    ]
+  },
+  "selection": "Largest absolute projected executed holding difference along adapted55k native baseline before episode_seconds-minimum_remaining_seconds; exact tie uses earliest original event order. No ranking by Q, outcome, cost, or seed.",
+  "branches": {
+    "adapted": "Adapted baseline from reset to full horizon.",
+    "single": "Same adapted prefix through selected event; use masked action once, then recompute remaining same-time events and all future events with adapted.",
+    "continuous": "Same adapted prefix through selected event; use masked action at selected event and all remaining same-time/future events."
+  },
+  "comparison": "Each intervention compares full-horizon accrued passenger cost against the same baseline state and population. Entire prefix and checkpoint/asset identities are frozen, not SUMO-saveState or restored Python approximations.",
+  "primary_cost": "(2*accrued_wait_passenger_seconds+accrued_ride_passenger_seconds)/departed_passengers at24000; report components and completion.",
+  "counterfactual_checks": "Exact replay of baseline pre-intervention event identities,times,executed actions; equality of selected raw/canonical state, prior within event batch, tracker and passenger ledger. Use deterministic seed/reset and zero optimizer updates.",
+  "critic_stages": {
+    "adapted": {
+      "folder": "source_dense_adaptation",
+      "filename": "adapted.pt",
+      "stored_updates": 5000
+    },
+    "unmasked": {
+      "folder": "entropy_free_continuation/td025",
+      "filename": "final_learner.pt",
+      "stored_updates": 25000
+    },
+    "masked": {
+      "folder": "free_execution_actor/td025",
+      "filename": "final_learner.pt",
+      "stored_updates": 25000
+    }
+  },
+  "code_boundary": "CFCMT-owned frozen snapshot only; no mutable Thesis access. Remote code/smallJSON/log only, no H5/CSV/checkpoint downloads.",
+  "new_training_updates": 0,
+  "limits": [
+    "One diagnostic seed/case/event selected by action divergence; not a general or statistically independent performance claim.",
+    "Continuous-branch effects combine first action and downstream decisions; single intervention is a controlled first-action effect conditional on adapted continuation.",
+    "Projected Q ranks are learned estimates; actual full-horizon passenger outcomes determine the observed effect.",
+    "The minimum remaining time120s equals2*maximum_hold60s; no episode outcome enters event selection."
+  ]
+}

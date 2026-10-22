@@ -1,0 +1,22 @@
+{
+  "experiment": "cfcmt-bus-rule-confirmation-isolated-v1",
+  "smoke": true,
+  "analysis_location": "server",
+  "rule_ready": 2,
+  "rule_expected": 2,
+  "interpretation": "Strong fixed-rule supplement on the previously analyzed v13 test days, not a wholly unseen target benchmark. Reuse all 20 fresh-seed fixed0250 policies without retraining, development selection, or test-driven coefficient selection. CI varies training initialization conditional on these five paired test days and the fixed source conditions; it does not cover new cities or a population of new days. Existing H2O+, fixed0300, shared_gated and duet comparisons remain descriptive and cannot replace the primary result. No data, checkpoints, or daily results are downloaded locally.",
+  "gate": "Allow the next incremental cross-city stage only if the all-20-seed, six-cell equal-weight mean cost delta is at most -5 seconds per departed passenger, its paired training-seed CI95 upper endpoint is below zero, every source-by-demand cell mean cost delta is nonpositive, and every cell mean completion delta is at least -0.1 percentage points. Individual seed regressions are disclosed, not an automatic failure. A failed gate closes this confirmation without changing gain, seeds, or thresholds.",
+  "paired_ci": {
+    "method": "Student t",
+    "confidence": 0.95,
+    "degrees_of_freedom": 19,
+    "critical_value": 2.093024054408263
+  },
+  "runtime_validation": {
+    "decision": "SMOKE_ONLY"
+  },
+  "complete": true,
+  "missing_count": 0,
+  "missing_examples": [],
+  "decision": "SMOKE_ONLY"
+}

@@ -110,21 +110,21 @@ def build_rows() -> list[dict[str, Any]]:
 
     rows = [
         _development_row(
-            stage="v86 legacy global",
+            stage="V86 legacy global",
             evidence_class="adaptive screen",
             audit=audits["v86"],
             policy="uh_global_h120_m1",
             interpretation="development only",
         ),
         _development_row(
-            stage="v87 unbounded stay",
+            stage="V87 unbounded stay",
             evidence_class="adaptive ablation",
             audit=audits["v87"],
             policy="uh_global_h120_stay_aware",
             interpretation="variant rejected",
         ),
         _development_row(
-            stage="v88 one-stay budget",
+            stage="V88 one-stay budget",
             evidence_class="adaptive ablation",
             audit=audits["v88"],
             policy="uh_global_h120_stay_budget1",
@@ -135,7 +135,7 @@ def build_rows() -> list[dict[str, Any]]:
     ci = summary["bootstrap"]["ci95"]
     rows.append(
         {
-            "stage": "v89 frozen legacy",
+            "stage": "V89 frozen legacy",
             "evidence_class": "fresh confirmation",
             "policy": v89["confirmation_gate"]["policy"],
             "seed_count": int(summary["seed_count"]),
@@ -168,7 +168,7 @@ def write_outputs(rows: list[dict[str, Any]]) -> None:
     lines = [
         r"\begin{tabular}{llrrrrl}",
         r"\toprule",
-        r"Stage & Evidence & Seeds & Mean $\Delta$ & 95\% CI & Improved & Decision \\",
+        r"Stage & Evidence & Seeds & Mean relative waiting difference & 95\% interval & Improved & Decision \\",
         r"\midrule",
     ]
     for row in rows:

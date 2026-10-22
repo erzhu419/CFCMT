@@ -1,118 +1,118 @@
 \section{Introduction}
 
 Traffic-signal controllers are commonly trained and tested within one fixed
-network.  New random seeds change arrivals, but topology, route choice, phase
-programs and feature semantics remain largely unchanged.  Cross-network
-deployment changes all of them at once.  A policy or world model can therefore
-fit source transitions while misranking actions in a target network, which is
-the quantity that ultimately determines control performance.
+network.  New random seeds change arrivals while leaving topology, routes,
+phase programs and feature semantics largely unchanged.  Cross-network
+deployment changes these conditions together.  A model can therefore fit
+source transitions yet misrank feasible actions in a target network.
+Action ordering, rather than transition accuracy alone, determines which
+control decision the model recommends.
 
-Two established approaches expose the central trade-off.  MaxPressure and
-phase-pressure controllers use local queue imbalance and transfer without a
-city-indexed policy, with strong throughput and stability motivation
-\citep{varaiya2013maxpressure}.  Pressure structure also underlies learned
-controllers including PressLight, FRAP and MPLight
-\citep{wei2019presslight,zheng2019frap,chen2020thousandlights}.  These rules are
-difficult baselines because local pressure is already close to the control
-sufficient statistic in many signal networks.  Conversely, simulator-based
-offline-to-online reinforcement learning can use source data to correct
-dynamics mismatch \citep{niu2022h2o,liu2025h2oplus}, but an unrestricted
-residual may absorb network identity, demand scale and phase-specific
-associations that do not survive a city shift.
+Two established approaches expose the challenge.  MaxPressure uses
+local queue imbalance and has throughput and stability guarantees under its
+stated store-and-forward assumptions \citep{varaiya2013maxpressure}.  The
+PhasePressure comparator likewise uses local queue imbalance and
+transfers without a city-indexed policy.  Pressure structure also underlies
+controllers learned by reinforcement learning (RL),
+such as PressLight and MPLight
+\citep{wei2019presslight,chen2020thousandlights}.  The Flipping- and
+Rotation-invariant All-Phase design (FRAP) represents competition
+between conflicting phases from movement demand
+\citep{zheng2019frap}.  These baselines are strong because their inputs
+directly reflect the queues affected by signal decisions.
 
-Prior transfer-oriented signal control spans materially different information
-budgets.  MetaLight adapts a meta-learned initialization with target
-experience, whereas GESA and X-Light construct scenario-normalized or
-cross-city representations for policy generalization
-\citep{zang2020metalight,jiang2024gesa,jiang2024xlight}.  CrossLight explicitly
-combines source-city offline pretraining with target-city online fine-tuning
-\citep{sun2024crosslight}.  Sim-to-real work such as UGAT instead transforms
-actions to compensate for a simulator dynamics gap \citep{da2023ugat}.  These
-methods establish that topology normalization, meta-adaptation and dynamics-gap
-correction are each useful, but their zero-shot, online-interaction and
-sim-to-real protocols answer different questions.  Our setting is target
-offline adaptation: target interactions are counterfactual simulator labels
-collected before deployment, and no target closed-loop reward is used for model
-selection.
+Dynamics-Aware Hybrid Offline-and-Online Reinforcement Learning (H2O) combines
+fixed real-world data with interaction in an imperfect simulator
+\citep{niu2022h2o}.  Its extension, An Improved Framework for Hybrid
+Offline-and-Online Reinforcement Learning with Dynamics Gaps (H2O$^+$),
+explicitly accounts for dynamics gaps \citep{niu2023h2oplus}.
+Their real--simulator setting motivates our dense residual comparator,
+although cross-network transfer introduces a different shift.  An
+unrestricted residual can absorb network identity, demand scale and
+phase-specific associations that change between cities.
 
-Mechanism-factored world models provide an intermediate design.  They restrict
-prediction to stable parent sets and can adapt mechanism state separately,
-consistent with the modularity motivation of causal transfer
-\citep{bengio2020meta,feng2022factored,scholkopf2021causal}.  Our experiments
-revealed a sharper
-requirement for traffic control: accurate decomposition of absolute dynamics
-does not guarantee accurate ordering of feasible phases.  The final method
-therefore retains structural parent restrictions but changes the estimand from
-next-state prediction to within-state action contrast.
+Transfer-oriented signal control spans different target information budgets.
+MetaLight adapts a meta-learned initialization with target experience
+\citep{zang2020metalight}.  GEneral Scenario-Agnostic reinforcement learning
+(GESA) normalizes heterogeneous intersections into unified state and action
+structures \citep{jiang2024gesa}.  X-Light learns cross-city
+decision-trajectory representations \citep{jiang2024xlight}, whereas
+CrossLight combines source-city offline pretraining with target-city online fine-tuning
+\citep{sun2024crosslight}.  Sim-to-real work such as Uncertainty-Aware Grounded
+Action Transformation (UGAT) transforms actions to compensate for a
+simulator dynamics gap \citep{da2023ugat}.  These methods instantiate distinct
+approaches to topology normalization, meta-adaptation and dynamics-gap
+correction.  Their zero-shot, online-interaction and sim-to-real protocols
+answer different questions.  Our final comparison uses target offline
+adaptation, with counterfactual simulator labels collected before deployment
+and no target closed-loop reward used for model selection.
 
-We call the resulting method anchored Causal-Factored Cross-City Model
-Transfer (CFCMT).  At a simulator snapshot, every feasible phase is executed
-from the same restored state.  Candidate cost is expressed relative to one
-source-selected pressure reference and normalized by the action range of that
-matched group.  A low-capacity rigid anchor estimates candidate-versus-reference
-cost from declared queue, occupancy, pressure and transition parents.  A
-second model compares every unordered phase pair and is antisymmetrized by
-construction.  The target score is
-\begin{equation}
-  S(s,a)=A(s,a)+\alpha(s)\{P(s,a)-A(s,a)\},
-  \label{eq:intro-score}
-\end{equation}
-where the interpolation is selected out of fold by holding out one complete
-target adaptation seed.  Constant interpolation permits aggressive correction
-when it is stable; a local confidence-cap limits how far the pairwise model can
-perturb the anchor when they disagree.
+Causal representation work motivates modular mechanisms whose changes can
+remain sparse across environments
+\citep{bengio2019meta,scholkopf2021causal}.  Factored Adaptation for
+Non-Stationary Reinforcement Learning operationalizes this idea through a
+factored Markov decision process and individual latent change factors
+\citep{feng2022factored}.  Our earlier mechanism-factored world model
+restricted each predicted component to declared parents and adapted its
+mechanism state separately.  Traffic control places a further requirement on
+this structure.  Accurate decomposition of absolute dynamics does not
+guarantee accurate ordering of feasible phases.  The final method retains
+parent restrictions but changes the estimand from next-state prediction to
+within-state action contrast.
 
-The information budget is central to the claim.  CFCMT is not evaluated as
-zero-shot transfer in the final external experiment.  It uses target-network
-files, online target state and counterfactual transition labels generated by an
-uncalibrated target SUMO model.  Those labels constitute target offline
-adaptation even though no target simulator parameter is fitted to field data.
-The method is therefore calibration-light rather than target-data-free.
-Adaptation seeds, the offline confirmation seed and closed-loop seeds are
-disjoint, and the evaluation cache did not exist when the target model and
-selector were frozen.
+We formulate Causal-Factored Cross-City Model Transfer (CFCMT) around matched
+action contrasts.  At each simulator snapshot, every feasible phase is
+executed from the same restored state.  Candidate costs are measured relative
+to a source-selected pressure reference and normalized by the matched group's
+action range.  A parent-restricted rigid anchor and an antisymmetric all-pair
+model estimate these contrasts.  Their anchored interpolation
+(\Cref{eq:anchored-blend}) is selected by out-of-fold (OOF) validation that
+holds out complete target adaptation seeds.  A local confidence cap limits
+the correction when the models disagree.  Definitions, formal statements and
+inline proofs appear in
+\Cref{sec:methods-matched-groups,sec:methods-pairwise,sec:methods-blend}.
 
-The empirical design has five levels.  First, 18 source networks from seven
-city groups support leave-one-city-out development with an excluded evaluation
-seed.  Second, two external city-derived networks, Los Angeles and Jinan, test
-the frozen procedure using all valid target adaptation groups and a new
-offline seed.  Third, 56 matched 3,600-s closed-loop rollouts compare CFCMT with
-fixed time, simulator-only model predictive control, a rigid causal anchor, an
-H2O$^+$-style dense residual and two classical pressure policies.  All policies
-share target networks, feasible green phases, demand seeds, signal-transition
-execution and metric populations.  Fourth, a legacy near-target-only model already
-frozen in the same baseline family is compared with CFCMT on 64 newly generated
-seeds, four target scenarios and 512 rollouts.  This fourth stage directly tests
-whether the original source-plus-target controller improves both external
-targets after the target adaptation budget is held fixed.  Fifth, a separate
-post-V91 target-offline selector abstains to exact target-only control for Los
-Angeles and admits a Hangzhou source component for Jinan before 56 further
-Jinan seeds are observed.  This conditional experiment is reported separately
-because it uses a topology-repaired refit and a shared pressure guard absent
-from the frozen v43 controller.  Official RESCO and LibSignal reinforcement
-learning runs are retained only as native-protocol integration checks because
-their state, reward, action timing and training budgets are not commensurate
-with this experiment \citep{ault2021reinforcement,mei2023libsignal}.
-The study consequently does not present native CrossLight, X-Light or GESA
-scores as if they were paired baselines; a same-protocol reproduction of those
-systems remains outside the evidence reported here.
+The target information budget defines this adaptation setting.  CFCMT uses
+target-network files, observed target state and counterfactual labels from an
+uncalibrated Simulation of Urban MObility (SUMO) model.  The simulator is not
+fitted to field trajectories, but its counterfactual labels are target data.
+The method is therefore calibration-light rather than zero-shot.  Adaptation,
+offline confirmation and closed-loop seeds are disjoint.  The evaluation cache
+was generated after the target model and selector were frozen.
+
+Development uses 18 source networks from seven city groups, followed by
+evaluation on two external city-derived networks, Los Angeles and Jinan.
+In 56 matched 3,600-s rollouts, CFCMT is compared with fixed time,
+simulator-only model predictive control (MPC), a rigid anchor, a dense
+residual and two pressure policies.  All policies share target networks,
+feasible phases, demand seeds, transition execution and metric populations.
+Further controller comparisons distinguish source-plus-target control from
+target-only control under fixed target adaptation budgets.  V91 evaluates
+the original controller on 64 fresh seeds, four target scenarios and 512
+rollouts.  V98 independently confirms a subsequent target-offline selector
+on 56 further Jinan seeds.  Its topology-repaired refit and shared pressure
+guard distinguish this procedure from the frozen V43 controller.  V-prefixed
+identifiers denote frozen experimental protocols rather than method names.
+
+The Reinforcement Signal Control (RESCO) benchmark
+\citep{ault2021reinforcement} and LibSignal \citep{mei2022libsignal} RL runs
+provide native-protocol integration checks.  Their state, reward, action
+timing and training budgets differ from the paired experiment.
+Same-protocol reproductions of CrossLight, X-Light and GESA remain a
+comparison gap.
 
 This study makes four contributions.  First, it formulates cross-network
 signal adaptation around matched action contrasts and proves cancellation of
-action-common domain bias.  Second, it combines a parent-restricted anchor with
-an antisymmetric all-action correction and derives exact ranking and bounded
-perturbation properties.  Third, it implements an auditable seed-blocked
-selection and full-refit protocol that prevents out-of-fold or evaluation
-models from entering deployment.  Fourth, it separates structured-model gain,
-controller-pair performance and source-row attribution.  CFCMT improves the
-dense residual, while the fresh V91 comparison reveals a Jinan benefit and Los
-Angeles negative transfer, rejecting a joint two-city source-benefit claim.
-The distinct V98 selector subsequently abstains for Los Angeles and reproduces
-a Jinan-specific controller gain against its declared lower-capacity
-zero-source-row target model; this comparison does not isolate source-row
-contribution.
-Classical pressure control remains the closed-loop ceiling, and a separate
-64-seed execution-layer challenge does not close that gap.  The contribution
-is consequently an auditable action-ranking framework and evidence for
-target-network-dependent controller outcomes, not a claim that complexity or
-source volume alone should replace a strong traffic-control rule.
+action-common domain bias (\Cref{prop:exact-cancellation}).  Second, it combines
+a parent-restricted anchor with an antisymmetric all-action correction and
+derives exact ranking and bounded perturbation properties
+(\Cref{prop:pairwise-recovery,prop:blend-bounds,cor:bounded-local-perturbation}).
+Third, it implements seed-blocked selection and full refitting, with OOF and
+evaluation models excluded from deployment.  Fourth, it separates
+structured-model gain, controller-pair performance and source-row attribution
+through distinct frozen comparisons.  The central evidence concerns matched
+action contrasts relative to a same-information dense residual and a
+separately confirmed Jinan controller-pair gain.  Opposite V91 outcomes across
+the two cities establish the need to retain network-dependent failures.
+The V98 comparator's lower capacity limits source-row attribution, and
+PhasePressure remains the stronger operational reference.

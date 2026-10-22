@@ -1,0 +1,46 @@
+{
+  "complete": true,
+  "scope": "Existing compact source pool and target fit rows; server-only reads, no sampling or training changes",
+  "reward_scale_factor": 0.0001,
+  "row_gap_definition": "Differences in original source_row_index between consecutive selected rows sharing global_trajectory_id",
+  "immediate_successor_definition": "Fraction of these within-trajectory row gaps equal to one; measures retention of the original next row, not geometric state coverage",
+  "source_pool": {
+    "rows": 16384,
+    "terminal_rows": 240,
+    "positive_reward_rows": 0,
+    "discount_values": [0.0, 1.0],
+    "original_row_gap_quantiles": {
+      "minimum": 201.0,
+      "median": 204.0,
+      "p95": 205.0,
+      "maximum": 205.0
+    },
+    "selected_immediate_successor_fraction": 0.0,
+    "scaled_terminal_reward": {
+      "minimum": -860.6282,
+      "median": -260.3298,
+      "maximum": -45.6768
+    },
+    "scaled_nonterminal_reward_mean": -0.24829123513379586
+  },
+  "target_fit": {
+    "rows": 12288,
+    "terminal_rows": 6,
+    "positive_reward_rows": 0,
+    "discount_values": [0.0, 1.0],
+    "original_row_gap_quantiles": {
+      "minimum": 1.0,
+      "median": 2.0,
+      "p95": 2.0,
+      "maximum": 2.0
+    },
+    "selected_immediate_successor_fraction": 0.12750366389838788,
+    "scaled_terminal_reward": {
+      "minimum": -0.8280000000000001,
+      "median": -0.7223,
+      "maximum": -0.6466000000000001
+    },
+    "scaled_nonterminal_reward_mean": -0.19491875915974594
+  },
+  "interpretation": "Sparse original successor retention and large source terminal costs are observed pool asymmetries. Their interaction with undiscounted IQL and Huber delta one is a diagnostic hypothesis, not established causation or a policy performance claim. Original selected transition pairs retain their adjacent next states."
+}

@@ -1,0 +1,123 @@
+{
+  "complete": true,
+  "protocol": "cfcmt-bus-native-actor-preference-v1",
+  "tasks": [
+    "t128466",
+    "t128467",
+    "t128468"
+  ],
+  "case": {
+    "case": 0,
+    "demand_seed": 72561,
+    "sumo_seed": 73561
+  },
+  "new_training_updates": 0,
+  "total_control_events": 11502,
+  "total_free_events": 9976,
+  "by_seed": {
+    "75101": {
+      "control_events": 3834,
+      "free_events": 3324,
+      "collapsed_events": 510,
+      "different_actor_actions": 249,
+      "own_gate_disagreement": 2080,
+      "own_gate_disagreement_percent": 62.57521058965102,
+      "own_gate_disagreement_both_heads": 1885,
+      "both_heads_disagreement_percent": 56.70878459687124,
+      "gate_disagreement_in_same_actor_actions": 1974,
+      "same_actor_action_share_of_gate_disagreement_percent": 94.90384615384616,
+      "different_action_own_critic_prefers_masked": 173,
+      "different_action_own_critic_prefers_adapted": 76,
+      "different_action_own_critic_prefers_masked_percent": 69.47791164658635,
+      "conditional_positive_seconds_mean": 1.5989730801034348,
+      "baseline_cost": 2282.366990846682
+    },
+    "75102": {
+      "control_events": 3834,
+      "free_events": 3333,
+      "collapsed_events": 501,
+      "different_actor_actions": 538,
+      "own_gate_disagreement": 1322,
+      "own_gate_disagreement_percent": 39.663966396639665,
+      "own_gate_disagreement_both_heads": 1069,
+      "both_heads_disagreement_percent": 32.073207320732074,
+      "gate_disagreement_in_same_actor_actions": 1100,
+      "same_actor_action_share_of_gate_disagreement_percent": 83.2072617246596,
+      "different_action_own_critic_prefers_masked": 332,
+      "different_action_own_critic_prefers_adapted": 206,
+      "different_action_own_critic_prefers_masked_percent": 61.71003717472119,
+      "conditional_positive_seconds_mean": 1.801317419799784,
+      "baseline_cost": 2274.266304347826
+    },
+    "75103": {
+      "control_events": 3834,
+      "free_events": 3319,
+      "collapsed_events": 515,
+      "different_actor_actions": 328,
+      "own_gate_disagreement": 812,
+      "own_gate_disagreement_percent": 24.465200361554686,
+      "own_gate_disagreement_both_heads": 721,
+      "both_heads_disagreement_percent": 21.723410665863213,
+      "gate_disagreement_in_same_actor_actions": 617,
+      "same_actor_action_share_of_gate_disagreement_percent": 75.98522167487685,
+      "different_action_own_critic_prefers_masked": 136,
+      "different_action_own_critic_prefers_adapted": 192,
+      "different_action_own_critic_prefers_masked_percent": 41.46341463414634,
+      "conditional_positive_seconds_mean": 1.855432460379191,
+      "baseline_cost": 2285.733981693364
+    }
+  },
+  "seed75102_baseline_matches_prior_replay_exactly": true,
+  "prior_counterfactual_anchor": {
+    "seed": 75102,
+    "event_index": 1839,
+    "time_seconds": 6956,
+    "holds_seconds": {
+      "adapted": 59.99464416503906,
+      "masked": 0.0,
+      "masked_positive": 3.1631736755371094,
+      "zero": 0.0
+    },
+    "masked_hold_probability": 0.0017967203166335821,
+    "masked_twin_min_q": {
+      "adapted": -31.98191261291504,
+      "zero": -32.032405853271484,
+      "masked_positive": -32.07054901123047
+    },
+    "own_positive_minus_zero_q": -0.038143157958984375,
+    "gate_agrees_with_own_positive_vs_zero_critic": true,
+    "interpretation": "Own critic prefers adapted approximately60s to zero, but prefers zero to the masked actor own3.16s conditional-positive candidate. The prior counterfactual loss is not a local gate-versus-own-branch conflict; changing gate alone does not recover the old duration.",
+    "server_event_log": "/home/zhengliang01/scheduleurm_work/CFCMT/experiments/bus_cross_city_native_v1/native_actor_preference/seed75102/events.jsonl"
+  },
+  "conclusions": [
+    "Finite-candidate actor/critic preference disagreements occur at all3 seeds with strongly varying frequencies.",
+    "Most gate disagreements occur where both actors execute the same action; these cannot by themselves explain masked-versus-adapted performance regression.",
+    "Own critic preference for masked versus adapted among different-action events is not consistent across seeds.",
+    "The original event shows changes in positive duration as well as gate probability. No unified gate-threshold fix is supported."
+  ],
+  "next_step": {
+    "kind": "Native single-action outcome comparisons before any extraction change",
+    "event_rule": "For each of the3 fixed adapted trajectories, use zero-based free-control ordinals400,1200,2000,2800; select by chronological order only and retain identical candidates.",
+    "candidates": [
+      "adapted",
+      "masked",
+      "masked_positive",
+      "zero"
+    ],
+    "continuation": "Same exact adapted prefix; one projected candidate intervention; all subsequent decisions adapted; full24000s accrued passenger cost.",
+    "new_training_updates": 0,
+    "status": "Complete:all12 events/48 candidate entries with16 actual simulations; see native_fixed_action_replay_reporting.json",
+    "protocol": "native_fixed_action_replay_protocol.json"
+  },
+  "limitations": [
+    "All3 training seeds share a single diagnostic demand/SUMO case; events are correlated and the reported frequencies are descriptive.",
+    "Learned scaled undiscounted IQL/H2O+ Q signs, including tiny gaps, are not calibrated passenger cost labels under adapted deterministic continuation. IQL deterministic extraction does not require candidate-wise Q maximization.",
+    "The historical diagnose_values conditional-positive duration field used tanh despite the frozen actor using sigmoid; source corrected and64-record actual-API probe passed, but historical copies of that field were not recomputed. Actual executed actions, costs, and iql_execution_signal positive-action diagnostics were already correct."
+  ],
+  "evidence": [
+    "native_actor_preference_protocol.json",
+    "native_actor_preference_summary.json",
+    "native_action_replay_summary.json"
+  ],
+  "data_boundary": "No mutable Thesis reads/writes. Per-event logs and all data/checkpoints stay on server; aggregated JSON only retrieved."
+}

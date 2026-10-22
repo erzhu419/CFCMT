@@ -1,0 +1,50 @@
+{
+  "name": "cfcmt-bus-zero-hold-eval-v1",
+  "evaluation": {
+    "episode_seconds": 24000,
+    "demand_scale": 1.0,
+    "rule": "forward_proportional",
+    "rule_gain": 0.6,
+    "cases": [
+      {
+        "case": 0,
+        "demand_seed": 72501,
+        "sumo_seed": 73501
+      },
+      {
+        "case": 1,
+        "demand_seed": 72502,
+        "sumo_seed": 73502
+      },
+      {
+        "case": 2,
+        "demand_seed": 72503,
+        "sumo_seed": 73503
+      }
+    ],
+    "test_separation": "New fixed demand/SUMO seed realizations, disjoint from fit/stop/calibrate; same pinned timetable and generated route corridors.",
+    "comparison": "Three training seeds, three paired generated demand days; retain every branch/day/seed and compare all-seed means.",
+    "primary_cost": "(2*wait_passenger_seconds+in_vehicle_passenger_seconds)/departed_passengers",
+    "completion": "Report completion rate and departed/completed counts alongside cost.",
+    "interpretation": "Bounded pilot on one target city; no population-level CI or city removal."
+  },
+  "reference_training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "execution_layer": "early60",
+  "completion_guard": "quarter-load-sixty",
+  "training_updates": 0,
+  "proposal": "Always zero seconds before the original guard; encode with hold_seconds_to_policy_action_v7(0.0), not action0",
+  "artifacts": "Three independent case jobs, no training seed or checkpoint; original assets and CFCMT frozen runtime, no mutable Thesis imports/writes",
+  "comparisons": [
+    "strong_rule",
+    "source_adapted",
+    "target_adapted"
+  ],
+  "metrics": "Cost, waiting/in-vehicle time, completion, proposed holding, guarded holding requests, and guard increases/decreases; environment execution layer retained",
+  "interpretation": "Three previously analyzed generated demand/SUMO cases in one corridor city. Zero autonomous proposals retain all original execution constraints and may produce positive guarded holding. Model seeds reuse the corresponding zero case;21paired policy comparisons are not21independent zero runs.",
+  "next_decision": "Compare rule and adaptation-stage policies against zero autonomous holding to diagnose their net control benefit before additional training. This is not an optimal-policy lower bound or a proof that no better holding policy exists.",
+  "data_boundary": "No training, target/source data reads, world-model load, checkpoint load, or simulator trajectory export; retrieve only small JSON summaries"
+}

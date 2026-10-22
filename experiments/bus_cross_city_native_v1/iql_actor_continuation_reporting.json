@@ -1,0 +1,330 @@
+{
+  "complete": true,
+  "protocol": "cfcmt-bus-iql-actor-continuation-v1",
+  "actual_evaluations": 48,
+  "training_budget_and_original_configs_verified": true,
+  "all_seed_case_means": {
+    "td0": {
+      "cost": 2332.4069785661964,
+      "wait_seconds": 838.7061490933655,
+      "ride_seconds": 654.9946803794654,
+      "completion": 0.98398918895151,
+      "mean_executed_hold_seconds": 8.395496074011602,
+      "positive_hold_fraction": 0.18827366618316754
+    },
+    "td025": {
+      "cost": 2333.375179968285,
+      "wait_seconds": 839.1462978620241,
+      "ride_seconds": 655.0825842442368,
+      "completion": 0.9839270631592161,
+      "mean_executed_hold_seconds": 8.363684590623818,
+      "positive_hold_fraction": 0.18415297311836576
+    },
+    "sac0": {
+      "cost": 2357.769050685843,
+      "wait_seconds": 841.8275135095429,
+      "ride_seconds": 674.1140236667575,
+      "completion": 0.984052782216753,
+      "mean_executed_hold_seconds": 12.41756934914232,
+      "positive_hold_fraction": 0.693940364559033
+    },
+    "sac025": {
+      "cost": 2357.879012978097,
+      "wait_seconds": 837.9873733514992,
+      "ride_seconds": 681.9042662750984,
+      "completion": 0.9843016327484793,
+      "mean_executed_hold_seconds": 14.752300680985469,
+      "positive_hold_fraction": 0.9946385982163098
+    },
+    "adapted": {
+      "cost": 2333.4456117951977,
+      "wait_seconds": 839.1389196065861,
+      "ride_seconds": 655.1677725820258,
+      "completion": 0.9839582128960007,
+      "mean_executed_hold_seconds": 8.48056642891789,
+      "positive_hold_fraction": 0.1790860033215669
+    },
+    "strong_rule": {
+      "cost": 2335.356079000136,
+      "wait_seconds": 838.7512258422352,
+      "ride_seconds": 657.8536273156659,
+      "completion": 0.9840507546886047,
+      "mean_executed_hold_seconds": 9.192814222097835,
+      "positive_hold_fraction": 0.493261440000508
+    }
+  },
+  "comparisons": {
+    "iql0_vs_sac0": {
+      "differences": {
+        "cost": -25.362072119646655,
+        "wait_seconds": -3.1213644161773573,
+        "ride_seconds": -19.119343287292054,
+        "completion": -6.359326524296716e-05,
+        "mean_executed_hold_seconds": -4.022073275130719,
+        "positive_hold_fraction": -0.5056666983758654
+      },
+      "cost_percent_of_right": -1.0756809328831072,
+      "better_pairs": 9,
+      "compared_pairs": 9,
+      "better_training_seed_means": 3,
+      "by_seed_cost_difference": {
+        "75101": -19.14152043280319,
+        "75102": -25.808341271275367,
+        "75103": -31.136354654860043
+      },
+      "by_case_cost_difference": {
+        "0": -22.18811326044306,
+        "1": -32.79574388997253,
+        "2": -21.10235920852392
+      }
+    },
+    "iql025_vs_sac025": {
+      "differences": {
+        "cost": -24.503833009811842,
+        "wait_seconds": 1.158924510524912,
+        "ride_seconds": -26.821682030861552,
+        "completion": -0.00037456958926318507,
+        "mean_executed_hold_seconds": -6.388616090361651,
+        "positive_hold_fraction": -0.8104856250979441
+      },
+      "cost_percent_of_right": -1.0392319909095975,
+      "better_pairs": 8,
+      "compared_pairs": 9,
+      "better_training_seed_means": 3,
+      "by_seed_cost_difference": {
+        "75101": -25.951982981633137,
+        "75102": -20.002079132580548,
+        "75103": -27.557436915222752
+      },
+      "by_case_cost_difference": {
+        "0": -0.8294551911039889,
+        "1": -40.34680791747951,
+        "2": -32.33523592085248
+      }
+    },
+    "iql025_vs_iql0": {
+      "differences": {
+        "cost": 0.9682014020886527,
+        "wait_seconds": 0.4401487686585597,
+        "ride_seconds": 0.08790386477141965,
+        "completion": -6.212579229392112e-05,
+        "mean_executed_hold_seconds": -0.03181148338778428,
+        "positive_hold_fraction": -0.004120693064801784
+      },
+      "cost_percent_of_right": 0.04151082598302962,
+      "better_pairs": 3,
+      "compared_pairs": 9,
+      "better_training_seed_means": 2,
+      "by_seed_cost_difference": {
+        "75101": -0.6283805378366196,
+        "75102": 4.205401852056184,
+        "75103": -0.6724171079549706
+      },
+      "by_case_cost_difference": {
+        "0": 3.940659751424846,
+        "1": 0.5984573924351935,
+        "2": -1.634512937594991
+      }
+    },
+    "iql0_vs_adapted": {
+      "differences": {
+        "cost": -1.0386332290013343,
+        "wait_seconds": -0.43277051322058924,
+        "ride_seconds": -0.17309220256038316,
+        "completion": 3.097605550927973e-05,
+        "mean_executed_hold_seconds": -0.08507035490628745,
+        "positive_hold_fraction": 0.009187662861600637
+      },
+      "cost_percent_of_right": -0.044510710845421374,
+      "better_pairs": 4,
+      "compared_pairs": 9,
+      "better_training_seed_means": 2,
+      "by_seed_cost_difference": {
+        "75101": -5.928564783643651,
+        "75102": 7.267830821091138,
+        "75103": -4.455165724451035
+      },
+      "by_case_cost_difference": {
+        "0": 0.7964676198484995,
+        "1": -3.900381005482359,
+        "2": -0.01198630136968859
+      }
+    },
+    "iql025_vs_adapted": {
+      "differences": {
+        "cost": -0.07043182691268157,
+        "wait_seconds": 0.007378255437970438,
+        "ride_seconds": -0.08518833778896351,
+        "completion": -3.114973678464139e-05,
+        "mean_executed_hold_seconds": -0.11688183829407173,
+        "positive_hold_fraction": 0.005066969796798854
+      },
+      "cost_percent_of_right": -0.0030183616261146113,
+      "better_pairs": 5,
+      "compared_pairs": 9,
+      "better_training_seed_means": 2,
+      "by_seed_cost_difference": {
+        "75101": -6.556945321480271,
+        "75102": 11.473232673147322,
+        "75103": -5.127582832406006
+      },
+      "by_case_cost_difference": {
+        "0": 4.7371273712733455,
+        "1": -3.3019236130471654,
+        "2": -1.6464992389646795
+      }
+    },
+    "iql0_vs_rule": {
+      "differences": {
+        "cost": -2.9491004339397477,
+        "wait_seconds": -0.045076748869632866,
+        "ride_seconds": -2.858946936200482,
+        "completion": -6.156573709470425e-05,
+        "mean_executed_hold_seconds": -0.7973181480862337,
+        "positive_hold_fraction": -0.30498777381734044
+      },
+      "cost_percent_of_right": -0.12628054712763037,
+      "better_pairs": 6,
+      "compared_pairs": 9,
+      "better_training_seed_means": 3,
+      "by_seed_cost_difference": {
+        "75101": -2.1154661674090676,
+        "75102": -2.417923609463287,
+        "75103": -4.313911524945979
+      },
+      "by_case_cost_difference": {
+        "0": -0.39052425007002967,
+        "1": -6.158070811262405,
+        "2": -2.298706240487263
+      }
+    },
+    "iql025_vs_rule": {
+      "differences": {
+        "cost": -1.980899031851095,
+        "wait_seconds": 0.3950720197889268,
+        "ride_seconds": -2.7710430714290624,
+        "completion": -0.00012369152938862538,
+        "mean_executed_hold_seconds": -0.829129631474018,
+        "positive_hold_fraction": -0.3091084668821422
+      },
+      "cost_percent_of_right": -0.08482214124276932,
+      "better_pairs": 5,
+      "compared_pairs": 9,
+      "better_training_seed_means": 2,
+      "by_seed_cost_difference": {
+        "75101": -2.743846705245687,
+        "75102": 1.787478242592897,
+        "75103": -4.98632863290095
+      },
+      "by_case_cost_difference": {
+        "0": 3.5501355013548164,
+        "1": -5.559613418827212,
+        "2": -3.933219178082254
+      }
+    },
+    "adapted_vs_rule": {
+      "differences": {
+        "cost": -1.9104672049384135,
+        "wait_seconds": 0.38769376435095637,
+        "ride_seconds": -2.685854733640099,
+        "completion": -9.254179260398399e-05,
+        "mean_executed_hold_seconds": -0.7122477931799462,
+        "positive_hold_fraction": -0.3141754366789411
+      },
+      "cost_percent_of_right": -0.08180624882507702,
+      "better_pairs": 4,
+      "compared_pairs": 9,
+      "better_training_seed_means": 1,
+      "by_seed_cost_difference": {
+        "75101": 3.8130986162345835,
+        "75102": -9.685754430554425,
+        "75103": 0.14125419950505602
+      },
+      "by_case_cost_difference": {
+        "0": -1.1869918699185291,
+        "1": -2.2576898057800463,
+        "2": -2.2867199391175745
+      }
+    }
+  },
+  "conclusions": [
+    "Replacing only the actor objective with recorded-action IQL reduces corresponding SAC continuation cost on all three seed means: TD0 nine of nine pairs, TD0.25 eight of nine pairs.",
+    "Physical holding and cost return close to adapted55k; additional improvement over adapted55k is small and inconsistent across seed/case pairs.",
+    "IQL0 has a small mean rule advantage0.126%, all three seed means but only six of nine pairs; this is not cross-city generality or robust rule superiority.",
+    "ModelTD0.25 has no stable incremental benefit: mean cost increases0.968 seconds/person versusIQL0, with three of nine pairs improving.",
+    "SAC temperature updates retained after removing entropy from actor objective increasealpha to308-329; final critic TD and value errors are large. Target-term attribution requires the fixed-fit diagnostic rather than causal inference from correlation alone."
+  ],
+  "final_log_ranges": {
+    "train/alpha": [
+      307.7109375,
+      329.189697265625
+    ],
+    "train/offline_nonterminal_abs_td": [
+      411.33306884765625,
+      525.420166015625
+    ],
+    "train/critic_loss": [
+      354.051513671875,
+      480.83056640625
+    ],
+    "train/value_loss": [
+      232.29965209960938,
+      3179.224365234375
+    ],
+    "train/value_grad_norm": [
+      30775.0546875,
+      405270.75
+    ],
+    "model_weight_mean": [
+      0.4927360415458679,
+      0.4959425628185272
+    ]
+  },
+  "next_step": {
+    "kind": "entropy-free TD bootstrap single intervention",
+    "status": "Entropy-OFF campaign complete48/48; numerical TD/V repair confirmed; closed-loop cost did not improve. See entropy_free_continuation_reporting.json.",
+    "diagnostic_summary": "iql_backup_diagnostic_summary.json",
+    "diagnostic_reporting": "iql_backup_diagnostic_reporting.json",
+    "protocol": "entropy_free_continuation_protocol.json",
+    "seeds": [
+      75101,
+      75102,
+      75103
+    ],
+    "demand_seeds": [
+      72541,
+      72542,
+      72543
+    ],
+    "evaluation_rows_read_for_diagnosis": 0,
+    "training_task_ids": [
+      "t126837",
+      "t126838",
+      "t126839",
+      "t126840",
+      "t126841",
+      "t126842"
+    ],
+    "reference_task_ids": [
+      "t126843",
+      "t126844",
+      "t126845",
+      "t126846",
+      "t126847",
+      "t126848",
+      "t126849",
+      "t126850",
+      "t126851",
+      "t126852"
+    ],
+    "initialization_evidence": "entropy_free_continuation_initialization.json",
+    "completed_results": "entropy_free_continuation_reporting.json"
+  },
+  "provenance": {
+    "summary": "iql_actor_continuation_summary.json",
+    "final_metrics": "iql_actor_continuation_final_metrics.json",
+    "training_trajectories": "iql_actor_continuation_training_trajectories.json",
+    "mutable_thesis_accessed": false,
+    "large_remote_files_downloaded": false
+  }
+}

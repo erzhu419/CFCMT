@@ -1,0 +1,32 @@
+{
+  "name": "cfcmt-bus-native-terminal-iql-drift-v1",
+  "training_seeds": [75101, 75102, 75103],
+  "target_pool": "native_terminal_repair/target_pool.h5",
+  "target_fit_rows": 12288,
+  "target_union_rows": 16384,
+  "fit_role": 0,
+  "state_batch_size": 512,
+  "action_equality_tolerance": 0.000001,
+  "stages": {
+    "adapted55": {
+      "artifact": "native_terminal_adaptation/seed{seed}/adapted.pt",
+      "stored_updates": 5000,
+      "historical_updates": 55000
+    },
+    "unmasked75": {
+      "artifact": "native_terminal_actor_unmasked/real_v_unmasked/seed{seed}/final_learner.pt",
+      "stored_updates": 25000,
+      "historical_updates": 75000
+    }
+  },
+  "new_training_updates": 0,
+  "world_model_refit_updates": 0,
+  "new_simulations": 0,
+  "evaluation_rows_read": 0,
+  "weight_definition": "Recompute native exp/clamp weights from recorded-action min target-critic Q minus V at each frozen learner's final parameters and saved IQL configuration; these are not claimed to be the final update's cached weights.",
+  "objective_definition": "Cross each of the two frozen actor likelihoods with each of the two frozen weight sources. Keep the native full-record denominator, with no free-state multiplier or division by weight sum. Report contributions by free/collapsed execution bounds and recorded zero/positive action.",
+  "action_definition": "Use native deterministic actor actions and the existing canonical execution projection; report requested and executed holding drift on the same fit states.",
+  "checkpoint_rule": "All three seed-matched55k/75k learner states fixed before diagnosis; no training, selection, checkpoint writes or simulation.",
+  "interpretation": "Training-fit decomposition of weight and actor drift. Likelihood or Q improvement is not measured passenger-cost improvement or validated action ranking.",
+  "code_boundary": "CFCMT-owned corrected pool and physically frozen runtime only; all data/model reads on the server, only statistic JSON returned; no mutable Thesis access."
+}

@@ -1,0 +1,86 @@
+{
+  "name": "cfcmt-bus-native-terminal-confirmation-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "branches": {
+    "repaired": {
+      "method": "cross_city",
+      "artifact_folder": "native_terminal_adaptation"
+    }
+  },
+  "evaluation": {
+    "episode_seconds": 24000,
+    "demand_scale": 1.0,
+    "rule": "forward_proportional",
+    "rule_gain": 0.6,
+    "cases": [
+      {
+        "case": 0,
+        "demand_seed": 72571,
+        "sumo_seed": 73571
+      },
+      {
+        "case": 1,
+        "demand_seed": 72572,
+        "sumo_seed": 73572
+      },
+      {
+        "case": 2,
+        "demand_seed": 72573,
+        "sumo_seed": 73573
+      }
+    ],
+    "test_separation": "Predeclared before any new assets or results; disjoint from all existing native collection/evaluation cases",
+    "comparison": "Twelve new evaluations: three fixed repaired actors times three fresh generated demand cases, plus three actual rule runs",
+    "primary_cost": "(2*wait_passenger_seconds+in_vehicle_passenger_seconds)/departed_passengers",
+    "completion": "Report completion rate and departed/completed counts alongside cost.",
+    "interpretation": "Bounded pilot on one target city; no population-level CI or city removal."
+  },
+  "asset_selection": {
+    "start_hour": 7,
+    "service_hours": 4,
+    "max_directional_services": 12,
+    "minimum_departures_in_window": 2,
+    "ordering": "Original route, direction, pattern and service id, before any control outcomes",
+    "require_positive_apc": true,
+    "required_tables": [
+      "stop_news.xlsx",
+      "route_news.xlsx",
+      "time_table.xlsx",
+      "passenger_OD.xlsx"
+    ],
+    "network": "GTFS-derived route corridors; APC-apportioned demand, generated destinations; not a measured city road network",
+    "scheduled_service_date": "2026-05-19",
+    "calendar_rule": "Earliest weekday in the pinned GTFS feed with active weekday service and without a holiday exception; keep the original 12-service subset",
+    "calendar_provenance": "Actual trip_id/service_id and full stop signatures from GTFS; never merge mutually exclusive calendar services or clamp zero scheduled headways"
+  },
+  "asset_folder": "native_terminal_confirmation",
+  "actor_action_space": "executed",
+  "rule_action_space": "proposal",
+  "rule": {
+    "method": "forward_proportional",
+    "gain": 0.6,
+    "actor_action_space": "proposal",
+    "checkpoint": null,
+    "training_seed": null
+  },
+  "new_training_updates": 0,
+  "world_model_refit_updates": 0,
+  "checkpoint_rule": "Freeze every native_terminal_adaptation/seedN/policy.pt final55000 actor; no checkpoint/seed/gate selection or additional updates",
+  "primary_comparison": "Equal-weight full24000 passenger cost of repaired actors versus forward proportional gain0.6 rule, all seeds and cases retained",
+  "diagnostic_trigger": "Same previously analyzed72551-72553 cases showed mean\u2212.20947% versus rule; this new cohort checks whether the small gain persists",
+  "reporting": "Report each seed/case and pooled cost/wait/ride/completion; three actual rule runs support nine pairs, no population CI",
+  "interpretation": "Prospective generated-demand confirmation on the same pinned Halifax services, not measured real deployment or source/confidence contribution isolation",
+  "code_boundary": "CFCMT-owned corrected pool/runtime/source checkpoints/assets only; no mutable Thesis access and no heavy data downloads.",
+  "prepared": true,
+  "paired_comparisons": {
+    "repaired_vs_rule": [
+      "repaired",
+      "strong_rule"
+    ]
+  },
+  "reporting_interpretation": "Prospective generated-demand confirmation on the same pinned Halifax services, not measured real deployment or source/confidence contribution isolation; all12 actual evaluations and all9 pairs retained, equal case/seed weights, three actual rule runs reused across9 pairs, no old-case pooling or population CI."
+}

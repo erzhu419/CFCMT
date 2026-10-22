@@ -1,0 +1,37 @@
+{
+  "name": "cfcmt-bus-value-diagnostic-v1",
+  "training_protocol": "cfcmt-bus-cross-city-offline-pilot-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "roles": [
+    "stop",
+    "calibrate"
+  ],
+  "target_row_selection": "All existing 2048 stop and 2048 calibrate rows; same rows at every checkpoint stage. No final test rows.",
+  "physical_model_comparison": "Recorded actions only, positive-dt nonterminal rows with state.time/horizon<0.75; matched future-action RNG and identical decoded model transitions across stages.",
+  "source_row_selection": "256 uniformly spaced positions from the already consumed 16384-row source pool, including both endpoints, plus every existing source terminal tail for a separate terminal-anchor diagnostic. No new source outcomes.",
+  "value_stages": [
+    "source_initializer_native",
+    "source_initializer_transferred",
+    "target_initializer",
+    "source_adapted",
+    "target_adapted"
+  ],
+  "final_actor_stages": [
+    "target_only",
+    "target_model",
+    "cross_city"
+  ],
+  "missing_artifact": "Final policy artifacts contain actor only. Final same-state Q/V are unavailable; last logged final minibatches remain separate observations.",
+  "action_semantics": "Deterministic proposed holding before the physical completion executor; actor-zero Q gaps are learned preferences, not measured action gains.",
+  "value_metrics": "Recorded-action Q, zero-action Q, actor-action Q, value V, positive-Q fractions, exact masked IQL residual; actual versus model one-step H2O+ target under matched RNG.",
+  "model_metrics": "Predicted versus actual duration and reward on observed actions; next-state bootstrap differences. No fitted trust or model updates.",
+  "decisions": "Locate pre-existing source value error, category-reset shift, target adaptation change and model next-state bias before specifying another experiment; never select a tested checkpoint or retune the pilot.",
+  "training_updates": 0,
+  "new_simulation_events": 0,
+  "large_files_downloaded": false,
+  "interpretation": "Read-only diagnostic using held-out behavior transitions; it does not identify the counterfactual cost of a new actor action or a final critic that was not saved."
+}

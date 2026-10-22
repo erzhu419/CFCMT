@@ -1,0 +1,107 @@
+{
+  "complete": true,
+  "formal_tasks": [
+    "t124940",
+    "t124941",
+    "t124942"
+  ],
+  "zero_evaluations": 3,
+  "paired_policy_comparisons": 21,
+  "horizon_seconds": 24000,
+  "training_updates": 0,
+  "zero_mean": {
+    "cost": 2326.1304157021054,
+    "completion": 0.9830394943156975,
+    "wait_seconds": 842.7707862490182,
+    "ride_seconds": 640.5888432040688,
+    "mean_executed_hold_seconds": 7.990927992393114,
+    "positive_hold_fraction": 0.1331821332065519
+  },
+  "policy_comparisons": {
+    "strong_rule": {
+      "cost": 2318.793199460133,
+      "cost_minus_zero": -7.337216241972328,
+      "cost_percent_of_zero": -0.31542583306782074,
+      "wait_seconds_minus_zero": -5.442188754020435,
+      "ride_seconds_minus_zero": 3.5471612660687697,
+      "better_case_pairs": 2,
+      "case_pairs": 3,
+      "better_seed_means": null
+    },
+    "source_adapted": {
+      "cost": 2318.620490559514,
+      "cost_minus_zero": -7.509925142591328,
+      "cost_percent_of_zero": -0.32285056297346837,
+      "wait_seconds_minus_zero": -4.3593585445273675,
+      "ride_seconds_minus_zero": 1.2087919464639754,
+      "better_case_pairs": 9,
+      "case_pairs": 9,
+      "better_seed_means": 3
+    },
+    "target_adapted": {
+      "cost": 2321.9001813648947,
+      "cost_minus_zero": -4.230234337210732,
+      "cost_percent_of_zero": -0.18185714389250623,
+      "wait_seconds_minus_zero": -2.181406638415183,
+      "ride_seconds_minus_zero": 0.13257893961895206,
+      "better_case_pairs": 6,
+      "case_pairs": 9,
+      "better_seed_means": 3
+    }
+  },
+  "zero_guard_statistics": {
+    "mean_proposed_seconds": 0,
+    "decision_events": 11503,
+    "guard_increased_events": 1532,
+    "guard_decreased_events": 0,
+    "positive_executed_hold_seconds": 60,
+    "execution_layer": "early60",
+    "completion_guard": "quarter-load-sixty"
+  },
+  "conclusion": "Rule and both adapted routes reduce mean cost relative to zero autonomous proposals under the same executor. This shows a net control benefit in these cases. Cross-city adaptation remains nearly tied with the rule; this test does not establish a holding optimum.",
+  "action_semantics_finding": {
+    "evidence": "action_semantics_audit.json",
+    "data": "12288 original target-fit rows only",
+    "contract": "Actor, Q and world model train on recorded post-guard actions; deployment interprets actor output as a pre-guard proposal.",
+    "original_proposals_reproduce_recorded_actions_max_error": 0.0,
+    "repeated_guard_changed_rows": 2010,
+    "changed_fraction_of_fit": 0.16357421875,
+    "changed_fraction_of_positive_labels": 0.5371459112773918,
+    "changed_rows_mean_seconds_before": 1.8507943153381348,
+    "changed_rows_mean_seconds_after": 0.2505935728549957,
+    "unchanged_positive_rows": 1732,
+    "model_updates": 0,
+    "simulator_runs": 0
+  },
+  "next_step": {
+    "kind": "Resolve action semantics before another performance experiment",
+    "plan": "First inspect the owned frozen source data action definition, then align actor, Q, world-model and deployment action roles while retaining the original executor. Fix the interface contract before defining a fixed-budget comparison.",
+    "source_boundary": "Verified source identity execution: original proposal equals physical execution. This intervention retains both source and target physical execution labels.",
+    "performance_experiment_submitted": true,
+    "status": "complete; execution-space projection evaluation collected",
+    "protocol": "executed_action_eval_protocol.json",
+    "formal_tasks": [
+      "t124972",
+      "t124973",
+      "t124974",
+      "t124975",
+      "t124976",
+      "t124977"
+    ],
+    "results": "executed_action_eval_reporting.json"
+  },
+  "limitations": [
+    "Zero proposals retain execution constraints: 1532 of11503 events still execute60 seconds. This is not a no-holding or no-control reference.",
+    "Only three previously analyzed generated demand days in one corridor city. Reused zero cases create21 paired comparisons, not21 independent zero runs.",
+    "The action audit replays recorded labels at the same fit states; it neither measures actor predictions nor establishes how much of the closed-loop performance difference the mismatch causes.",
+    "The internal guard scaling is part of the existing design. Not all positive labels shrink on repeated application, and the owned full-source action semantics are not yet verified."
+  ],
+  "provenance": {
+    "protocol": "zero_hold_eval_protocol.json",
+    "summary": "zero_hold_eval_summary.json",
+    "downloaded_summary_bytes": 37464,
+    "downloaded_action_audit_bytes": 1683,
+    "large_remote_files_downloaded": false,
+    "thesis_modified": false
+  }
+}

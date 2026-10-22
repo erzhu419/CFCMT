@@ -53,7 +53,7 @@ def test_current_method_schematic_has_no_pressure_guard() -> None:
 
     assert "pressure guard" not in schematic
     assert "maxpressure" in schematic
-    assert ">pressure</text>" in schematic
+    assert ">phasepressure</text>" in schematic
     assert "not zero-shot or field causal identification" in schematic
 
 
@@ -62,7 +62,7 @@ def test_postfreeze_claim_is_rebuilt_from_frozen_audits() -> None:
     assert len(rows) == 4
     confirmation = rows[-1]
 
-    assert confirmation["stage"] == "v89 frozen legacy"
+    assert confirmation["stage"] == "V89 frozen legacy"
     assert confirmation["evidence_class"] == "fresh confirmation"
     assert confirmation["seed_count"] == 64
     assert confirmation["mean_relative_delta"] == pytest.approx(

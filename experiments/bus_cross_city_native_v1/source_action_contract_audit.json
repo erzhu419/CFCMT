@@ -1,0 +1,24 @@
+{
+  "complete": true,
+  "source_rows": 3284718,
+  "source_shards": 240,
+  "terminal_rows": 240,
+  "owned_dataset": "source_dense_ablation/source_dense.h5",
+  "action_role": "Source actions are both original policy proposals and physically executed0–60second holding; the source executor is an identity map apart from domain clipping.",
+  "separate_proposal_column": false,
+  "proposal_recoverable": true,
+  "source_zero_policy_rows": 410596,
+  "source_zero_policy_actions_all_minus_one": true,
+  "dense_copy_action_transformation": "None; source rate features were cleared but original actions and transition pairs were retained.",
+  "frozen_evidence_root": "/home/zhengliang01/scheduleurm_work/CFCMT/experiments/bus_thesis_rule_confirmation_v1/thesis_snapshot/sumo_eval/runtime/H2Oplus",
+  "evidence": [
+    "dense_source_ablation.py:32–64 and source_dense_ablation/snapshot_summary.json: all3284718 source rows retained after matching consumed16384 compact rows.",
+    "collect_policy/collect_transit_v7.py:412,443–450,485–488: record action output and directly decode and dispatch its holding.",
+    "bus_h2o/envs/sumo_gym_env.py:347–352: directly bridge holding.",
+    "bus_h2o/sumo_env/rl_bridge.py:929–952,986–991: clip to physical domain and execute service_completion_time+holding; no target early/quarter transform."
+  ],
+  "decision": "Retain source and target executed-action labels. First evaluate fixed adapted actors with execution-space projection under the original target reachable range; no source reconstruction or retraining required.",
+  "thesis_accessed": false,
+  "large_remote_files_downloaded": false,
+  "training_updates": 0
+}

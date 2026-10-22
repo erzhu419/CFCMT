@@ -1,0 +1,158 @@
+{
+  "name": "cfcmt-bus-iql-actor-continuation-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "branches": {
+    "td0": {
+      "method": "cross_city",
+      "artifact_folder": "iql_actor_continuation/td0",
+      "model_td_coefficient": 0.0,
+      "actor_objective": "recorded_iql"
+    },
+    "td025": {
+      "method": "cross_city",
+      "artifact_folder": "iql_actor_continuation/td025",
+      "model_td_coefficient": 0.25,
+      "actor_objective": "recorded_iql"
+    },
+    "sac0": {
+      "method": "cross_city",
+      "artifact_folder": "projected_continuation/td0",
+      "model_td_coefficient": 0.0,
+      "actor_objective": "sac"
+    },
+    "sac025": {
+      "method": "cross_city",
+      "artifact_folder": "projected_continuation/td025",
+      "model_td_coefficient": 0.25,
+      "actor_objective": "sac"
+    },
+    "adapted": {
+      "method": "cross_city",
+      "artifact_folder": "source_dense_adapted_eval"
+    }
+  },
+  "evaluation": {
+    "episode_seconds": 24000,
+    "demand_scale": 1.0,
+    "rule": "forward_proportional",
+    "rule_gain": 0.6,
+    "cases": [
+      {
+        "case": 0,
+        "demand_seed": 72531,
+        "sumo_seed": 73531
+      },
+      {
+        "case": 1,
+        "demand_seed": 72532,
+        "sumo_seed": 73532
+      },
+      {
+        "case": 2,
+        "demand_seed": 72533,
+        "sumo_seed": 73533
+      }
+    ],
+    "test_separation": "Predefined before new training or evaluation; disjoint from fit/stop/calibration, smoke and all previous evaluation cohorts. Same pinned services and generated OD intensities.",
+    "comparison": "48 actual new evaluations: new IQL actor18, previous SAC18, adapted55k9, rule3.",
+    "primary_cost": "(2*wait_passenger_seconds+in_vehicle_passenger_seconds)/departed_passengers",
+    "completion": "Report completion rate and departed/completed counts alongside cost.",
+    "interpretation": "Bounded pilot on one target city; no population-level CI or city removal."
+  },
+  "asset_selection": {
+    "start_hour": 7,
+    "service_hours": 4,
+    "max_directional_services": 12,
+    "minimum_departures_in_window": 2,
+    "ordering": "Original route, direction, pattern and service id, before any control outcomes",
+    "require_positive_apc": true,
+    "required_tables": [
+      "stop_news.xlsx",
+      "route_news.xlsx",
+      "time_table.xlsx",
+      "passenger_OD.xlsx"
+    ],
+    "network": "GTFS-derived route corridors; APC-apportioned demand, generated destinations; not a measured city road network",
+    "scheduled_service_date": "2026-05-19",
+    "calendar_rule": "Earliest weekday in the pinned GTFS feed with active weekday service and without a holiday exception; keep the original 12-service subset",
+    "calendar_provenance": "Actual trip_id/service_id and full stop signatures from GTFS; never merge mutually exclusive calendar services or clamp zero scheduled headways"
+  },
+  "asset_folder": "iql_actor_continuation",
+  "actor_action_space": "executed",
+  "rule_action_space": "proposal",
+  "initialization_updates": 50000,
+  "adaptation_updates": 5000,
+  "world_model_refit_updates": 0,
+  "checkpoint_rule": "New IQL-actor and previous projected SAC controllers use fixed final20k continuation artifacts, with no outcome-based seed/checkpoint selection. Adapted55k is a fewer-update stage reference.",
+  "intervention": "Only the actor loss changes from SAC min-Q plus latent entropy to the existing recorded-action IQL weighted likelihood. Preserve execution-projected generated actions, real/model critic losses, value updates, H2O+ backup, temperature updates, sampling order and replay.",
+  "rule": {
+    "method": "forward_proportional",
+    "gain": 0.6,
+    "actor_action_space": "proposal",
+    "checkpoint": null,
+    "training_seed": null
+  },
+  "primary_comparisons": [
+    "iql0_vs_sac0",
+    "iql025_vs_sac025"
+  ],
+  "boundary": "Matched20k actor-objective intervention within an offline continuation. Hybrid recorded-action IQL actor with original SAC/H2O+ critic and temperature, not pure IQL, live LF interaction, or isolated normalized-confidence efficacy.",
+  "limits": [
+    "One target city, fixed service date, generated OD destinations/intensities and three prospective passenger realizations.",
+    "Recorded-action likelihood constrains the loss; it is not a hard bound on actor actions or a correction of critic bias.",
+    "Execution projection preserves latent rather than executed-action entropy; temperature algorithm is unchanged, but its trajectory can change.",
+    "Adapted55k has fewer updates; model0/0.25 does not isolate normalized confidence from other model components.",
+    "All fixed seeds and final artifacts retained; no threshold, model, city, seed, checkpoint or temperature selection after outcomes."
+  ],
+  "code_boundary": "CFCMT-owned frozen runtime and inputs only; no mutable Thesis access; no H5/CSV/checkpoint downloads.",
+  "continuation_updates": 20000,
+  "target_fit_rows": 12288,
+  "target_union_rows": 16384,
+  "source_rows": 3284718,
+  "new_training_updates_per_policy": 20000,
+  "paired_comparisons": {
+    "iql0_vs_sac0": [
+      "td0",
+      "sac0"
+    ],
+    "iql025_vs_sac025": [
+      "td025",
+      "sac025"
+    ],
+    "iql025_vs_iql0": [
+      "td025",
+      "td0"
+    ],
+    "iql0_vs_adapted": [
+      "td0",
+      "adapted"
+    ],
+    "iql025_vs_adapted": [
+      "td025",
+      "adapted"
+    ],
+    "iql0_vs_rule": [
+      "td0",
+      "strong_rule"
+    ],
+    "iql025_vs_rule": [
+      "td025",
+      "strong_rule"
+    ],
+    "adapted_vs_rule": [
+      "adapted",
+      "strong_rule"
+    ]
+  },
+  "fixed_training": "Each new arm loads the same seed-matched full-source50k plus target5k adapted learner and optimizers. 20k online=True continuation updates use original fit12288 only; existing V update and its detached IQL weights are reused. Model TD coefficients0/0.25, world model, normalized QDelta trust, generation, backup, alpha update, and RNG offsets unchanged. No training simulator interactions.",
+  "entropy_interpretation": "Entropy/log probabilities remain those of the latent desired-action distribution. Many-to-one projection does not produce an execution-action density. Keep the frozen entropy kernel and temperature; ordinary clamp gradient is1 inside the interval and0 when saturated.",
+  "admission": "Seed75101, four paired real/model steps per original-SAC/new-IQL-actor arm. Same replay draws, original IQL weights/labels, pre-actor critic/model computation and initial RNG/alpha; same V/critic/actor/temperature update counts and algorithms.",
+  "reporting_interpretation": "48 actual evaluations on prospective demand72531-72533 and SUMO73531-73533: new actor two arms18, previous SAC two arms18, adapted55k9, rule3. Same-demand comparison, equal seed/case weights, all outcomes, no old-case pooling or population CI.",
+  "new_training_simulator_events": 0,
+  "actor_objective": "Existing _update_iql_actor: negative mean detached IQL weight times raw recorded-action log likelihood; advantage temperature3 and max weight100. No extra coefficient, replay sampling, label projection, hard data-support bound or new V update.",
+  "temperature_interpretation": "The SAC latent-temperature sample retains its original pre-actor-step position and random draws; alpha optimizer updates remain after the actor step. Alpha trajectories may diverge as actors diverge; no freeze, clamp or retuning."
+}

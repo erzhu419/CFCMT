@@ -19,6 +19,7 @@ V157B_MANIFEST = RESULT_ROOT / "tsc_v157b_feature_aligned_b100_arm_manifest_v2.j
 V158_RESULT = (
     RESULT_ROOT / "tsc_v158_native_prefix_ranking_calibration_v1.json"
 )
+V159_RESULT = RESULT_ROOT / "tsc_v159_native_endpoint_ablation_v1.json"
 EXPECTED_CITIES = {
     "atlanta",
     "cologne",
@@ -140,9 +141,21 @@ def _read_v158_result() -> dict[str, Any]:
     return result
 
 
+def _read_v159_result() -> dict[str, Any]:
+    result = json.loads(V159_RESULT.read_text(encoding="utf-8"))
+    if (
+        not isinstance(result, dict)
+        or result.get("protocol")
+        != "tsc-v159-jinan-native-endpoint-ablation-paper-artifact-v1"
+    ):
+        raise ValueError("v159 native-endpoint result evidence changed")
+    return result
+
+
 def build_rows() -> list[dict[str, str]]:
     result = _read_results()
     v158 = _read_v158_result()
+    v159 = _read_v159_result()
     repeat = result["v150a"]["repeatability_summary"][
         "forced_source_leave_one_seed_out"
     ]
@@ -203,6 +216,16 @@ def build_rows() -> list[dict[str, str]]:
     v158_source_target = v158_comparisons["source_minus_target"]
     v158_source_placebo = v158_comparisons["source_minus_placebo"]
     v158_source_pp = v158_comparisons["source_minus_phase_pressure"]
+    v159_oof = v159["oof"]
+    v159_gate = v159_oof["gate"]
+    v159_comparisons = v159_oof["comparisons"]
+    v159_endpoint_delta = v159_comparisons[
+        "endpoint_target_minus_delta_target"
+    ]
+    v159_endpoint_pp = v159_comparisons[
+        "endpoint_target_minus_phase_pressure"
+    ]
+    v159_demand = v159_oof["endpoint_minus_delta_by_scenario"]
     k_effect = _city_effect(
         result["v150k"], "selected_effect_vs_rigid_target_only"
     )
@@ -218,7 +241,7 @@ def build_rows() -> list[dict[str, str]]:
                 "city means improved"
             ),
             "adjudication": "Headroom exists; not deployable",
-            "evidence": "v150a",
+            "evidence": "V150A",
         },
         {
             "stage": "Mechanism parameter prior",
@@ -229,7 +252,7 @@ def build_rows() -> list[dict[str, str]]:
                 f"placebo upper 95% {float(c_placebo['upper_95']):+.5f}"
             ),
             "adjudication": "Offline pass; source identity unresolved",
-            "evidence": "v150c",
+            "evidence": "V150C",
         },
         {
             "stage": "Budget-aware shrinkage",
@@ -239,7 +262,7 @@ def build_rows() -> list[dict[str, str]]:
                 f"mean {float(i_effect['mean']):+.5f}; no city regression"
             ),
             "adjudication": "Reject multicity generality",
-            "evidence": "v150i",
+            "evidence": "V150I",
         },
         {
             "stage": "Local mechanism context",
@@ -247,7 +270,7 @@ def build_rows() -> list[dict[str, str]]:
             "source_admission": f"{int(result['v150j']['source_admission_count'])}/7",
             "quantitative_result": "Exact rigid fallback in all cities",
             "adjudication": "Reject",
-            "evidence": "v150j",
+            "evidence": "V150J",
         },
         {
             "stage": "State-conditioned utility",
@@ -261,7 +284,7 @@ def build_rows() -> list[dict[str, str]]:
                 f"RESCO {100 * float(l_cities['resco_synthetic']['source_relative_change_vs_rigid']):+.1f}%"
             ),
             "adjudication": "Historical; reject after closed-loop smoke",
-            "evidence": "v150k--v150l",
+            "evidence": "V150K--V150L",
         },
         {
             "stage": "Feature-aligned dense utility",
@@ -276,7 +299,7 @@ def build_rows() -> list[dict[str, str]]:
                 f"{float(o_blind['city_means']['hangzhou']):+.5f} vs rigid/placebo/blind"
             ),
             "adjudication": "Reject globally and city-specifically",
-            "evidence": "v150o historical; v156a corrected",
+            "evidence": "V150O historical; V156A corrected",
         },
         {
             "stage": "Leave-city-out meta utility",
@@ -284,7 +307,7 @@ def build_rows() -> list[dict[str, str]]:
             "source_admission": f"{int(result['v151a']['source_admission_count'])}/7",
             "quantitative_result": "Exact rigid fallback in all cities",
             "adjudication": "Reject",
-            "evidence": "v151a",
+            "evidence": "V151A",
         },
         {
             "stage": "Source-only hierarchical prior",
@@ -295,7 +318,7 @@ def build_rows() -> list[dict[str, str]]:
                 f"{sum(float(value) < 0 for value in p152['city_means'].values())}/7 improved"
             ),
             "adjudication": "Reject",
-            "evidence": "v152a",
+            "evidence": "V152A",
         },
         {
             "stage": "Target-calibrated hierarchical prior",
@@ -306,7 +329,7 @@ def build_rows() -> list[dict[str, str]]:
                 f"[{float(p153['lower_95']):+.5f}, {float(p153['upper_95']):+.5f}]"
             ),
             "adjudication": "Reject; exact rigid fallback",
-            "evidence": "v153a",
+            "evidence": "V153A",
         },
         {
             "stage": "Domain-aligned B100 source gate",
@@ -319,14 +342,14 @@ def build_rows() -> list[dict[str, str]]:
                 f"[{float(v157b_effect['lower_95']):+.5f}, "
                 f"{float(v157b_effect['upper_95']):+.5f}]; "
                 f"{v157b_improved}/22 improve; "
-                f"{float(v157b_gate['uniform_source_mean_normalized_delta_vs_phase_pressure']):+.5f} vs PP"
+                f"{float(v157b_gate['uniform_source_mean_normalized_delta_vs_phase_pressure']):+.5f} vs PhasePressure"
             ),
             "adjudication": "B100 gate pass; V157C incomplete",
-            "evidence": "v123/v157a historical; v157b corrected",
+            "evidence": "V123/V157A historical; V157B corrected",
         },
         {
             "stage": "Native one-action branch",
-            "information": "Fixed Jinan roster; seed 27178 t=480 invalid",
+            "information": "Fixed Jinan roster; seed 27178 checkpoint at 480 s invalid",
             "source_admission": "2/3 valid seeds",
             "quantitative_result": (
                 "descriptive source-target "
@@ -334,16 +357,16 @@ def build_rows() -> list[dict[str, str]]:
                 f"({int(v157c_source_target['negative_available_seed_count'])}/2 improve); "
                 "source-placebo "
                 f"{float(v157c_source_placebo['mean_of_available_seed_means']):+.5f}; "
-                "target-PP "
+                "target-PhasePressure "
                 f"{float(v157c_target_pp['mean_of_available_seed_means']):+.5f}; "
-                "source-PP "
+                "source-PhasePressure "
                 f"{float(v157c_source_pp['mean_of_available_seed_means']):+.5f} "
                 f"({int(v157c_source_pp['negative_available_seed_count'])}/2 improve); "
                 f"collisions {int(v157c_descriptive['valid_seed_collision_events'])}; "
-                "PP=PhasePressure heuristic"
+                "PhasePressure is the reference heuristic"
             ),
             "adjudication": "Incomplete; no three-seed inference",
-            "evidence": "v157c",
+            "evidence": "V157C",
         },
         {
             "stage": "Native-prefix ranking calibration",
@@ -362,7 +385,7 @@ def build_rows() -> list[dict[str, str]]:
                 f"[{float(v158_source_placebo['paired_bootstrap_95'][0]):+.5f}, "
                 f"{float(v158_source_placebo['paired_bootstrap_95'][1]):+.5f}] "
                 f"({int(v158_source_placebo['improved_seeds'])}/10 improve); "
-                "source-PP "
+                "source-PhasePressure "
                 f"{float(v158_source_pp['mean_difference']):+.5f}, 95% "
                 f"[{float(v158_source_pp['paired_bootstrap_95'][0]):+.5f}, "
                 f"{float(v158_source_pp['paired_bootstrap_95'][1]):+.5f}] "
@@ -373,7 +396,28 @@ def build_rows() -> list[dict[str, str]]:
                 f"{int(v158_development['snapshot_restores'])} restores"
             ),
             "adjudication": "Reject; OOF gate failed; reserve withheld",
-            "evidence": "v158",
+            "evidence": "V158",
+        },
+        {
+            "stage": "Native endpoint ablation",
+            "information": "V158 B100 target labels; direct physical endpoints",
+            "source_admission": "Target only; no source",
+            "quantitative_result": (
+                "endpoint-delta "
+                f"{float(v159_endpoint_delta['mean_difference']):+.5f}, 95% "
+                f"[{float(v159_endpoint_delta['paired_bootstrap_95'][0]):+.5f}, "
+                f"{float(v159_endpoint_delta['paired_bootstrap_95'][1]):+.5f}] "
+                f"({int(v159_endpoint_delta['improved_seeds'])}/10 improve); "
+                "base/2000/2500 "
+                f"{float(v159_demand['jinan_3x4_real']):+.5f}/"
+                f"{float(v159_demand['jinan_3x4_real_2000']):+.5f}/"
+                f"{float(v159_demand['jinan_3x4_real_2500']):+.5f}; "
+                "endpoint-PhasePressure "
+                f"{float(v159_endpoint_pp['mean_difference']):+.5f} "
+                f"({int(v159_endpoint_pp['improved_seeds'])}/10 improve)"
+            ),
+            "adjudication": "Reject; direct-endpoint hypothesis closed",
+            "evidence": "V159",
         },
     ]
     expected_v157c_means = {
@@ -583,6 +627,43 @@ def build_rows() -> list[dict[str, str]]:
                 "seed_wins_passed": False,
                 "passed": False,
             },
+        }
+        and v159["parent"]["protocol"]
+        == "tsc-v158-jinan-native-prefix-ranking-calibration-v1"
+        and v159["status"] == "OOF_GATE_FAIL"
+        and v159["scientific_status"] == "direct_endpoint_hypothesis_closed"
+        and v159["decision"]
+        == {
+            "deployment_authorized": False,
+            "followup_authorized": False,
+            "reserve_executed": False,
+        }
+        and v159["input_bank"]["action_groups"] == 100
+        and v159["input_bank"]["candidate_rows"] == 800
+        and v159["input_bank"]["new_simulator_trajectories"] == 0
+        and v159_oof["fold_count"] == 5
+        and v159_oof["unit"] == "whole_seed"
+        and v159_endpoint_delta["seed_count"] == 10
+        and v159_endpoint_delta["mean_difference"]
+        == -0.0006064814814814134
+        and v159_endpoint_delta["paired_bootstrap_95"]
+        == [-0.002236280864197459, 0.0008122337962963532]
+        and v159_endpoint_delta["improved_seeds"] == 5
+        and v159_endpoint_pp["mean_difference"] == 0.0006547839506173547
+        and v159_endpoint_pp["improved_seeds"] == 3
+        and v159_demand
+        == {
+            "jinan_3x4_real": -0.002011188271604958,
+            "jinan_3x4_real_2000": 0.001571502057613361,
+            "jinan_3x4_real_2500": -0.0009115226337449434,
+        }
+        and v159_gate["passed"] is False
+        and v159_gate["checks"]
+        == {
+            "bootstrap_upper_passed": False,
+            "every_demand_noninferior_passed": False,
+            "mean_passed": True,
+            "seed_wins_passed": False,
         }
     ):
         raise ValueError("source-remedy adjudication changed")

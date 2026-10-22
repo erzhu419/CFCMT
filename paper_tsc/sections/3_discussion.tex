@@ -1,199 +1,136 @@
 \section{Discussion}
 
-One supported result is about model structure: aligning the estimand and
-capacity with the decision improved a learned controller relative to a dense
-residual.  CFCMT predicts a normalized ordering among phases from the same
-state, keeps a rigid local anchor and allows an all-pair correction only at a
-weight selected on complete held-out target seeds.  This reduced external
-offline regret and closed-loop waiting relative to a same-information dense
-residual.  Because the dense comparison also receives matched action
-contrasts, the gain cannot be explained by reference subtraction alone.
+The central result concerns the alignment between model structure and the
+control decision.  CFCMT estimates normalized action contrasts, retains a
+rigid local anchor and selects an all-pair correction on complete held-out
+target seeds.  This design reduced external offline regret and closed-loop
+waiting relative to a same-information dense residual.  The dense comparator
+also receives matched action contrasts, so reference subtraction alone cannot
+explain the gain.  The comparison supports the combined structural design
+rather than identifying each restriction's individual contribution.
 
-A distinct claim about transferred data is conditional rather than uniformly
-positive or negative.  The v91 comparator shares the target labels, feature
-semantics, model family and executor with CFCMT, and assigns source-labelled
-samples zero weight in deployed scoring.  However, its retained source prior
-can resolve exact prediction ties, so it is a legacy near-target-only
-comparator rather than a strict source-free arm.  Across 64 fresh closed-loop
-seeds, CFCMT reduced Jinan waiting by 3.045\%, with all 64 seed-level city
-contrasts favourable, but increased Los Angeles waiting by 7.865\%, with only
-22 of 64 contrasts favourable.  The equal-city mean therefore rejected a
-general cross-city source-contribution claim and exposed negative transfer as
-a network-dependent failure mode.
+This result clarifies why the earlier full mechanism-world-model route was
+not retained as the final controller.  MC-WM decomposed queue propagation,
+red accumulation, mobility, spillback and control cost.  These components
+support diagnosis, but their prediction errors accumulate before the model
+answers the narrower phase-selection question.  Good next-state or mechanism
+loss does not guarantee correct action ordering.  Under limited target
+support, flexible latent or graph paths can also dominate the rigid signal.
+The final design preserves declared parents and local mechanism features,
+then adds an antisymmetric ranking correction with a measurable, bounded
+effect.
 
-A separate post-v91 target-offline selector then made the network dependence
-operational before its fresh rollouts: it returned exact target-only control
+The controller comparisons show that transferred information has
+network-dependent value.  V91 held target labels, feature semantics, model
+family and execution fixed.  Across 64 fresh seeds, CFCMT reduced Jinan
+waiting by 3.045\%, with all 64 seed-level city contrasts favourable.
+Los Angeles waiting increased by 7.865\%, with only 22 of 64 contrasts
+favourable.  The equal-city mean rejected a joint two-city source-benefit
+claim.  These opposite effects show why source transfer needs an explicit
+abstention option rather than an assumption of benefit.
+
+V98 tested that option through a separate post-V91 target-offline selector.
+Before its fresh rollouts, the selector returned exact target-only control
 for Los Angeles and admitted a Hangzhou source component at mass one for
 Jinan.  On 56 further Jinan seeds (336 rollouts), the admitted controller
-reduced waiting by 4.527\% relative to a strict zero-source-row target model
-(paired 95\% interval, 4.279--4.787\%); all 56 contrasts were favourable
-($p=7.5475\times10^{-11}$, Wilcoxon signed-rank test).  Because the abstention
-and admission decisions preceded these rollouts, this is evidence for a
-preselected Jinan controller-pair gain rather than a post-hoc deletion of Los
-Angeles.
-The comparison still does not isolate source rows at fixed architecture: the
-strict target comparator has lower capacity, and both arms use the same risk
-multiplier of 0.5 inherited from earlier Jinan closed-loop development.  It
-also does not establish superiority over phase pressure.
+reduced waiting by 4.527\% against a strict zero-source-row target model.
+The paired 95\% interval was 4.279--4.787\%, and all 56 contrasts were
+favourable (two-sided Wilcoxon signed-rank probability value
+$7.5475\times10^{-11}$).  The decisions preceded the rollouts, so the gain
+reflects the preselected Jinan controller comparison
+(\Cref{sec:supp-v98-confirmation}).
 
-The experiments also explain why the earlier full mechanism-world-model route
-was not retained as the final controller.  MC-WM decomposed queue propagation,
-red accumulation, mobility, spillback and control cost.  That decomposition is
-useful for diagnosis, but each auxiliary prediction introduces error before the
-model answers the narrower control question.  Good next-state or mechanism loss
-does not guarantee the correct phase ordering, and flexible latent or graph
-paths can dominate the rigid signal under limited target support.  The final
-method is therefore a reverse design from the successful rigid model: preserve
-declared parents and local mechanism features, then add only an antisymmetric
-ranking correction whose effect is measurable and bounded.  This is a change
-in scientific hypothesis, not a residual patch to rescue a predetermined
-``full'' architecture.
+Pressure control remains the stronger operational reference on both external
+cities.  MaxPressure and PhasePressure achieved lower system vehicle-hours
+and slightly higher completion than CFCMT.  Queue pressure directly reflects
+service imbalance, giving these rules a strong local control signal.
+CFCMT's advantage over a dense residual supports structured transfer, while
+the pressure comparison identifies where the learned controller remains
+weaker.  The discarded pressure-guard experiments showed a similar boundary
+(\Cref{sec:supp-discarded-guard,tab:discarded-guard-600,tab:discarded-guard-3600}).
+Those pressure guards are absent from the final V43 policy.
 
-Pressure control remains the operational reference.  MaxPressure and phase
-pressure were better than CFCMT in both external cities, with lower system
-vehicle-hours and slightly higher completion.  Traffic-signal control has a
-strong local-rule ceiling because queue pressure directly reflects service
-imbalance.  A learned method that beats fixed time or a dense neural baseline
-but not pressure control is not a replacement controller.  CFCMT is better
-positioned as a transfer layer for settings where the decision depends on
-effects absent from a pressure score, or as a structured model used alongside
-rather than rhetorically above a rule.  The discarded pressure-guard
-experiments in the supplement reinforce this point, but pressure is not hidden
-inside the final v43 policy.
+\subsection{Limitations}
 
-The absence of same-protocol CrossLight, X-Light, MetaLight and GESA
-reproductions is also a substantive comparison gap, not merely a citation
-issue.  Their published protocols use different target interaction budgets,
-state and action interfaces, simulators and training objectives.  Reporting
-their native numbers beside the paired SUMO matrix would manufacture a ranking
-rather than estimate one.  A broader benchmark should reimplement each method
-behind the same safe phase executor and expose three separate target budgets:
-zero labels, passive target transitions and matched counterfactual target
-actions.
+The formal external evidence contains two independent cities.  Multiple Jinan
+demand scenarios add within-city coverage but do not add independent city
+units.  Los Angeles and Jinan are CityFlow-derived networks converted and
+semantically audited for SUMO, rather than calibrated city-wide digital
+twins.  Training counterfactuals and evaluation share the same SUMO physics
+family.  The study therefore evaluates cross-network transfer in simulation,
+with field transfer left untested.
 
-Target information changes the interpretation.  The target simulator is
-uncalibrated against field trajectories, which reduces calibration effort, but
-its action outcomes are labelled target data.  The external result is thus a
-few-shot/full-budget offline-adaptation result with 165 and 911 groups, not a
-demonstration that a source-city policy can be deployed without target
-transitions.  A genuine zero-shot arm remains scientifically useful as the
-left endpoint of an information curve, but it is not the basis of the present
-closed-loop claim.  Conversely, field loop-detector or trajectory data could
-adapt passive state representations without supplying the counterfactual
-outcome of an unexecuted phase.
+Target counterfactual labels also define the information scope.  The
+uncalibrated target simulator reduces calibration effort, but its action
+outcomes remain labelled target data.  The external comparison uses 165 and
+911 adaptation groups and is an offline-adaptation result, not a zero-shot
+result.  The seven-policy matrix uses two seeds, V91 uses 64 seeds over the
+same two target geometries, and V98 uses 56 further seeds on Jinan.
+These protocols remain separate, and their intervals describe the stated
+networks and demand settings.  These evaluations use a fixed 3,600-s horizon
+and include unfinished vehicles.  Longer incidents, non-recurrent demand and
+detector failure remain untested.
 
-The source-comparison results also change how the adaptation budget should be
-used.
-More source data is not monotonically beneficial after target labels are
-available.  Initial target-seed-blocked gates either retained city regressions
-or removed them by selecting target only in all seven development cities
-(Supplementary Table~\ref{tab:source-gate-development}).  A subsequent remedy
-ladder tested mechanism-specific priors, inverse-budget shrinkage, local
-right-of-way context, state-conditioned downstream utility, leave-city-out
-meta-utility and source-only or target-calibrated hierarchical priors
-(Supplementary Table~\ref{tab:source-remedy-ladder}).  Forced source arms still
-showed useful headroom, including improvement in five of seven city means for
-the final target-calibrated prior, but its city interval crossed zero and no
-source survived the complete source-identity controls.  The only state-level
-utility gate that passed offline development produced a large Cologne
-closed-loop regression before matrix expansion.  These experiments validate
-exact abstention as a fallback and expose source-benefit identification as the
-unresolved multicity problem; they do not extend the separate Jinan-specific
-v98 result into a general deployable selector.
+Source-row attribution has two specific limits.  V91's comparator assigns source-labelled
+samples zero weight in deployed scoring, but its retained source prior can
+resolve exact prediction ties.  Its comparator is therefore legacy
+near-target-only rather than strictly source-free.  V98 uses a strict
+zero-source-row target model, but that model has lower capacity than the
+selected controller.  Both V98 arms also share a risk multiplier of 0.5
+inherited from earlier Jinan closed-loop development.  The comparison
+establishes its declared controller-pair gain, without isolating source rows
+at fixed architecture or demonstrating superiority over PhasePressure.
 
-Several limitations constrain generalization.  First, the formal external
-unit count is two cities.  Multiple Jinan demand files improve within-city
-coverage but do not create independent cities, so all intervals are explicitly
-descriptive.  Second, the Los Angeles and Jinan scenarios are CityFlow-derived
-networks converted and semantically audited for SUMO; they are not calibrated
-city-wide digital twins.  Third, training counterfactuals share the same SUMO
-physics family as evaluation.  Cross-network transfer is real at the topology,
-demand and phase-program levels, but sim-to-real transfer is not tested.
-Fourth, the seven-policy closed-loop matrix uses two seeds, whereas v91 uses 64
-seeds over the same two target geometries and v98 uses 56 further seeds on
-Jinan only.  These protocols are reported separately rather than pooled.  All
-use a fixed 3,600-s horizon.  Unfinished vehicles are included, yet longer
-incidents, non-recurrent demand and detector failure remain outside the
-experiment.
+The later source diagnostics reinforce this distinction between available
+headroom and a reliable selection rule.  Target-seed-blocked gates either
+retained city regressions or selected target only throughout the seven
+development cities (\Cref{sec:supp-source-gate,tab:source-gate-development}).
+Mechanism-specific priors, budget-aware shrinkage, local context and
+state-conditioned or hierarchical utility did not resolve the source-identity
+controls.  Forced source arms improved five of seven city means for the final
+target-calibrated prior, but its city interval crossed zero.  The state-level
+utility gate that passed offline development caused a large Cologne
+closed-loop regression before matrix expansion.
+Development-only V123/V157A contrasts were superseded after a Jinan
+domain-handling mismatch was found; V157B corrected B100 on the reused
+selector but remained worse than PhasePressure.  V157C retained an invalid
+seed in its incomplete native diagnostic, and V158/V159 failed their frozen
+native-prefix and endpoint-calibration gates.  Their negative results and
+complete quantitative record are retained in
+\Cref{sec:supp-source-remedy,tab:source-remedy-ladder}.
+These diagnostics leave multicity source-benefit identification unresolved.
 
-The sequential development record is another limitation and a strength.  A
-diagnostic external seed exposed a one-city regression and motivated removal
-of an arbitrary adaptation cap and stricter complete-seed cross-fitting.  That
-diagnostic seed was then permanently excluded, and a new seed authorized the
-final test.  This is not equivalent to a single untouched preregistration;
-reporting the failed stages is necessary to expose researcher degrees of
-freedom.  The final v43 cache, selectors, deployment models and closed-loop
-matrix are nevertheless hash-linked and frozen before their respective next
-stage.
+The sequential development record also matters.  A diagnostic external seed
+exposed a one-city regression, prompting removal of an arbitrary adaptation
+cap and stricter complete-seed cross-fitting.  That seed was permanently
+excluded, and a new seed authorized the final test.  The final V43 cache,
+selectors, deployment models and closed-loop matrix were frozen before their
+respective next stages.  This sequence is not equivalent to a single
+untouched preregistration (\Cref{sec:supp-development-history,sec:supp-artifact-chain}).
+A separate execution-layer programme's favourable 54-seed adaptive estimate
+shrank almost to zero on 64 newly generated Jinan seeds.
+It failed its preregistered bootstrap, sign-test and worst-seed criteria
+(\Cref{sec:supp-postfreeze-stress,tab:postfreeze-stress}).
+Its different 120-s latent originator and global cooldown distinguish it
+from the V43 comparison.
 
-A later execution-layer programme provides a stronger check on this boundary.
-Its favourable 54-seed adaptive estimate shrank almost to zero on 64 newly
-generated Jinan seeds and failed the preregistered bootstrap, sign-test and
-worst-seed criteria.  Because that programme used a different 120-s latent
-originator and global cooldown, it neither rescues nor invalidates the v43
-anchored all-pair comparison.  It does show why adaptive search and independent
-confirmation must not be pooled, and why the present evidence cannot support
-learned-policy superiority over phase pressure.
+Same-protocol CrossLight, X-Light, MetaLight and GESA reproductions remain a
+substantive comparison gap.  Their published experiments differ in target
+interaction budgets, state and action interfaces, simulators and training
+objectives.  A broader benchmark should implement these systems behind the
+same phase executor and distinguish zero labels, passive transitions and
+matched counterfactual actions.  Native-protocol scores cannot provide those
+paired comparisons (\Cref{sec:supp-native-rl}).
 
-The fresh v91 near-target-only test more directly rejects a uniform cross-city
-source-benefit claim.  Unlike the execution-layer programme, it holds the
-CFCMT model family, target adaptation budget and executor fixed.  Its retained
-source-prior tie-break prevents a strict source-row causal interpretation, but
-the opposite city effects cannot be dismissed as a different policy class.
-Offline regret and short-horizon action ranking did not reliably predict the
-closed-loop value of source data, particularly in the Los Angeles corridor
-where one seed produced a large congestion cascade.
-
-The post-v91 evidence narrows but does not close that attribution gap.  V98
-shows that a frozen target-offline rule can abstain for Los Angeles and retain a
-repeatable Jinan-specific controller gain against its declared lower-capacity
-zero-source-row target model.
-The development-only v123/v157a analysis reported favourable model-path
-differences at five target-label budgets, but the target and source paths used
-different Jinan domain handling.  These historical contrasts therefore do not
-isolate source-row value.  V157B corrected the comparator at B100 only: on the
-reused 22-seed Jinan selector, source minus target was $-0.01357$ (paired 95\%
-interval $[-0.01784,-0.00935]$), with 20/22 seeds improving.  The source arm
-still cost $+0.02534$ relative to phase pressure.  V157C then ran the fixed
-three-seed Jinan native one-action protocol.  Seeds 80314 and 88625 completed,
-but seed 27178 remained invalid because its fixed 480-s checkpoint had no
-eligible, scorable traffic light; the seed was neither dropped nor replaced.
-Across the two valid seeds, the descriptive source-minus-target mean was
-$+0.00236$ (one of two seeds improved), source minus matched placebo was
-$-0.00232$, target minus PhasePressure was $+0.00125$, and source minus
-PhasePressure was $+0.00362$, with source worse in both seeds.  Recorded
-collision counts were zero.  PhasePressure is the reference heuristic, not a
-learned arm.  Because the fixed roster was incomplete, these values do not
-support a three-seed inference or confirm the reused-selector advantage.
-Moreover, only two of five effective source overrides improved their native
-PhasePressure continuation, and the predicted source--target ordering agreed
-with the native outcome in only one of four different-action windows.  The
-limitation therefore extends beyond the missing seed to action-benefit ranking
-on native continuations.  V158 made one final frozen attempt to address that
-ranking mismatch.  It collected 100 native-prefix action groups from ten fixed
-Jinan development seeds and fitted native residual calibrators in five
-whole-seed folds.  Source minus target was $-0.00113$ (paired 95\% interval
-$[-0.00240,+0.00019]$; 6/10 seeds improved), source minus matched placebo was
-$-0.00072$ ($[-0.00219,+0.00091]$; 7/10), and source minus PhasePressure was
-$+0.00014$ ($[-0.00239,+0.00261]$; 5/10).  All three preregistered OOF
-comparisons failed, so the reserve was withheld.  This result authorizes no
-controller adoption, unseen-city claim or post-hoc retuning; it closes the
-native-prefix ranking-remediation route under the frozen Jinan sparse
-controller.  No single experiment therefore combines
-fixed architecture, strict source removal, fresh multicity closed-loop
-confirmation and pressure-policy superiority.
-
-Any future study would require a new precommitted design and independent city
-units rather than a relaxed threshold or another sweep on the V158 outcomes.
-It would need to freeze the link between compatibility and downstream action
-ranking before evaluation on additional external cities and a calibrated
-digital twin or prospective signal intervention.  Such a study could
-test whether the local pairwise advantage survives simulator
-mismatch and whether source mechanisms add value in objectives where pressure
-is incomplete, including multimodal priority, spillback risk, emissions or
-network-level coordination.  Until then, the supported claim is narrower:
-causal parent restrictions and antisymmetric action ranking improve a
-simulation-assisted residual relative to dense modelling, while a
-predeployment rule retained a Jinan-specific controller-pair gain that does not
-isolate source-row contribution.  Classical pressure remains the stronger
-controller on the reported targets.
+Future work should freeze the link between source compatibility and action
+ranking before evaluation on additional independent cities.
+A calibrated digital twin or prospective signal intervention could test
+whether the pairwise advantage survives simulator mismatch.
+Passive detector or trajectory records could adapt state representations,
+but do not label unexecuted counterfactual actions.
+Objectives involving multimodal priority, spillback risk, emissions or
+network-level coordination may reveal value beyond a pressure score.
+The present evidence supports matched action contrasts relative to dense
+residual transfer and a separately confirmed Jinan controller-pair gain.
+The broader question is when source mechanisms improve control beyond both
+a target-only model and a strong local rule.

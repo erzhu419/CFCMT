@@ -1,0 +1,44 @@
+/home/zhengliang01/scheduleurm_work/CFCMT/experiments/bus_thesis_rule_confirmation_v1/thesis_snapshot/sumo_eval/runtime/H2Oplus/SimpleSAC/transit_v3/trainer.py::TransitH2OTrainer._iql_value_terms
+    def _iql_value_terms(
+        self, batch: dict[str, torch.Tensor]
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        if self.value is None:
+            raise RuntimeError("IQL value update requires a state-value network")
+        with torch.no_grad():
+            target_q = self.target_critic(
+                batch["observations"], batch["actions"]
+            ).min(dim=0).values
+        value = self.value(batch["observations"])
+        advantage = target_q - value
+        expectile = self.config.iql_expectile
+        weights = torch.where(
+            advantage >= 0.0,
+            torch.full_like(advantage, expectile),
+            torch.full_like(advantage, 1.0 - expectile),
+        )
+        value_loss = (weights * advantage.square()).mean()
+        actor_weights = torch.exp(
+            advantage.detach() * self.config.iql_advantage_temperature
+        ).clamp_max(self.config.iql_max_weight)
+        return value_loss, advantage.detach(), actor_weights
+
+/home/zhengliang01/scheduleurm_work/CFCMT/experiments/bus_thesis_rule_confirmation_v1/thesis_snapshot/sumo_eval/runtime/H2Oplus/SimpleSAC/transit_v3/trainer.py::TransitH2OTrainer._update_iql_actor
+    def _update_iql_actor(
+        self,
+        batch: dict[str, torch.Tensor],
+        actor_weights: torch.Tensor,
+        *,
+        collect_metrics: bool = True,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        self._last_actor_diagnostics = {}
+        log_probability = self.actor.action_log_prob(
+            batch["observations"], batch["actions"]
+        )
+        actor_loss = -(actor_weights * log_probability).mean()
+        self.actor_optimizer.zero_grad(set_to_none=True)
+        actor_loss.backward()
+        actor_grad_norm = self._gradient_norm(
+            self.actor.parameters(), collect_metrics=collect_metrics
+        )
+        self.actor_optimizer.step()
+        return actor_loss, actor_grad_norm

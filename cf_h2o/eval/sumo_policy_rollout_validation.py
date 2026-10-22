@@ -32,7 +32,6 @@ from cf_h2o.eval.paper_experiment_suite import (
     _merge_stats,
     _merge_stats_weighted,
     _parse_float_list,
-    _predict_action_from_obs,
     _repo_root,
     _resolve_path,
     _rollout_feature_obs,
@@ -315,6 +314,7 @@ def _event_obs(
     backward_hw: float,
     station_count: int,
     speed_mps: float,
+    base_dwell_sec: float,
 ) -> np.ndarray:
     station_idx = _stop_index(stop_id)
     station_fraction = station_idx / max(float(station_count - 1), 1.0)
@@ -327,7 +327,7 @@ def _event_obs(
     obs[6] = float(np.clip(backward_hw, 10.0, 7200.0))
     obs[7] = max(0.0, 0.02 * target_hw)
     obs[8] = float(max(target_hw, 60.0))
-    obs[9] = 8.0
+    obs[9] = max(0.0, float(base_dwell_sec))
     obs[10] = float(now)
     obs[11] = obs[5] - obs[6]
     obs[12] = obs[8]
@@ -344,7 +344,7 @@ def _choose_extra_hold(
     actions: list[float],
     line_uid: str,
     station_count: int,
-    sim_start_hour: int,
+    segment_times: list[float],
     mpc_horizon: int,
     mpc_discount: float,
     mpc_action_cost: float,
@@ -416,7 +416,7 @@ def _choose_extra_hold(
                 actions,
                 line_uid=line_uid,
                 station_count=station_count,
-                sim_start_hour=sim_start_hour,
+                segment_times=segment_times,
                 horizon=mpc_horizon,
                 discount=mpc_discount,
                 action_cost=mpc_action_cost,
@@ -430,7 +430,7 @@ def _choose_extra_hold(
                 _unique_actions([daganzo, threshold]),
                 line_uid=line_uid,
                 station_count=station_count,
-                sim_start_hour=sim_start_hour,
+                segment_times=segment_times,
                 horizon=mpc_horizon,
                 discount=mpc_discount,
                 action_cost=mpc_action_cost,
@@ -445,7 +445,7 @@ def _choose_extra_hold(
                 _unique_actions(alpha_actions),
                 line_uid=line_uid,
                 station_count=station_count,
-                sim_start_hour=sim_start_hour,
+                segment_times=segment_times,
                 horizon=mpc_horizon,
                 discount=mpc_discount,
                 action_cost=mpc_action_cost,
@@ -458,7 +458,7 @@ def _choose_extra_hold(
             residual_actions,
             line_uid=line_uid,
             station_count=station_count,
-            sim_start_hour=sim_start_hour,
+            segment_times=segment_times,
             horizon=mpc_horizon,
             discount=mpc_discount,
             action_cost=mpc_action_cost,
@@ -481,7 +481,7 @@ def _choose_extra_hold(
                 residual_actions,
                 line_uid=line_uid,
                 station_count=station_count,
-                sim_start_hour=sim_start_hour,
+                segment_times=segment_times,
                 horizon=mpc_horizon,
                 discount=mpc_discount,
                 action_cost=mpc_action_cost,
@@ -496,7 +496,7 @@ def _choose_extra_hold(
                 residual_actions,
                 line_uid=line_uid,
                 station_count=station_count,
-                sim_start_hour=sim_start_hour,
+                segment_times=segment_times,
                 horizon=mpc_horizon,
                 discount=mpc_discount,
                 action_cost=mpc_action_cost,
@@ -513,7 +513,7 @@ def _choose_extra_hold(
                 _unique_actions(candidate_actions),
                 line_uid=line_uid,
                 station_count=station_count,
-                sim_start_hour=sim_start_hour,
+                segment_times=segment_times,
                 horizon=mpc_horizon,
                 discount=mpc_discount,
                 action_cost=mpc_action_cost,
@@ -525,7 +525,7 @@ def _choose_extra_hold(
             actions,
             line_uid=line_uid,
             station_count=station_count,
-            sim_start_hour=sim_start_hour,
+            segment_times=segment_times,
             horizon=mpc_horizon,
             discount=mpc_discount,
             action_cost=mpc_action_cost,
@@ -545,38 +545,29 @@ def _choose_extra_hold(
             actions,
             line_uid=line_uid,
             station_count=station_count,
-            sim_start_hour=sim_start_hour,
+            segment_times=segment_times,
             horizon=mpc_horizon,
             discount=mpc_discount,
             action_cost=mpc_action_cost,
         )
-    if policy == "h2oplus_dense_policy":
-        return _predict_action_from_obs(
-            obs,
-            policy,
-            model["h2o_beta"],
-            model["cfcmt_beta"],
-            actions,
-            line_key=line_uid,
-            station_count=station_count,
-            sim_start_hour=sim_start_hour,
-        )
     if policy in {
+        "h2oplus_dense_policy",
         "cfcmt_mechanism_policy",
         "cfcmt_similarity_weighted_policy",
         "cfcmt_target_fewshot_policy",
         "cfcmt_source_target_fewshot_policy",
     }:
-        beta = _cfcmt_beta_for_family(model, _model_family_from_policy(policy))
-        return _predict_action_from_obs(
+        return _predict_mpc_action_from_obs(
             obs,
-            "cfcmt_mechanism_policy",
-            model["h2o_beta"],
-            beta,
+            policy,
+            model,
             actions,
-            line_key=line_uid,
+            line_uid=line_uid,
             station_count=station_count,
-            sim_start_hour=sim_start_hour,
+            segment_times=segment_times,
+            horizon=1,
+            discount=1.0,
+            action_cost=0.0,
         )
     return 0.0
 
@@ -661,15 +652,17 @@ def _predict_next_y_batch_from_model(
     actions: list[float] | np.ndarray,
     line_uid: str,
     station_count: int,
-    sim_start_hour: int,
+    segment_times: list[float],
 ) -> tuple[np.ndarray, np.ndarray]:
     family = _model_family_from_policy(policy)
     feature_obs = _rollout_feature_obs(
         obs,
         line_key=line_uid,
         station_count=station_count,
-        sim_start_hour=sim_start_hour,
+        sim_start_hour=0,
     )
+    # SUMO time is already absolute; the shared adapter expects relative time.
+    feature_obs[10] = float(obs[10])
     action_arr = np.asarray(actions, dtype=np.float32)
     obs_mat = np.repeat(feature_obs[None, :], len(action_arr), axis=0).astype(np.float32)
     obs_action = np.concatenate([obs_mat, action_arr[:, None]], axis=1)
@@ -678,7 +671,9 @@ def _predict_next_y_batch_from_model(
     waiting = np.maximum(obs_mat[:, 7].astype(np.float64), 0.0)
     target = np.maximum(obs_mat[:, 8].astype(np.float64), 60.0)
     speed = np.clip(obs_mat[:, 14].astype(np.float64), 1.0, 25.0)
-    travel_time = np.clip(target / 4.0, 30.0, 600.0)
+    # Stop i is at the start of segment i, matching the training route row.
+    station_idx = int(round(float(obs[2])))
+    travel_time = np.full(len(action_arr), segment_times[station_idx], dtype=np.float64)
     hour = int(round(float(feature_obs[3]) * 23.0)) % 24
     sim_y = np.column_stack(_uncalibrated_transition(fwd, bwd, waiting, target, speed, travel_time, action_arr, hour))
     if family == "h2oplus_dense_policy":
@@ -708,7 +703,7 @@ def _predict_next_y_from_model(
     action: float,
     line_uid: str,
     station_count: int,
-    sim_start_hour: int,
+    segment_times: list[float],
 ) -> tuple[np.ndarray, np.ndarray]:
     pred_y, obs_action = _predict_next_y_batch_from_model(
         obs,
@@ -717,7 +712,7 @@ def _predict_next_y_from_model(
         actions=[float(action)],
         line_uid=line_uid,
         station_count=station_count,
-        sim_start_hour=sim_start_hour,
+        segment_times=segment_times,
     )
     return pred_y[0], obs_action[0]
 
@@ -728,6 +723,7 @@ def _advance_obs_from_prediction(
     action: float,
     *,
     station_count: int,
+    travel_time: float,
 ) -> np.ndarray:
     out = np.asarray(obs, dtype=np.float32).copy()
     out[5] = float(np.clip(pred_y[0], 10.0, 7200.0))
@@ -738,7 +734,8 @@ def _advance_obs_from_prediction(
     out[12] = float(np.clip(pred_y[5], 10.0, 7200.0))
     out[13] = float(np.clip(pred_y[6], 10.0, 7200.0))
     out[14] = float(np.clip(pred_y[7], 1.0, 25.0))
-    out[10] = float(out[10] + max(1.0, out[9] + float(action)))
+    out[10] = float(obs[10] + float(obs[9]) + float(action) + travel_time)
+    out[3] = float(int(out[10] // 3600) % 24) / 23.0
     out[2] = float(min(max(station_count - 1, 0), int(round(float(out[2]))) + 1))
     out[1] = float(out[2] / max(float(station_count - 1), 1.0))
     return out
@@ -752,7 +749,7 @@ def _predict_mpc_action_from_obs(
     *,
     line_uid: str,
     station_count: int,
-    sim_start_hour: int,
+    segment_times: list[float],
     horizon: int,
     discount: float,
     action_cost: float,
@@ -769,11 +766,12 @@ def _predict_mpc_action_from_obs(
             actions=action_arr,
             line_uid=line_uid,
             station_count=station_count,
-            sim_start_hour=sim_start_hour,
+            segment_times=segment_times,
         )
         scores = _bus_linear_reward_from_predicted_state(pred_y, obs_action).astype(np.float64)
         scores -= float(action_cost) * action_arr.astype(np.float64)
-        if depth <= 1:
+        # The generated last segment has one stop at its start and no later stop.
+        if depth <= 1 or int(round(float(sim_obs[2]))) == station_count - 1:
             best_idx = int(np.argmax(scores))
             return float(scores[best_idx]), float(action_arr[best_idx])
         totals = []
@@ -783,6 +781,7 @@ def _predict_mpc_action_from_obs(
                 pred_y[idx],
                 float(action),
                 station_count=station_count,
+                travel_time=segment_times[int(round(float(sim_obs[2])))],
             )
             future_score, _future_action = best_score_from(next_obs, depth - 1)
             totals.append(float(scores[idx]) + discount * future_score)
@@ -816,7 +815,6 @@ def _run_city_policy(
     speed_by_stop = _segment_speed_by_stop(city)
     line_departures = _line_departures(line_map)
     segment_times = _segment_times_by_line(city)
-    sim_start_hour = int(float(city.get("begin", 0.0)) // 3600)
     cmd = [
         "sumo",
         "-c",
@@ -892,6 +890,7 @@ def _run_city_policy(
                     backward_hw=backward_hw,
                     station_count=station_count,
                     speed_mps=speed_by_stop.get(stop_id, 8.0),
+                    base_dwell_sec=base_dwell_sec,
                 )
                 hold = _choose_extra_hold(
                     policy=policy,
@@ -900,7 +899,7 @@ def _run_city_policy(
                     actions=actions,
                     line_uid=line_uid,
                     station_count=station_count,
-                    sim_start_hour=sim_start_hour,
+                    segment_times=segment_times[line_uid],
                     mpc_horizon=mpc_horizon,
                     mpc_discount=mpc_discount,
                     mpc_action_cost=mpc_action_cost,

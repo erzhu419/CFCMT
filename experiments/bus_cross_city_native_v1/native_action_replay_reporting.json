@@ -1,0 +1,118 @@
+{
+  "complete": true,
+  "protocol": "cfcmt-bus-native-action-replay-v1",
+  "task": "t128406",
+  "training_seed": 75102,
+  "case": {
+    "case": 0,
+    "demand_seed": 72561,
+    "sumo_seed": 73561
+  },
+  "training_updates": 0,
+  "cost_definition": "(2 * accrued waiting passenger-seconds + accrued in-vehicle passenger-seconds) / all departed passengers",
+  "selection": {
+    "rule": "Largest absolute projected holding difference on adapted native prefix; at least 120s remaining; no cost or Q selection",
+    "event": [
+      6956.0,
+      "106X_000006",
+      "106X",
+      "106X006",
+      false
+    ],
+    "event_index": 1839,
+    "holds_seconds": {
+      "adapted": 59.99464416503906,
+      "masked": 0.0
+    }
+  },
+  "branch_costs_seconds_per_departed": {
+    "adapted": 2274.266304347826,
+    "single": 2275.295480549199,
+    "continuous": 2276.5726544622426
+  },
+  "effects_vs_adapted": {
+    "single": {
+      "generalized_passenger_seconds": 3598.0,
+      "generalized_seconds_per_departed_passenger": 1.0291762013730477,
+      "wait_passenger_seconds": 1623.0,
+      "in_vehicle_passenger_seconds": 352.0
+    },
+    "continuous": {
+      "generalized_passenger_seconds": 8063.0,
+      "generalized_seconds_per_departed_passenger": 2.3063501144165457,
+      "wait_passenger_seconds": 5244.0,
+      "in_vehicle_passenger_seconds": -2425.0
+    }
+  },
+  "common_population": {
+    "departed": 3496,
+    "completed": 3441,
+    "unfinished": 55,
+    "completion_rate": 0.9842677345537757,
+    "all_branches_equal": true
+  },
+  "same_native_prefix": {
+    "single": {
+      "exact": true,
+      "event_batches": 1597,
+      "executed_control_actions": 1839,
+      "terminal_actions": 0,
+      "selected_raw": true,
+      "selected_canonical": true,
+      "selected_batch_prior": true,
+      "selected_arrival_tracker": true,
+      "selected_ledger": true,
+      "selected_candidate_actions": true
+    },
+    "continuous": {
+      "exact": true,
+      "event_batches": 1597,
+      "executed_control_actions": 1839,
+      "terminal_actions": 0,
+      "selected_raw": true,
+      "selected_canonical": true,
+      "selected_batch_prior": true,
+      "selected_arrival_tracker": true,
+      "selected_ledger": true,
+      "selected_candidate_actions": true
+    }
+  },
+  "critic_comparison": {
+    "adapted": {
+      "adapted_q": -15.264981269836426,
+      "masked_q": -15.284368515014648,
+      "masked_minus_adapted_q": -0.019387245178222656,
+      "prefers_masked": false,
+      "reward_scale": 0.0001
+    },
+    "unmasked": {
+      "adapted_q": -32.18699645996094,
+      "masked_q": -32.182373046875,
+      "masked_minus_adapted_q": 0.0046234130859375,
+      "prefers_masked": true,
+      "reward_scale": 0.0001
+    },
+    "masked": {
+      "adapted_q": -31.981914520263672,
+      "masked_q": -32.03240966796875,
+      "masked_minus_adapted_q": -0.050495147705078125,
+      "prefers_masked": false,
+      "reward_scale": 0.0001
+    }
+  },
+  "conclusions": [
+    "At this selected native state, replacing approximately60s adapted holding with0s masked holding increases cost even when all later decisions use the adapted actor.",
+    "Continuous masked continuation increases total cost further; the loss is not solely a subsequent-policy-feedback effect.",
+    "The masked actor chooses0s although its own twin-min critic and the adapted critic both prefer the approximately60s candidate. This establishes local actor/critic candidate-preference disagreement; native single-intervention cost favors the adapted candidate.",
+    "The actor extraction mechanism warrants diagnosis before further likelihood, entropy, or training-duration tuning."
+  ],
+  "limitations": [
+    "One prespecified fresh demand/SUMO case and one maximum-divergence event at one training seed; this mechanism diagnosis is not a new population performance confirmation.",
+    "Critics estimate scaled undiscounted IQL/H2O+ continuation values (V7 gamma=1); their magnitudes are not calibrated passenger cost labels under adapted deterministic continuation, and local agreement does not prove global critic calibration."
+  ],
+  "next_step": "Complete: all-event preference diagnosis across3 training seeds; see native_actor_preference_reporting.json. Native single-action costs on predetermined wider events are the subsequent step.",
+  "evidence": [
+    "native_action_replay_protocol.json",
+    "native_action_replay_summary.json"
+  ]
+}

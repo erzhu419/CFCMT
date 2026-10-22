@@ -125,7 +125,7 @@ POLICY_LABELS = {
     "simulator_only_mpc": "Simulator only",
     "rigid_anchor_mpc": "Rigid anchor",
     "cfcmt_selected_mpc": "Anchored CFCMT",
-    "phase_pressure": "Phase pressure",
+    "phase_pressure": "PhasePressure",
     "max_pressure": "MaxPressure",
 }
 
@@ -170,6 +170,31 @@ def latex_escape(value: object) -> str:
     for old, new in replacements.items():
         text = text.replace(old, new)
     return text
+
+
+def selected_blend_label(value: object) -> str:
+    labels = {
+        "local_cap_1_z_0p25": r"local cap 1, $\zeta=0.25$",
+        "constant_alpha_0p9": r"constant $\alpha_g=0.9$",
+    }
+    text = str(value)
+    return labels.get(text, latex_escape(text))
+
+
+def display_city_group(value: object) -> str:
+    labels = {
+        "atlanta": "Atlanta",
+        "cologne": "Cologne",
+        "hangzhou": "Hangzhou",
+        "ingolstadt": "Ingolstadt",
+        "jinan": "Jinan",
+        "los_angeles": "Los Angeles",
+        "new_york": "New York",
+        "resco_synthetic": "RESCO synthetic",
+        "salt_lake_city": "Salt Lake City",
+    }
+    text = str(value)
+    return labels.get(text, text.replace("_", " ").title())
 
 
 def write_csv(path: Path, rows: list[dict]) -> None:
@@ -728,7 +753,7 @@ def build_result_tables(
     lines = [
         r"\begin{tabular}{lrrrrrrr}",
         r"\toprule",
-        r"City & Adapt. groups & Held-out groups & Anchor & Target only & CFCMT & CFCMT vs target only & Selected blend \\",
+        r"City & Adaptation groups & Held-out groups & Anchor & Target only & CFCMT & CFCMT vs target only & Selected blend \\",
         r"\midrule",
     ]
     for row in offline:
@@ -738,7 +763,7 @@ def build_result_tables(
             f"{row['anchor_regret']:.3f} & {row['target_only_regret']:.3f} & "
             f"{row['selected_regret']:.3f} & "
             f"{100.0 * row['source_relative_improvement']:.2f}\\% & "
-            f"{latex_escape(row['selected_candidate'])} \\\\"
+            f"{selected_blend_label(row['selected_candidate'])} \\\\"
         )
     lines.extend(
         [
@@ -759,7 +784,7 @@ def build_result_tables(
     lines = [
         r"\begin{tabular}{lrrrrrr}",
         r"\toprule",
-        r"Policy & All-departed wait & Completed wait & System veh-h & Unfinished & Completion & Incidents \\",
+        r"Policy & All-departed wait & Completed wait & System vehicle-hours & Unfinished & Completion & Incidents \\",
         r"\midrule",
     ]
     for row in macro:
@@ -779,7 +804,7 @@ def build_result_tables(
     lines = [
         r"\begin{tabular}{lrrrrrr}",
         r"\toprule",
-        r"Policy & LA wait & Jinan wait & LA completion & Jinan completion & LA incidents & Jinan incidents \\",
+        r"Policy & Los Angeles wait & Jinan wait & Los Angeles completion & Jinan completion & Los Angeles incidents & Jinan incidents \\",
         r"\midrule",
     ]
     for policy in POLICY_ORDER:
@@ -797,7 +822,7 @@ def build_result_tables(
     lines = [
         r"\begin{tabular}{lrrrrr}",
         r"\toprule",
-        r"Baseline & CFCMT gain (s) & Relative gain & Descriptive 95\% interval & LA gain & Jinan gain \\",
+        r"Baseline & CFCMT gain (s) & Relative gain & Descriptive 95\% interval & Los Angeles gain & Jinan gain \\",
         r"\midrule",
     ]
     for row in comparisons:
@@ -812,7 +837,7 @@ def build_result_tables(
     lines = [
         r"\begin{tabular}{lrrrrrrrrr}",
         r"\toprule",
-        r"Evidence & Seeds & Paired cells & Legacy near-target-only wait & CFCMT wait & $\Delta$ wait & LA $\Delta$ & Jinan $\Delta$ & Improved & Incidents C/legacy \\",
+        r"Evidence & Seeds & Paired cells & Legacy near-target-only wait & CFCMT wait & CFCMT minus legacy wait & Los Angeles difference & Jinan difference & Improved & Incidents CFCMT/legacy \\",
         r"\midrule",
     ]
     for row in source_contribution:
@@ -866,7 +891,7 @@ def build_jinan_conditional_source_transfer_table(rows: list[dict]) -> None:
             r">{\raggedright\arraybackslash}p{0.17\textwidth}@{}}"
         ),
         r"\toprule",
-        r"Experiment & Selection/evaluation & Seeds & Improved & $\Delta$ waiting & 95\% interval & Comparator & Guard \\",
+        r"Experiment & Selection/evaluation & Seeds & Improved & Mean relative waiting difference & 95\% interval & Comparator & Guard \\",
         r"\midrule",
     ]
     for row in rows:
@@ -1317,7 +1342,7 @@ def network_rows(source_manifest: Path, external_conversion: Path) -> list[dict]
 def short_scenario(name: str) -> str:
     replacements = {
         "saltlake_400s_200w_q1_weekday_peak": "Salt Lake 400S-200W",
-        "saltlake_state_university_q1_weekday_peak": "Salt Lake State Univ.",
+        "saltlake_state_university_q1_weekday_peak": "Salt Lake State University",
         "hangzhou_4x4_hetero": "Hangzhou 4x4 hetero",
         "hangzhou_bc_tyc": "Hangzhou bc-tyc",
         "hangzhou_kn_hz": "Hangzhou kn-hz",
@@ -1350,8 +1375,8 @@ def network_figure(rows: list[dict]) -> None:
         ax.set_axis_off()
         title_color = COLORS["cfcmt"] if target else COLORS["transfer_dark"]
         ax.text(0.0, 1.10, f"{letters[index]}  {short_scenario(row['scenario'])}", transform=ax.transAxes, ha="left", va="bottom", fontsize=7.2, color=title_color, fontweight="bold")
-        role = "target" if target else row["city"].replace("_", " ")
-        ax.text(0.0, 1.01, f"{role} | {row['signal_count']} TLS | {row['lane_count']} lanes", transform=ax.transAxes, ha="left", va="bottom", fontsize=5.8, color=COLORS["muted"])
+        role = "target" if target else display_city_group(row["city"])
+        ax.text(0.0, 1.01, f"{role} | {row['signal_count']} traffic signals | {row['lane_count']} lanes", transform=ax.transAxes, ha="left", va="bottom", fontsize=5.8, color=COLORS["muted"])
     fig.suptitle(
         "Cross-network evidence spans 18 source networks and two external target cities",
         x=0.02,
@@ -1410,12 +1435,12 @@ def build_network_table(rows: list[dict]) -> None:
     lines = [
         r"\begin{tabular}{llrrrl}",
         r"\toprule",
-        r"Role & City group & Networks & TLS & Lanes & Scenarios \\",
+        r"Role & City group & Networks & Traffic signals & Lanes & Scenarios \\",
         r"\midrule",
     ]
     for row in table_rows:
         lines.append(
-            f"{row['role']} & {latex_escape(row['city'])} & {row['networks']} & "
+            f"{row['role']} & {latex_escape(display_city_group(row['city']))} & {row['networks']} & "
             f"{row['signals']} & {row['lanes']} & {latex_escape(row['scenarios'])} \\\\"
         )
     lines.extend([r"\bottomrule", r"\end{tabular}"])
@@ -1536,8 +1561,9 @@ def qa_manifest(
         r"\midrule",
     ]
     for label, digest in provenance.items():
+        display_label = label.replace("v91", "V91").replace("v98", "V98")
         lines.append(
-            f"{latex_escape(label)} & \\texttt{{\\detokenize{{{digest}}}}} \\\\"
+            f"{latex_escape(display_label)} & \\texttt{{\\detokenize{{{digest}}}}} \\\\"
         )
     lines.extend([r"\bottomrule", r"\end{tabular}"])
     write_text(TABLES / "external_confirmation_provenance.tex", "\n".join(lines))

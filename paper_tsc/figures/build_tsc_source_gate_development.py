@@ -25,7 +25,7 @@ EXPECTED_CITIES = {
 CONFIGS = (
     {
         "name": "Robust history",
-        "version": "v145",
+        "version": "V145",
         "path": REPO
         / "cf_h2o/results/cluster/tsc_v145_multicity_robust_source_gate_20260901/development_v1/aggregate.json",
         "protocol": "tsc-v145-multicity-robust-source-gate-aggregate-v1",
@@ -33,7 +33,7 @@ CONFIGS = (
     },
     {
         "name": "OOF action agreement",
-        "version": "v146",
+        "version": "V146",
         "path": REPO
         / "cf_h2o/results/cluster/tsc_v146_multicity_oof_compatibility_gate_20260901/development_v1/aggregate.json",
         "protocol": "tsc-v146-multicity-oof-compatibility-gate-aggregate-v1",
@@ -41,7 +41,7 @@ CONFIGS = (
     },
     {
         "name": "Mechanism compatibility",
-        "version": "v148",
+        "version": "V148",
         "path": REPO
         / "cf_h2o/results/cluster/tsc_v148_multicity_mechanism_compatibility_gate_20260901/development_v2_corrected/aggregate.json",
         "protocol": "tsc-v148-multicity-mechanism-compatibility-aggregate-v1",
@@ -113,10 +113,10 @@ def build() -> list[dict[str, Any]]:
         r"\begin{tabular}{llrrrrrr}",
         r"\toprule",
         (
-            r"Version & Source gate & Source & $\Delta$ target & Upper & "
-            r"Cities & Max. reg. & $\Delta$ dense \\"
+            r"Version & Source gate & Source cities & Target comparator & Target upper & "
+            r"Target cities & Maximum city & Dense comparator \\"
         ),
-        r" &  & selected & mean & 95\% & improved &  & mean \\",
+        r" &  & selected & mean difference & 95\% bound & improved & regression & mean difference \\",
         r"\midrule",
     ]
     for row in rows:

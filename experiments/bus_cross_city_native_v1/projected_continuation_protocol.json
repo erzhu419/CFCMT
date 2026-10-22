@@ -1,0 +1,135 @@
+{
+  "name": "cfcmt-bus-projected-continuation-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "branches": {
+    "td0": {
+      "method": "cross_city",
+      "artifact_folder": "projected_continuation/td0",
+      "model_td_coefficient": 0.0
+    },
+    "td025": {
+      "method": "cross_city",
+      "artifact_folder": "projected_continuation/td025",
+      "model_td_coefficient": 0.25
+    },
+    "adapted": {
+      "method": "cross_city",
+      "artifact_folder": "source_dense_adapted_eval"
+    }
+  },
+  "evaluation": {
+    "episode_seconds": 24000,
+    "demand_scale": 1.0,
+    "rule": "forward_proportional",
+    "rule_gain": 0.6,
+    "cases": [
+      {
+        "case": 0,
+        "demand_seed": 72521,
+        "sumo_seed": 73521
+      },
+      {
+        "case": 1,
+        "demand_seed": 72522,
+        "sumo_seed": 73522
+      },
+      {
+        "case": 2,
+        "demand_seed": 72523,
+        "sumo_seed": 73523
+      }
+    ],
+    "test_separation": "New predefined demand72521-72523 and SUMO73521-73523, disjoint from fit/stop/calibration, smoke and both previous evaluation cohorts; same pinned timetable/corridors.",
+    "comparison": "TD0 nine,TD0.25 nine,adapted55k nine,rule three actual new evaluations; seeds fixed before training.",
+    "primary_cost": "(2*wait_passenger_seconds+in_vehicle_passenger_seconds)/departed_passengers",
+    "completion": "Report completion rate and departed/completed counts alongside cost.",
+    "interpretation": "Bounded pilot on one target city; no population-level CI or city removal."
+  },
+  "asset_selection": {
+    "start_hour": 7,
+    "service_hours": 4,
+    "max_directional_services": 12,
+    "minimum_departures_in_window": 2,
+    "ordering": "Original route, direction, pattern and service id, before any control outcomes",
+    "require_positive_apc": true,
+    "required_tables": [
+      "stop_news.xlsx",
+      "route_news.xlsx",
+      "time_table.xlsx",
+      "passenger_OD.xlsx"
+    ],
+    "network": "GTFS-derived route corridors; APC-apportioned demand, generated destinations; not a measured city road network",
+    "scheduled_service_date": "2026-05-19",
+    "calendar_rule": "Earliest weekday in the pinned GTFS feed with active weekday service and without a holiday exception; keep the original 12-service subset",
+    "calendar_provenance": "Actual trip_id/service_id and full stop signatures from GTFS; never merge mutually exclusive calendar services or clamp zero scheduled headways"
+  },
+  "asset_folder": "projected_continuation",
+  "actor_action_space": "executed",
+  "rule_action_space": "proposal",
+  "initialization_updates": 50000,
+  "adaptation_updates": 5000,
+  "world_model_refit_updates": 0,
+  "checkpoint_rule": "Each TD arm uses its fixed final20k continuation policy.pt, no seed/checkpoint selection. The adapted55k reference is a zero-continuation diagnostic, not a matched-update competing method.",
+  "intervention": "Actor soft and repeated component actions are differentiably clipped to the canonical execution interval before Q, target Q, WM generation and trust continuation queries. Recorded execution labels, WM fit inputs and likelihoods remain unchanged. Evaluation uses the previously fixed execution projection.",
+  "rule": {
+    "method": "forward_proportional",
+    "gain": 0.6,
+    "actor_action_space": "proposal",
+    "checkpoint": null,
+    "training_seed": null
+  },
+  "primary_comparisons": [
+    "model_vs_real",
+    "model_vs_adapted",
+    "real_vs_adapted"
+  ],
+  "boundary": "Isolates model-TD addition within the execution-aligned offline-SAC continuation. It does not isolate normalized confidence from all other model components, reproduce live LF interaction, or establish cross-city generality.",
+  "limits": [
+    "One target city and the same fixed service date, timetable and generated OD intensities; new passenger realizations are not real new days or cities.",
+    "Canonical headway ratios are capped at5. Current fit has no present-headway clipping; synthetic projection uses the decoder representation.",
+    "Execution projection preserves latent entropy rather than estimating executed-action entropy.",
+    "The adapted55k reference has fewer updates; confidence efficacy cannot be isolated by the0/0.25 comparison.",
+    "No threshold, floor, city, model, seed or checkpoint selection after these new outcomes."
+  ],
+  "code_boundary": "CFCMT-owned frozen runtime and inputs only; no mutable Thesis access; no H5/CSV/checkpoint downloads.",
+  "continuation_updates": 20000,
+  "target_fit_rows": 12288,
+  "target_union_rows": 16384,
+  "source_rows": 3284718,
+  "new_training_updates_per_policy": 20000,
+  "paired_comparisons": {
+    "model_vs_real": [
+      "td025",
+      "td0"
+    ],
+    "model_vs_adapted": [
+      "td025",
+      "adapted"
+    ],
+    "real_vs_adapted": [
+      "td0",
+      "adapted"
+    ],
+    "model_vs_rule": [
+      "td025",
+      "strong_rule"
+    ],
+    "real_vs_rule": [
+      "td0",
+      "strong_rule"
+    ],
+    "adapted_vs_rule": [
+      "adapted",
+      "strong_rule"
+    ]
+  },
+  "fixed_training": "Both arms load the same seed-matched source_dense_adaptation adapted.pt with optimizer state after50k source IQL+5k target IQL.20k online=True SAC updates on original fit replay only. Existing WM, normalized QDelta trust, model generation, backup, latent entropy, alpha, all RNG offsets and config remain identical. Model TD coefficient is0 or0.25; no simulator interaction.",
+  "entropy_interpretation": "Entropy/log probabilities remain those of the latent desired-action distribution. Many-to-one projection does not produce an execution-action density. Keep the frozen entropy kernel and temperature; ordinary clamp gradient is1 inside the interval and0 when saturated.",
+  "admission": "Same seed75101 adapted learner, four real/model updates per TD arm; check sampled/backup/model/trust action domains and unchanged latent probabilities, replay likelihoods, optimizer parameter identity, and policy export/reload. No performance selection.",
+  "reporting_interpretation": "Prospective three new random demand realizations in one fixed corridor city, three training seeds.30 actual evaluations: TD0 nine, TD0.25 nine, adapted55k nine, rule three. Each rule run is reused across seeds. Equal weights, retain all outcomes, no old-case pooling or population CI.",
+  "new_training_simulator_events": 0
+}

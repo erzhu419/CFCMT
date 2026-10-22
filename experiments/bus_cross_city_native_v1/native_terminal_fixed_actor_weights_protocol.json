@@ -1,0 +1,59 @@
+{
+  "name": "cfcmt-bus-native-terminal-fixed-actor-weights-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "branch": "real_v_fixed55_weights",
+  "training_template_protocol": "native_terminal_actor_unmasked_protocol.json",
+  "intervention": "Restart from each seed's original repaired55k learner with its complete optimizers. Retain the original unmasked V-only20k continuation, changing only recorded-IQL actor advantage weights to scores from that initial55k learner's frozen target-critic and value functions. The training learner's critic, target-critic and value continue their original updates. No gate or positive-amount substitution at deployment.",
+  "actor_weights": "exp(beta*(min frozen55k target-Q(s,recorded action)-frozen55k V(s))).clamp_max(saved max_weight), detached. Preserve native beta3, cap100, all-fit likelihood and full-batch denominator; do not renormalize or add a penalty.",
+  "fixed_components": "Same repaired55k initial networks and complete optimizer states, target fit12288, update order, batch sampling, RNG stream, mixed_backup_lambda1, backup entropyOFF, actor maskOFF, latent temperature updates, shadow model generation/trust with model TD coefficient0, and fixed final checkpoint as the original unmasked continuation.",
+  "continuation_updates_per_seed": 20000,
+  "new_training_updates": 60000,
+  "historical_final_updates": 75000,
+  "world_model_refit_updates": 0,
+  "target_online_training_events": 0,
+  "admission_training_updates": 8,
+  "admission": "Before formal continuation, run two seed75101 learners for four actual updates each. Verify equal initialization and optimizer states, all real batches, the first model batch and its weights, and all update RNG streams; verify unchanged critic/value loss and update paths, the fixed arm's exact native actor weight formula using frozen55k scores, and unchanged frozen scorer parameters. Later shadow model batches may differ through the changed actor. Check budget8 separately; no simulation or checkpoint writes.",
+  "reference_protocol": "native_terminal_actor_unmasked_confirmation_protocol.json",
+  "reference_summary": "native_terminal_actor_unmasked_confirmation_summary.json",
+  "asset_folder": "native_terminal_actor_unmasked_confirmation",
+  "evaluation": {
+    "episode_seconds": 24000,
+    "cases": [
+      {
+        "case": 0,
+        "demand_seed": 72581,
+        "sumo_seed": 73581
+      },
+      {
+        "case": 1,
+        "demand_seed": 72582,
+        "sumo_seed": 73582
+      },
+      {
+        "case": 2,
+        "demand_seed": 72583,
+        "sumo_seed": 73583
+      }
+    ],
+    "primary_cost": "(2*wait_passenger_seconds+in_vehicle_passenger_seconds)/departed_passengers"
+  },
+  "new_evaluations": 9,
+  "reference_evaluations_reused": 21,
+  "actual_evaluations_planned": 30,
+  "primary_comparison": "Fixed55k actor advantage weights versus the original dynamic-weight unmasked75k continuation. Retain the original55k and three actual rule references; preserve all original identities, all nine pairs and equal seed/case means.",
+  "checkpoint_selection": "Fixed final20k continuation for every seed; no checkpoint, seed, threshold or coefficient selection.",
+  "interpretation": "Retrospective single-variable training intervention on previously analyzed generated demand. Any improvement supports this weight-freezing intervention in the fixed continuation recipe, not erroneous critics, a unique degradation cause, confidence-module value or new-demand generalization.",
+  "decision": "If fixed weights do not beat the original55k mean, conclude this registered continuation attempt without additional weight, checkpoint or branch-composition tuning; retain all outcomes and the55k reference.",
+  "code_boundary": "CFCMT-owned frozen implementation, learners and assets only; no mutable Thesis access or heavy downloads.",
+  "submitted": true,
+  "branches": {
+    "real_v_fixed55_weights": {
+      "method": "cross_city",
+      "artifact_folder": "native_terminal_fixed_actor_weights/real_v_fixed55_weights"
+    }
+  }
+}

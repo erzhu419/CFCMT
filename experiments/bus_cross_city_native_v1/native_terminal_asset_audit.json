@@ -1,0 +1,211 @@
+{
+  "complete": true,
+  "kind": "Read-only asset and old-terminal audit; no simulator run or data repair",
+  "source_remote_root": "/home/zhengliang01/scheduleurm_work/CFCMT/experiments/bus_cross_city_native_v1",
+  "source_assets_root": "/home/zhengliang01/scheduleurm_work/CFCMT/experiments/bus_cross_city_native_v1/assets/halifax",
+  "source_summary_pattern": "runs/caseXX/summary.json",
+  "source_asset_manifest_pattern": "assets/halifax/caseXX/asset_manifest.json",
+  "source_route_patterns": [
+    "assets/halifax/caseXX/routes/persons.rou.xml",
+    "assets/halifax/caseXX/routes/buses.rou.xml"
+  ],
+  "configured_episode_seconds": 24000,
+  "passenger_arrival_window_end_seconds": 14400,
+  "common_assets": {
+    "bus_xml_count": 119,
+    "last_bus_depart_seconds": 14100,
+    "person_plan_shapes": [
+      [
+        "walk",
+        "ride"
+      ]
+    ],
+    "all_person_xml_counts_equal_manifest_and_departed": true,
+    "no_transfers_or_post_ride_walk": true
+  },
+  "common_old_service": {
+    "departed_trips": 119,
+    "completed_trips": 118,
+    "active_trips_at_horizon": 1,
+    "interpretation": "The bridge reads arrived buses before simulationStep, then may terminate immediately after it; the last physical bus arrival can leave one stale Python active trip. Physical vehicle absence must be confirmed by case00 replay."
+  },
+  "cases": [
+    {
+      "case": 0,
+      "person_xml_count": 3505,
+      "asset_person_count": 3505,
+      "departed_passengers": 3505,
+      "completed_passengers": 3446,
+      "max_person_depart_seconds": 14397.964088,
+      "old_ledger_end_seconds": 17922,
+      "waiting_passengers": 59,
+      "in_vehicle_passengers": 0,
+      "other_active_passengers": 0,
+      "analytical_additional_wait_seconds": 358602
+    },
+    {
+      "case": 1,
+      "person_xml_count": 3633,
+      "asset_person_count": 3633,
+      "departed_passengers": 3633,
+      "completed_passengers": 3564,
+      "max_person_depart_seconds": 14396.994315,
+      "old_ledger_end_seconds": 18116,
+      "waiting_passengers": 69,
+      "in_vehicle_passengers": 0,
+      "other_active_passengers": 0,
+      "analytical_additional_wait_seconds": 405996
+    },
+    {
+      "case": 2,
+      "person_xml_count": 3522,
+      "asset_person_count": 3522,
+      "departed_passengers": 3522,
+      "completed_passengers": 3462,
+      "max_person_depart_seconds": 14394.235961,
+      "old_ledger_end_seconds": 18042,
+      "waiting_passengers": 60,
+      "in_vehicle_passengers": 0,
+      "other_active_passengers": 0,
+      "analytical_additional_wait_seconds": 357480
+    },
+    {
+      "case": 3,
+      "person_xml_count": 3483,
+      "asset_person_count": 3483,
+      "departed_passengers": 3483,
+      "completed_passengers": 3430,
+      "max_person_depart_seconds": 14396.040991,
+      "old_ledger_end_seconds": 17960,
+      "waiting_passengers": 53,
+      "in_vehicle_passengers": 0,
+      "other_active_passengers": 0,
+      "analytical_additional_wait_seconds": 320120
+    },
+    {
+      "case": 4,
+      "person_xml_count": 3495,
+      "asset_person_count": 3495,
+      "departed_passengers": 3495,
+      "completed_passengers": 3430,
+      "max_person_depart_seconds": 14381.545196,
+      "old_ledger_end_seconds": 17925,
+      "waiting_passengers": 65,
+      "in_vehicle_passengers": 0,
+      "other_active_passengers": 0,
+      "analytical_additional_wait_seconds": 394875
+    },
+    {
+      "case": 5,
+      "person_xml_count": 3574,
+      "asset_person_count": 3574,
+      "departed_passengers": 3574,
+      "completed_passengers": 3515,
+      "max_person_depart_seconds": 14398.225737,
+      "old_ledger_end_seconds": 17966,
+      "waiting_passengers": 59,
+      "in_vehicle_passengers": 0,
+      "other_active_passengers": 0,
+      "analytical_additional_wait_seconds": 356006
+    },
+    {
+      "case": 6,
+      "person_xml_count": 3504,
+      "asset_person_count": 3504,
+      "departed_passengers": 3504,
+      "completed_passengers": 3452,
+      "max_person_depart_seconds": 14388.807933,
+      "old_ledger_end_seconds": 17987,
+      "waiting_passengers": 52,
+      "in_vehicle_passengers": 0,
+      "other_active_passengers": 0,
+      "analytical_additional_wait_seconds": 312676
+    },
+    {
+      "case": 7,
+      "person_xml_count": 3493,
+      "asset_person_count": 3493,
+      "departed_passengers": 3493,
+      "completed_passengers": 3425,
+      "max_person_depart_seconds": 14398.953459,
+      "old_ledger_end_seconds": 18088,
+      "waiting_passengers": 68,
+      "in_vehicle_passengers": 0,
+      "other_active_passengers": 0,
+      "analytical_additional_wait_seconds": 402016
+    }
+  ],
+  "analytical_repair_condition": "Validated original-action case00 prefix, empty physical vehicles/minExpected0 at old end and exact W*(24000-old_end) real ledger extension. Eight-day asset/old-balance audit confirms no future departures or moving passengers; old end occurred via the same no-expected-agent termination.",
+  "terminal_contract": {
+    "source": "/home/zhengliang01/scheduleurm_work/CFCMT/experiments/bus_thesis_rule_confirmation_v1/thesis_snapshot/sumo_eval/runtime/H2Oplus/bus_h2o/mdp_contract_v7.py",
+    "terminal_constructor_lines": [
+      533,
+      548
+    ],
+    "terminal_raw_changes": {
+      "decision_time_seconds": 0,
+      "system_waiting_passengers": 3,
+      "system_in_vehicle_passengers": 4
+    },
+    "canonical_conversion_lines": [
+      453,
+      530
+    ],
+    "terminal_from_last_observation": true,
+    "fields_to_repair": [
+      "terminal rewards",
+      "terminal wait_passenger_seconds",
+      "terminal delta_t_seconds",
+      "terminal raw_next_observations",
+      "terminal canonical next_observations"
+    ],
+    "unchanged_fields": [
+      "all observations",
+      "all actions and proposed/executed holds",
+      "all nonterminal transitions",
+      "all in_vehicle_passenger_seconds",
+      "terminal=1",
+      "terminal discount=0",
+      "all roles and provenance indices"
+    ],
+    "equations": {
+      "extra_wait": "W*(24000-old_end)",
+      "reward": "old_reward-2*extra_wait",
+      "duration": "old_duration+24000-old_end",
+      "next_raw": "terminal_raw_state_v7(last_raw,extended_ledger_snapshot)",
+      "next_canonical": "raw_state_to_canonical_v7(next_raw,original_station_max,original_config)"
+    }
+  },
+  "stepping_evidence": {
+    "source": "/home/zhengliang01/scheduleurm_work/CFCMT/experiments/bus_thesis_rule_confirmation_v1/thesis_snapshot/sumo_eval/runtime/H2Oplus/bus_h2o/sumo_env/rl_bridge.py",
+    "natural_termination_lines": [
+      1505,
+      1511
+    ],
+    "advance_and_termination_lines": [
+      1121,
+      1129
+    ],
+    "bus_arrival_sync_lines": [
+      1032,
+      1038
+    ],
+    "waiting_ledger_source": "/home/zhengliang01/scheduleurm_work/CFCMT/experiments/bus_thesis_rule_confirmation_v1/thesis_snapshot/sumo_eval/runtime/H2Oplus/bus_h2o/passenger_time.py",
+    "waiting_ledger_lines": [
+      67,
+      79
+    ]
+  },
+  "data_boundary": "All observations were read from CFCMT-owned frozen runtime and server assets; no mutable Thesis access, checkpoint download, or simulation.",
+  "native_replay_validation": {
+    "task": "t128751",
+    "case": 0,
+    "physical_vehicles_at_old_end": [],
+    "sumo_expected_agents_at_old_end": 0,
+    "ledger_waiting_at_old_end": 59,
+    "all_original_nonterminal_fields_exact": true,
+    "measured_wait_increment": 358602.0,
+    "analytic_wait_increment": 358602.0,
+    "physical_waiting_count_probe": "No separate bus-stop probe; actual full-horizon ledger extension exactly reproduces the static waiting-tail integral"
+  }
+}

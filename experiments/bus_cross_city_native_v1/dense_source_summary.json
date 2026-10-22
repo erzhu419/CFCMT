@@ -1,0 +1,2043 @@
+{
+  "protocol": "cfcmt-bus-source-compression-ablation-v1",
+  "complete": true,
+  "ready": 3,
+  "expected": 3,
+  "results": {
+    "75101": {
+      "seed": 75101,
+      "complete": true,
+      "training": {
+        "complete": true,
+        "seed": 75101,
+        "source_rows": 3284718,
+        "initialization_updates": 50000,
+        "device": "cpu",
+        "target_training_rows_read": 0,
+        "target_test_rows_read": 0,
+        "admission": false,
+        "config": {
+          "ensemble_size": 2,
+          "hidden_dim": 256,
+          "batch_size": 256,
+          "reward_scale": 0.0001,
+          "critic_loss": "huber",
+          "huber_delta": 1.0,
+          "activation": "relu",
+          "actor_layer_norm": false,
+          "critic_layer_norm": false,
+          "value_layer_norm": false,
+          "online_fraction": 0.0,
+          "actor_learning_rate": 0.0003,
+          "critic_learning_rate": 0.0003,
+          "value_learning_rate": 0.0003,
+          "alpha_learning_rate": 0.0003,
+          "ratio_learning_rate": 0.0001,
+          "soft_target_rate": 0.005,
+          "target_subset_size": 2,
+          "target_subset_replacement": false,
+          "target_entropy": 0.0,
+          "initial_temperature": 1.0,
+          "backup_entropy": true,
+          "bootstrap_probability": 1.0,
+          "offline_objective": "iql",
+          "online_backup": "h2oplus",
+          "actor_q_reduction": "min-all",
+          "online_actor_update_interval": 1,
+          "online_actor_batch_mode": "latest",
+          "online_update_order": "actor-before-critic",
+          "offline_cql_alpha": 0.0,
+          "online_cql_alpha": 0.0,
+          "cql_n_actions": 10,
+          "cql_max_target_backup": false,
+          "mixed_backup_lambda": 0.1,
+          "iql_expectile": 0.7,
+          "iql_advantage_temperature": 3.0,
+          "iql_max_weight": 100.0,
+          "ratio_min_weight": 1e-05,
+          "ratio_max_weight": 1.0,
+          "use_ratio_correction": false,
+          "ratio_update_interval": 4,
+          "gradient_clip_norm": null,
+          "cql_penalty_subset_size": null,
+          "cql_penalty_subset_replacement": false,
+          "offline_update_order": "critic-before-actor",
+          "temperature_state_source": "actor",
+          "offline_temperature_action_samples": 1
+        }
+      },
+      "role_rows": {
+        "stop": 2048,
+        "calibrate": 2048
+      },
+      "target_test_rows_read": 0,
+      "dense": {
+        "native": {
+          "stop": {
+            "values": {
+              "q_mean": -14.549944267608225,
+              "q_min_mean": -14.588917583459988,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -13.066368667874485,
+              "iql_target_mean": -13.158757350378437,
+              "iql_residual_min_mean": -1.43016022676602,
+              "iql_residual_min_mae": 2.842830053064972,
+              "terminal": {
+                "q_mean": -26.006507873535156,
+                "q_min_mean": -26.01691436767578,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -25.665815353393555,
+                "iql_target_mean": -0.790399968624115,
+                "iql_residual_min_mean": -25.22651481628418,
+                "iql_residual_min_mae": 25.22651481628418
+              },
+              "nonterminal": {
+                "q_mean": -14.544347509618031,
+                "q_min_mean": -14.583334780927396,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -13.06021358888791,
+                "iql_target_mean": -13.16479953766801,
+                "iql_residual_min_mean": -1.4185352367369444,
+                "iql_residual_min_mae": 2.8318951801957883
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.01977462274953723,
+              "q_recorded_min_range": {
+                "min": -307.0273132324219,
+                "max": -6.6658830642700195
+              },
+              "value_range": {
+                "min": -160.48568725585938,
+                "max": -6.9061479568481445
+              },
+              "following_value_range": {
+                "min": -180.67982482910156,
+                "max": -6.941811561584473
+              },
+              "iql_target_range": {
+                "min": -181.0606231689453,
+                "max": -0.790399968624115
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.39054054006123806,
+              "proposed_hold_mean_seconds": 4.695730064704549,
+              "proposed_positive_fraction": 0.24560546875,
+              "recorded_hold_mean_seconds": 8.594742826768197
+            }
+          },
+          "calibrate": {
+            "values": {
+              "q_mean": -15.121910378802568,
+              "q_min_mean": -15.159677037969232,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -13.179958086227998,
+              "iql_target_mean": -13.266355725296307,
+              "iql_residual_min_mean": -1.8933213134296238,
+              "iql_residual_min_mae": 3.4225972993299365,
+              "terminal": {
+                "q_mean": -26.737329483032227,
+                "q_min_mean": -26.74823760986328,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -26.954524993896484,
+                "iql_target_mean": -0.8295999765396118,
+                "iql_residual_min_mean": -25.918638229370117,
+                "iql_residual_min_mae": 25.918638229370117
+              },
+              "nonterminal": {
+                "q_mean": -15.116236016758489,
+                "q_min_mean": -15.154015796849595,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -13.173228937763088,
+                "iql_target_mean": -13.272431326541426,
+                "iql_residual_min_mean": -1.8815844707740594,
+                "iql_residual_min_mae": 3.411607538250288
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.022094035055488348,
+              "q_recorded_min_range": {
+                "min": -300.6872863769531,
+                "max": -6.484304904937744
+              },
+              "value_range": {
+                "min": -207.96951293945312,
+                "max": -6.937661170959473
+              },
+              "following_value_range": {
+                "min": -207.96951293945312,
+                "max": -6.973430633544922
+              },
+              "iql_target_range": {
+                "min": -208.0124053955078,
+                "max": -0.8295999765396118
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.39377343674459553,
+              "proposed_hold_mean_seconds": 5.185065858822782,
+              "proposed_positive_fraction": 0.26318359375,
+              "recorded_hold_mean_seconds": 8.724521991796792
+            }
+          }
+        },
+        "transferred": {
+          "stop": {
+            "values": {
+              "q_mean": -15.371873659314588,
+              "q_min_mean": -15.412173378514126,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -13.27603760920465,
+              "iql_target_mean": -13.49767629566486,
+              "iql_residual_min_mean": -1.9144970960915089,
+              "iql_residual_min_mae": 3.8969063251279294,
+              "terminal": {
+                "q_mean": -218.2310791015625,
+                "q_min_mean": -218.4304656982422,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -29.436338424682617,
+                "iql_target_mean": -0.790399968624115,
+                "iql_residual_min_mean": -217.6400604248047,
+                "iql_residual_min_mae": 217.6400604248047
+              },
+              "nonterminal": {
+                "q_mean": -15.272772923876264,
+                "q_min_mean": -15.312994925988612,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -13.268142982523909,
+                "iql_target_mean": -13.503884051564734,
+                "iql_residual_min_mean": -1.8091108902640964,
+                "iql_residual_min_mae": 3.7924885654309697
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.013302020030096173,
+              "q_recorded_min_range": {
+                "min": -330.357666015625,
+                "max": -6.220710277557373
+              },
+              "value_range": {
+                "min": -38.22121047973633,
+                "max": -6.776914596557617
+              },
+              "following_value_range": {
+                "min": -47.78303527832031,
+                "max": -6.776914596557617
+              },
+              "iql_target_range": {
+                "min": -48.26703643798828,
+                "max": -0.790399968624115
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.3642059111116396,
+              "proposed_hold_mean_seconds": 4.15062765032053,
+              "proposed_positive_fraction": 0.2509765625,
+              "recorded_hold_mean_seconds": 8.594742826768197
+            }
+          },
+          "calibrate": {
+            "values": {
+              "q_mean": -16.09023378486745,
+              "q_min_mean": -16.12977806548588,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -13.374842339195311,
+              "iql_target_mean": -13.5206740659778,
+              "iql_residual_min_mean": -2.609104009112343,
+              "iql_residual_min_mae": 4.5842033450026065,
+              "terminal": {
+                "q_mean": -238.94415283203125,
+                "q_min_mean": -239.17501831054688,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -31.248992919921875,
+                "iql_target_mean": -0.8295999765396118,
+                "iql_residual_min_mean": -238.3454132080078,
+                "iql_residual_min_mae": 238.3454132080078
+              },
+              "nonterminal": {
+                "q_mean": -15.981365236236691,
+                "q_min_mean": -16.02081605266465,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -13.36611046299564,
+                "iql_target_mean": -13.526873906764044,
+                "iql_residual_min_mean": -2.4939421580137133,
+                "iql_residual_min_mae": 4.470006369007001
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.012493761954829097,
+              "q_recorded_min_range": {
+                "min": -319.15966796875,
+                "max": -6.470081329345703
+              },
+              "value_range": {
+                "min": -48.59378433227539,
+                "max": -6.941831111907959
+              },
+              "following_value_range": {
+                "min": -46.94712448120117,
+                "max": -6.963897228240967
+              },
+              "iql_target_range": {
+                "min": -46.99002456665039,
+                "max": -0.8295999765396118
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.36636260345176197,
+              "proposed_hold_mean_seconds": 4.252060777682345,
+              "proposed_positive_fraction": 0.24658203125,
+              "recorded_hold_mean_seconds": 8.724521991796792
+            }
+          }
+        }
+      },
+      "sparse": {
+        "native": {
+          "stop": {
+            "values": {
+              "q_mean": -900.1849206499755,
+              "q_min_mean": -901.7895186915994,
+              "positive_q_min_fraction": 0.99951171875,
+              "value_mean": -3974.952984499163,
+              "iql_target_mean": -3971.5565716810233,
+              "iql_residual_min_mean": 3069.7671360764652,
+              "iql_residual_min_mae": 5448.317724248394,
+              "terminal": {
+                "q_mean": 237.48313903808594,
+                "q_min_mean": 236.71133422851562,
+                "positive_q_min_fraction": 1.0,
+                "value_mean": -97.9254379272461,
+                "iql_target_mean": -0.790399968624115,
+                "iql_residual_min_mean": 237.50173950195312,
+                "iql_residual_min_mae": 237.50173950195312
+              },
+              "nonterminal": {
+                "q_mean": -900.7406940059541,
+                "q_min_mean": -902.3456988835486,
+                "positive_q_min_fraction": 0.9995114802149487,
+                "value_mean": -3976.8469891628524,
+                "iql_target_mean": -3973.496369517717,
+                "iql_residual_min_mean": 3071.150753759208,
+                "iql_residual_min_mae": 5450.863310953205
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.007802475243806839,
+              "q_recorded_min_range": {
+                "min": -2351223.0,
+                "max": 475.4783020019531
+              },
+              "value_range": {
+                "min": -8643390.0,
+                "max": 1675.8240966796875
+              },
+              "following_value_range": {
+                "min": -8643390.0,
+                "max": 2146.736572265625
+              },
+              "iql_target_range": {
+                "min": -8643390.0,
+                "max": 2146.542236328125
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.2841913202764705,
+              "proposed_hold_mean_seconds": 5.577344080491457,
+              "proposed_positive_fraction": 0.2470703125,
+              "recorded_hold_mean_seconds": 8.594742826768197
+            }
+          },
+          "calibrate": {
+            "values": {
+              "q_mean": 246.92296321690083,
+              "q_min_mean": 245.92067197710276,
+              "positive_q_min_fraction": 1.0,
+              "value_mean": 243.98004836949985,
+              "iql_target_mean": -960.4004286444397,
+              "iql_residual_min_mean": 1206.321073692292,
+              "iql_residual_min_mae": 1279.6717861406505,
+              "terminal": {
+                "q_mean": 233.3189239501953,
+                "q_min_mean": 232.516357421875,
+                "positive_q_min_fraction": 1.0,
+                "value_mean": -100.6178207397461,
+                "iql_target_mean": -0.8295999765396118,
+                "iql_residual_min_mean": 233.34596252441406,
+                "iql_residual_min_mae": 233.34596252441406
+              },
+              "nonterminal": {
+                "q_mean": 246.92960905923923,
+                "q_min_mean": 245.92722024996803,
+                "positive_q_min_fraction": 1.0,
+                "value_mean": 244.14839124644624,
+                "iql_target_mean": -960.869197979402,
+                "iql_residual_min_mean": 1206.79639128446,
+                "iql_residual_min_mae": 1280.182937007097
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.007932249456644058,
+              "q_recorded_min_range": {
+                "min": 65.80545806884766,
+                "max": 452.4029235839844
+              },
+              "value_range": {
+                "min": -503.7018127441406,
+                "max": 4154.64697265625
+              },
+              "following_value_range": {
+                "min": -2466353.75,
+                "max": 3760.292236328125
+              },
+              "iql_target_range": {
+                "min": -2466353.75,
+                "max": 3760.1357421875
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.2997437501492992,
+              "proposed_hold_mean_seconds": 6.214595875586383,
+              "proposed_positive_fraction": 0.26904296875,
+              "recorded_hold_mean_seconds": 8.724521991796792
+            }
+          }
+        },
+        "transferred": {
+          "stop": {
+            "values": {
+              "q_mean": -194.13049621134996,
+              "q_min_mean": -197.30139999836683,
+              "positive_q_min_fraction": 0.99951171875,
+              "value_mean": -3909.45997221407,
+              "iql_target_mean": -3912.1739267735684,
+              "iql_residual_min_mean": 3714.8727090731263,
+              "iql_residual_min_mae": 4821.3274304792285,
+              "terminal": {
+                "q_mean": 287.9053039550781,
+                "q_min_mean": 287.3545227050781,
+                "positive_q_min_fraction": 1.0,
+                "value_mean": 418.2698669433594,
+                "iql_target_mean": -0.790399968624115,
+                "iql_residual_min_mean": 288.1449279785156,
+                "iql_residual_min_mae": 288.1449279785156
+              },
+              "nonterminal": {
+                "q_mean": -194.3659802368343,
+                "q_min_mean": -197.53816400554976,
+                "positive_q_min_fraction": 0.9995114802149487,
+                "value_mean": -3911.5741538648554,
+                "iql_target_mean": -3914.0847150133363,
+                "iql_residual_min_mean": 3716.546733392176,
+                "iql_residual_min_mae": 4823.541979820949
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.006355307996273041,
+              "q_recorded_min_range": {
+                "min": -981616.1875,
+                "max": 534.0853271484375
+              },
+              "value_range": {
+                "min": -8706118.0,
+                "max": 2826.339111328125
+              },
+              "following_value_range": {
+                "min": -8706118.0,
+                "max": 2895.259521484375
+              },
+              "iql_target_range": {
+                "min": -8706118.0,
+                "max": 2895.208984375
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.1868184082268814,
+              "proposed_hold_mean_seconds": 3.138114520115778,
+              "proposed_positive_fraction": 0.15625,
+              "recorded_hold_mean_seconds": 8.594742826768197
+            }
+          },
+          "calibrate": {
+            "values": {
+              "q_mean": 282.59941420704126,
+              "q_min_mean": 281.84302396327257,
+              "positive_q_min_fraction": 1.0,
+              "value_mean": 337.49237852799706,
+              "iql_target_mean": 340.8125691273599,
+              "iql_residual_min_mean": -58.96954517066479,
+              "iql_residual_min_mae": 91.50388441979885,
+              "terminal": {
+                "q_mean": 281.73724365234375,
+                "q_min_mean": 281.1201171875,
+                "positive_q_min_fraction": 1.0,
+                "value_mean": 426.9768981933594,
+                "iql_target_mean": -0.8295999765396118,
+                "iql_residual_min_mean": 281.94970703125,
+                "iql_residual_min_mae": 281.94970703125
+              },
+              "nonterminal": {
+                "q_mean": 282.5998353944153,
+                "q_min_mean": 281.8433771175353,
+                "positive_q_min_fraction": 1.0,
+                "value_mean": 337.4486635696847,
+                "iql_target_mean": 340.979468086375,
+                "iql_residual_min_mean": -59.13609097047031,
+                "iql_residual_min_mae": 91.41084786747278
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.006341785192489624,
+              "q_recorded_min_range": {
+                "min": 167.19366455078125,
+                "max": 542.2339477539062
+              },
+              "value_range": {
+                "min": -91.4039535522461,
+                "max": 2751.233642578125
+              },
+              "following_value_range": {
+                "min": -81.3102035522461,
+                "max": 2751.233642578125
+              },
+              "iql_target_range": {
+                "min": -81.46660614013672,
+                "max": 2751.128173828125
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.19494345776515495,
+              "proposed_hold_mean_seconds": 3.9150155837414786,
+              "proposed_positive_fraction": 0.1689453125,
+              "recorded_hold_mean_seconds": 8.724521991796792
+            }
+          }
+        }
+      },
+      "source_fit_dense": {
+        "uniform256": {
+          "rows": 256,
+          "values": {
+            "q_mean": -49.63511407747865,
+            "q_min_mean": -49.643680265173316,
+            "positive_q_min_fraction": 0.0,
+            "value_mean": -48.74053747393191,
+            "iql_target_mean": -48.04183063842356,
+            "iql_residual_min_mean": -1.601849626749754,
+            "iql_residual_min_mae": 1.8051671162247658,
+            "terminal": {
+              "q_mean": -718.2363993326823,
+              "q_min_mean": -718.4377950032552,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -704.3224080403646,
+              "iql_target_mean": -620.0728505452474,
+              "iql_residual_min_mean": -98.36494445800781,
+              "iql_residual_min_mae": 98.36494445800781
+            },
+            "nonterminal": {
+              "q_mean": -41.707035596191645,
+              "q_min_mean": -41.71331526827906,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -40.966839403974205,
+              "iql_target_mean": -41.25885411778929,
+              "iql_residual_min_mean": -0.454461150489777,
+              "iql_residual_min_mae": 0.6601895192866268
+            },
+            "proposal_q_advantage_vs_zero_mean": 0.007001938298344612,
+            "q_recorded_min_range": {
+              "min": -839.71240234375,
+              "max": -7.083623886108398
+            },
+            "value_range": {
+              "min": -822.0367431640625,
+              "max": -7.135725021362305
+            },
+            "following_value_range": {
+              "min": -890.4658203125,
+              "max": -7.135552406311035
+            },
+            "iql_target_range": {
+              "min": -823.4559936523438,
+              "max": -7.159552574157715
+            }
+          }
+        },
+        "all_terminal_tails": {
+          "rows": 240,
+          "values": {
+            "q_mean": -550.2476174672445,
+            "q_min_mean": -550.4555948257446,
+            "positive_q_min_fraction": 0.0,
+            "value_mean": -540.5851122538248,
+            "iql_target_mean": -366.8886397838593,
+            "iql_residual_min_mean": -183.5669552485148,
+            "iql_residual_min_mae": 184.3202501296997,
+            "terminal": {
+              "q_mean": -550.2476174672445,
+              "q_min_mean": -550.4555948257446,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -540.5851122538248,
+              "iql_target_mean": -366.8886397838593,
+              "iql_residual_min_mean": -183.5669552485148,
+              "iql_residual_min_mae": 184.3202501296997
+            },
+            "proposal_q_advantage_vs_zero_mean": -0.02219734191894531,
+            "q_recorded_min_range": {
+              "min": -871.036865234375,
+              "max": -244.6421356201172
+            },
+            "value_range": {
+              "min": -853.2163696289062,
+              "max": -254.52560424804688
+            },
+            "following_value_range": {
+              "min": -921.6204833984375,
+              "max": -305.73822021484375
+            },
+            "iql_target_range": {
+              "min": -860.628173828125,
+              "max": -45.67679977416992
+            }
+          }
+        }
+      },
+      "source_fit_sparse": {
+        "uniform256": {
+          "rows": 256,
+          "values": {
+            "q_mean": 221.03080785274506,
+            "q_min_mean": 219.66139048337936,
+            "positive_q_min_fraction": 0.98828125,
+            "value_mean": 275.6119589433074,
+            "iql_target_mean": -150648.19460940175,
+            "iql_residual_min_mean": 150867.8572358787,
+            "iql_residual_min_mae": 150977.6013239324,
+            "terminal": {
+              "q_mean": -625.464599609375,
+              "q_min_mean": -654.5015869140625,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -37.59471193949381,
+              "iql_target_mean": -620.0728505452474,
+              "iql_residual_min_mean": -34.4287363688151,
+              "iql_residual_min_mae": 40.6695810953776
+            },
+            "nonterminal": {
+              "q_mean": 231.06830280288878,
+              "q_min_mean": 230.0269593853253,
+              "positive_q_min_fraction": 1.0,
+              "value_mean": 279.32587203677934,
+              "iql_target_mean": -152427.18419547516,
+              "iql_residual_min_mean": 152657.2124055101,
+              "iql_residual_min_mae": 152767.3673129779
+            },
+            "proposal_q_advantage_vs_zero_mean": -0.004207015037536621,
+            "q_recorded_min_range": {
+              "min": -818.9531860351562,
+              "max": 356.041748046875
+            },
+            "value_range": {
+              "min": -176.72232055664062,
+              "max": 3827.369384765625
+            },
+            "following_value_range": {
+              "min": -38628492.0,
+              "max": 2075.088623046875
+            },
+            "iql_target_range": {
+              "min": -38628492.0,
+              "max": 2074.877685546875
+            }
+          }
+        },
+        "all_terminal_tails": {
+          "rows": 240,
+          "values": {
+            "q_mean": -374.1136268893878,
+            "q_min_mean": -404.25130004088084,
+            "positive_q_min_fraction": 0.004166666666666667,
+            "value_mean": -28.842355771859488,
+            "iql_target_mean": -366.8886397838593,
+            "iql_residual_min_mean": -37.36266018549601,
+            "iql_residual_min_mae": 69.20257924397787,
+            "terminal": {
+              "q_mean": -374.1136268893878,
+              "q_min_mean": -404.25130004088084,
+              "positive_q_min_fraction": 0.004166666666666667,
+              "value_mean": -28.842355771859488,
+              "iql_target_mean": -366.8886397838593,
+              "iql_residual_min_mean": -37.36266018549601,
+              "iql_residual_min_mae": 69.20257924397787
+            },
+            "proposal_q_advantage_vs_zero_mean": 0.8299723148345948,
+            "q_recorded_min_range": {
+              "min": -882.873046875,
+              "max": 68.22805786132812
+            },
+            "value_range": {
+              "min": -172.21646118164062,
+              "max": 221.18099975585938
+            },
+            "following_value_range": {
+              "min": -175.07778930664062,
+              "max": 220.92221069335938
+            },
+            "iql_target_range": {
+              "min": -860.628173828125,
+              "max": -45.67679977416992
+            }
+          }
+        }
+      }
+    },
+    "75102": {
+      "seed": 75102,
+      "complete": true,
+      "training": {
+        "complete": true,
+        "seed": 75102,
+        "source_rows": 3284718,
+        "initialization_updates": 50000,
+        "device": "cpu",
+        "target_training_rows_read": 0,
+        "target_test_rows_read": 0,
+        "admission": false,
+        "config": {
+          "ensemble_size": 2,
+          "hidden_dim": 256,
+          "batch_size": 256,
+          "reward_scale": 0.0001,
+          "critic_loss": "huber",
+          "huber_delta": 1.0,
+          "activation": "relu",
+          "actor_layer_norm": false,
+          "critic_layer_norm": false,
+          "value_layer_norm": false,
+          "online_fraction": 0.0,
+          "actor_learning_rate": 0.0003,
+          "critic_learning_rate": 0.0003,
+          "value_learning_rate": 0.0003,
+          "alpha_learning_rate": 0.0003,
+          "ratio_learning_rate": 0.0001,
+          "soft_target_rate": 0.005,
+          "target_subset_size": 2,
+          "target_subset_replacement": false,
+          "target_entropy": 0.0,
+          "initial_temperature": 1.0,
+          "backup_entropy": true,
+          "bootstrap_probability": 1.0,
+          "offline_objective": "iql",
+          "online_backup": "h2oplus",
+          "actor_q_reduction": "min-all",
+          "online_actor_update_interval": 1,
+          "online_actor_batch_mode": "latest",
+          "online_update_order": "actor-before-critic",
+          "offline_cql_alpha": 0.0,
+          "online_cql_alpha": 0.0,
+          "cql_n_actions": 10,
+          "cql_max_target_backup": false,
+          "mixed_backup_lambda": 0.1,
+          "iql_expectile": 0.7,
+          "iql_advantage_temperature": 3.0,
+          "iql_max_weight": 100.0,
+          "ratio_min_weight": 1e-05,
+          "ratio_max_weight": 1.0,
+          "use_ratio_correction": false,
+          "ratio_update_interval": 4,
+          "gradient_clip_norm": null,
+          "cql_penalty_subset_size": null,
+          "cql_penalty_subset_replacement": false,
+          "offline_update_order": "critic-before-actor",
+          "temperature_state_source": "actor",
+          "offline_temperature_action_samples": 1
+        }
+      },
+      "role_rows": {
+        "stop": 2048,
+        "calibrate": 2048
+      },
+      "target_test_rows_read": 0,
+      "dense": {
+        "native": {
+          "stop": {
+            "values": {
+              "q_mean": -12.289681150345132,
+              "q_min_mean": -12.322395526338369,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -12.012635092716664,
+              "iql_target_mean": -12.200213597359834,
+              "iql_residual_min_mean": -0.12218192871659994,
+              "iql_residual_min_mae": 0.42399597354233265,
+              "terminal": {
+                "q_mean": -21.144899368286133,
+                "q_min_mean": -21.162647247314453,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -19.758737564086914,
+                "iql_target_mean": -0.790399968624115,
+                "iql_residual_min_mean": -20.37224769592285,
+                "iql_residual_min_mae": 20.37224769592285
+              },
+              "nonterminal": {
+                "q_mean": -12.285355201044721,
+                "q_min_mean": -12.318076888467838,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -12.008850968402365,
+                "iql_target_mean": -12.20578751706122,
+                "iql_residual_min_mean": -0.11228937094072977,
+                "iql_residual_min_mae": 0.4142508578987662
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.0016094744205474854,
+              "q_recorded_min_range": {
+                "min": -37.97920227050781,
+                "max": -7.835360527038574
+              },
+              "value_range": {
+                "min": -21.991342544555664,
+                "max": -8.241609573364258
+              },
+              "following_value_range": {
+                "min": -23.379552841186523,
+                "max": -8.392976760864258
+              },
+              "iql_target_range": {
+                "min": -23.53565216064453,
+                "max": -0.790399968624115
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.29341862680144004,
+              "proposed_hold_mean_seconds": 0.44081372127402574,
+              "proposed_positive_fraction": 0.025390625,
+              "recorded_hold_mean_seconds": 8.594742826768197
+            }
+          },
+          "calibrate": {
+            "values": {
+              "q_mean": -12.345392528688535,
+              "q_min_mean": -12.376482927706093,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -12.060571893816814,
+              "iql_target_mean": -12.246784995601047,
+              "iql_residual_min_mean": -0.12969793193042278,
+              "iql_residual_min_mae": 0.43191617354750633,
+              "terminal": {
+                "q_mean": -22.05269432067871,
+                "q_min_mean": -22.060565948486328,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -20.408309936523438,
+                "iql_target_mean": -0.8295999765396118,
+                "iql_residual_min_mean": -21.230966567993164,
+                "iql_residual_min_mae": 21.230966567993164
+              },
+              "nonterminal": {
+                "q_mean": -12.340650319703684,
+                "q_min_mean": -12.371752061550362,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -12.056493858622526,
+                "iql_target_mean": -12.25236251637245,
+                "iql_residual_min_mean": -0.11938954471202379,
+                "iql_residual_min_mae": 0.4217554259195407
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.002038876060396433,
+              "q_recorded_min_range": {
+                "min": -40.40574645996094,
+                "max": -7.957128524780273
+              },
+              "value_range": {
+                "min": -20.408309936523438,
+                "max": -7.995863437652588
+              },
+              "following_value_range": {
+                "min": -21.059656143188477,
+                "max": -8.100902557373047
+              },
+              "iql_target_range": {
+                "min": -21.255355834960938,
+                "max": -0.8295999765396118
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.300181718949716,
+              "proposed_hold_mean_seconds": 0.4341012134682387,
+              "proposed_positive_fraction": 0.0390625,
+              "recorded_hold_mean_seconds": 8.724521991796792
+            }
+          }
+        },
+        "transferred": {
+          "stop": {
+            "values": {
+              "q_mean": -12.325807936489582,
+              "q_min_mean": -12.359046519035473,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -12.261913591995835,
+              "iql_target_mean": -12.454185097682057,
+              "iql_residual_min_mean": 0.09513857937417924,
+              "iql_residual_min_mae": 0.6263962590601295,
+              "terminal": {
+                "q_mean": -29.56012725830078,
+                "q_min_mean": -29.590761184692383,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -21.686161041259766,
+                "iql_target_mean": -0.790399968624115,
+                "iql_residual_min_mean": -28.80036163330078,
+                "iql_residual_min_mae": 28.80036163330078
+              },
+              "nonterminal": {
+                "q_mean": -12.317388630518986,
+                "q_min_mean": -12.350628485490942,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -12.25730966065765,
+                "iql_target_mean": -12.459883087486189,
+                "iql_residual_min_mean": 0.10925460292702485,
+                "iql_residual_min_mae": 0.6126327195514628
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.0016663125716149807,
+              "q_recorded_min_range": {
+                "min": -35.99546813964844,
+                "max": -7.9720234870910645
+              },
+              "value_range": {
+                "min": -23.86952781677246,
+                "max": -8.608086585998535
+              },
+              "following_value_range": {
+                "min": -24.744956970214844,
+                "max": -8.607178688049316
+              },
+              "iql_target_range": {
+                "min": -24.90105628967285,
+                "max": -0.790399968624115
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.21664200831719427,
+              "proposed_hold_mean_seconds": 0.48087052861228585,
+              "proposed_positive_fraction": 0.041015625,
+              "recorded_hold_mean_seconds": 8.594742826768197
+            }
+          },
+          "calibrate": {
+            "values": {
+              "q_mean": -12.396145266247913,
+              "q_min_mean": -12.428601467516273,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -12.305965339764953,
+              "iql_target_mean": -12.501678749278653,
+              "iql_residual_min_mean": 0.07307728286832571,
+              "iql_residual_min_mae": 0.651446801610291,
+              "terminal": {
+                "q_mean": -35.00324630737305,
+                "q_min_mean": -35.051513671875,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -22.504274368286133,
+                "iql_target_mean": -0.8295999765396118,
+                "iql_residual_min_mean": -34.2219123840332,
+                "iql_residual_min_mae": 34.2219123840332
+              },
+              "nonterminal": {
+                "q_mean": -12.38510125010667,
+                "q_min_mean": -12.417549727308966,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -12.300983264030453,
+                "iql_target_mean": -12.507380790691814,
+                "iql_residual_min_mean": 0.08983106384873682,
+                "iql_residual_min_mae": 0.6350469649798939
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.002415812574326992,
+              "q_recorded_min_range": {
+                "min": -39.17300033569336,
+                "max": -7.986263751983643
+              },
+              "value_range": {
+                "min": -23.482797622680664,
+                "max": -8.404964447021484
+              },
+              "following_value_range": {
+                "min": -23.799402236938477,
+                "max": -8.600872993469238
+              },
+              "iql_target_range": {
+                "min": -23.941246032714844,
+                "max": -0.8295999765396118
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.22090963563533705,
+              "proposed_hold_mean_seconds": 0.4676345569314435,
+              "proposed_positive_fraction": 0.044921875,
+              "recorded_hold_mean_seconds": 8.724521991796792
+            }
+          }
+        }
+      },
+      "sparse": {
+        "native": {
+          "stop": {
+            "values": {
+              "q_mean": -3.111595428781584,
+              "q_min_mean": -3.1495945221104193,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -4.16902922479494,
+              "iql_target_mean": -4.289671821461525,
+              "iql_residual_min_mean": 1.140077298390679,
+              "iql_residual_min_mae": 1.604745918768458,
+              "terminal": {
+                "q_mean": -5.9123854637146,
+                "q_min_mean": -5.956711769104004,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -10.368369102478027,
+                "iql_target_mean": -0.790399968624115,
+                "iql_residual_min_mean": -5.166311740875244,
+                "iql_residual_min_mae": 5.166311740875244
+              },
+              "nonterminal": {
+                "q_mean": -3.1102271874357448,
+                "q_min_mean": -3.1482231897963042,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -4.166000724610434,
+                "iql_target_mean": -4.291381284994909,
+                "iql_residual_min_mean": 1.143158094208591,
+                "iql_residual_min_mae": 1.6030060233985963
+              },
+              "proposal_q_advantage_vs_zero_mean": 0.0005306461243890226,
+              "q_recorded_min_range": {
+                "min": -123.1450424194336,
+                "max": -0.6380758881568909
+              },
+              "value_range": {
+                "min": -55.95947265625,
+                "max": -0.43780040740966797
+              },
+              "following_value_range": {
+                "min": -56.05380630493164,
+                "max": -0.3035805821418762
+              },
+              "iql_target_range": {
+                "min": -56.221805572509766,
+                "max": -0.3661805987358093
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.24282119918417622,
+              "proposed_hold_mean_seconds": 3.7588073617662303,
+              "proposed_positive_fraction": 0.19189453125,
+              "recorded_hold_mean_seconds": 8.594742826768197
+            }
+          },
+          "calibrate": {
+            "values": {
+              "q_mean": -2.9844891620159615,
+              "q_min_mean": -3.0151434405706823,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -4.168140307199792,
+              "iql_target_mean": -4.309421005222248,
+              "iql_residual_min_mean": 1.2942775648843963,
+              "iql_residual_min_mae": 1.5243432325369213,
+              "terminal": {
+                "q_mean": -5.988147735595703,
+                "q_min_mean": -6.003777027130127,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -10.111392974853516,
+                "iql_target_mean": -0.8295999765396118,
+                "iql_residual_min_mean": -5.174177169799805,
+                "iql_residual_min_mae": 5.174177169799805
+              },
+              "nonterminal": {
+                "q_mean": -2.983021815375229,
+                "q_min_mean": -3.0136834339333793,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -4.165236910684084,
+                "iql_target_mean": -4.311120966643197,
+                "iql_residual_min_mean": 1.2974375330009982,
+                "iql_residual_min_mae": 1.5225602164464167
+              },
+              "proposal_q_advantage_vs_zero_mean": 0.0007103103562258184,
+              "q_recorded_min_range": {
+                "min": -31.853378295898438,
+                "max": -0.6411327719688416
+              },
+              "value_range": {
+                "min": -56.764549255371094,
+                "max": -0.3958002030849457
+              },
+              "following_value_range": {
+                "min": -53.25145721435547,
+                "max": -0.3958002030849457
+              },
+              "iql_target_range": {
+                "min": -53.29435729980469,
+                "max": -0.5387002229690552
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.2460669947649581,
+              "proposed_hold_mean_seconds": 3.8168221635278314,
+              "proposed_positive_fraction": 0.1962890625,
+              "recorded_hold_mean_seconds": 8.724521991796792
+            }
+          }
+        },
+        "transferred": {
+          "stop": {
+            "values": {
+              "q_mean": -3.7915786403464153,
+              "q_min_mean": -3.8449723417288624,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -5.766638438668451,
+              "iql_target_mean": -5.851043408882106,
+              "iql_residual_min_mean": 2.0060710550751537,
+              "iql_residual_min_mae": 3.1207192965084687,
+              "terminal": {
+                "q_mean": -5.874640941619873,
+                "q_min_mean": -5.914400100708008,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -12.651701927185059,
+                "iql_target_mean": -0.790399968624115,
+                "iql_residual_min_mean": -5.124000072479248,
+                "iql_residual_min_mae": 5.124000072479248
+              },
+              "nonterminal": {
+                "q_mean": -3.790561023198749,
+                "q_min_mean": -3.843961385324867,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -5.763274948932977,
+                "iql_target_mean": -5.853515633327762,
+                "iql_residual_min_mean": 2.009554235889787,
+                "iql_residual_min_mae": 3.119740654214394
+              },
+              "proposal_q_advantage_vs_zero_mean": 0.0012568988604471087,
+              "q_recorded_min_range": {
+                "min": -814.0536499023438,
+                "max": -1.0830433368682861
+              },
+              "value_range": {
+                "min": -16.01560401916504,
+                "max": -0.48904022574424744
+              },
+              "following_value_range": {
+                "min": -16.01560401916504,
+                "max": -0.48904022574424744
+              },
+              "iql_target_range": {
+                "min": -16.126813888549805,
+                "max": -0.790399968624115
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.14703858217642857,
+              "proposed_hold_mean_seconds": 2.488121914328076,
+              "proposed_positive_fraction": 0.111328125,
+              "recorded_hold_mean_seconds": 8.594742826768197
+            }
+          },
+          "calibrate": {
+            "values": {
+              "q_mean": -3.2779502369230613,
+              "q_min_mean": -3.3238524404005148,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -5.711253670102451,
+              "iql_target_mean": -5.896732812965638,
+              "iql_residual_min_mean": 2.572880371415522,
+              "iql_residual_min_mae": 2.687031738983933,
+              "terminal": {
+                "q_mean": -5.7696852684021,
+                "q_min_mean": -5.805321216583252,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -12.604995727539062,
+                "iql_target_mean": -0.8295999765396118,
+                "iql_residual_min_mean": -4.97572135925293,
+                "iql_residual_min_mae": 4.97572135925293
+              },
+              "nonterminal": {
+                "q_mean": -3.2767329750610785,
+                "q_min_mean": -3.3226401938073624,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -5.707885940714353,
+                "iql_target_mean": -5.899208207609715,
+                "iql_residual_min_mean": 2.576568012710426,
+                "iql_residual_min_mae": 2.68591366882259
+              },
+              "proposal_q_advantage_vs_zero_mean": 0.001102757581975311,
+              "q_recorded_min_range": {
+                "min": -44.03785705566406,
+                "max": -1.0861692428588867
+              },
+              "value_range": {
+                "min": -15.438769340515137,
+                "max": -0.5394996404647827
+              },
+              "following_value_range": {
+                "min": -16.102888107299805,
+                "max": -0.15909668803215027
+              },
+              "iql_target_range": {
+                "min": -16.334087371826172,
+                "max": -0.15909668803215027
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.1604164863266767,
+              "proposed_hold_mean_seconds": 2.6866402098094113,
+              "proposed_positive_fraction": 0.11865234375,
+              "recorded_hold_mean_seconds": 8.724521991796792
+            }
+          }
+        }
+      },
+      "source_fit_dense": {
+        "uniform256": {
+          "rows": 256,
+          "values": {
+            "q_mean": -48.384110467508435,
+            "q_min_mean": -48.39778310805559,
+            "positive_q_min_fraction": 0.0,
+            "value_mean": -47.63852890022099,
+            "iql_target_mean": -48.66829915717244,
+            "iql_residual_min_mean": 0.2705160491168499,
+            "iql_residual_min_mae": 0.9595863223075867,
+            "terminal": {
+              "q_mean": -644.7718302408854,
+              "q_min_mean": -645.4190470377604,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -556.7192230224609,
+              "iql_target_mean": -620.0728505452474,
+              "iql_residual_min_mean": -25.34619649251302,
+              "iql_residual_min_mae": 31.711390177408855
+            },
+            "nonterminal": {
+              "q_mean": -41.312319323950604,
+              "q_min_mean": -41.31847958319743,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -41.60199893039206,
+              "iql_target_mean": -41.89275111699764,
+              "iql_residual_min_mean": 0.574271533800208,
+              "iql_residual_min_mae": 0.5949404267925519
+            },
+            "proposal_q_advantage_vs_zero_mean": 0.0030234046280384064,
+            "q_recorded_min_range": {
+              "min": -813.908203125,
+              "max": -7.734536170959473
+            },
+            "value_range": {
+              "min": -734.2926635742188,
+              "max": -7.740300178527832
+            },
+            "following_value_range": {
+              "min": -800.5072631835938,
+              "max": -7.7517595291137695
+            },
+            "iql_target_range": {
+              "min": -823.4559936523438,
+              "max": -7.757129192352295
+            }
+          }
+        },
+        "all_terminal_tails": {
+          "rows": 240,
+          "values": {
+            "q_mean": -405.29543285369874,
+            "q_min_mean": -405.7746774037679,
+            "positive_q_min_fraction": 0.0,
+            "value_mean": -324.9206837177277,
+            "iql_target_mean": -366.8886397838593,
+            "iql_residual_min_mean": -38.88603760401408,
+            "iql_residual_min_mae": 46.78286091486613,
+            "terminal": {
+              "q_mean": -405.29543285369874,
+              "q_min_mean": -405.7746774037679,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -324.9206837177277,
+              "iql_target_mean": -366.8886397838593,
+              "iql_residual_min_mean": -38.88603760401408,
+              "iql_residual_min_mae": 46.78286091486613
+            },
+            "proposal_q_advantage_vs_zero_mean": -0.003253269195556641,
+            "q_recorded_min_range": {
+              "min": -862.9174194335938,
+              "max": -41.35643768310547
+            },
+            "value_range": {
+              "min": -773.6768798828125,
+              "max": -33.386165618896484
+            },
+            "following_value_range": {
+              "min": -837.0304565429688,
+              "max": -56.27592849731445
+            },
+            "iql_target_range": {
+              "min": -860.628173828125,
+              "max": -45.67679977416992
+            }
+          }
+        }
+      },
+      "source_fit_sparse": {
+        "uniform256": {
+          "rows": 256,
+          "values": {
+            "q_mean": -12.213820262346417,
+            "q_min_mean": -12.250161486212164,
+            "positive_q_min_fraction": 0.0,
+            "value_mean": -11.546092026110273,
+            "iql_target_mean": -134.7108221763483,
+            "iql_residual_min_mean": 122.46066068625078,
+            "iql_residual_min_mae": 123.95196331432089,
+            "terminal": {
+              "q_mean": -668.5591532389323,
+              "q_min_mean": -669.9988098144531,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -623.3080037434896,
+              "iql_target_mean": -620.0728505452474,
+              "iql_residual_min_mean": -49.92595926920573,
+              "iql_residual_min_mae": 49.92595926920573
+            },
+            "nonterminal": {
+              "q_mean": -4.4310692784343315,
+              "q_min_mean": -4.450770399316026,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -4.291998211279688,
+              "iql_target_mean": -128.95554120754713,
+              "iql_residual_min_mean": 124.50477080429967,
+              "iql_residual_min_mae": 124.82974201841317
+            },
+            "proposal_q_advantage_vs_zero_mean": 0.01224874472245574,
+            "q_recorded_min_range": {
+              "min": -874.5110473632812,
+              "max": -0.9734896421432495
+            },
+            "value_range": {
+              "min": -813.3262329101562,
+              "max": -0.08556197583675385
+            },
+            "following_value_range": {
+              "min": -31457.08984375,
+              "max": 0.04329840838909149
+            },
+            "iql_target_range": {
+              "min": -31457.498046875,
+              "max": 0.019298408180475235
+            }
+          }
+        },
+        "all_terminal_tails": {
+          "rows": 240,
+          "values": {
+            "q_mean": -402.6693165143331,
+            "q_min_mean": -403.5203719774882,
+            "positive_q_min_fraction": 0.0,
+            "value_mean": -368.4999537150065,
+            "iql_target_mean": -366.8886397838593,
+            "iql_residual_min_mean": -36.63173219362895,
+            "iql_residual_min_mae": 36.63173219362895,
+            "terminal": {
+              "q_mean": -402.6693165143331,
+              "q_min_mean": -403.5203719774882,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -368.4999537150065,
+              "iql_target_mean": -366.8886397838593,
+              "iql_residual_min_mean": -36.63173219362895,
+              "iql_residual_min_mae": 36.63173219362895
+            },
+            "proposal_q_advantage_vs_zero_mean": 3.224528121948242,
+            "q_recorded_min_range": {
+              "min": -911.3648681640625,
+              "max": -64.50345611572266
+            },
+            "value_range": {
+              "min": -841.9066162109375,
+              "max": -44.67827224731445
+            },
+            "following_value_range": {
+              "min": -866.0328369140625,
+              "max": -54.35746383666992
+            },
+            "iql_target_range": {
+              "min": -860.628173828125,
+              "max": -45.67679977416992
+            }
+          }
+        }
+      }
+    },
+    "75103": {
+      "seed": 75103,
+      "complete": true,
+      "training": {
+        "complete": true,
+        "seed": 75103,
+        "source_rows": 3284718,
+        "initialization_updates": 50000,
+        "device": "cpu",
+        "target_training_rows_read": 0,
+        "target_test_rows_read": 0,
+        "admission": false,
+        "config": {
+          "ensemble_size": 2,
+          "hidden_dim": 256,
+          "batch_size": 256,
+          "reward_scale": 0.0001,
+          "critic_loss": "huber",
+          "huber_delta": 1.0,
+          "activation": "relu",
+          "actor_layer_norm": false,
+          "critic_layer_norm": false,
+          "value_layer_norm": false,
+          "online_fraction": 0.0,
+          "actor_learning_rate": 0.0003,
+          "critic_learning_rate": 0.0003,
+          "value_learning_rate": 0.0003,
+          "alpha_learning_rate": 0.0003,
+          "ratio_learning_rate": 0.0001,
+          "soft_target_rate": 0.005,
+          "target_subset_size": 2,
+          "target_subset_replacement": false,
+          "target_entropy": 0.0,
+          "initial_temperature": 1.0,
+          "backup_entropy": true,
+          "bootstrap_probability": 1.0,
+          "offline_objective": "iql",
+          "online_backup": "h2oplus",
+          "actor_q_reduction": "min-all",
+          "online_actor_update_interval": 1,
+          "online_actor_batch_mode": "latest",
+          "online_update_order": "actor-before-critic",
+          "offline_cql_alpha": 0.0,
+          "online_cql_alpha": 0.0,
+          "cql_n_actions": 10,
+          "cql_max_target_backup": false,
+          "mixed_backup_lambda": 0.1,
+          "iql_expectile": 0.7,
+          "iql_advantage_temperature": 3.0,
+          "iql_max_weight": 100.0,
+          "ratio_min_weight": 1e-05,
+          "ratio_max_weight": 1.0,
+          "use_ratio_correction": false,
+          "ratio_update_interval": 4,
+          "gradient_clip_norm": null,
+          "cql_penalty_subset_size": null,
+          "cql_penalty_subset_replacement": false,
+          "offline_update_order": "critic-before-actor",
+          "temperature_state_source": "actor",
+          "offline_temperature_action_samples": 1
+        }
+      },
+      "role_rows": {
+        "stop": 2048,
+        "calibrate": 2048
+      },
+      "target_test_rows_read": 0,
+      "dense": {
+        "native": {
+          "stop": {
+            "values": {
+              "q_mean": -12.470467227511108,
+              "q_min_mean": -12.483625553082675,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -11.679238872835413,
+              "iql_target_mean": -11.857815004856093,
+              "iql_residual_min_mean": -0.6258105484303087,
+              "iql_residual_min_mae": 0.727576453005895,
+              "terminal": {
+                "q_mean": -27.206377029418945,
+                "q_min_mean": -27.21746826171875,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -27.17491912841797,
+                "iql_target_mean": -0.790399968624115,
+                "iql_residual_min_mean": -26.42706871032715,
+                "iql_residual_min_mae": 26.42706871032715
+              },
+              "nonterminal": {
+                "q_mean": -12.463268444022145,
+                "q_min_mean": -12.476427779409672,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -11.671668926447731,
+                "iql_target_mean": -11.863221656070666,
+                "iql_residual_min_mean": -0.6132061233390059,
+                "iql_residual_min_mae": 0.715021742572421
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.0008386343251913786,
+              "q_recorded_min_range": {
+                "min": -34.593753814697266,
+                "max": -7.500029563903809
+              },
+              "value_range": {
+                "min": -27.17491912841797,
+                "max": -6.8037638664245605
+              },
+              "following_value_range": {
+                "min": -27.57007598876953,
+                "max": -6.688658237457275
+              },
+              "iql_target_range": {
+                "min": -27.23919677734375,
+                "max": -0.790399968624115
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.34344440511313223,
+              "proposed_hold_mean_seconds": 1.455777573864907,
+              "proposed_positive_fraction": 0.0966796875,
+              "recorded_hold_mean_seconds": 8.594742826768197
+            }
+          },
+          "calibrate": {
+            "values": {
+              "q_mean": -12.524622877594084,
+              "q_min_mean": -12.537785609718412,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -11.738082110416144,
+              "iql_target_mean": -11.905414020933677,
+              "iql_residual_min_mean": -0.632371589075774,
+              "iql_residual_min_mae": 0.7223670491948724,
+              "terminal": {
+                "q_mean": -29.916290283203125,
+                "q_min_mean": -29.935930252075195,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -29.08366584777832,
+                "iql_target_mean": -0.8295999765396118,
+                "iql_residual_min_mean": -29.10633087158203,
+                "iql_residual_min_mae": 29.10633087158203
+              },
+              "nonterminal": {
+                "q_mean": -12.516126703971413,
+                "q_min_mean": -12.529286271837437,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -11.729608449577178,
+                "iql_target_mean": -11.910824775229912,
+                "iql_residual_min_mean": -0.6184614966075247,
+                "iql_residual_min_mae": 0.7085009212894561
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.0018375713843852282,
+              "q_recorded_min_range": {
+                "min": -40.316165924072266,
+                "max": -7.455078125
+              },
+              "value_range": {
+                "min": -29.08366584777832,
+                "max": -6.797670364379883
+              },
+              "following_value_range": {
+                "min": -29.402252197265625,
+                "max": -6.860517501831055
+              },
+              "iql_target_range": {
+                "min": -29.23502540588379,
+                "max": -0.8295999765396118
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.34058918915343384,
+              "proposed_hold_mean_seconds": 1.5129031743854284,
+              "proposed_positive_fraction": 0.0986328125,
+              "recorded_hold_mean_seconds": 8.724521991796792
+            }
+          }
+        },
+        "transferred": {
+          "stop": {
+            "values": {
+              "q_mean": -12.503046217607334,
+              "q_min_mean": -12.517276997445151,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -12.012759048491716,
+              "iql_target_mean": -12.185537432291312,
+              "iql_residual_min_mean": -0.3317395653575659,
+              "iql_residual_min_mae": 0.698351735714823,
+              "terminal": {
+                "q_mean": -31.764150619506836,
+                "q_min_mean": -31.79388999938965,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -21.857769012451172,
+                "iql_target_mean": -0.790399968624115,
+                "iql_residual_min_mean": -31.003490447998047,
+                "iql_residual_min_mae": 31.003490447998047
+              },
+              "nonterminal": {
+                "q_mean": -12.493636787025068,
+                "q_min_mean": -12.507859990604924,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -12.007949566340296,
+                "iql_target_mean": -12.191104182395692,
+                "iql_residual_min_mean": -0.3167558082092315,
+                "iql_residual_min_mae": 0.6835470758651487
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.0019356580451130867,
+              "q_recorded_min_range": {
+                "min": -37.241031646728516,
+                "max": -6.995306968688965
+              },
+              "value_range": {
+                "min": -25.560699462890625,
+                "max": -6.872068405151367
+              },
+              "following_value_range": {
+                "min": -28.07415008544922,
+                "max": -6.868930816650391
+              },
+              "iql_target_range": {
+                "min": -28.558149337768555,
+                "max": -0.790399968624115
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.3677094315089562,
+              "proposed_hold_mean_seconds": 1.5680917702848092,
+              "proposed_positive_fraction": 0.12939453125,
+              "recorded_hold_mean_seconds": 8.594742826768197
+            }
+          },
+          "calibrate": {
+            "values": {
+              "q_mean": -12.565428368747234,
+              "q_min_mean": -12.579803150612861,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -12.070742950309068,
+              "iql_target_mean": -12.236033621768001,
+              "iql_residual_min_mean": -0.3437695282045752,
+              "iql_residual_min_mae": 0.7031765433494002,
+              "terminal": {
+                "q_mean": -35.62405014038086,
+                "q_min_mean": -35.644371032714844,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -22.961389541625977,
+                "iql_target_mean": -0.8295999765396118,
+                "iql_residual_min_mean": -34.81476974487305,
+                "iql_residual_min_mae": 34.81476974487305
+              },
+              "nonterminal": {
+                "q_mean": -12.554163775795777,
+                "q_min_mean": -12.568535652868796,
+                "positive_q_min_fraction": 0.0,
+                "value_mean": -12.065422653977208,
+                "iql_target_mean": -12.241605890280571,
+                "iql_residual_min_mean": -0.32692976258822515,
+                "iql_residual_min_mae": 0.6865123551708346
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.0017234196420758963,
+              "q_recorded_min_range": {
+                "min": -46.80705261230469,
+                "max": -6.935023784637451
+              },
+              "value_range": {
+                "min": -28.933109283447266,
+                "max": -6.879652500152588
+              },
+              "following_value_range": {
+                "min": -24.50851058959961,
+                "max": -6.892933368682861
+              },
+              "iql_target_range": {
+                "min": -24.680110931396484,
+                "max": -0.8295999765396118
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.36592294458569086,
+              "proposed_hold_mean_seconds": 1.6556483065942302,
+              "proposed_positive_fraction": 0.12939453125,
+              "recorded_hold_mean_seconds": 8.724521991796792
+            }
+          }
+        }
+      },
+      "sparse": {
+        "native": {
+          "stop": {
+            "values": {
+              "q_mean": 58.43163845629897,
+              "q_min_mean": 58.122467811685055,
+              "positive_q_min_fraction": 0.99755859375,
+              "value_mean": 49.174512739497004,
+              "iql_target_mean": 50.916132536600344,
+              "iql_residual_min_mean": 7.206335281021893,
+              "iql_residual_min_mae": 36.83514706324786,
+              "terminal": {
+                "q_mean": 58.597408294677734,
+                "q_min_mean": 58.13547897338867,
+                "positive_q_min_fraction": 1.0,
+                "value_mean": -125.32585144042969,
+                "iql_target_mean": -0.790399968624115,
+                "iql_residual_min_mean": 58.925880432128906,
+                "iql_residual_min_mae": 58.925880432128906
+              },
+              "nonterminal": {
+                "q_mean": 58.43155747445316,
+                "q_min_mean": 58.12246145547514,
+                "positive_q_min_fraction": 0.9975574010747436,
+                "value_mean": 49.25975961989756,
+                "iql_target_mean": 50.94139220074555,
+                "iql_residual_min_mean": 7.181069259941723,
+                "iql_residual_min_mae": 36.82435530293087
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.15775004914030433,
+              "q_recorded_min_range": {
+                "min": -120.94290924072266,
+                "max": 109.85844421386719
+              },
+              "value_range": {
+                "min": -501.8628845214844,
+                "max": 331.8065490722656
+              },
+              "following_value_range": {
+                "min": -379.15240478515625,
+                "max": 348.4349670410156
+              },
+              "iql_target_range": {
+                "min": -379.2593078613281,
+                "max": 348.4349670410156
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.4452923638041775,
+              "proposed_hold_mean_seconds": 10.742190578777809,
+              "proposed_positive_fraction": 0.42236328125,
+              "recorded_hold_mean_seconds": 8.594742826768197
+            }
+          },
+          "calibrate": {
+            "values": {
+              "q_mean": 59.026202736073174,
+              "q_min_mean": 58.71884540980682,
+              "positive_q_min_fraction": 0.99853515625,
+              "value_mean": 50.866473542293534,
+              "iql_target_mean": 47.360903414388304,
+              "iql_residual_min_mean": 11.357942008413374,
+              "iql_residual_min_mae": 36.93620439898223,
+              "terminal": {
+                "q_mean": 56.51065444946289,
+                "q_min_mean": 56.149173736572266,
+                "positive_q_min_fraction": 1.0,
+                "value_mean": -131.4730682373047,
+                "iql_target_mean": -0.8295999765396118,
+                "iql_residual_min_mean": 56.97877502441406,
+                "iql_residual_min_mae": 56.97877502441406
+              },
+              "nonterminal": {
+                "q_mean": 59.027431631181436,
+                "q_min_mean": 58.720100745260275,
+                "positive_q_min_fraction": 0.9985344406448461,
+                "value_mean": 50.955550016050054,
+                "iql_target_mean": 47.38444542874635,
+                "iql_residual_min_mean": 11.335655328874537,
+                "iql_residual_min_mae": 36.926413206688416
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.1714133769273758,
+              "q_recorded_min_range": {
+                "min": -30.349090576171875,
+                "max": 108.41331481933594
+              },
+              "value_range": {
+                "min": -388.0624694824219,
+                "max": 338.3592834472656
+              },
+              "following_value_range": {
+                "min": -663.242919921875,
+                "max": 297.2206115722656
+              },
+              "iql_target_range": {
+                "min": -663.7238159179688,
+                "max": 297.1692199707031
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.45987651395620055,
+              "proposed_hold_mean_seconds": 11.525075493380427,
+              "proposed_positive_fraction": 0.4375,
+              "recorded_hold_mean_seconds": 8.724521991796792
+            }
+          }
+        },
+        "transferred": {
+          "stop": {
+            "values": {
+              "q_mean": -6.580271480605006,
+              "q_min_mean": -7.825217502657324,
+              "positive_q_min_fraction": 0.99951171875,
+              "value_mean": 109.72713657852728,
+              "iql_target_mean": 111.37671660671913,
+              "iql_residual_min_mean": -119.2019359068945,
+              "iql_residual_min_mae": 129.43272507283837,
+              "terminal": {
+                "q_mean": 65.46127319335938,
+                "q_min_mean": 65.0174560546875,
+                "positive_q_min_fraction": 1.0,
+                "value_mean": 159.2499237060547,
+                "iql_target_mean": -0.790399968624115,
+                "iql_residual_min_mean": 65.80785369873047,
+                "iql_residual_min_mae": 65.80785369873047
+              },
+              "nonterminal": {
+                "q_mean": -6.615465200523895,
+                "q_min_mean": -7.86080258988612,
+                "positive_q_min_fraction": 0.9995114802149487,
+                "value_mean": 109.7029437172046,
+                "iql_target_mean": 111.43151246239835,
+                "iql_residual_min_mean": -119.29231684954503,
+                "iql_residual_min_mae": 129.46380708132597
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.128721309825778,
+              "q_recorded_min_range": {
+                "min": -160300.5,
+                "max": 146.9497528076172
+              },
+              "value_range": {
+                "min": -207.7169952392578,
+                "max": 436.0622863769531
+              },
+              "following_value_range": {
+                "min": -188.33192443847656,
+                "max": 425.1070861816406
+              },
+              "iql_target_range": {
+                "min": -188.6784210205078,
+                "max": 424.7079772949219
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.3208564442023655,
+              "proposed_hold_mean_seconds": 9.161182257230394,
+              "proposed_positive_fraction": 0.3037109375,
+              "recorded_hold_mean_seconds": 8.594742826768197
+            }
+          },
+          "calibrate": {
+            "values": {
+              "q_mean": 70.9772138139233,
+              "q_min_mean": 70.69405953306705,
+              "positive_q_min_fraction": 1.0,
+              "value_mean": 109.20289035057067,
+              "iql_target_mean": 107.07933956503985,
+              "iql_residual_min_mean": -36.38527998980135,
+              "iql_residual_min_mae": 47.500725959427655,
+              "terminal": {
+                "q_mean": 64.12689208984375,
+                "q_min_mean": 63.74912643432617,
+                "positive_q_min_fraction": 1.0,
+                "value_mean": 154.6877899169922,
+                "iql_target_mean": -0.8295999765396118,
+                "iql_residual_min_mean": 64.57872772216797,
+                "iql_residual_min_mae": 64.57872772216797
+              },
+              "nonterminal": {
+                "q_mean": 70.98056033161947,
+                "q_min_mean": 70.69745227029163,
+                "positive_q_min_fraction": 1.0,
+                "value_mean": 109.1806700772114,
+                "iql_target_mean": 107.13205521698981,
+                "iql_residual_min_mean": -36.43460290514672,
+                "iql_residual_min_mae": 47.49238301767741
+              },
+              "proposal_q_advantage_vs_zero_mean": -0.12829266861081123,
+              "q_recorded_min_range": {
+                "min": 16.093536376953125,
+                "max": 149.51626586914062
+              },
+              "value_range": {
+                "min": -171.38111877441406,
+                "max": 432.7821350097656
+              },
+              "following_value_range": {
+                "min": -174.5402374267578,
+                "max": 417.4610290527344
+              },
+              "iql_target_range": {
+                "min": -174.89993286132812,
+                "max": 417.4096374511719
+              }
+            },
+            "actor": {
+              "rows": 2048,
+              "gate_probability_mean": 0.3169097857177021,
+              "proposed_hold_mean_seconds": 9.182677704142407,
+              "proposed_positive_fraction": 0.29345703125,
+              "recorded_hold_mean_seconds": 8.724521991796792
+            }
+          }
+        }
+      },
+      "source_fit_dense": {
+        "uniform256": {
+          "rows": 256,
+          "values": {
+            "q_mean": -47.22161456570029,
+            "q_min_mean": -47.227798799052835,
+            "positive_q_min_fraction": 0.0,
+            "value_mean": -45.90412983484566,
+            "iql_target_mean": -47.72922592610121,
+            "iql_residual_min_mean": 0.5014271270483732,
+            "iql_residual_min_mae": 1.7864095102995634,
+            "terminal": {
+              "q_mean": -531.7605387369791,
+              "q_min_mean": -531.9370320638021,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -489.25953674316406,
+              "iql_target_mean": -620.0728505452474,
+              "iql_residual_min_mean": 88.13581848144531,
+              "iql_residual_min_mae": 94.84558614095052
+            },
+            "nonterminal": {
+              "q_mean": -41.47609372572465,
+              "q_min_mean": -41.48025848366055,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -40.64695109680236,
+              "iql_target_mean": -40.94254263022201,
+              "iql_residual_min_mean": -0.537715853438547,
+              "iql_residual_min_mae": 0.6829410127029117
+            },
+            "proposal_q_advantage_vs_zero_mean": 0.00435541570186615,
+            "q_recorded_min_range": {
+              "min": -669.577392578125,
+              "max": -7.002372741699219
+            },
+            "value_range": {
+              "min": -622.9817504882812,
+              "max": -7.149723529815674
+            },
+            "following_value_range": {
+              "min": -688.4716796875,
+              "max": -7.179850101470947
+            },
+            "iql_target_range": {
+              "min": -823.4559936523438,
+              "max": -7.204950332641602
+            }
+          }
+        },
+        "all_terminal_tails": {
+          "rows": 240,
+          "values": {
+            "q_mean": -349.53034823735555,
+            "q_min_mean": -349.69081881841026,
+            "positive_q_min_fraction": 0.0,
+            "value_mean": -317.74687989552814,
+            "iql_target_mean": -366.8886397838593,
+            "iql_residual_min_mean": 17.197820933659873,
+            "iql_residual_min_mae": 66.80377335548401,
+            "terminal": {
+              "q_mean": -349.53034823735555,
+              "q_min_mean": -349.69081881841026,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -317.74687989552814,
+              "iql_target_mean": -366.8886397838593,
+              "iql_residual_min_mean": 17.197820933659873,
+              "iql_residual_min_mae": 66.80377335548401
+            },
+            "proposal_q_advantage_vs_zero_mean": -0.031073570251464844,
+            "q_recorded_min_range": {
+              "min": -690.322509765625,
+              "max": -110.51033782958984
+            },
+            "value_range": {
+              "min": -645.65234375,
+              "max": -88.6295394897461
+            },
+            "following_value_range": {
+              "min": -711.5674438476562,
+              "max": -123.29009246826172
+            },
+            "iql_target_range": {
+              "min": -860.628173828125,
+              "max": -45.67679977416992
+            }
+          }
+        }
+      },
+      "source_fit_sparse": {
+        "uniform256": {
+          "rows": 256,
+          "values": {
+            "q_mean": 41.962099850177765,
+            "q_min_mean": 41.74687813222408,
+            "positive_q_min_fraction": 0.98828125,
+            "value_mean": 57.71088538505137,
+            "iql_target_mean": -6984.177149113268,
+            "iql_residual_min_mean": 7025.923838794231,
+            "iql_residual_min_mae": 7057.155869930983,
+            "terminal": {
+              "q_mean": -646.0495910644531,
+              "q_min_mean": -651.748545328776,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -441.27820841471356,
+              "iql_target_mean": -620.0728505452474,
+              "iql_residual_min_mean": -31.675694783528645,
+              "iql_residual_min_mae": 31.675694783528645
+            },
+            "nonterminal": {
+              "q_mean": 50.1203412444224,
+              "q_min_mean": 49.970144023065984,
+              "positive_q_min_fraction": 1.0,
+              "value_mean": 63.62775210994977,
+              "iql_target_mean": -7059.640836448067,
+              "iql_residual_min_mean": 7109.610789785272,
+              "iql_residual_min_mae": 7140.461958964352
+            },
+            "proposal_q_advantage_vs_zero_mean": -0.024200648069381714,
+            "q_recorded_min_range": {
+              "min": -860.3176879882812,
+              "max": 70.0868911743164
+            },
+            "value_range": {
+              "min": -465.3673400878906,
+              "max": 212.4304962158203
+            },
+            "following_value_range": {
+              "min": -1801660.75,
+              "max": 198.17323303222656
+            },
+            "iql_target_range": {
+              "min": -1801661.125,
+              "max": 198.01522827148438
+            }
+          }
+        },
+        "all_terminal_tails": {
+          "rows": 240,
+          "values": {
+            "q_mean": -378.6868820985158,
+            "q_min_mean": -382.652833366394,
+            "positive_q_min_fraction": 0.0,
+            "value_mean": -310.208073981603,
+            "iql_target_mean": -366.8886397838593,
+            "iql_residual_min_mean": -15.76419358253479,
+            "iql_residual_min_mae": 28.834370565414428,
+            "terminal": {
+              "q_mean": -378.6868820985158,
+              "q_min_mean": -382.652833366394,
+              "positive_q_min_fraction": 0.0,
+              "value_mean": -310.208073981603,
+              "iql_target_mean": -366.8886397838593,
+              "iql_residual_min_mean": -15.76419358253479,
+              "iql_residual_min_mae": 28.834370565414428
+            },
+            "proposal_q_advantage_vs_zero_mean": 2.566325378417969,
+            "q_recorded_min_range": {
+              "min": -915.3247680664062,
+              "max": -32.97360610961914
+            },
+            "value_range": {
+              "min": -493.0938415527344,
+              "max": -54.61861038208008
+            },
+            "following_value_range": {
+              "min": -508.2346496582031,
+              "max": -57.220829010009766
+            },
+            "iql_target_range": {
+              "min": -860.628173828125,
+              "max": -45.67679977416992
+            }
+          }
+        }
+      }
+    }
+  },
+  "interpretation": "Source available data quantity and sampling density change together; equal update counts are not equal source sample budgets. This isolates the prior source compression decision, not sparse support versus terminal weighting individually. Value recovery is not a closed-loop performance result."
+}

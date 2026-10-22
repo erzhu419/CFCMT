@@ -1,0 +1,102 @@
+{
+  "name": "cfcmt-bus-native-terminal-actor-unmasked-confirmation-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "branches": {
+    "unmasked": {
+      "method": "cross_city",
+      "artifact_folder": "native_terminal_actor_unmasked/real_v_unmasked",
+      "training_protocol": "cfcmt-bus-native-terminal-actor-unmasked-v1",
+      "historical_training_updates": 75000
+    },
+    "repaired": {
+      "method": "cross_city",
+      "artifact_folder": "native_terminal_adaptation",
+      "historical_training_updates": 55000
+    }
+  },
+  "evaluation": {
+    "episode_seconds": 24000,
+    "demand_scale": 1.0,
+    "rule": "forward_proportional",
+    "rule_gain": 0.6,
+    "cases": [
+      {
+        "case": 0,
+        "demand_seed": 72581,
+        "sumo_seed": 73581
+      },
+      {
+        "case": 1,
+        "demand_seed": 72582,
+        "sumo_seed": 73582
+      },
+      {
+        "case": 2,
+        "demand_seed": 72583,
+        "sumo_seed": 73583
+      }
+    ],
+    "test_separation": "Predeclared before generating assets or submitting jobs;72581-72583/73581-73583 are disjoint from prior native collection/evaluation cohorts",
+    "comparison": "Twenty-one new evaluations: three frozen unmasked75000 actors and three frozen repaired55000 actors, each on three fresh generated demand cases, plus three actual rule runs",
+    "primary_cost": "(2*wait_passenger_seconds+in_vehicle_passenger_seconds)/departed_passengers",
+    "completion": "Report completion rate and departed/completed counts alongside cost.",
+    "interpretation": "Bounded pilot on one target city; no population-level CI or city removal."
+  },
+  "asset_selection": {
+    "start_hour": 7,
+    "service_hours": 4,
+    "max_directional_services": 12,
+    "minimum_departures_in_window": 2,
+    "ordering": "Original route, direction, pattern and service id, before any control outcomes",
+    "require_positive_apc": true,
+    "required_tables": [
+      "stop_news.xlsx",
+      "route_news.xlsx",
+      "time_table.xlsx",
+      "passenger_OD.xlsx"
+    ],
+    "network": "GTFS-derived route corridors; APC-apportioned demand, generated destinations; not a measured city road network",
+    "scheduled_service_date": "2026-05-19",
+    "calendar_rule": "Earliest weekday in the pinned GTFS feed with active weekday service and without a holiday exception; keep the original 12-service subset",
+    "calendar_provenance": "Actual trip_id/service_id and full stop signatures from GTFS; never merge mutually exclusive calendar services or clamp zero scheduled headways"
+  },
+  "asset_folder": "native_terminal_actor_unmasked_confirmation",
+  "actor_action_space": "executed",
+  "rule_action_space": "proposal",
+  "rule": {
+    "method": "forward_proportional",
+    "gain": 0.6,
+    "actor_action_space": "proposal",
+    "checkpoint": null,
+    "training_seed": null
+  },
+  "new_training_updates": 0,
+  "world_model_refit_updates": 0,
+  "checkpoint_rule": "Freeze all three native_terminal_actor_unmasked/real_v_unmasked/seedN/policy.pt final75000 actors and all three native_terminal_adaptation/seedN/policy.pt final55000 actors; no further training or checkpoint/seed/gate selection",
+  "primary_comparison": "Equal-weight full24000 passenger cost of unmasked75000 actors versus forward proportional gain0.6 rule and repaired55000 actors, all seeds and cases retained",
+  "diagnostic_trigger": "Previously analyzed72571-72573 cases: unmasked75k mean cost2362.012701, rule2369.708118, adapted55k2363.774906; improvements are heterogeneous and largely driven by seed75103. Confirm these frozen actors on fresh generated demand.",
+  "reporting": "Report each seed/case and equal seed/case mean cost/wait/ride/completion; three actual rule runs reused across nine pairs per learned branch; all21 actual evaluations retained",
+  "interpretation": "Prospective generated-demand confirmation on the same pinned Halifax services, not measured real deployment or source/confidence contribution isolation",
+  "code_boundary": "CFCMT-owned corrected pool/runtime/source checkpoints/assets only; no mutable Thesis access and no heavy data downloads.",
+  "prepared": true,
+  "paired_comparisons": {
+    "unmasked_vs_rule": [
+      "unmasked",
+      "strong_rule"
+    ],
+    "unmasked_vs_adapted": [
+      "unmasked",
+      "repaired"
+    ],
+    "adapted_vs_rule": [
+      "repaired",
+      "strong_rule"
+    ]
+  },
+  "reporting_interpretation": "Prospective generated-demand confirmation on the same pinned Halifax services; all21 actual evaluations and all9 pairs per comparison retained, equal case/seed weights, three actual rule runs reused, no old-case pooling or population CI. This does not isolate source or normalized-confidence contribution.",
+  "expected_actual_evaluations": 21
+}

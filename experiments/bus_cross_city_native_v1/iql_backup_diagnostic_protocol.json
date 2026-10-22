@@ -1,0 +1,65 @@
+{
+  "name": "cfcmt-bus-iql-backup-diagnostic-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "fit_role": 0,
+  "target_fit_rows": 12288,
+  "state_batch_size": 256,
+  "positive_samples_per_state": 8,
+  "common_draw_seed_offset": 90000,
+  "action_equality_tolerance": 1e-05,
+  "stages": {
+    "adapted": {
+      "folder": "source_dense_adaptation",
+      "filename": "adapted.pt",
+      "stored_updates": 5000
+    },
+    "td0": {
+      "folder": "iql_actor_continuation/td0",
+      "filename": "final_learner.pt",
+      "stored_updates": 25000
+    },
+    "td025": {
+      "folder": "iql_actor_continuation/td025",
+      "filename": "final_learner.pt",
+      "stored_updates": 25000
+    }
+  },
+  "counterfactual": "Fixed learner/state/common latent draws; toggle only existing config.backup_entropy for H2O+ TD target computation; no parameter, optimizer, model or policy update.",
+  "groups": [
+    "all",
+    "free",
+    "forced60",
+    "next_free",
+    "next_forced60"
+  ],
+  "diagnostics": [
+    "Actual reward, duration-discounted V and min-target-Q bootstrap, latent entropy target delta, ON/OFF TD residuals and their ratio.",
+    "Original per-record IQL advantages/exp-temperature3/clamp100 weights: quantiles, cap/near-zero/exact-zero fractions and ESS/N.",
+    "Stratify free and forced execution states; identical physical forced actions do not imply identical latent entropy."
+  ],
+  "near_zero_weight_threshold": 1e-06,
+  "admission_rows": 64,
+  "admission": "One real seed75101 checkpoint-state batch; single positive draw and identical RNG; check decomposition against actual _target with backup entropy ON/OFF and actual IQL value terms. No policy evaluation or training.",
+  "limits": [
+    "Fixed fit states and learned values; not real counterfactual cost or a performance test of entropy removal.",
+    "Monte Carlo8 common latent draws for full diagnostic; admission uses the actual single-draw kernel.",
+    "Existing critics are held fixed when entropy is toggled; lower residual is not proof that a new training arm improves outcomes."
+  ],
+  "code_boundary": "CFCMT-owned snapshot only; no mutable Thesis access; JSON/code/log pulls only, no local H5/CSV/checkpoints.",
+  "new_training_updates": 0,
+  "evaluation_rows_read": 0,
+  "new_simulator_events": 0,
+  "admission_atol": 1e-05,
+  "admission_rtol": 1e-05,
+  "group_observation_side": {
+    "all": "all fit transitions",
+    "free": "observations",
+    "forced60": "observations",
+    "next_free": "next_observations",
+    "next_forced60": "next_observations"
+  }
+}

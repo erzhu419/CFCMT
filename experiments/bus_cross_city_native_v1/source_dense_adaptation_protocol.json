@@ -1,0 +1,22 @@
+{
+  "name": "cfcmt-bus-full-source-target-adaptation-v1",
+  "training_seeds": [75101, 75102, 75103],
+  "source_initialization_updates": 50000,
+  "adaptation_updates": 5000,
+  "target_fit_rows": 12288,
+  "target_union_rows": 16384,
+  "device": "cpu",
+  "initializers": "Existing fixed-final source_dense_ablation/seedN/initializer.pt; no additional source training or checkpoint selection.",
+  "fixed_settings": "Exact original train_native.py source adaptation: fresh CPU continuation trainer/optimizers with seedN, original trainer_config overridden IQL/online_fraction0/ratiooff, transfer four network modules only, reset encoder city/rate columns0..11 and19 from fresh destination modules, seed_all and learner.rng=N+10000, online=False. No alpha or optimizer transfer.",
+  "checkpoint_rule": "Fixed-final 5000-update adapted.pt retains full networks and optimizers; its total_updates is5000, history reports50000+5000.",
+  "primary_diagnostics": "Identical target stop2048/calibrate2048 states before and after adaptation; Qmin/positive fraction, exact terminal-masked IQL residual, V/next-V extremes, proposed holding. Compare original sparse-source-adapted and target-only-adapted references.",
+  "terminal_diagnostics": "Existing six target-fit terminal rows added as training diagnostics, separately from the two held-out stop/calibrate terminal rows; same rows before/after, no extra data or fitting.",
+  "source_probes": "Same source256/all240 source terminal rows before and after using reset city/rate columns in both stages. Check numerical extremes only; do not interpret target-fitted networks with changed city features as source-city calibration retention.",
+  "admission": "Three original-interface target updates from seed75101 dense initializer; separate fresh formal learners afterward.",
+  "world_model_updates": 0,
+  "continuation_updates": 0,
+  "new_simulation_events": 0,
+  "final_test_rows_read": 0,
+  "next_decision": "Use all three adapted-model diagnostics to decide whether numerical recovery persists before any model continuation. Retain all seeds and existing negative evidence; do not tune terminal weights, target samples, update counts or thresholds here.",
+  "interpretation": "Numerical adaptation diagnostic within the existing target budget, not a new closed-loop result. Earlier world-model cost underprediction is unchanged."
+}
