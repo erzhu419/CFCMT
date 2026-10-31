@@ -9,6 +9,15 @@ also receives matched action contrasts, so reference subtraction alone cannot
 explain the gain.  The comparison supports the combined structural design
 rather than identifying each restriction's individual contribution.
 
+The frozen-model confirmation strengthens this controller comparison beyond
+the original two-seed matrix.  Ten new paired simulator seeds reproduced the
+dense-baseline advantage without refitting or tuning: waiting decreased by
+4.93\%, with a paired 95\% interval of 2.64--7.31\%.  Completion increased
+while system burden decreased.  The ten-seed result shows that the original
+6.27\% estimate was not confined to its two evaluation seeds, while the
+Los Angeles regressions on four new seeds expose remaining local variability
+(\Cref{sec:v43-dense-fresh10}).
+
 This result clarifies why the earlier full mechanism-world-model route was
 not retained as the final controller.  MC-WM decomposed queue propagation,
 red accumulation, mobility, spillback and control cost.  These components
@@ -64,8 +73,10 @@ Target counterfactual labels also define the information scope.  The
 uncalibrated target simulator reduces calibration effort, but its action
 outcomes remain labelled target data.  The external comparison uses 165 and
 911 adaptation groups and is an offline-adaptation result, not a zero-shot
-result.  The seven-policy matrix uses two seeds, V91 uses 64 seeds over the
-same two target geometries, and V98 uses 56 further seeds on Jinan.
+result.  The seven-policy matrix uses two seeds; the independent frozen-model
+dense comparison adds ten new seeds on the same four scenarios.  V91 uses
+64 seeds over the same two target geometries, and V98 uses 56 further seeds on
+Jinan.
 These protocols remain separate, and their intervals describe the stated
 networks and demand settings.  These evaluations use a fixed 3,600-s horizon
 and include unfinished vehicles.  Longer incidents, non-recurrent demand and

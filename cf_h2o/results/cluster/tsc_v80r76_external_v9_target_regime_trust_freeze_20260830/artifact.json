@@ -1,0 +1,63 @@
+{
+  "city": "jinan",
+  "classification": "target_simulator_labeled_full_horizon_few_shot_regime_adaptation",
+  "created_at_utc": "2026-08-30T01:41:02.281964+00:00",
+  "heldout_or_validation_metrics_used": false,
+  "model": {
+    "coefficient": -0.006204028294865914,
+    "feature_mean": 0.9437960653159985,
+    "feature_names": [
+      "historical_phase_mean_queue_per_lane"
+    ],
+    "feature_scale": 0.16205956634885993,
+    "intercept": 0.002276905628613531,
+    "l2": 1.0,
+    "protocol": "cfcmt-target-regime-trust-ridge-v1",
+    "trust_rule": "predicted_relative_delta_strictly_less_than_zero"
+  },
+  "protocol": "cfcmt-target-regime-trust-artifact-v1",
+  "runtime_rule": "use local CFCMT only when the frozen target-history regime model predicts a negative waiting-time relative delta; otherwise execute PhasePressure exactly",
+  "scenario_history": {
+    "jinan_3x4_real": {
+      "historical_phase_mean_queue_per_lane": 1.1474849514156913,
+      "history_source_seeds": [
+        80314,
+        88625,
+        27178,
+        77524,
+        63775,
+        50945
+      ],
+      "predicted_relative_delta": -0.005520792718868839,
+      "trust_local_controller": true
+    },
+    "jinan_3x4_real_2000": {
+      "historical_phase_mean_queue_per_lane": 0.751436871777171,
+      "history_source_seeds": [
+        80314,
+        88625,
+        27178,
+        77524,
+        63775,
+        50945
+      ],
+      "predicted_relative_delta": 0.00964087621288302,
+      "trust_local_controller": false
+    },
+    "jinan_3x4_real_2500": {
+      "historical_phase_mean_queue_per_lane": 0.9324663727551329,
+      "history_source_seeds": [
+        80314,
+        88625,
+        27178,
+        77524,
+        63775,
+        50945
+      ],
+      "predicted_relative_delta": 0.0027106333918264208,
+      "trust_local_controller": false
+    }
+  },
+  "scenario_id_is_model_feature": false,
+  "scenario_id_role": "lookup_key_for_frozen_target_history_summary_only"
+}

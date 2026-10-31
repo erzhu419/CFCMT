@@ -1,0 +1,197 @@
+{
+  "city_code": "BOS",
+  "created_at_utc": "2026-08-31T20:46:28.359221+00:00",
+  "demand_inventory": {
+    "canonical_to_taz_attribute_count": 0,
+    "conflicting_destination_taz_attribute_count": 0,
+    "custom_trip_to_taz_attribute_count": 3806510,
+    "depart_span_sec": 43193.96,
+    "duplicate_trip_id_count": 0,
+    "maximum_depart_sec": 50395.74,
+    "minimum_depart_sec": 7201.78,
+    "missing_edge_anchor_count": 0,
+    "missing_required_attribute_count": 0,
+    "missing_taz_anchor_count": 0,
+    "nonmonotonic_departure_count": 0,
+    "other_route_element_counts": {
+      "routes": 1
+    },
+    "trip_count": 3806510,
+    "unique_trip_id_count": 3806510
+  },
+  "destination_taz_schema_canonicalization": {
+    "destination": "microscopic_trips.rou.xml",
+    "direct_child_count": 3806510,
+    "non_trip_element_counts": {},
+    "preexisting_to_taz_count": 0,
+    "protocol": "eth-five-city-trip-destination-taz-schema-canonicalization-v1",
+    "renamed_trip_to_taz_count": 3806510,
+    "route_repair_applied": false,
+    "source": "source/BOS/trips24h_smoothed.rou.xml",
+    "trip_anchor_edges_changed": 0,
+    "trip_count": 3806510,
+    "trips_removed": 0
+  },
+  "gates": {
+    "all_trip_edges_exist": true,
+    "all_trip_taz_exist": true,
+    "complete_city_archive_entries": true,
+    "complete_trip_attributes": true,
+    "controllable_traffic_lights_present": true,
+    "destination_taz_schema_canonicalized_without_demand_loss": true,
+    "monotonic_departures": true,
+    "native_config_input_boundary_verified": true,
+    "nonempty_unique_demand": true,
+    "only_passive_output_removed": true,
+    "previously_screened_departure_bounds_match": true,
+    "published_approximately_12h_span": true,
+    "published_destination_taz_field_is_unambiguous": true,
+    "source_archive_identity": true
+  },
+  "input_audit_protocol": "eth-five-city-complete-published-static-input-audit-v2",
+  "microscopic_demand_inventory": {
+    "canonical_to_taz_attribute_count": 3806510,
+    "conflicting_destination_taz_attribute_count": 0,
+    "custom_trip_to_taz_attribute_count": 0,
+    "depart_span_sec": 43193.96,
+    "duplicate_trip_id_count": 0,
+    "maximum_depart_sec": 50395.74,
+    "minimum_depart_sec": 7201.78,
+    "missing_edge_anchor_count": 0,
+    "missing_required_attribute_count": 0,
+    "missing_taz_anchor_count": 0,
+    "nonmonotonic_departure_count": 0,
+    "other_route_element_counts": {
+      "routes": 1
+    },
+    "trip_count": 3806510,
+    "unique_trip_id_count": 3806510
+  },
+  "microscopic_instantiation": {
+    "backend_required_by_protocol": "libsumo",
+    "begin_sec": 7201,
+    "collision_action": "warn",
+    "collision_check_junctions": true,
+    "config": "microscopic.sumo.cfg",
+    "drain_after_last_depart_sec": 21600,
+    "end_sec": 71996,
+    "ignore_route_errors": false,
+    "last_depart_sec": 50395.74,
+    "max_depart_delay_sec": -1,
+    "mode": "microscopic",
+    "passive_output_change": {
+      "additional_file": {
+        "demand_or_network_elements_removed": 0,
+        "protocol": "eth-five-city-passive-output-removal-v1",
+        "remaining_element_count": 1,
+        "removed_passive_output_elements": [
+          {
+            "id": "dump_10",
+            "tag": "edgeData"
+          }
+        ]
+      },
+      "configuration": {
+        "demand_or_network_elements_removed": 0,
+        "protocol": "eth-five-city-config-passive-output-removal-v1",
+        "removed_output_option_count": 9,
+        "removed_output_options": [
+          {
+            "tag": "output-prefix",
+            "value": "TIME"
+          },
+          {
+            "tag": "summary-output",
+            "value": "stats.xml"
+          },
+          {
+            "tag": "tripinfo-output.write-unfinished",
+            "value": "true"
+          },
+          {
+            "tag": "tripinfo-output",
+            "value": "trips_BOS.xml"
+          },
+          {
+            "tag": "vehroute-output",
+            "value": "routes_BOS.xml"
+          },
+          {
+            "tag": "vehroute-output.route-length",
+            "value": "true"
+          },
+          {
+            "tag": "vehroute-output.last-route",
+            "value": "true"
+          },
+          {
+            "tag": "vehroute-output.write-unfinished",
+            "value": "true"
+          },
+          {
+            "tag": "vehroute-output.exit-times",
+            "value": "true"
+          }
+        ]
+      }
+    },
+    "protocol": "eth-five-city-derived-strict-microscopic-sumo122-v2",
+    "route_file": "microscopic_trips.rou.xml",
+    "seed": 5057,
+    "step_length_sec": 1,
+    "time_to_teleport_sec": -1,
+    "transformation": "structured_destination_taz_schema_canonicalization_plus_native_config_copy_with_explicit_microscopic_and_strict_safety_overrides"
+  },
+  "native_meso_config_inventory": {
+    "additional_files": "additional.add.xml,taz.xml",
+    "begin_sec": "14400",
+    "collision_action": "none",
+    "end_sec": "49800",
+    "ignore_route_errors": "true",
+    "max_depart_delay_sec": "1200",
+    "mesosim": "true",
+    "net_file": "BOS.net.xml",
+    "random_depart_offset_sec": "1200",
+    "rerouting_period_sec": "360",
+    "rerouting_probability": "0.5",
+    "route_files": "trips24h_smoothed.rou.xml",
+    "seed": "2136",
+    "step_length_sec": "2",
+    "time_to_teleport_sec": "360"
+  },
+  "network_inventory": {
+    "connection_count": 352275,
+    "edge_count": 161096,
+    "junction_count": 60283,
+    "lane_count": 189716,
+    "noninternal_edge_count": 161096,
+    "traffic_light_count": 4203,
+    "traffic_light_phase_count": 20230,
+    "traffic_light_program_count": 4203
+  },
+  "passed": true,
+  "protocol": "cfcmt-eth-five-city-microscopic-complete-published-package-v2",
+  "scenario": "eth_boston_complete_published_micro",
+  "scientific_status": "pre-simulation-input-admission",
+  "source": {
+    "archive_md5": "802321f1d2c61de527ed579ce9c54842",
+    "archive_name": "sumo_sim_perc_mfd.zip",
+    "archive_size_bytes": 658810696,
+    "city_entries": [
+      "BOS/",
+      "BOS/additional.add.xml",
+      "BOS/BOS.net.xml",
+      "BOS/meso.sumo.cfg",
+      "BOS/taz.xml",
+      "BOS/trips24h_smoothed.rou.xml"
+    ],
+    "doi": "10.3929/ethz-b-000584669",
+    "license": "CC-BY-NC-4.0"
+  },
+  "taz_inventory": {
+    "duplicate_taz_id_count": 0,
+    "taz_count": 969,
+    "taz_sink_count": 0,
+    "taz_source_count": 0
+  }
+}

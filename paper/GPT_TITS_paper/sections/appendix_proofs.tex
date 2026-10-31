@@ -1,0 +1,56 @@
+\appendices
+\section{Source-Component Details and Score Properties}
+\label{app:score-proofs}
+
+
+\emph{Los Angeles source-component configuration.}
+The source candidates and equal-source comparator in Los Angeles use the
+following fixed blend rule. Let $a_A$ and $a_P$ minimize $A_g$ and $P_g$,
+respectively. The operator $\range$ denotes the maximum minus the minimum of a score over feasible actions. Then
+\begin{align}
+ h_g&=\max\{\range(A_g),\median_a u_{A,g}(a),10^{-6}\},\nonumber\\
+ D_g&=\range(P_g-A_g)/h_g,\nonumber\\
+ M_g&=\max\{P_g(a_A)-P_g(a_P),0\}/h_g,\nonumber\\
+ U_g&=\{u_{P,g}(a_A)+u_{P,g}(a_P)\}/h_g,\nonumber\\
+ \alpha_g&=\min\{1,1/\max(D_g,10^{-12})\}\nonumber\\
+ &\quad{}\times\ind\{M_g+10^{-12}\geq0.25U_g\}.
+ \label{eq:la-component-blend}
+\end{align}
+Here $h_g$ is the reference-score scale, $D_g$ is normalized model
+disagreement, $M_g$ is the pairwise margin, and $U_g$ is the combined error
+score. The operator $\median$ takes the median over feasible actions, and
+$\ind$ is one when its condition holds and zero otherwise. The final Los
+Angeles controller selects the target anchor rather than these source
+components.
+
+\emph{Common-offset cancellation.}
+Subtracting $Y_g(r_g)$ from $Y_g(a)$ cancels $b_g$ and gives
+\eqref{eq:cancellation}. Adding a common constant leaves every contrast and
+the group range unchanged. Multiplying all outcomes by a positive constant
+multiplies both by that constant, so normalized labels are unchanged when
+the numerical floor is inactive. Action ordering is preserved in either case.
+
+\emph{Pairwise ranking recovery.}
+Swapping $i$ and $j$ in \eqref{eq:antisym} negates the prediction. For exact
+pair predictions,
+\begin{equation*}
+ \sum_{j\ne i}\{z_g(a_i)-z_g(a_j)\}
+ =K_gz_g(a_i)-\sum_{j=1}^{K_g}z_g(a_j).
+\end{equation*}
+Dividing by $K_g-1$ and subtracting the reference score gives
+\eqref{eq:recovery}. The common subtraction and positive factor preserve
+the minimizers, and $P_g(r_g)=0$.
+
+\emph{Ranking error.}
+For the ranking bound, let $a_g^\star$ minimize $z_g$. By the definition of
+$\widehat a_g$ in \eqref{eq:blend},
+\begin{align*}
+ z_g(\widehat a_g)-z_g(a_g^\star)
+ &=z_g(\widehat a_g)-S_g(\widehat a_g)\\
+ &\quad+S_g(\widehat a_g)-S_g(a_g^\star)\\
+ &\quad+S_g(a_g^\star)-z_g(a_g^\star)\\
+ &\leq2\|S_g-z_g\|_\infty.
+\end{align*}
+Here $\|S_g-z_g\|_\infty$ is the largest absolute score error over the feasible
+actions. This is an algebraic bound; it assumes no error guarantee for an
+unseen network.

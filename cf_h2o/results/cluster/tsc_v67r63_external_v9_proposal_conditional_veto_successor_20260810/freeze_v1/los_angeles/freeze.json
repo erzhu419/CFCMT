@@ -1,0 +1,811 @@
+{
+  "all_action_group_count": 5133,
+  "city": "los_angeles",
+  "created_at_utc": "2026-08-10T05:58:08.780491+00:00",
+  "failed_v66_certificate_sha256": "9984778d6feb25432682fddbb2140570b6f9465a80beef30cad45038229756d3",
+  "feature_names": [
+    "total_q",
+    "total_veh",
+    "mean_speed",
+    "mean_occ",
+    "green_q",
+    "red_q",
+    "green_down_q",
+    "green_down_occ",
+    "delta_green_q",
+    "delta_red_q",
+    "delta_green_down_q",
+    "delta_green_down_occ",
+    "delta_service_pressure",
+    "delta_switch_indicator",
+    "delta_clearance_fraction",
+    "delta_current_phase_overlap"
+  ],
+  "final_config": {
+    "acceptance_quantile": 0.125,
+    "enabled": false,
+    "rollout_value_horizon_sec": 300,
+    "score_threshold": 0.07286229156489432
+  },
+  "final_fit": {
+    "calibration_error": 0.4960567714006201,
+    "constant": false,
+    "feature_count": 16,
+    "feature_names": [
+      "total_q",
+      "total_veh",
+      "mean_speed",
+      "mean_occ",
+      "green_q",
+      "red_q",
+      "green_down_q",
+      "green_down_occ",
+      "delta_green_q",
+      "delta_red_q",
+      "delta_green_down_q",
+      "delta_green_down_occ",
+      "delta_service_pressure",
+      "delta_switch_indicator",
+      "delta_clearance_fraction",
+      "delta_current_phase_overlap"
+    ],
+    "nonzero_sign_accuracy": 0.5,
+    "protocol": "proposal-conditional-causal-regressor-v1",
+    "rows": 6,
+    "weighted_mae": 0.18995669876233748
+  },
+  "gate_selection": {
+    "decision": "always_veto_to_phase_pressure",
+    "feasible_candidate_count": 0,
+    "grid": [
+      {
+        "acceptance_quantile": 0.05,
+        "bootstrap": {
+          "ci95": [
+            -5.1352818430027145e-05,
+            0.00032199319454368614
+          ],
+          "observed": 0.00010015297885712799,
+          "probability_nonnegative": 0.7905,
+          "replicates": 10000,
+          "seed": 20260819,
+          "unit": "simulator_seed_equal_scenario_mean"
+        },
+        "feasible": false,
+        "gates": {
+          "bootstrap_upper": false,
+          "harmful_fraction": false,
+          "mean_delta": false,
+          "minimum_retained_groups": false,
+          "minimum_retained_seed_fraction": true,
+          "passed": false,
+          "worst_seed": true
+        },
+        "harmful_group_fraction": 0.5,
+        "key": "q0p05",
+        "mean_delta": 0.00010015297885712799,
+        "retained_group_count": 6,
+        "retained_seed_count": 4,
+        "retained_seed_fraction": 0.6666666666666666,
+        "robust_score": 0.0008709994093464791,
+        "seed_delta_std": 0.0002537200828039577,
+        "seed_mean_delta": {
+          "27178": -1.384311729139672e-05,
+          "50945": -0.00013929195654821546,
+          "63775": 0.0,
+          "77524": 0.00011006655789500782,
+          "80314": 0.0,
+          "88625": 0.0006439863890873723
+        },
+        "stratum_mean_delta": {
+          "seed27178::la_1x4": -1.384311729139672e-05,
+          "seed50945::la_1x4": -0.00013929195654821546,
+          "seed63775::la_1x4": 0.0,
+          "seed77524::la_1x4": 0.00011006655789500782,
+          "seed80314::la_1x4": 0.0,
+          "seed88625::la_1x4": 0.0006439863890873723
+        },
+        "worst_seed_delta": 0.0006439863890873723
+      },
+      {
+        "acceptance_quantile": 0.075,
+        "bootstrap": {
+          "ci95": [
+            -5.1352818430027145e-05,
+            0.00032199319454368614
+          ],
+          "observed": 0.00010015297885712799,
+          "probability_nonnegative": 0.7905,
+          "replicates": 10000,
+          "seed": 20260819,
+          "unit": "simulator_seed_equal_scenario_mean"
+        },
+        "feasible": false,
+        "gates": {
+          "bootstrap_upper": false,
+          "harmful_fraction": false,
+          "mean_delta": false,
+          "minimum_retained_groups": false,
+          "minimum_retained_seed_fraction": true,
+          "passed": false,
+          "worst_seed": true
+        },
+        "harmful_group_fraction": 0.5,
+        "key": "q0p075",
+        "mean_delta": 0.00010015297885712799,
+        "retained_group_count": 6,
+        "retained_seed_count": 4,
+        "retained_seed_fraction": 0.6666666666666666,
+        "robust_score": 0.0008709994093464791,
+        "seed_delta_std": 0.0002537200828039577,
+        "seed_mean_delta": {
+          "27178": -1.384311729139672e-05,
+          "50945": -0.00013929195654821546,
+          "63775": 0.0,
+          "77524": 0.00011006655789500782,
+          "80314": 0.0,
+          "88625": 0.0006439863890873723
+        },
+        "stratum_mean_delta": {
+          "seed27178::la_1x4": -1.384311729139672e-05,
+          "seed50945::la_1x4": -0.00013929195654821546,
+          "seed63775::la_1x4": 0.0,
+          "seed77524::la_1x4": 0.00011006655789500782,
+          "seed80314::la_1x4": 0.0,
+          "seed88625::la_1x4": 0.0006439863890873723
+        },
+        "worst_seed_delta": 0.0006439863890873723
+      },
+      {
+        "acceptance_quantile": 0.1,
+        "bootstrap": {
+          "ci95": [
+            -5.1352818430027145e-05,
+            0.00032199319454368614
+          ],
+          "observed": 0.00010015297885712799,
+          "probability_nonnegative": 0.7905,
+          "replicates": 10000,
+          "seed": 20260819,
+          "unit": "simulator_seed_equal_scenario_mean"
+        },
+        "feasible": false,
+        "gates": {
+          "bootstrap_upper": false,
+          "harmful_fraction": false,
+          "mean_delta": false,
+          "minimum_retained_groups": false,
+          "minimum_retained_seed_fraction": true,
+          "passed": false,
+          "worst_seed": true
+        },
+        "harmful_group_fraction": 0.5,
+        "key": "q0p1",
+        "mean_delta": 0.00010015297885712799,
+        "retained_group_count": 6,
+        "retained_seed_count": 4,
+        "retained_seed_fraction": 0.6666666666666666,
+        "robust_score": 0.0008709994093464791,
+        "seed_delta_std": 0.0002537200828039577,
+        "seed_mean_delta": {
+          "27178": -1.384311729139672e-05,
+          "50945": -0.00013929195654821546,
+          "63775": 0.0,
+          "77524": 0.00011006655789500782,
+          "80314": 0.0,
+          "88625": 0.0006439863890873723
+        },
+        "stratum_mean_delta": {
+          "seed27178::la_1x4": -1.384311729139672e-05,
+          "seed50945::la_1x4": -0.00013929195654821546,
+          "seed63775::la_1x4": 0.0,
+          "seed77524::la_1x4": 0.00011006655789500782,
+          "seed80314::la_1x4": 0.0,
+          "seed88625::la_1x4": 0.0006439863890873723
+        },
+        "worst_seed_delta": 0.0006439863890873723
+      },
+      {
+        "acceptance_quantile": 0.125,
+        "bootstrap": {
+          "ci95": [
+            -5.1352818430027145e-05,
+            0.00032199319454368614
+          ],
+          "observed": 0.00010015297885712799,
+          "probability_nonnegative": 0.7905,
+          "replicates": 10000,
+          "seed": 20260819,
+          "unit": "simulator_seed_equal_scenario_mean"
+        },
+        "feasible": false,
+        "gates": {
+          "bootstrap_upper": false,
+          "harmful_fraction": false,
+          "mean_delta": false,
+          "minimum_retained_groups": false,
+          "minimum_retained_seed_fraction": true,
+          "passed": false,
+          "worst_seed": true
+        },
+        "harmful_group_fraction": 0.5,
+        "key": "q0p125",
+        "mean_delta": 0.00010015297885712799,
+        "retained_group_count": 6,
+        "retained_seed_count": 4,
+        "retained_seed_fraction": 0.6666666666666666,
+        "robust_score": 0.0008709994093464791,
+        "seed_delta_std": 0.0002537200828039577,
+        "seed_mean_delta": {
+          "27178": -1.384311729139672e-05,
+          "50945": -0.00013929195654821546,
+          "63775": 0.0,
+          "77524": 0.00011006655789500782,
+          "80314": 0.0,
+          "88625": 0.0006439863890873723
+        },
+        "stratum_mean_delta": {
+          "seed27178::la_1x4": -1.384311729139672e-05,
+          "seed50945::la_1x4": -0.00013929195654821546,
+          "seed63775::la_1x4": 0.0,
+          "seed77524::la_1x4": 0.00011006655789500782,
+          "seed80314::la_1x4": 0.0,
+          "seed88625::la_1x4": 0.0006439863890873723
+        },
+        "worst_seed_delta": 0.0006439863890873723
+      },
+      {
+        "acceptance_quantile": 0.15,
+        "bootstrap": {
+          "ci95": [
+            -5.1352818430027145e-05,
+            0.00032199319454368614
+          ],
+          "observed": 0.00010015297885712799,
+          "probability_nonnegative": 0.7905,
+          "replicates": 10000,
+          "seed": 20260819,
+          "unit": "simulator_seed_equal_scenario_mean"
+        },
+        "feasible": false,
+        "gates": {
+          "bootstrap_upper": false,
+          "harmful_fraction": false,
+          "mean_delta": false,
+          "minimum_retained_groups": false,
+          "minimum_retained_seed_fraction": true,
+          "passed": false,
+          "worst_seed": true
+        },
+        "harmful_group_fraction": 0.5,
+        "key": "q0p15",
+        "mean_delta": 0.00010015297885712799,
+        "retained_group_count": 6,
+        "retained_seed_count": 4,
+        "retained_seed_fraction": 0.6666666666666666,
+        "robust_score": 0.0008709994093464791,
+        "seed_delta_std": 0.0002537200828039577,
+        "seed_mean_delta": {
+          "27178": -1.384311729139672e-05,
+          "50945": -0.00013929195654821546,
+          "63775": 0.0,
+          "77524": 0.00011006655789500782,
+          "80314": 0.0,
+          "88625": 0.0006439863890873723
+        },
+        "stratum_mean_delta": {
+          "seed27178::la_1x4": -1.384311729139672e-05,
+          "seed50945::la_1x4": -0.00013929195654821546,
+          "seed63775::la_1x4": 0.0,
+          "seed77524::la_1x4": 0.00011006655789500782,
+          "seed80314::la_1x4": 0.0,
+          "seed88625::la_1x4": 0.0006439863890873723
+        },
+        "worst_seed_delta": 0.0006439863890873723
+      }
+    ],
+    "selected": null
+  },
+  "model_config": {
+    "l2_regularization": 16.0,
+    "learning_rate": 0.05,
+    "max_iter": 100,
+    "max_leaf_nodes": 7,
+    "min_samples_leaf": 12,
+    "random_state": 20260803,
+    "uncertainty_quantile": 0.9
+  },
+  "oof_folds": [
+    {
+      "fit": {
+        "calibration_error": 0.4960567714006201,
+        "constant": false,
+        "feature_count": 16,
+        "feature_names": [
+          "total_q",
+          "total_veh",
+          "mean_speed",
+          "mean_occ",
+          "green_q",
+          "red_q",
+          "green_down_q",
+          "green_down_occ",
+          "delta_green_q",
+          "delta_red_q",
+          "delta_green_down_q",
+          "delta_green_down_occ",
+          "delta_service_pressure",
+          "delta_switch_indicator",
+          "delta_clearance_fraction",
+          "delta_current_phase_overlap"
+        ],
+        "nonzero_sign_accuracy": 0.5,
+        "protocol": "proposal-conditional-causal-regressor-v1",
+        "rows": 6,
+        "weighted_mae": 0.18995669876233748
+      },
+      "heldout_rows": 0,
+      "heldout_seed": 80314,
+      "predictions": [],
+      "thresholds": {
+        "0.05": 0.07286229156489432,
+        "0.075": 0.07286229156489432,
+        "0.1": 0.07286229156489432,
+        "0.125": 0.07286229156489432,
+        "0.15": 0.07286229156489432
+      },
+      "training_rows": 6,
+      "training_seeds": [
+        27178,
+        50945,
+        77524,
+        88625
+      ]
+    },
+    {
+      "fit": {
+        "calibration_error": 0.18606825870447224,
+        "constant": false,
+        "feature_count": 16,
+        "feature_names": [
+          "total_q",
+          "total_veh",
+          "mean_speed",
+          "mean_occ",
+          "green_q",
+          "red_q",
+          "green_down_q",
+          "green_down_occ",
+          "delta_green_q",
+          "delta_red_q",
+          "delta_green_down_q",
+          "delta_green_down_occ",
+          "delta_service_pressure",
+          "delta_switch_indicator",
+          "delta_clearance_fraction",
+          "delta_current_phase_overlap"
+        ],
+        "nonzero_sign_accuracy": 0.5,
+        "protocol": "proposal-conditional-causal-regressor-v1",
+        "rows": 4,
+        "weighted_mae": 0.0879233412162433
+      },
+      "heldout_rows": 2,
+      "heldout_seed": 88625,
+      "predictions": [
+        {
+          "actual_group_normalized_delta": 0.7674970344009475,
+          "fold_thresholds": {
+            "0.05": 0.006669634419749952,
+            "0.075": 0.006669634419749952,
+            "0.1": 0.006669634419749952,
+            "0.125": 0.006669634419749952,
+            "0.15": 0.006669634419749952
+          },
+          "group_id": "la_1x4:seed88625:7:2200742494",
+          "predicted_delta": 0.006669634419749952,
+          "scenario": "la_1x4",
+          "simulator_seed": 88625
+        },
+        {
+          "actual_group_normalized_delta": -0.22461650840029265,
+          "fold_thresholds": {
+            "0.05": 0.006669634419749952,
+            "0.075": 0.006669634419749952,
+            "0.1": 0.006669634419749952,
+            "0.125": 0.006669634419749952,
+            "0.15": 0.006669634419749952
+          },
+          "group_id": "la_1x4:seed88625:8:2200742494",
+          "predicted_delta": 0.006669634419749952,
+          "scenario": "la_1x4",
+          "simulator_seed": 88625
+        }
+      ],
+      "thresholds": {
+        "0.05": 0.006669634419749952,
+        "0.075": 0.006669634419749952,
+        "0.1": 0.006669634419749952,
+        "0.125": 0.006669634419749952,
+        "0.15": 0.006669634419749952
+      },
+      "training_rows": 4,
+      "training_seeds": [
+        27178,
+        50945,
+        77524
+      ]
+    },
+    {
+      "fit": {
+        "calibration_error": 0.5301230532743126,
+        "constant": false,
+        "feature_count": 16,
+        "feature_names": [
+          "total_q",
+          "total_veh",
+          "mean_speed",
+          "mean_occ",
+          "green_q",
+          "red_q",
+          "green_down_q",
+          "green_down_occ",
+          "delta_green_q",
+          "delta_red_q",
+          "delta_green_down_q",
+          "delta_green_down_occ",
+          "delta_service_pressure",
+          "delta_switch_indicator",
+          "delta_clearance_fraction",
+          "delta_current_phase_overlap"
+        ],
+        "nonzero_sign_accuracy": 0.6,
+        "protocol": "proposal-conditional-causal-regressor-v1",
+        "rows": 5,
+        "weighted_mae": 0.2221293935896941
+      },
+      "heldout_rows": 1,
+      "heldout_seed": 27178,
+      "predictions": [
+        {
+          "actual_group_normalized_delta": -0.011877394636018385,
+          "fold_thresholds": {
+            "0.05": 0.10110885363186518,
+            "0.075": 0.10110885363186518,
+            "0.1": 0.10110885363186518,
+            "0.125": 0.10110885363186518,
+            "0.15": 0.10110885363186518
+          },
+          "group_id": "la_1x4:seed27178:7:2200742494",
+          "predicted_delta": 0.10110885363186518,
+          "scenario": "la_1x4",
+          "simulator_seed": 27178
+        }
+      ],
+      "thresholds": {
+        "0.05": 0.10110885363186518,
+        "0.075": 0.10110885363186518,
+        "0.1": 0.10110885363186518,
+        "0.125": 0.10110885363186518,
+        "0.15": 0.10110885363186518
+      },
+      "training_rows": 5,
+      "training_seeds": [
+        50945,
+        77524,
+        88625
+      ]
+    },
+    {
+      "fit": {
+        "calibration_error": 0.5371079579076062,
+        "constant": false,
+        "feature_count": 16,
+        "feature_names": [
+          "total_q",
+          "total_veh",
+          "mean_speed",
+          "mean_occ",
+          "green_q",
+          "red_q",
+          "green_down_q",
+          "green_down_occ",
+          "delta_green_q",
+          "delta_red_q",
+          "delta_green_down_q",
+          "delta_green_down_occ",
+          "delta_service_pressure",
+          "delta_switch_indicator",
+          "delta_clearance_fraction",
+          "delta_current_phase_overlap"
+        ],
+        "nonzero_sign_accuracy": 0.4,
+        "protocol": "proposal-conditional-causal-regressor-v1",
+        "rows": 5,
+        "weighted_mae": 0.2443716502171201
+      },
+      "heldout_rows": 1,
+      "heldout_seed": 77524,
+      "predictions": [
+        {
+          "actual_group_normalized_delta": 0.0928961748633866,
+          "fold_thresholds": {
+            "0.05": 0.06618433046539689,
+            "0.075": 0.06618433046539689,
+            "0.1": 0.06618433046539689,
+            "0.125": 0.06618433046539689,
+            "0.15": 0.06618433046539689
+          },
+          "group_id": "la_1x4:seed77524:7:2200742494",
+          "predicted_delta": 0.06618433046539689,
+          "scenario": "la_1x4",
+          "simulator_seed": 77524
+        }
+      ],
+      "thresholds": {
+        "0.05": 0.06618433046539689,
+        "0.075": 0.06618433046539689,
+        "0.1": 0.06618433046539689,
+        "0.125": 0.06618433046539689,
+        "0.15": 0.06618433046539689
+      },
+      "training_rows": 5,
+      "training_seeds": [
+        27178,
+        50945,
+        88625
+      ]
+    },
+    {
+      "fit": {
+        "calibration_error": 0.4960567714006201,
+        "constant": false,
+        "feature_count": 16,
+        "feature_names": [
+          "total_q",
+          "total_veh",
+          "mean_speed",
+          "mean_occ",
+          "green_q",
+          "red_q",
+          "green_down_q",
+          "green_down_occ",
+          "delta_green_q",
+          "delta_red_q",
+          "delta_green_down_q",
+          "delta_green_down_occ",
+          "delta_service_pressure",
+          "delta_switch_indicator",
+          "delta_clearance_fraction",
+          "delta_current_phase_overlap"
+        ],
+        "nonzero_sign_accuracy": 0.5,
+        "protocol": "proposal-conditional-causal-regressor-v1",
+        "rows": 6,
+        "weighted_mae": 0.18995669876233748
+      },
+      "heldout_rows": 0,
+      "heldout_seed": 63775,
+      "predictions": [],
+      "thresholds": {
+        "0.05": 0.07286229156489432,
+        "0.075": 0.07286229156489432,
+        "0.1": 0.07286229156489432,
+        "0.125": 0.07286229156489432,
+        "0.15": 0.07286229156489432
+      },
+      "training_rows": 6,
+      "training_seeds": [
+        27178,
+        50945,
+        77524,
+        88625
+      ]
+    },
+    {
+      "fit": {
+        "calibration_error": 0.557638337503725,
+        "constant": false,
+        "feature_count": 16,
+        "feature_names": [
+          "total_q",
+          "total_veh",
+          "mean_speed",
+          "mean_occ",
+          "green_q",
+          "red_q",
+          "green_down_q",
+          "green_down_occ",
+          "delta_green_q",
+          "delta_red_q",
+          "delta_green_down_q",
+          "delta_green_down_occ",
+          "delta_service_pressure",
+          "delta_switch_indicator",
+          "delta_clearance_fraction",
+          "delta_current_phase_overlap"
+        ],
+        "nonzero_sign_accuracy": 0.5,
+        "protocol": "proposal-conditional-causal-regressor-v1",
+        "rows": 4,
+        "weighted_mae": 0.21667022888612741
+      },
+      "heldout_rows": 2,
+      "heldout_seed": 50945,
+      "predictions": [
+        {
+          "actual_group_normalized_delta": 0.09798657718120651,
+          "fold_thresholds": {
+            "0.05": 0.1174863477425652,
+            "0.075": 0.1174863477425652,
+            "0.1": 0.1174863477425652,
+            "0.125": 0.1174863477425652,
+            "0.15": 0.1174863477425652
+          },
+          "group_id": "la_1x4:seed50945:7:2200742494",
+          "predicted_delta": 0.1174863477425652,
+          "scenario": "la_1x4",
+          "simulator_seed": 50945
+        },
+        {
+          "actual_group_normalized_delta": -0.22000633111744325,
+          "fold_thresholds": {
+            "0.05": 0.1174863477425652,
+            "0.075": 0.1174863477425652,
+            "0.1": 0.1174863477425652,
+            "0.125": 0.1174863477425652,
+            "0.15": 0.1174863477425652
+          },
+          "group_id": "la_1x4:seed50945:8:2200742494",
+          "predicted_delta": 0.1174863477425652,
+          "scenario": "la_1x4",
+          "simulator_seed": 50945
+        }
+      ],
+      "thresholds": {
+        "0.05": 0.1174863477425652,
+        "0.075": 0.1174863477425652,
+        "0.1": 0.1174863477425652,
+        "0.125": 0.1174863477425652,
+        "0.15": 0.1174863477425652
+      },
+      "training_rows": 4,
+      "training_seeds": [
+        27178,
+        77524,
+        88625
+      ]
+    }
+  ],
+  "oof_predictions": [
+    {
+      "actual_group_normalized_delta": 0.7674970344009475,
+      "fold_thresholds": {
+        "0.05": 0.006669634419749952,
+        "0.075": 0.006669634419749952,
+        "0.1": 0.006669634419749952,
+        "0.125": 0.006669634419749952,
+        "0.15": 0.006669634419749952
+      },
+      "group_id": "la_1x4:seed88625:7:2200742494",
+      "predicted_delta": 0.006669634419749952,
+      "scenario": "la_1x4",
+      "simulator_seed": 88625
+    },
+    {
+      "actual_group_normalized_delta": -0.22461650840029265,
+      "fold_thresholds": {
+        "0.05": 0.006669634419749952,
+        "0.075": 0.006669634419749952,
+        "0.1": 0.006669634419749952,
+        "0.125": 0.006669634419749952,
+        "0.15": 0.006669634419749952
+      },
+      "group_id": "la_1x4:seed88625:8:2200742494",
+      "predicted_delta": 0.006669634419749952,
+      "scenario": "la_1x4",
+      "simulator_seed": 88625
+    },
+    {
+      "actual_group_normalized_delta": -0.011877394636018385,
+      "fold_thresholds": {
+        "0.05": 0.10110885363186518,
+        "0.075": 0.10110885363186518,
+        "0.1": 0.10110885363186518,
+        "0.125": 0.10110885363186518,
+        "0.15": 0.10110885363186518
+      },
+      "group_id": "la_1x4:seed27178:7:2200742494",
+      "predicted_delta": 0.10110885363186518,
+      "scenario": "la_1x4",
+      "simulator_seed": 27178
+    },
+    {
+      "actual_group_normalized_delta": 0.0928961748633866,
+      "fold_thresholds": {
+        "0.05": 0.06618433046539689,
+        "0.075": 0.06618433046539689,
+        "0.1": 0.06618433046539689,
+        "0.125": 0.06618433046539689,
+        "0.15": 0.06618433046539689
+      },
+      "group_id": "la_1x4:seed77524:7:2200742494",
+      "predicted_delta": 0.06618433046539689,
+      "scenario": "la_1x4",
+      "simulator_seed": 77524
+    },
+    {
+      "actual_group_normalized_delta": 0.09798657718120651,
+      "fold_thresholds": {
+        "0.05": 0.1174863477425652,
+        "0.075": 0.1174863477425652,
+        "0.1": 0.1174863477425652,
+        "0.125": 0.1174863477425652,
+        "0.15": 0.1174863477425652
+      },
+      "group_id": "la_1x4:seed50945:7:2200742494",
+      "predicted_delta": 0.1174863477425652,
+      "scenario": "la_1x4",
+      "simulator_seed": 50945
+    },
+    {
+      "actual_group_normalized_delta": -0.22000633111744325,
+      "fold_thresholds": {
+        "0.05": 0.1174863477425652,
+        "0.075": 0.1174863477425652,
+        "0.1": 0.1174863477425652,
+        "0.125": 0.1174863477425652,
+        "0.15": 0.1174863477425652
+      },
+      "group_id": "la_1x4:seed50945:8:2200742494",
+      "predicted_delta": 0.1174863477425652,
+      "scenario": "la_1x4",
+      "simulator_seed": 50945
+    }
+  ],
+  "proposal_fraction": 0.0011689070718877848,
+  "proposal_training_row_count": 6,
+  "protocol": "tsc-v67r63-external-v9-proposal-conditional-veto-freeze-v1",
+  "scenarios": [
+    "la_1x4"
+  ],
+  "seeds": [
+    80314,
+    88625,
+    27178,
+    77524,
+    63775,
+    50945
+  ],
+  "veto_diagnostics": {
+    "action_originator": false,
+    "config": {
+      "acceptance_quantile": 0.125,
+      "enabled": false,
+      "rollout_value_horizon_sec": 300,
+      "score_threshold": 0.07286229156489432
+    },
+    "feature_names": [
+      "total_q",
+      "total_veh",
+      "mean_speed",
+      "mean_occ",
+      "green_q",
+      "red_q",
+      "green_down_q",
+      "green_down_occ",
+      "delta_green_q",
+      "delta_red_q",
+      "delta_green_down_q",
+      "delta_green_down_occ",
+      "delta_service_pressure",
+      "delta_switch_indicator",
+      "delta_clearance_fraction",
+      "delta_current_phase_overlap"
+    ],
+    "protocol": "target-simulator-300s-proposal-conditional-causal-veto-v1",
+    "role": "proposal_conditional_execution_veto_only",
+    "target_labels": "target_simulator_counterfactual_recovery_value",
+    "zero_shot": false
+  }
+}

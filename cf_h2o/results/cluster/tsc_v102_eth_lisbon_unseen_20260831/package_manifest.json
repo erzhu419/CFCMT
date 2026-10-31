@@ -1,0 +1,112 @@
+{
+  "created_at_utc": "2026-08-31T00:24:04.348102+00:00",
+  "demand_inventory": {
+    "depart_span_sec": 43179.05,
+    "duplicate_trip_id_count": 0,
+    "maximum_depart_sec": 50393.47,
+    "minimum_depart_sec": 7214.42,
+    "missing_edge_anchor_count": 0,
+    "missing_required_attribute_count": 0,
+    "missing_taz_anchor_count": 0,
+    "nonmonotonic_departure_count": 0,
+    "other_route_element_counts": {
+      "routes": 1
+    },
+    "trip_count": 769834,
+    "unique_trip_id_count": 769834
+  },
+  "gates": {
+    "all_trip_edges_exist": true,
+    "all_trip_taz_exist": true,
+    "complete_lisbon_archive_entries": true,
+    "complete_trip_attributes": true,
+    "controllable_traffic_lights_present": true,
+    "monotonic_departures": true,
+    "native_config_boundary_verified": true,
+    "nonempty_unique_demand": true,
+    "only_passive_output_removed": true,
+    "published_24h_demand_span": false,
+    "source_archive_identity": true
+  },
+  "input_audit_protocol": "eth-lisbon-full-demand-static-input-audit-v1",
+  "microscopic_instantiation": {
+    "begin_sec": 7214,
+    "collision_action": "warn",
+    "collision_check_junctions": true,
+    "config": "microscopic.sumo.cfg",
+    "drain_after_last_depart_sec": 21600,
+    "end_sec": 71994,
+    "ignore_route_errors": false,
+    "last_depart_sec": 50393.47,
+    "max_depart_delay_sec": -1,
+    "mode": "microscopic",
+    "passive_output_change": {
+      "demand_or_network_elements_removed": 0,
+      "protocol": "eth-lisbon-passive-output-removal-v1",
+      "remaining_element_count": 1,
+      "removed_passive_output_elements": [
+        {
+          "id": "dump_10",
+          "tag": "edgeData"
+        }
+      ]
+    },
+    "protocol": "eth-lisbon-derived-microscopic-sumo122-config-v1",
+    "seed": 5057,
+    "source_random_depart_offset_sec": 1200,
+    "step_length_sec": 1,
+    "time_to_teleport_sec": -1
+  },
+  "native_meso_config_inventory": {
+    "additional_files": "additional.add.xml,taz.xml",
+    "begin_sec": "14400",
+    "collision_action": "none",
+    "end_sec": "49800",
+    "ignore_route_errors": "true",
+    "max_depart_delay_sec": "1200",
+    "mesosim": "true",
+    "net_file": "LIS.net.xml",
+    "random_depart_offset_sec": "1200",
+    "rerouting_period_sec": "360",
+    "rerouting_probability": "0.5",
+    "route_files": "trips24h_smoothed.rou.xml",
+    "seed": "2136",
+    "step_length_sec": "2",
+    "time_to_teleport_sec": "360"
+  },
+  "network_inventory": {
+    "connection_count": 212192,
+    "edge_count": 100909,
+    "junction_count": 44235,
+    "lane_count": 128837,
+    "noninternal_edge_count": 100909,
+    "traffic_light_count": 1199,
+    "traffic_light_phase_count": 6265,
+    "traffic_light_program_count": 1199
+  },
+  "passed": false,
+  "protocol": "cfcmt-eth-lisbon-microscopic-full-demand-package-v1",
+  "scenario": "eth_lisbon_full_day_micro",
+  "scientific_status": "pre-simulation-input-admission",
+  "source": {
+    "archive_md5": "802321f1d2c61de527ed579ce9c54842",
+    "archive_name": "sumo_sim_perc_mfd.zip",
+    "archive_size_bytes": 658810696,
+    "doi": "10.3929/ethz-b-000584669",
+    "license": "CC-BY-NC-4.0",
+    "lisbon_entries": [
+      "LIS/",
+      "LIS/additional.add.xml",
+      "LIS/LIS.net.xml",
+      "LIS/meso.sumo.cfg",
+      "LIS/taz.xml",
+      "LIS/trips24h_smoothed.rou.xml"
+    ]
+  },
+  "taz_inventory": {
+    "duplicate_taz_id_count": 0,
+    "taz_count": 374,
+    "taz_sink_count": 0,
+    "taz_source_count": 0
+  }
+}

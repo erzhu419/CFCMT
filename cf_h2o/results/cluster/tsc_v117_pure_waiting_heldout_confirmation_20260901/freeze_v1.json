@@ -1,0 +1,226 @@
+{
+  "active_arms": [
+    "phase_pressure",
+    "h2oplus_dense_b100",
+    "h2oplus_dense_b0"
+  ],
+  "blend_candidate_selection": {
+    "decision": "suppress_residual_and_freeze_rigid_anchor",
+    "gate_passed": false,
+    "selected_candidate": "constant_alpha_0",
+    "sha256": "7eea29be684b8a736242d77fec07b3c64c66ab7dbcc8d980b6c91831c3e0dc70",
+    "target_transition_labels_consumed": 0
+  },
+  "claim_scope": "Los Angeles is held out from Jinan selector development, but is not claimed to be untouched by all earlier project development.",
+  "confirmation_gate": {
+    "bootstrap_replicates": 20000,
+    "bootstrap_seed": 20260901,
+    "candidate_collision_incidents_must_not_exceed_phase_in_aggregate": true,
+    "candidate_teleports_must_not_exceed_phase_in_aggregate": true,
+    "joint_rule": "all_applicable_primary_gates_must_pass",
+    "maximum_95pct_upper_relative_delta_source_b100_vs_h2oplus_b100": 0.0,
+    "maximum_95pct_upper_relative_delta_source_b100_vs_phase_pressure": 0.01,
+    "maximum_95pct_upper_relative_delta_source_b100_vs_target_only_b100": 0.0,
+    "minimum_active_source_seed_fraction": 0.5,
+    "no_failed_seed_exclusion": true,
+    "paired_unit": "same_la_scenario_same_fresh_seed",
+    "primary_metric": "mean_tripinfo_waiting_time"
+  },
+  "created_at_utc": "2026-08-31T21:15:28.070119+00:00",
+  "decision": "authorize_v117_selector_heldout_city_rollouts",
+  "deployment": {
+    "city": "los_angeles",
+    "control_interval_sec": 10,
+    "conversion_manifest": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9/conversion_manifest.json",
+    "conversion_manifest_sha256": "b140f2deea63653efd225c53ad306bf910ecf1ee149fb894c202227d7d454f56",
+    "conversion_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9",
+    "conversion_tree_sha256": "9aa639a6fde43c4008bc6b4c24e2171ae3135858a437e10bfc65440a002015de",
+    "duration_sec": 3600,
+    "manifest": "cf_h2o/config/traffic_signal_tsc_v39_external_la_jinan_v9_manifest.json",
+    "manifest_sha256": "636e09d8e2f47d5fefaa26b33b0552373b01f185e77e18896c97751c267c356c",
+    "prediction_horizon_sec": 450,
+    "require_zero_starting_and_ending_teleports": true,
+    "residual_coordination_mode": "sparse",
+    "scenario": "la_1x4",
+    "sumo_version": "1.22.0",
+    "warmup_sec": 60
+  },
+  "deployment_fit_result": {
+    "adaptation_contract_sha256": "e57885e51707a091e2072d03c05730767271a5825aa53a1dadd26b9d11af9575",
+    "path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v115_pure_waiting_mechanism_fit_20260901/fit_v3_architecture_matched/los_angeles/result.json",
+    "sha256": "10548752220932d71b517c7dfd585bc806400925d2986c64316cbe170d07dd99"
+  },
+  "fresh_seeds": [
+    5211240,
+    2368418,
+    4205667,
+    6004797,
+    5784607,
+    9150150,
+    1956047,
+    9737178,
+    6459568,
+    7459197,
+    5847394,
+    4969554,
+    3649635,
+    6172063,
+    7428119,
+    5362514,
+    4135836,
+    8951596,
+    7734817,
+    6057264,
+    9768828,
+    7461500,
+    4969108,
+    1948022,
+    4913760,
+    2454288,
+    6659667,
+    9150707,
+    2877634,
+    8948527,
+    5852481,
+    2751488,
+    9744995,
+    2619691,
+    8930687,
+    8498850,
+    7406405,
+    5505865,
+    7427263,
+    5030282,
+    3865792,
+    8363711,
+    8703930,
+    9137662,
+    8731014,
+    1387540,
+    7486908,
+    3205640,
+    1797010,
+    7067954,
+    2399924,
+    3306468,
+    1368627,
+    4699647,
+    5294297,
+    8888720,
+    9341813,
+    5602707,
+    5215399,
+    4401307,
+    5218648,
+    7808912,
+    3706899,
+    6403965
+  ],
+  "inactive_arm_fallbacks": {
+    "source_selected_b0": "phase_pressure",
+    "source_selected_b100": "phase_pressure",
+    "target_only_b100": "phase_pressure"
+  },
+  "information_arms": {
+    "h2oplus_dense_b0": {
+      "activation": "always",
+      "role": "same_estimand_target_label_free_dense_residual_comparator",
+      "target_transition_label_budget": 0
+    },
+    "h2oplus_dense_b100": {
+      "activation": "always",
+      "role": "same_estimand_same_budget_dense_residual_comparator",
+      "target_transition_label_budget": 100
+    },
+    "phase_pressure": {
+      "activation": "always",
+      "role": "strong_rule_safety_reference",
+      "target_transition_label_budget": 0
+    },
+    "source_selected_b0": {
+      "activation": "v116_zero_shot_source_gate_passes",
+      "role": "cfcmt_target_label_free_transfer",
+      "target_transition_label_budget": 0
+    },
+    "source_selected_b100": {
+      "activation": "v116_nested_source_transfer_gate_passes",
+      "role": "primary_cfcmt_target_offline_adaptation",
+      "target_transition_label_budget": 100
+    },
+    "target_only_b100": {
+      "activation": "matched_target_profile_exists_in_v116",
+      "role": "same_anchor_same_correction_same_source_loco_blend_and_same_B100_groups_without_source_rows",
+      "target_transition_label_budget": 100
+    }
+  },
+  "matrix_size": 192,
+  "model_artifacts": {
+    "h2oplus_dense_b0": {
+      "adaptation_contract_sha256": "e57885e51707a091e2072d03c05730767271a5825aa53a1dadd26b9d11af9575",
+      "path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v115_pure_waiting_mechanism_fit_20260901/fit_v3_architecture_matched/los_angeles/h2oplus_dense_b0.pkl",
+      "protocol": "cfcmt-pure-waiting-h2oplus-dense-v2",
+      "sha256": "2d56a3cf9c4e91e78f7a0f9a0ed432a4120396616f9be5496681856b82de6af0",
+      "size_bytes": 17358,
+      "target_group_budget": 0
+    },
+    "h2oplus_dense_b100": {
+      "adaptation_contract_sha256": "e57885e51707a091e2072d03c05730767271a5825aa53a1dadd26b9d11af9575",
+      "path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v115_pure_waiting_mechanism_fit_20260901/fit_v3_architecture_matched/los_angeles/h2oplus_dense_b100.pkl",
+      "protocol": "cfcmt-pure-waiting-h2oplus-dense-v2",
+      "sha256": "2ee24bffd5670505b091cf3d716f2476852cad078f2162510145ee4f54f17f7f",
+      "size_bytes": 24867,
+      "target_group_budget": 100
+    },
+    "source_components_b0": {
+      "adaptation_contract_sha256": "e57885e51707a091e2072d03c05730767271a5825aa53a1dadd26b9d11af9575",
+      "path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v115_pure_waiting_mechanism_fit_20260901/fit_v3_architecture_matched/los_angeles/source_components_b0.pkl",
+      "protocol": "cfcmt-pure-waiting-source-component-bundle-v3",
+      "sha256": "9d18b57b1e962eec2dd23958d9dce4856cbd152846f9fe840e4f0b1fec54778c",
+      "size_bytes": 3393300,
+      "target_group_budget": 0
+    },
+    "source_components_b100": {
+      "adaptation_contract_sha256": "e57885e51707a091e2072d03c05730767271a5825aa53a1dadd26b9d11af9575",
+      "path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v115_pure_waiting_mechanism_fit_20260901/fit_v3_architecture_matched/los_angeles/source_components_b100.pkl",
+      "protocol": "cfcmt-pure-waiting-source-component-bundle-v3",
+      "sha256": "cdc055c9fa524e6011ab17154e0ea67558c45d6ac2b68931b210a3ccacea00d7",
+      "size_bytes": 3499394,
+      "target_group_budget": 100
+    },
+    "strict_target_b100": {
+      "adaptation_contract_sha256": "e57885e51707a091e2072d03c05730767271a5825aa53a1dadd26b9d11af9575",
+      "path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v115_pure_waiting_mechanism_fit_20260901/fit_v3_architecture_matched/los_angeles/strict_target_b100.pkl",
+      "protocol": "cfcmt-pure-waiting-architecture-matched-target-only-v2",
+      "sha256": "e1b54681e0615c39a4bc6f66b81472796f8b283d59e075fa4957b8ec6c81877d",
+      "size_bytes": 436947,
+      "target_group_budget": 100
+    }
+  },
+  "primary_comparisons": [
+    "source_selected_b100_vs_h2oplus_dense_b100",
+    "source_selected_b100_vs_target_only_b100",
+    "source_selected_b100_vs_phase_pressure"
+  ],
+  "protocol": "tsc-v117-pure-waiting-confirmation-freeze-v2",
+  "protocol_spec": {
+    "path": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/b6f2cdbba2028e30a2c3/cf_h2o/config/traffic_signal_tsc_v117_pure_waiting_heldout_city_confirmation.json",
+    "sha256": "256c291f43b37d75119f722946bd55877221561bd49f112a695f4f8320e3cdd5"
+  },
+  "scientific_status": "frozen_before_any_v117_rollout",
+  "secondary_comparisons": [
+    "source_selected_b0_vs_h2oplus_dense_b0",
+    "source_selected_b100_vs_source_selected_b0",
+    "h2oplus_dense_b100_vs_h2oplus_dense_b0"
+  ],
+  "selector_result": {
+    "development_city": "jinan",
+    "matched_target_profile_key": null,
+    "path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v116_pure_waiting_source_selector_20260901/selector_v2_optimized/pure_waiting_source_selector_v1.json",
+    "selected_b0_profile_key": null,
+    "selected_b100_profile_key": null,
+    "selected_b100_source_city_group": null,
+    "sha256": "2bee44575f9d9eed7620c5831f8dbeaf16b4c53500f69b7536ec2b60e0522741",
+    "source_transfer_gate_passed": false,
+    "zero_shot_source_gate_passed": false
+  }
+}

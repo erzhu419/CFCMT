@@ -434,9 +434,10 @@ one Jinan geometry with three demand files.  Jinan scenarios are weighted
 equally before city aggregation, preventing that city from receiving triple
 the weight of Los Angeles.
 
-Closed-loop evaluation runs four scenarios, two seeds and seven policies for
-56 paired rollouts.  Every rollout uses SUMO 1.22.0, \texttt{libsumo}, a 60-s
-warm-up and a 3,600-s measurement horizon.  The experiment was parallelized
+The original closed-loop matrix runs four scenarios, two seeds and seven
+policies for 56 paired rollouts.  Every rollout uses SUMO 1.22.0,
+\texttt{libsumo} and a 3,600-s simulation horizon with a 60-s warm-up.
+The experiment was parallelized
 across cluster workers, while numerical libraries were restricted to one
 thread per process to avoid nested oversubscription.  Each rollout records its
 result and \texttt{tripinfo} hashes, source snapshot identity, model identity,
@@ -449,6 +450,36 @@ Six process-isolated shards ran on six nodes with 22 workers per node.  Full
 rollout records remain on the execution host; six complete shard summaries and
 the launch and audit manifests are materialized with the manuscript evidence.
 
+\subsection{Independent confirmation of the frozen V43 dense comparison}
+\label{sec:methods-v43-dense-fresh10}
+
+After the original two-seed results, a separate protocol fixed ten new seeds
+and the analysis before any new rollout.  Python's Mersenne Twister generator,
+initialized with 20261022, drew unique integers from 10,000,000 through
+99,999,999, excluding 567 seed values recorded in 159 existing configuration
+files, including used and reserved seeds.  The resulting roster is given in
+\Cref{sec:supp-v43-dense-fresh10}.  Each seed paired the original CFCMT and dense
+artifacts on Los Angeles and all three Jinan demands, producing 80 required
+rollouts.  The original source snapshot, converted networks, SUMO version,
+models and selected blends were retained, as were the sparse executor,
+10-s control interval, 60-s prediction horizon, warm-up and simulation end
+time.  There was no refitting, additional label collection, model selection or
+parameter tuning.
+
+The primary contrast was the equal-city mean waiting difference, CFCMT minus
+dense, in seconds per departed vehicle.  Within each seed, the three Jinan
+demands were averaged equally, followed by equal city weights and then equal
+weights across the ten seeds.  The relative contrast divided the difference
+of the two macro means by the dense macro mean; it did not average seed-level
+percentages.  Twenty thousand paired percentile bootstrap replicates used
+PCG64 initialized with 20261022.  Each draw resampled ten complete seed blocks,
+preserving both policies on all four scenarios together and keeping cities
+fixed.  Confirmation required all 80 identities to be valid and complete,
+the primary mean difference to be negative and its two-sided 95\% upper
+endpoint to be below zero.  Missing or failed runs could not be replaced by
+new seeds or encoded as zero.  Secondary metrics and both city effects were
+retained, with no pooling with the original matrix, V91 or V98.
+
 \subsection{Outcomes, aggregation and uncertainty}
 
 The preregistered closed-loop primary is mean vehicle waiting time.  The
@@ -459,16 +490,24 @@ unfinished fraction, completion ratio, throughput, mean queue per lane,
 teleports, emergency stops and junction collisions.  Together, these outcomes
 account for withheld departures and unfinished trips that could otherwise
 make a controller appear effective.
+Trip-based waiting includes vehicles departing during warm-up.  Queue and
+system-burden samples begin at the end of warm-up.  Completion is the number
+of arrived vehicles divided by departed vehicles plus vehicles still pending
+departure at the horizon.
 
 Scenario-seed results are first averaged within scenario, scenarios are
 averaged equally within city and the two external cities are averaged equally.
 All policy contrasts remain paired on city, scenario and seed.  Offline
-uncertainty uses 10,000 paired action-group bootstrap replicates.  Closed-loop
-uncertainty uses 10,000 paired hierarchical replicates that sample city, then
+uncertainty uses 10,000 paired action-group bootstrap replicates.  For the
+original seven-policy matrix, uncertainty uses 10,000 paired hierarchical
+replicates that sample city, then
 scenario, then seed.  With only two independent target cities, these intervals
 describe sensitivity of the observed matrix; they are not estimates of a
 general population of cities.  No multiplicity-adjusted claim or universal
 city-level significance is made.
+The ten-new-seed dense confirmation instead uses the whole-seed-block
+procedure in \Cref{sec:methods-v43-dense-fresh10}; its interval describes
+seed variation within the two fixed target networks.
 
 The V91 source-contribution interval instead resamples the 64 paired seed
 statistics in \Cref{eq:source-contribution} 20,000 times.  The exact sign test
@@ -477,10 +516,13 @@ are secondary diagnostics because the independent city count remains two.
 
 Raw SUMO collision events are consolidated by participant, lane and time into
 unique junction incidents.  Teleports are a hard validity failure; collisions
-are retained as outcomes in closed loop and compared pairwise.  A valid matrix
-requires all 56 authorized records, exact provenance identities, complete
+are retained as outcomes in closed loop and compared pairwise.  The original
+matrix requires all 56 authorized records, exact provenance identities, complete
 population accounting, readable \texttt{tripinfo} hashes and zero teleports.
-The V91 integrity audit analogously requires all 512 frozen identities and
+The independent dense confirmation requires all 80 registered identities,
+unchanged models and execution settings, complete vehicle accounting and zero
+teleports; every seed remains in the report.  The V91 integrity audit
+analogously requires all 512 frozen identities and
 retains every seed regardless of performance or incident status.
 
 \subsection{Meaning of ``causal''}

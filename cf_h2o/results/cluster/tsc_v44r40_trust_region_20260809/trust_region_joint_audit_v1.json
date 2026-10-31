@@ -1,0 +1,93 @@
+{
+  "cities": {
+    "jinan": {
+      "certificate_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v44r40_trust_region_20260809/freeze_v1/jinan/trust_region_freeze.json",
+      "certificate_sha256": "32ee08819687ca3922e3634071d2e892606238ed4bd4b20ee81205719b2eb662",
+      "decision": "deploy_pressure_prior_only",
+      "deployment": {
+        "cooldown_intervals": "prediction_horizon_minus_one_interval",
+        "coordination_mode": "sparse",
+        "guard": {
+          "enabled": false,
+          "margin": 0.0,
+          "max_relative_rule_gap": 1.0,
+          "min_context_trust": 0.0,
+          "risk_multiplier": 1.0
+        },
+        "policy": "selected_source_prior"
+      },
+      "hostname": "node004",
+      "oof_action_record_count": 911,
+      "recomputed_selector_exact_match": true,
+      "selected_candidate": "constant_alpha_0p9",
+      "selected_oof_diagnostics": null
+    },
+    "los_angeles": {
+      "certificate_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v44r40_trust_region_20260809/freeze_v1/los_angeles/trust_region_freeze.json",
+      "certificate_sha256": "4d7c941eb7c25ea32f7de21ac6092b3321cbb532903ecb4efd292225bd0b2972",
+      "decision": "deploy_oof_conformal_trust_region",
+      "deployment": {
+        "cooldown_intervals": "prediction_horizon_minus_one_interval",
+        "coordination_mode": "sparse",
+        "guard": {
+          "enabled": true,
+          "margin": 0.0,
+          "max_relative_rule_gap": 0.0,
+          "min_context_trust": 0.5,
+          "risk_multiplier": 0.25
+        },
+        "policy": "cfcmt_selected_conformal_guard"
+      },
+      "hostname": "node003",
+      "oof_action_record_count": 165,
+      "recomputed_selector_exact_match": true,
+      "selected_candidate": "local_cap_1_z_0p25",
+      "selected_oof_diagnostics": {
+        "accepted_conformal_violation_fraction": 0.0,
+        "accepted_conformal_violations": 0,
+        "accepted_overrides": 5,
+        "coverage": 0.9,
+        "decisions": 165,
+        "feasible": true,
+        "fold_conformal_margins": {
+          "0": -0.01852033247468915,
+          "1": -0.04788873681592204
+        },
+        "fold_mean_delta": {
+          "0": -0.007053571428571434,
+          "1": -0.00962919821393882
+        },
+        "learned_proposals": 29,
+        "margin": 0.0,
+        "max_relative_rule_gap": 0.0,
+        "mean_oof_delta_vs_pressure": -0.008341384821255127,
+        "min_context_trust": 0.5,
+        "minimum_required_overrides": 2,
+        "override_fraction": 0.030303030303030304,
+        "precondition_eligible": 6,
+        "reason": "passed_oof_safe_improvement_gate",
+        "risk_multiplier": 0.25,
+        "robust_selection_score": -0.008019431473084204,
+        "scenario_mean_delta": {
+          "la_1x4": -0.008341384821255127
+        },
+        "std_stratum_delta_vs_pressure": 0.001287813392683693,
+        "stratum_mean_delta": {
+          "fold0:la_1x4": -0.007053571428571434,
+          "fold1:la_1x4": -0.00962919821393882
+        },
+        "worst_fold_mean_delta": -0.007053571428571434,
+        "worst_stratum_mean_delta": -0.007053571428571434
+      }
+    }
+  },
+  "claim_boundary": "guard selection is frozen without held-out or closed-loop seeds; the next 8081/9091 rollouts are redesign diagnostics, not confirmation",
+  "created_at_utc": "2026-08-09T10:07:14.414751+00:00",
+  "decision": "authorize_contaminated_seed_development_rollouts_only",
+  "launch_manifest_sha256": "0e939629a72c375d9d1477d6123cb7ebf6b8a6bde9b0aa2aaf1ef4f60da29c77",
+  "parent_joint_freeze_audit_sha256": "471e8c34eb7be96411c812c7fe961d5c07f1857e3fb50d2c8d7edd59fc23c596",
+  "protocol": "tsc-v44r40-external-oof-trust-region-joint-audit-v1",
+  "snapshot_sha256": "2ab7dd41bd31fdae821bed08da1fe905099a275b3159707f350303790f11223c",
+  "source_tree_sha256": "d130d9403dc8916d9691e11855913be8094fdd642a08b8c182e47048de38a6b1",
+  "status": "PASS"
+}

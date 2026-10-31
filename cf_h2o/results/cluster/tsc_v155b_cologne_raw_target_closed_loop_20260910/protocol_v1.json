@@ -1,0 +1,87 @@
+{
+  "protocol": "tsc-v155b-cologne-raw-target-closed-loop-v1",
+  "frozen_at_utc": "2026-09-09T17:59:13.617894+00:00",
+  "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+  "frozen_threshold_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v155a_cologne_raw_target_refit_20260910/fit_v1/frozen_threshold.json",
+  "frozen_threshold": {
+    "protocol": "tsc-v154l-cologne-rigid-oof-threshold-v1",
+    "calibration_protocol": "tsc-v155a-cologne-raw-target-refit-v1",
+    "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+    "fit_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v155a_cologne_raw_target_refit_20260910/fit_v1/result.json",
+    "calibration_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v155a_cologne_raw_target_refit_20260910/fit_v1/result.json",
+    "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v155a_cologne_raw_target_refit_20260910/fit_v1/model.pkl",
+    "ablation_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154s_cologne_no_stay_closed_loop_20260909/tooling_v1/no_stay_fraction_rigid.py",
+    "threshold": 0.0,
+    "mode": "minimum_advantage",
+    "comparison": "predicted_advantage > threshold + 1e-12",
+    "score_units": "raw_native_halted_per_lane_cost_difference",
+    "selection_data": "Original100 native B100 OOF records; fixed raw-target ablation and S stay veto",
+    "calibration_mean_cost": 0.781472321251733
+  },
+  "threshold_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154m_cologne_threshold_closed_loop_20260909/tooling_v1/thresholded_fraction_rigid.py",
+  "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+  "geometry_reference": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154e_cologne_bilateral_full_validation_20260909/paired_full_v1/result.json",
+  "conversion_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9",
+  "scratch_root": "/home/zhengliang01/scheduleurm_work/CFCMT_SCRATCH/tsc_v155b_cologne_raw_target_closed_loop_20260910",
+  "evaluation": {
+    "scenario": "cologne1",
+    "seeds": [
+      52282,
+      41242,
+      63792
+    ],
+    "duration_sec": 3600,
+    "warmup_sec": 60,
+    "control_interval_sec": 10,
+    "prediction_horizon_sec": 450,
+    "residual_coordination_mode": "direct",
+    "residual_cooldown_intervals": 44
+  },
+  "controls": {
+    "baseline_summary": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/paper_artifacts/tsc_v154x_cologne_spaced_no_stay_v1.json",
+    "spaced_model_tasks": [
+      "t91944",
+      "t91945",
+      "t91946"
+    ],
+    "phase_pressure_tasks": [
+      "t91636",
+      "t91638",
+      "t91640"
+    ],
+    "old_model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+    "old_frozen_threshold": {
+      "protocol": "tsc-v154l-cologne-rigid-oof-threshold-v1",
+      "calibration_protocol": "tsc-v154t-cologne-no-stay-oof-threshold-v1",
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "fit_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/result.json",
+      "calibration_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154t_cologne_no_stay_oof_threshold_20260909/calibration_v1/result.json",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+      "ablation_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154s_cologne_no_stay_closed_loop_20260909/tooling_v1/no_stay_fraction_rigid.py",
+      "threshold": 0.20790450432178334,
+      "mode": "minimum_advantage",
+      "comparison": "predicted_advantage > threshold + 1e-12",
+      "selection_data": "Original 100 native B100 seed-OOF records with fixed post-selection stay veto",
+      "calibration_mean_cost": 0.7990718459100812
+    }
+  },
+  "analysis": "Compare equal-seed full-run halted queue cost against the fixed X and PP controls; retain all valid trajectories. Waiting, vehicle hours and arrivals are supporting measures. Verify accepted switches keep at least450-second spacing and execute no model stay. Collision records remain diagnostic and do not exclude otherwise valid runs.",
+  "new_simulation_count": 3,
+  "new_model_fit_count": 0,
+  "threshold_retuning": false,
+  "limits": [
+    "This is one Cologne1 demand and three previously inspected development seeds;41242 was used for geometry development.",
+    "The model and threshold were selected using the original100 training groups; they are frozen before these evaluation runs.",
+    "This comparison changes the fitted target and its resulting calibrated policy, with original training sample weights retained."
+  ],
+  "ablation_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154s_cologne_no_stay_closed_loop_20260909/tooling_v1/no_stay_fraction_rigid.py",
+  "only_change": "Replace the normalized-target P model and T threshold by the frozen raw-target V155A model and OOF-selected threshold0. Keep S stay veto, X450-second intervention spacing, network, executor, demand and timing fixed.",
+  "spacing_contract": {
+    "control_interval_sec": 10,
+    "cooldown_intervals": 44,
+    "minimum_intervention_gap_sec": 450,
+    "model_action_sec": 10,
+    "pp_continuation_sec": 440
+  },
+  "new_labels": 0
+}

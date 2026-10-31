@@ -1,0 +1,25 @@
+{
+  "protocol": "tsc-v72r68-spatiotemporal-diagnostic-pre-result-failure-v1",
+  "created_at_utc": "2026-08-10T07:57:54+00:00",
+  "status": "FAIL",
+  "decision": "invalidate_v54_execution_and_require_new_frozen_protocol",
+  "analysis_stage": "pre_result_feature_matrix_contract",
+  "diagnostic_protocol_sha256": "7305ed72f845b4840ec423392006e0e470dd47fe3e6d11c905dd1b7d8fb89300",
+  "executable_source_sha256": "38610896e1a2ec8043e3c418ac767d28a4293ac7378de91f5042d3e57197a683",
+  "runner_sha256": "d2430e8800e31d6b8c7bd506e99837382042a7241de61c83f0738eb0cc7918a7",
+  "error": {
+    "type": "ValueError",
+    "message": "spatiotemporal diagnostic feature matrix changed",
+    "file": "cf_h2o/eval/traffic_signal_external_spatiotemporal_veto_diagnostic.py",
+    "line": 131,
+    "call_site": "_fit_variant -> feature_matrix"
+  },
+  "diagnosis": {
+    "cause": "A held-out simulator seed with zero proposals produced np.asarray([]) with shape (0,) instead of the required empty two-dimensional matrix (0, feature_count).",
+    "affected_scope": "LA empty OOF folds before any variant grid, oracle, or result artifact was produced.",
+    "scientific_outcome_available": false,
+    "sealed_validation_or_prospective_seed_read": false
+  },
+  "required_repair": "Construct empty feature matrices with explicit shape (0, feature_count), add an empty-fold regression test, and freeze a new protocol with new source hashes.",
+  "claim_boundary": "Engineering preflight failure only; it contains no evidence about module efficacy."
+}

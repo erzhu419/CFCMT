@@ -1,0 +1,108 @@
+{
+  "artifact_key": "state_action_h120_r025_t010",
+  "candidate_role": "adaptive_successor_candidate",
+  "created_at_utc": "2026-08-30T11:05:30.650172+00:00",
+  "fit_diagnostics": {
+    "action_group_count": 19851,
+    "base": {
+      "action_group_count": 19851,
+      "calibration_error": 0.594310055608427,
+      "config": {
+        "scope": "tls_time_phase_pair",
+        "shrinkage": 20.0,
+        "time_bin_sec": 300,
+        "uncertainty_quantile": 0.9
+      },
+      "phase_pair_count": 64,
+      "protocol": "target-spatiotemporal-action-latent-v1",
+      "row_count": 158808,
+      "target_name": "prefix_mean_cost_120s",
+      "target_scale_summary": {
+        "group_count": 19851,
+        "maximum": 0.1633837367439921,
+        "median": 0.04853865842928107,
+        "minimum": 0.0004137013903692255
+      },
+      "tls_phase_pair_count": 768,
+      "tls_time_phase_pair_count": 8792,
+      "training_nonreference_mae": 0.299537670763152,
+      "uses_future_outcomes_at_prediction": false,
+      "uses_target_labels_at_fit": true
+    },
+    "calibration_error": 0.59742845146855,
+    "calibration_mode": "leave_self_out_within_cell",
+    "cell_count": 7693,
+    "cell_support": {
+      "maximum": 115,
+      "median": 13.0,
+      "minimum": 1
+    },
+    "config": {
+      "base": {
+        "scope": "tls_time_phase_pair",
+        "shrinkage": 20.0,
+        "time_bin_sec": 300,
+        "uncertainty_quantile": 0.9
+      },
+      "distance_bandwidth": 1.0,
+      "feature_set": "state_action",
+      "local_shrinkage": 2.0,
+      "neighbor_count": 10,
+      "uncertainty_quantile": 0.9
+    },
+    "feature_names": [
+      "total_q",
+      "total_veh",
+      "mean_speed",
+      "mean_occ",
+      "current_green_elapsed_norm",
+      "queue_concentration",
+      "graph_upstream_q_mean",
+      "graph_downstream_q_mean",
+      "graph_neighbor_q_max",
+      "graph_neighbor_occ_mean",
+      "graph_global_q_per_tls",
+      "graph_focal_q_percentile",
+      "network_active_per_tls",
+      "delta_green_q",
+      "delta_red_q",
+      "delta_green_down_q",
+      "delta_green_down_occ",
+      "delta_service_pressure",
+      "delta_red_pressure",
+      "delta_green_corridor_pressure"
+    ],
+    "protocol": "target-state-conditioned-spatiotemporal-latent-v1",
+    "row_count": 158808,
+    "target_name": "prefix_mean_cost_120s",
+    "target_scale_summary": {
+      "group_count": 19851,
+      "maximum": 0.1633837367439921,
+      "median": 0.04853865842928107,
+      "minimum": 0.0004137013903692255
+    },
+    "training_nonreference_mae": 0.29145803228415734,
+    "uses_future_outcomes_at_prediction": false,
+    "uses_target_labels_at_fit": true
+  },
+  "fit_mode": "fit_full_v82_development_cache",
+  "model_sha256": "c35c4a81ee14b17ddbc544def6e3bcfcd1458331abca8816e6beeb09091a4abe",
+  "originator_config": {
+    "benefit_probability_kind": "calibrated",
+    "enabled": true,
+    "minimum_benefit_probability": 0.0,
+    "minimum_context_trust": 0.1,
+    "objective_name": "control_cost",
+    "risk_multiplier": 0.25,
+    "rollout_value_horizon_sec": 120
+  },
+  "prediction_horizon_sec": 120,
+  "prediction_sha256": "1d68ab7dedb62cbaa4eb2288a7e5165455f4d4520d42ac4318059c1c746029a4",
+  "protocol": "tsc-v83r79-uncertainty-horizon-artifact-freeze-result-v1",
+  "selection_eligible_closed_loop": true,
+  "status": "PASS",
+  "target_name": "prefix_mean_cost_120s",
+  "training_group_count": 19851,
+  "training_row_count": 158808,
+  "training_seed_count": 22
+}

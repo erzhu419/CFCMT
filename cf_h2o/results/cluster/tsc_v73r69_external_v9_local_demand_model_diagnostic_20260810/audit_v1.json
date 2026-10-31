@@ -1,0 +1,116 @@
+{
+  "city_decisions": {
+    "jinan": {
+      "decision": "freeze_active_veto",
+      "feasible_candidate_count": 2,
+      "oof_prediction_sha256": "1b2753108ee61ed362ffb56f7502516f7e861848c414beca735f1a158d6739f5",
+      "proposal_count": 5644,
+      "selected_candidate": {
+        "acceptance_quantile": 0.075,
+        "bootstrap": {
+          "ci95": [
+            -0.002030487412719988,
+            -0.0007664319987282248
+          ],
+          "observed": -0.0013495414952120362,
+          "probability_nonnegative": 0.0,
+          "replicates": 10000,
+          "seed": 20260820,
+          "unit": "simulator_seed_equal_scenario_mean"
+        },
+        "feasible": true,
+        "gates": {
+          "bootstrap_upper": true,
+          "harmful_fraction": true,
+          "mean_delta": true,
+          "minimum_retained_groups": true,
+          "minimum_retained_seed_fraction": true,
+          "passed": true,
+          "worst_seed": true
+        },
+        "harmful_group_fraction": 0.446524064171123,
+        "key": "q0p075",
+        "mean_delta": -0.0013495414952120362,
+        "retained_group_count": 374,
+        "retained_seed_count": 6,
+        "retained_seed_fraction": 1.0,
+        "robust_score": -0.0009450366733245706,
+        "seed_delta_std": 0.0008090096437749313,
+        "seed_mean_delta": {
+          "27178": -0.0009316005621792666,
+          "50945": -0.002683202355040609,
+          "63775": -0.0007581509947129466,
+          "77524": -0.0007578819840429562,
+          "80314": -0.0022700093469358216,
+          "88625": -0.0006964037283606166
+        },
+        "stratum_mean_delta": {
+          "seed27178::jinan_3x4_real": -0.0016719021744837313,
+          "seed27178::jinan_3x4_real_2000": -0.0031592166748421278,
+          "seed27178::jinan_3x4_real_2500": 0.0020363171627880597,
+          "seed50945::jinan_3x4_real": -0.005432352677406509,
+          "seed50945::jinan_3x4_real_2000": -0.002016029338266737,
+          "seed50945::jinan_3x4_real_2500": -0.0006012250494485808,
+          "seed63775::jinan_3x4_real": -0.0019297114044747143,
+          "seed63775::jinan_3x4_real_2000": 0.0005251787681512022,
+          "seed63775::jinan_3x4_real_2500": -0.0008699203478153278,
+          "seed77524::jinan_3x4_real": -0.0032099152819136845,
+          "seed77524::jinan_3x4_real_2000": -0.0010874418937798379,
+          "seed77524::jinan_3x4_real_2500": 0.0020237112235646534,
+          "seed80314::jinan_3x4_real": -0.005597943487029115,
+          "seed80314::jinan_3x4_real_2000": -0.00276389053717506,
+          "seed80314::jinan_3x4_real_2500": 0.001551805983396711,
+          "seed88625::jinan_3x4_real": -0.0017685137506124344,
+          "seed88625::jinan_3x4_real_2000": 0.0014588793635645463,
+          "seed88625::jinan_3x4_real_2500": -0.0017795767980339613
+        },
+        "worst_seed_delta": -0.0006964037283606166
+      },
+      "variant": "topology_local_squared_raw_scaled"
+    },
+    "los_angeles": {
+      "decision": "force_phase_pressure_fallback",
+      "feasible_candidate_count": 0,
+      "oof_prediction_sha256": "63a7b037c4114892037900a73b357abdc3b8c1c83def35ac172b1513d10af166",
+      "proposal_count": 6,
+      "selected_candidate": null,
+      "variant": "topology_local_squared_raw_scaled"
+    }
+  },
+  "claim_boundary": "Authorizes fitting frozen full-adaptation models only. It does not authorize closed-loop, validation-seed, prospective, or superiority claims.",
+  "created_at_utc": "2026-08-10T08:48:34.200233+00:00",
+  "decision": "authorize_oof_qualified_city_successor_freeze_only",
+  "diagnostic_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v56_external_v9_local_demand_model_diagnostic.json",
+    "sha256": "1275842a6d9062825be444e1c26318bbb32b9a19212187b5d6485e220bb86bc5"
+  },
+  "diagnostic_result": {
+    "path": "cf_h2o/results/cluster/tsc_v73r69_external_v9_local_demand_model_diagnostic_20260810/diagnostic_v1.json",
+    "sha256": "5dcf83e9da51b835be974a4cdb654a44fcd5f7d0791033ce6c8ffaab323bc82f"
+  },
+  "hostname": "FATHERSUCKERMSI",
+  "integrity_gate": {
+    "adaptation_prospective_disjoint": true,
+    "adaptation_validation_disjoint": true,
+    "diagnostic_only_boundary_preserved": true,
+    "expected_city_set": true,
+    "integrity_passed": true,
+    "jinan_winner_active": true,
+    "los_angeles_forced_fallback": true,
+    "passed": true,
+    "protocol_identity": true,
+    "result_binds_protocol": true,
+    "result_identity": true,
+    "result_passed": true,
+    "sealed_outputs_absent_at_freeze": true,
+    "source_gate_passed": true,
+    "topology_baseline_reproduced": true,
+    "validation_prospective_disjoint": true,
+    "winner_not_baseline": true,
+    "winner_target_transform_predeclared": true,
+    "winner_uses_label_free_local_context": true
+  },
+  "protocol": "tsc-v73r69-local-demand-model-diagnostic-audit-v1",
+  "status": "PASS",
+  "winner_selection_rule": "feasible_only_then_lower_robust_score_mean_harm_more_groups_quantile"
+}

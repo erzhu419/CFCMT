@@ -1,0 +1,149 @@
+{
+  "arms": {
+    "placebo_native": {
+      "abstentions": 54,
+      "groups": 100,
+      "mean_actual_advantage_overrides": -0.001865942028985514,
+      "mean_predicted_advantage_overrides": 0.008085054463084522,
+      "override_outcomes": {
+        "equal": 0,
+        "improved": 20,
+        "worse": 26
+      },
+      "overrides": 46,
+      "prediction_actual_pearson_overrides": -0.14097569385689088
+    },
+    "source_native": {
+      "abstentions": 52,
+      "groups": 100,
+      "mean_actual_advantage_overrides": -0.0002822788065843726,
+      "mean_predicted_advantage_overrides": 0.00775156934835945,
+      "override_outcomes": {
+        "equal": 0,
+        "improved": 21,
+        "worse": 27
+      },
+      "overrides": 48,
+      "prediction_actual_pearson_overrides": -0.09742553650676677
+    },
+    "target_native": {
+      "abstentions": 55,
+      "groups": 100,
+      "mean_actual_advantage_overrides": -0.0028028120713306133,
+      "mean_predicted_advantage_overrides": 0.0071740180897286185,
+      "override_outcomes": {
+        "equal": 0,
+        "improved": 19,
+        "worse": 26
+      },
+      "overrides": 45,
+      "prediction_actual_pearson_overrides": -0.13284032578591176
+    }
+  },
+  "decision_authority": false,
+  "inputs": {
+    "fit_result": {
+      "path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v158_native_prefix_ranking_calibration_20260911/fit_v1/result.json",
+      "sha256": "45a236690fe7a18f76057b4f8c45ebb3ba4fd03571dd3624b3741aea1d4438d3",
+      "size_bytes": 18193
+    },
+    "oof_records": {
+      "path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v158_native_prefix_ranking_calibration_20260911/fit_v1/oof_server_only.json",
+      "sha256": "5059eabdce0649abfd273bf55aad8fd1e65868f35a8c9656a9bd6e20f5967558",
+      "size_bytes": 218568
+    }
+  },
+  "interpretation_boundary": "Post-hoc behavior summary only; it does not alter the preregistered OOF gate or authorize reserve execution.",
+  "oracle_headroom": {
+    "all": {
+      "groups": 100,
+      "groups_with_strict_improvement": 80,
+      "mean_best_action_ties": 1.03,
+      "mean_oracle_advantage": 0.016532098765432112
+    },
+    "by_scenario": {
+      "jinan_3x4_real": {
+        "groups": 40,
+        "groups_with_strict_improvement": 35,
+        "mean_best_action_ties": 1.025,
+        "mean_oracle_advantage": 0.020418595679012382
+      },
+      "jinan_3x4_real_2000": {
+        "groups": 30,
+        "groups_with_strict_improvement": 23,
+        "mean_best_action_ties": 1.0666666666666667,
+        "mean_oracle_advantage": 0.01524845679012344
+      },
+      "jinan_3x4_real_2500": {
+        "groups": 30,
+        "groups_with_strict_improvement": 22,
+        "mean_best_action_ties": 1.0,
+        "mean_oracle_advantage": 0.01263374485596708
+      }
+    }
+  },
+  "pairwise_selected_actions": {
+    "source_vs_placebo": {
+      "different_action_equal": 0,
+      "different_action_left_better": 12,
+      "different_action_left_worse": 8,
+      "different_selected_action_groups": 20,
+      "mean_left_minus_right_cost_on_different_actions": -0.003614197530864188,
+      "same_selected_action_groups": 80
+    },
+    "source_vs_target": {
+      "different_action_equal": 0,
+      "different_action_left_better": 12,
+      "different_action_left_worse": 6,
+      "different_selected_action_groups": 18,
+      "mean_left_minus_right_cost_on_different_actions": -0.00625428669410154,
+      "same_selected_action_groups": 82
+    }
+  },
+  "protocol": "tsc-v158-native-prefix-oof-posthoc-diagnostic-v1",
+  "scenario_results": {
+    "jinan_3x4_real": {
+      "comparisons": {
+        "source_minus_phase_pressure": 0.0011481481481485645,
+        "source_minus_placebo": 0.00023225308641983133,
+        "source_minus_target": -0.0016944444444444429
+      },
+      "groups": 40,
+      "mean_costs": {
+        "phase_pressure": 1.1749062499999998,
+        "placebo_native": 1.1758221450617286,
+        "source_native": 1.1760543981481484,
+        "target_native": 1.1777488425925928
+      }
+    },
+    "jinan_3x4_real_2000": {
+      "comparisons": {
+        "source_minus_phase_pressure": -0.0030478395061730446,
+        "source_minus_placebo": -0.002926440329218183,
+        "source_minus_target": -0.0007664609053498195
+      },
+      "groups": 30,
+      "mean_costs": {
+        "phase_pressure": 0.8908698559670781,
+        "placebo_native": 0.8907484567901233,
+        "source_native": 0.8878220164609051,
+        "target_native": 0.8885884773662549
+      }
+    },
+    "jinan_3x4_real_2500": {
+      "comparisons": {
+        "source_minus_phase_pressure": 0.001968621399176973,
+        "source_minus_placebo": 0.00020730452674910804,
+        "source_minus_target": -0.0007268518518520617
+      },
+      "groups": 30,
+      "mean_costs": {
+        "phase_pressure": 0.9554398148148148,
+        "placebo_native": 0.9572011316872426,
+        "source_native": 0.9574084362139917,
+        "target_native": 0.9581352880658438
+      }
+    }
+  },
+  "status": "DIAGNOSTIC_ONLY"
+}

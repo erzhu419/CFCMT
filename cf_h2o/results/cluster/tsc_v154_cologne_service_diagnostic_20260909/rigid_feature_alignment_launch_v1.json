@@ -1,0 +1,46 @@
+{
+  "protocol": "tsc-v154-cologne-rigid-feature-alignment-launch-v1",
+  "created_at_utc": "2026-09-09T00:27:54.435363+00:00",
+  "snapshot": {
+    "created_at_utc": "2026-09-09T00:26:48.930900+00:00",
+    "data_root": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads",
+    "git_commit": "c85463807ecbc2c3a61ba0a43de0da2726e3911b",
+    "snapshot_root": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/589fd20266b7265b6f2f",
+    "snapshot_sha256": "589fd20266b7265b6f2f5c79f475ad036f557c6fb9fabb5fd1a4a8105f665300",
+    "source_tree_sha256": "b03165da8a79fc9f96aca991a720f5db78ad1a60332c31544a90b23135678261"
+  },
+  "feature_binding": "stored_feature_names",
+  "task_specs": [
+    {
+      "description": "CFCMT V154 Cologne original rigid model with corrected feature binding, 3600s seed 41242",
+      "project": "CFCMT",
+      "cmd": "env CFCMT_SOURCE_ROOT=/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/589fd20266b7265b6f2f PYTHONUNBUFFERED=1 /home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/589fd20266b7265b6f2f/scripts/cluster/run_cfcmt_sumo122.sh -c 'import json\nfrom pathlib import Path\nfrom cf_h2o.eval.traffic_signal_cologne_service_replay import launch_inputs\nfrom cf_h2o.eval.traffic_signal_state_conditioned_source_closed_loop import run_rollout\nfrom cf_h2o.traffic_signal.dataset_cache import atomic_write_json\nlaunch = Path('\"'\"'/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154_cologne_service_diagnostic_20260909/frozen_inputs/original_v150l_launch.json'\"'\"')\nout = Path('\"'\"'/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154_cologne_service_diagnostic_20260909/rigid_feature_alignment_v1/result.json'\"'\"')\nif out.exists():\n    raise FileExistsError(out)\no = launch_inputs(json.loads(launch.read_text()))\nr = run_rollout(manifest_path=Path(o[\"--manifest\"]), conversion_root=Path(o[\"--conversion-root\"]), scenario=o[\"--scenario\"], city=o[\"--city\"], seed=int(o[\"--seed\"]), arm=o[\"--arm\"], runtime_model_path=Path(o[\"--runtime-model\"]), expected_runtime_model_sha256=o[\"--runtime-model-sha256\"], duration_sec=float(o[\"--duration-sec\"]), warmup_sec=float(o[\"--warmup-sec\"]), control_interval_sec=int(o[\"--control-interval-sec\"]), prediction_horizon_sec=int(o[\"--prediction-horizon-sec\"]), tripinfo_path=Path('\"'\"'/home/zhengliang01/scheduleurm_work/CFCMT_SCRATCH/tsc_v154_cologne_service_diagnostic_20260909/rigid_feature_alignment_v1/tripinfo.xml'\"'\"'), result_protocol=\"tsc-v154-cologne-rigid-feature-alignment-rollout-v1\", scientific_status=\"fixed-scenario-implementation-correction-diagnostic\")\nr[\"feature_binding\"] = \"stored_feature_names\"\nr[\"reference_original_result\"] = o[\"reference_result\"]\nr[\"correction_scope\"] = \"Resolve the existing rigid anchor input columns by their stored feature names; original fitted model and all rollout parameters retained.\"\natomic_write_json(out, r)\nprint(json.dumps({\"protocol\":r[\"protocol\"], \"ok\":r[\"metrics\"].get(\"ok\"), \"waiting\":r[\"metrics\"].get(\"mean_tripinfo_waiting_time\"), \"arrived\":r[\"metrics\"].get(\"arrived\"), \"pending\":r[\"metrics\"].get(\"pending_vehicles_at_horizon\"), \"collision_incidents\":r[\"metrics\"].get(\"collision_incidents\")}))\n'",
+      "cwd": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/589fd20266b7265b6f2f",
+      "signature": "CFCMT/v154/cologne-rigid-feature-alignment-v1/cologne1/41242",
+      "resource_family": "CFCMT-v154-rigid-feature-alignment",
+      "ram_resource_family": "CFCMT-v154-rigid-feature-alignment",
+      "vram": 0,
+      "ram_mb": 8192,
+      "cpu": 1,
+      "priority": "high",
+      "allowed_nodes": [
+        "node001",
+        "node002",
+        "node003",
+        "node004",
+        "node005",
+        "node006"
+      ],
+      "skip_launch_staging": true,
+      "env_spec": "none",
+      "extra_env": {},
+      "result_dir": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154_cologne_service_diagnostic_20260909/rigid_feature_alignment_v1",
+      "local_result_dir": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154_cologne_service_diagnostic_20260909/rigid_feature_alignment_v1"
+    }
+  ],
+  "rollout_count": 1,
+  "submitted": true,
+  "scheduler_returncode": 0,
+  "scheduler_stdout": "{\"count\": 1, \"submitted\": [{\"id\": \"t90756\", \"signature\": \"CFCMT/v154/cologne-rigid-feature-alignment-v1/cologne1/41242\", \"description\": \"CFCMT V154 Cologne original rigid model with corrected feature binding, 3600s seed 41242\", \"require_node\": null, \"require_gpu_idx\": null, \"allowed_nodes\": [\"node001\", \"node002\", \"node003\", \"node004\", \"node005\", \"node006\"], \"cpu\": 1, \"ram_mb\": 8192, \"vram\": 0}]}\n",
+  "scheduler_stderr": ""
+}

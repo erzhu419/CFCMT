@@ -1,0 +1,8 @@
+{
+  "cmd": [
+    "scheduler.run_on",
+    "node001",
+    "export BAPR_PYTHON=/home/zhengliang01/scheduleurm_work/conda_envs/csbapr-gpu-py310/bin/python; export LD_LIBRARY_PATH=/cm/local/apps/cuda-driver/libs/535.261.03/lib64; export PATH=/home/zhengliang01/scheduleurm_work/conda_envs/csbapr-gpu-py310/bin:/usr/local/bin:/usr/bin:/bin; /home/zhengliang01/scheduleurm_work/conda_envs/csbapr-gpu-py310/bin/python -c '\nimport json\nfrom pathlib import Path\nroot=Path('\"'\"'/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v86r82_external_v9_interference_aware_redevelopment_20260830/reproducibility_v1'\"'\"')\nout={}\nfor group in sorted(p.name for p in root.iterdir() if p.is_dir()):\n rows=[]\n for path in sorted((root/group).glob(\"rep_*/result.json\")):\n  p=json.loads(path.read_text()); m=p[\"metrics\"]\n  rows.append({\"waiting\":m[\"mean_tripinfo_waiting_time\"],\"incidents\":m[\"collision_incidents\"],\"events\":m[\"collision_events\"],\"event_steps\":m[\"collision_event_steps\"],\"samples\":m[\"collision_samples\"],\"overrides\":m[\"guard_audit\"][\"executed_overrides\"]})\n out[group]=rows\nprint(json.dumps(out,sort_keys=True))\n'"
+  ],
+  "returncode": 1
+}

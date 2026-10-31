@@ -58,6 +58,30 @@ The CFCMT-versus-dense residual waiting improvements are 8.46 s in Los Angeles a
 $-2.33$ s, where negative values indicate that MaxPressure is better.  The
 gains over the dense residual therefore do not imply gains over MaxPressure.
 
+\subsection{Ten-new-seed frozen dense-baseline confirmation}
+\label{sec:supp-v43-dense-fresh10}
+
+The ten simulator seeds, in their registered order, were
+57326714, 87750540, 47977622, 33159112, 16511678,
+42424444, 40930102, 41482084, 10392689 and 83389073.
+Each seed supplied eight paired records: CFCMT and dense on one Los Angeles
+and three Jinan scenarios.  All 80 records were new runs; none reused an
+original result or omitted a failed identity.  Model identities, execution
+settings and complete vehicle ledgers were independently checked.  Every
+rollout recorded zero teleports.
+
+The overall waiting difference was $-7.826876$ s, with the preregistered
+whole-seed-block 95\% interval $[-11.851786,-4.108126]$ s
+(\Cref{sec:methods-v43-dense-fresh10}).  The relative reduction was
+4.932804\%, with interval 2.635285--7.312375\%.
+Each of the three Jinan demand means favoured CFCMT: waiting decreased by
+8.91, 10.58 and 11.17 s for the nominal, 2,000 and 2,500 demand files,
+respectively.  Los Angeles had four unfavourable seed contrasts, all retained
+in its mean and in \Cref{fig:v43-dense-fresh10}.  The source-data tables retain
+all per-rollout and paired seed outcomes alongside the city and scenario
+aggregates.  No new pressure-policy comparison or source-row ablation was
+performed in this confirmation.
+
 \subsection{Fresh source-contribution diagnostics}
 \label{sec:supp-source-diagnostics}
 
@@ -310,11 +334,12 @@ python3 paper_tsc/figures/build_tsc_causal_transfer_schematic.py
 python3 paper_tsc/figures/build_tsc_postfreeze_stress_test.py
 python3 paper_tsc/figures/build_tsc_source_gate_development.py
 python3 paper_tsc/figures/build_tsc_source_remedy_ladder.py
+python3 paper_tsc/figures/build_v43_dense_fresh10_confirmation.py
 \end{verbatim}
 These commands generate the submission figures and source tables.  The
 unreferenced V16-era builder and its outputs remain development history;
 they are not used for the submission figures in
-\Cref{fig:method-schematic,fig:network-plate,fig:external-confirmation,fig:source-contribution-diagnostic}.
+\Cref{fig:method-schematic,fig:network-plate,fig:external-confirmation,fig:v43-dense-fresh10,fig:source-contribution-diagnostic}.
 The first command refuses to write figures or tables if the development,
 external offline, joint-freeze or closed-loop validity gate is not satisfied.
 The third command checks all V86--V89 evidence-integrity audits and preserves
@@ -327,3 +352,6 @@ V157B B100 branch authorization and the incomplete V157C three-seed native
 one-action diagnostic.  It also requires the V158 native-prefix OOF gate and
 the V159 direct-endpoint OOF gate to remain failed, with both reserve
 authorizations false.
+The sixth command independently regenerates the frozen-model ten-new-seed
+figure and its source tables from the registered protocol and complete
+80-rollout report, without changing the original confirmation artifacts.

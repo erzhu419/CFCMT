@@ -1,0 +1,70 @@
+{
+  "protocol": "tsc-v154x-cologne-spaced-no-stay-closed-loop-v1",
+  "frozen_at_utc": "2026-09-09T16:52:58.546613+00:00",
+  "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+  "frozen_threshold_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154t_cologne_no_stay_oof_threshold_20260909/calibration_v1/frozen_threshold.json",
+  "frozen_threshold": {
+    "protocol": "tsc-v154l-cologne-rigid-oof-threshold-v1",
+    "calibration_protocol": "tsc-v154t-cologne-no-stay-oof-threshold-v1",
+    "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+    "fit_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/result.json",
+    "calibration_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154t_cologne_no_stay_oof_threshold_20260909/calibration_v1/result.json",
+    "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+    "ablation_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154s_cologne_no_stay_closed_loop_20260909/tooling_v1/no_stay_fraction_rigid.py",
+    "threshold": 0.20790450432178334,
+    "mode": "minimum_advantage",
+    "comparison": "predicted_advantage > threshold + 1e-12",
+    "selection_data": "Original 100 native B100 seed-OOF records with fixed post-selection stay veto",
+    "calibration_mean_cost": 0.7990718459100812
+  },
+  "threshold_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154m_cologne_threshold_closed_loop_20260909/tooling_v1/thresholded_fraction_rigid.py",
+  "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+  "geometry_reference": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154e_cologne_bilateral_full_validation_20260909/paired_full_v1/result.json",
+  "conversion_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9",
+  "scratch_root": "/home/zhengliang01/scheduleurm_work/CFCMT_SCRATCH/tsc_v154x_cologne_spaced_no_stay_20260910",
+  "evaluation": {
+    "scenario": "cologne1",
+    "seeds": [
+      52282,
+      41242,
+      63792
+    ],
+    "duration_sec": 3600,
+    "warmup_sec": 60,
+    "control_interval_sec": 10,
+    "prediction_horizon_sec": 450,
+    "residual_coordination_mode": "direct",
+    "residual_cooldown_intervals": 44
+  },
+  "controls": {
+    "baseline_summary": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/paper_artifacts/tsc_v154u_cologne_recalibrated_no_stay_v1.json",
+    "continuous_model_tasks": [
+      "t91893",
+      "t91894",
+      "t91895"
+    ],
+    "phase_pressure_tasks": [
+      "t91636",
+      "t91638",
+      "t91640"
+    ]
+  },
+  "analysis": "Compare waiting, system vehicle hours including pending insertions, arrivals, pending vehicles and safety against fixed U and PP controls; equal-seed means and paired changes for all three and the prespecified additional seeds52282/63792. Keep valid colliding runs in means; invalid runs disable means. Separate raw, threshold/stay-filtered, cooldown-rejected and actually executed proposals; verify full accepted trace and minimum450-second gap.",
+  "new_simulation_count": 3,
+  "new_model_fit_count": 0,
+  "threshold_retuning": false,
+  "limits": [
+    "The450-second spacing comes from the existing native B100 label horizon, with no spacing or threshold search.",
+    "This is one Cologne1 demand and three previously inspected development seeds;41242 was used for geometry development.",
+    "The previous one-window continuation diagnosis motivates this intervention but does not establish its full-run or cross-city benefit."
+  ],
+  "ablation_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154s_cologne_no_stay_closed_loop_20260909/tooling_v1/no_stay_fraction_rigid.py",
+  "only_change": "Set the existing coordinator cooldown to44 control intervals instead of0. After an executed model switch at t, use its initial10-second action, then PP at t+10 through t+440; permit a new model intervention at t+450. Preserve model, threshold, S stay veto, executor, network, demand and all timing.",
+  "spacing_contract": {
+    "control_interval_sec": 10,
+    "cooldown_intervals": 44,
+    "minimum_intervention_gap_sec": 450,
+    "model_action_sec": 10,
+    "pp_continuation_sec": 440
+  }
+}

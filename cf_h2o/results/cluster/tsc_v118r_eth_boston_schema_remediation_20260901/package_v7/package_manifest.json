@@ -1,0 +1,1692 @@
+{
+  "city_code": "BOS",
+  "collision_topology_repair": {
+    "checks": {
+      "all_other_package_files_reused_exactly": true,
+      "base_package_passed": true,
+      "declared_tls_changes_exact": true
+    },
+    "compatibility_audit": {
+      "expected_declared_changes": 2,
+      "network_xml_exact_except_declared_tls_changes": true,
+      "observed_declared_changes": 2,
+      "passed": true
+    },
+    "passed": true,
+    "protocol": "cfcmt-eth-boston-three-to-one-merge-tls-yield-repair-v1",
+    "repair": {
+      "changed_phase_character_count": 2,
+      "changes": [
+        {
+          "after": "g",
+          "before": "G",
+          "link_index": 12,
+          "phase_index": 10
+        },
+        {
+          "after": "g",
+          "before": "G",
+          "link_index": 14,
+          "phase_index": 12
+        }
+      ],
+      "method": "declared_phase_link_priority_substitution",
+      "tls_id": "joinedS_726"
+    },
+    "unchanged_file_count": 8
+  },
+  "created_at_utc": "2026-09-01T06:23:39.019445+00:00",
+  "demand_inventory": {
+    "canonical_to_taz_attribute_count": 0,
+    "conflicting_destination_taz_attribute_count": 0,
+    "custom_trip_to_taz_attribute_count": 3806510,
+    "depart_span_sec": 43193.96,
+    "duplicate_trip_id_count": 0,
+    "maximum_depart_sec": 50395.74,
+    "minimum_depart_sec": 7201.78,
+    "missing_edge_anchor_count": 0,
+    "missing_required_attribute_count": 0,
+    "missing_taz_anchor_count": 0,
+    "nonmonotonic_departure_count": 0,
+    "other_route_element_counts": {
+      "routes": 1
+    },
+    "trip_count": 3806510,
+    "unique_trip_id_count": 3806510
+  },
+  "derived_from": {
+    "package_manifest_sha256": "7dae903cf5f3b77263140ac4509d4d6bc9c22c1a2394def35b9a6e21b729636a",
+    "package_root": "/home/zhengliang01/scheduleurm_work/CFCMT_DATA/eth_five_city_584669/boston_complete_published_package_v6"
+  },
+  "destination_taz_schema_canonicalization": {
+    "destination": "microscopic_trips.rou.xml",
+    "direct_child_count": 3806510,
+    "non_trip_element_counts": {},
+    "preexisting_to_taz_count": 0,
+    "protocol": "eth-five-city-trip-destination-taz-schema-canonicalization-v1",
+    "renamed_trip_to_taz_count": 3806510,
+    "route_repair_applied": false,
+    "source": "source/BOS/trips24h_smoothed.rou.xml",
+    "trip_anchor_edges_changed": 0,
+    "trip_count": 3806510,
+    "trips_removed": 0
+  },
+  "gates": {
+    "all_trip_edges_exist": true,
+    "all_trip_taz_exist": true,
+    "boston_three_to_one_merge_tls_yield_repaired": true,
+    "complete_city_archive_entries": true,
+    "complete_trip_attributes": true,
+    "controllable_traffic_lights_present": true,
+    "destination_taz_schema_canonicalized_without_demand_loss": true,
+    "monotonic_departures": true,
+    "native_config_input_boundary_verified": true,
+    "network_edge_identity_preserved": true,
+    "nonempty_unique_demand": true,
+    "only_passive_output_removed": true,
+    "previously_screened_departure_bounds_match": true,
+    "published_approximately_12h_span": true,
+    "published_destination_taz_field_is_unambiguous": true,
+    "source_archive_identity": true,
+    "sumo122_zipper_compatibility_repaired": true
+  },
+  "input_audit_protocol": "eth-five-city-complete-published-static-input-audit-v2",
+  "microscopic_demand_inventory": {
+    "canonical_to_taz_attribute_count": 3806510,
+    "conflicting_destination_taz_attribute_count": 0,
+    "custom_trip_to_taz_attribute_count": 0,
+    "depart_span_sec": 43193.96,
+    "duplicate_trip_id_count": 0,
+    "maximum_depart_sec": 50395.74,
+    "minimum_depart_sec": 7201.78,
+    "missing_edge_anchor_count": 0,
+    "missing_required_attribute_count": 0,
+    "missing_taz_anchor_count": 0,
+    "nonmonotonic_departure_count": 0,
+    "other_route_element_counts": {
+      "routes": 1
+    },
+    "trip_count": 3806510,
+    "unique_trip_id_count": 3806510
+  },
+  "microscopic_instantiation": {
+    "backend_required_by_protocol": "libsumo",
+    "begin_sec": 7201,
+    "collision_action": "warn",
+    "collision_check_junctions": true,
+    "config": "microscopic.sumo.cfg",
+    "drain_after_last_depart_sec": 21600,
+    "end_sec": 71996,
+    "ignore_route_errors": false,
+    "last_depart_sec": 50395.74,
+    "max_depart_delay_sec": -1,
+    "mode": "microscopic",
+    "network_file": "microscopic_network.net.xml",
+    "passive_output_change": {
+      "additional_file": {
+        "demand_or_network_elements_removed": 0,
+        "protocol": "eth-five-city-passive-output-removal-v1",
+        "remaining_element_count": 1,
+        "removed_passive_output_elements": [
+          {
+            "id": "dump_10",
+            "tag": "edgeData"
+          }
+        ]
+      },
+      "configuration": {
+        "demand_or_network_elements_removed": 0,
+        "protocol": "eth-five-city-config-passive-output-removal-v1",
+        "removed_output_option_count": 9,
+        "removed_output_options": [
+          {
+            "tag": "output-prefix",
+            "value": "TIME"
+          },
+          {
+            "tag": "summary-output",
+            "value": "stats.xml"
+          },
+          {
+            "tag": "tripinfo-output.write-unfinished",
+            "value": "true"
+          },
+          {
+            "tag": "tripinfo-output",
+            "value": "trips_BOS.xml"
+          },
+          {
+            "tag": "vehroute-output",
+            "value": "routes_BOS.xml"
+          },
+          {
+            "tag": "vehroute-output.route-length",
+            "value": "true"
+          },
+          {
+            "tag": "vehroute-output.last-route",
+            "value": "true"
+          },
+          {
+            "tag": "vehroute-output.write-unfinished",
+            "value": "true"
+          },
+          {
+            "tag": "vehroute-output.exit-times",
+            "value": "true"
+          }
+        ]
+      }
+    },
+    "protocol": "eth-five-city-derived-strict-microscopic-sumo122-v5",
+    "route_file": "microscopic_trips.rou.xml",
+    "seed": 5057,
+    "step_length_sec": 1,
+    "time_to_teleport_sec": -1,
+    "transformation": "structured_destination_taz_schema_canonicalization_plus_declared_sumo122_zipper_compatibility_normalization_plus_native_config_copy_with_explicit_microscopic_and_strict_safety_overrides_plus_declared_three_to_one_merge_tls_yield_repair"
+  },
+  "microscopic_network_compatibility": {
+    "after": {
+      "max_response_foe_count_histogram": {
+        "0": 36,
+        "1": 303
+      },
+      "sumo122_failure_condition": "zipper_link_response_foe_count_gt_1",
+      "unsupported_candidate_count": 0,
+      "unsupported_candidates": [],
+      "zipper_junction_count": 339
+    },
+    "applied": true,
+    "before": {
+      "max_response_foe_count_histogram": {
+        "0": 36,
+        "1": 303,
+        "2": 138
+      },
+      "sumo122_failure_condition": "zipper_link_response_foe_count_gt_1",
+      "unsupported_candidate_count": 138,
+      "unsupported_candidates": [
+        {
+          "id": "1451392905",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "1524379418",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "1601964379",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "1638679889",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "2045637931",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "2045657671",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "2588580190",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "271527740",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "2849657006",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "2865659125",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "2924023010",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3181983710",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "330123309",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "330308373",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3401235867",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3401235868",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3403188377",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3403200595",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3403200597",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "3403885075",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3416294462",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3416294465",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3416337270",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3431894396",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "3449234018",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3517822493",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3517822495",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3588277550",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3622814037",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3859340173",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3874049464",
+          "incoming_lane_count": 2,
+          "max_response_foe_count": 2,
+          "request_count": 3,
+          "violating_request_indices": [
+            0
+          ]
+        },
+        {
+          "id": "3876471793",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "3922189387",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "4061987121",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "4078618746",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "41485523",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "4317298069",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "4440532614",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "4440532618",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "5227443821",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "5227443852",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "5276335800",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "5276335811",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "5471729843",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "5559417870",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "5559417879",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "5648715541",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "5863255762",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "5972035211",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "600250855",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "6107541439",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "61317417",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61317607",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61321968",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61325497",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61340585",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61341894",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61345029",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61345790",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61352500",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61355153",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61355170",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61394761",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61409312",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "61411874",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61419694",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61424899",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61429520",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "61439604",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "61588921",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "62024988",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "63491599",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "63527737",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "63554046",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "63565724",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "64209461",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "6505118573",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "6505118789",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "6505118811",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "65197972",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "65208677",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "65276318",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "65333723",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "65346277",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "65569489",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "65882858",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "66397603",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "66424412",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "66432656",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "66434391",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "66452543",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "6654284439",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "6654284441",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "6654316783",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "66804111",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "67006750",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "67018278",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "67029528",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "67393401",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "67401730",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "67436424",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "67456588",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "68491595",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "68580626",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "68637292",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "68640113",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "68981523",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "69308156",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "69343906",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "70472705",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "70721510",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "70769454",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "70803345",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "7086766356",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "71924163",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "71929549",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "71942628",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "71956220",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "73071325",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "73112411",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "73121061",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "73125660",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "73137583",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "73550900",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "73562447",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "73562999",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "73576894",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "73579398",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "73586508",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "74027234",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "74348856",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "74606108",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "74955220",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "7573172483",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "7573172504",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "940797007",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "940961064",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "969576543",
+          "incoming_lane_count": 4,
+          "max_response_foe_count": 2,
+          "request_count": 4,
+          "violating_request_indices": [
+            0,
+            3
+          ]
+        }
+      ],
+      "zipper_junction_count": 477
+    },
+    "checks": {
+      "all_declared_candidates_repaired": true,
+      "network_semantics_preserved_except_declared_zipper_changes": true
+    },
+    "compatibility_audit": {
+      "checks": {
+        "external_edges_exact": true,
+        "external_lanes_exact": true,
+        "external_movements_exact": true,
+        "junction_type_changes_exact": true,
+        "network_xml_exact_except_declared_zipper_compatibility_changes": true,
+        "traffic_light_programs_exact": true
+      },
+      "counts": {
+        "connection_state_changes": 551,
+        "external_edges": 161096,
+        "external_lanes": 189716,
+        "external_movements": 352275,
+        "junction_type_changes": 138,
+        "traffic_light_programs": 4203
+      },
+      "expected_connection_state_changes": 551,
+      "expected_junction_type_changes": 138,
+      "passed": true,
+      "unexpected_junction_type_change_count": 0
+    },
+    "derived_network": "microscopic_network.net.xml",
+    "passed": true,
+    "protocol": "sumo122-unsupported-multi-foe-zipper-repair-v3",
+    "repair": {
+      "changed_connection_state_count": 551,
+      "changed_junction_count": 138,
+      "connection_state_change_histogram": {
+        "Z->m": 551
+      },
+      "method": "structured_xml_declared_junction_type_and_link_state_substitution"
+    },
+    "source_network": "BOS.net.xml"
+  },
+  "microscopic_network_inventory": {
+    "connection_count": 352275,
+    "edge_count": 161096,
+    "junction_count": 60283,
+    "lane_count": 189716,
+    "noninternal_edge_count": 161096,
+    "traffic_light_count": 4203,
+    "traffic_light_phase_count": 20230,
+    "traffic_light_program_count": 4203
+  },
+  "native_meso_config_inventory": {
+    "additional_files": "additional.add.xml,taz.xml",
+    "begin_sec": "14400",
+    "collision_action": "none",
+    "end_sec": "49800",
+    "ignore_route_errors": "true",
+    "max_depart_delay_sec": "1200",
+    "mesosim": "true",
+    "net_file": "BOS.net.xml",
+    "random_depart_offset_sec": "1200",
+    "rerouting_period_sec": "360",
+    "rerouting_probability": "0.5",
+    "route_files": "trips24h_smoothed.rou.xml",
+    "seed": "2136",
+    "step_length_sec": "2",
+    "time_to_teleport_sec": "360"
+  },
+  "network_inventory": {
+    "connection_count": 352275,
+    "edge_count": 161096,
+    "junction_count": 60283,
+    "lane_count": 189716,
+    "noninternal_edge_count": 161096,
+    "traffic_light_count": 4203,
+    "traffic_light_phase_count": 20230,
+    "traffic_light_program_count": 4203
+  },
+  "passed": true,
+  "protocol": "cfcmt-eth-boston-complete-published-package-v7",
+  "scenario": "eth_boston_complete_published_micro",
+  "scientific_status": "pre-simulation-input-admission",
+  "source": {
+    "archive_md5": "802321f1d2c61de527ed579ce9c54842",
+    "archive_name": "sumo_sim_perc_mfd.zip",
+    "archive_size_bytes": 658810696,
+    "city_entries": [
+      "BOS/",
+      "BOS/additional.add.xml",
+      "BOS/BOS.net.xml",
+      "BOS/meso.sumo.cfg",
+      "BOS/taz.xml",
+      "BOS/trips24h_smoothed.rou.xml"
+    ],
+    "doi": "10.3929/ethz-b-000584669",
+    "license": "CC-BY-NC-4.0"
+  },
+  "taz_inventory": {
+    "duplicate_taz_id_count": 0,
+    "taz_count": 969,
+    "taz_sink_count": 0,
+    "taz_source_count": 0
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "protocol": "tsc-v154o-original-collector-label-replay-v1",
+  "frozen_at_utc": "2026-09-09T14:37:54.741858+00:00",
+  "base_protocol": "protocol_v1.json",
+  "groups": "The same nine original B100 groups already frozen in protocol_v1.json; no replacements.",
+  "reason": "The shortened pre-reload history reproduced old PP costs for3 late groups but not6 early/middle groups, although all72 native branch starts matched stored features/context and each other exactly.",
+  "execution": "Call the unchanged original collect_counterfactual_transitions_v3 with full3600-second PP behavior and only the three frozen selected groups per seed. Keep its own candidate order, restore calls and repeat checks.",
+  "comparison": "Compare all8 candidate phases, raw features, context, row time and450-second labels of each recollected group to its original bank. Labels must agree within1e-12.",
+  "reuse": "Reuse all72 completed native-prefix branches from t91785/t91786/t91787. Preserve their failed short-history controls. A final group comparison requires original-collector label reproduction and all eight native state/safety/full-horizon checks.",
+  "model_fits": 0,
+  "threshold_retuning": false,
+  "limits": [
+    "This probe compares original collector ordering against the shortened reload control; it does not isolate which hidden SUMO state causes their divergence."
+  ]
+}

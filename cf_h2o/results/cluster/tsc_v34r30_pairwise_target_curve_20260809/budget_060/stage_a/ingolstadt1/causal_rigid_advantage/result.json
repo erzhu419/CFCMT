@@ -1,0 +1,968 @@
+{
+  "baseline_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v25r21_policy_consistent_20260809/source_rule_baseline/baseline.json",
+  "cache_audit": {
+    "cache_root": "/home/zhengliang01/scheduleurm_work/CFCMT_CACHE/tsc_v25r21_policy_consistent_20260809",
+    "collection_shards": 16,
+    "file_count": 768,
+    "groups_by_scenario": {
+      "arterial4x4": 648,
+      "atlanta_1x5": 609,
+      "cologne1": 76,
+      "cologne3": 306,
+      "cologne8": 560,
+      "grid4x4": 648,
+      "hangzhou_4x4": 631,
+      "hangzhou_4x4_hetero": 634,
+      "hangzhou_bc_tyc": 25,
+      "hangzhou_kn_hz": 42,
+      "hangzhou_qc_yn": 33,
+      "hangzhou_sb_sx": 36,
+      "ingolstadt1": 90,
+      "ingolstadt21": 291,
+      "ingolstadt7": 271,
+      "manhattan_28x7": 572
+    },
+    "protocol": "embedded-identity-read-only-complete-shard-load-v1",
+    "rows_by_scenario": {
+      "arterial4x4": 3240,
+      "atlanta_1x5": 2131,
+      "cologne1": 608,
+      "cologne3": 1113,
+      "cologne8": 1745,
+      "grid4x4": 5184,
+      "hangzhou_4x4": 5048,
+      "hangzhou_4x4_hetero": 5072,
+      "hangzhou_bc_tyc": 200,
+      "hangzhou_kn_hz": 336,
+      "hangzhou_qc_yn": 264,
+      "hangzhou_sb_sx": 288,
+      "ingolstadt1": 270,
+      "ingolstadt21": 930,
+      "ingolstadt7": 817,
+      "manhattan_28x7": 5148
+    },
+    "scenario_count": 16,
+    "seeds": [
+      2027,
+      3037,
+      4047
+    ],
+    "unique_identities": 768,
+    "used_file_count": 768
+  },
+  "elapsed_sec": 23.162158242426813,
+  "fit_protocol": "screening",
+  "manifest": {
+    "city_group_count": 6,
+    "path": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/23de05528236c9d929c9/cf_h2o/config/traffic_signal_cross_city_v1.json",
+    "protocol": "legacy-v1",
+    "scenario_count": 16,
+    "scenarios": [
+      {
+        "city_group": "resco_synthetic",
+        "demand_count": 1473,
+        "provenance": "RESCO benchmark synthetic grid",
+        "scenario": "grid4x4",
+        "suite": "RESCO",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_resco/environments/grid4x4/grid4x4.sumocfg",
+        "tls_count": 16
+      },
+      {
+        "city_group": "resco_synthetic",
+        "demand_count": 2484,
+        "provenance": "RESCO benchmark synthetic arterial",
+        "scenario": "arterial4x4",
+        "suite": "RESCO",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_resco/environments/arterial4x4/arterial4x4.sumocfg",
+        "tls_count": 16
+      },
+      {
+        "city_group": "cologne",
+        "demand_count": 2015,
+        "provenance": "RESCO Cologne subnetwork",
+        "scenario": "cologne1",
+        "suite": "RESCO",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_resco/environments/cologne1/cologne1.sumocfg",
+        "tls_count": 1
+      },
+      {
+        "city_group": "cologne",
+        "demand_count": 4494,
+        "provenance": "RESCO Cologne subnetwork",
+        "scenario": "cologne3",
+        "suite": "RESCO",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_resco/environments/cologne3/cologne3.sumocfg",
+        "tls_count": 3
+      },
+      {
+        "city_group": "cologne",
+        "demand_count": 2046,
+        "provenance": "RESCO Cologne subnetwork",
+        "scenario": "cologne8",
+        "suite": "RESCO",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_resco/environments/cologne8/cologne8.sumocfg",
+        "tls_count": 8
+      },
+      {
+        "city_group": "ingolstadt",
+        "demand_count": 1716,
+        "provenance": "RESCO Ingolstadt subnetwork",
+        "scenario": "ingolstadt1",
+        "suite": "RESCO",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_resco/environments/ingolstadt1/ingolstadt1.sumocfg",
+        "tls_count": 1
+      },
+      {
+        "city_group": "ingolstadt",
+        "demand_count": 3031,
+        "provenance": "RESCO Ingolstadt subnetwork",
+        "scenario": "ingolstadt7",
+        "suite": "RESCO",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_resco/environments/ingolstadt7/ingolstadt7.sumocfg",
+        "tls_count": 7
+      },
+      {
+        "city_group": "ingolstadt",
+        "demand_count": 4283,
+        "provenance": "RESCO Ingolstadt subnetwork",
+        "scenario": "ingolstadt21",
+        "suite": "RESCO",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_resco/environments/ingolstadt21/ingolstadt21.sumocfg",
+        "tls_count": 21
+      },
+      {
+        "city_group": "atlanta",
+        "demand_count": 2171,
+        "provenance": "LibSignal Atlanta corridor",
+        "scenario": "atlanta_1x5",
+        "suite": "LibSignal",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/atlanta_1x5/atlanta_1x5.sumocfg",
+        "tls_count": 5
+      },
+      {
+        "city_group": "hangzhou",
+        "demand_count": 2021,
+        "provenance": "LibSignal Hangzhou observed-flow intersection",
+        "scenario": "hangzhou_bc_tyc",
+        "suite": "LibSignal",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/hangzhou_1x1_bc-tyc_18041610_1h/hangzhou_1x1_bc-tyc_18041610_1h.sumocfg",
+        "tls_count": 1
+      },
+      {
+        "city_group": "hangzhou",
+        "demand_count": 743,
+        "provenance": "LibSignal Hangzhou observed-flow intersection",
+        "scenario": "hangzhou_kn_hz",
+        "suite": "LibSignal",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/hangzhou_1x1_kn-hz_18041608_1h/hangzhou_1x1_kn-hz_18041608_1h.sumocfg",
+        "tls_count": 1
+      },
+      {
+        "city_group": "hangzhou",
+        "demand_count": 1417,
+        "provenance": "LibSignal Hangzhou observed-flow intersection",
+        "scenario": "hangzhou_qc_yn",
+        "suite": "LibSignal",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/hangzhou_1x1_qc-yn_18041608_1h/hangzhou_1x1_qc-yn_18041608_1h.sumocfg",
+        "tls_count": 1
+      },
+      {
+        "city_group": "hangzhou",
+        "demand_count": 1671,
+        "provenance": "LibSignal Hangzhou observed-flow intersection",
+        "scenario": "hangzhou_sb_sx",
+        "suite": "LibSignal",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/hangzhou_1x1_sb-sx_18041607_1h/hangzhou_1x1_sb-sx_18041607_1h.sumocfg",
+        "tls_count": 1
+      },
+      {
+        "city_group": "hangzhou",
+        "demand_count": 2983,
+        "provenance": "LibSignal Hangzhou observed-flow grid",
+        "scenario": "hangzhou_4x4",
+        "suite": "LibSignal",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/hangzhou_4x4_gudang_18041610_1h/hangzhou_4x4_gudang_18041610_1h.sumocfg",
+        "tls_count": 16
+      },
+      {
+        "city_group": "hangzhou",
+        "demand_count": 2376,
+        "provenance": "LibSignal Hangzhou heterogeneous grid variant",
+        "scenario": "hangzhou_4x4_hetero",
+        "suite": "LibSignal",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/hangzhou_4x4_hetero/hangzhou_4x4_gudang_18041610_1h_m.sumocfg",
+        "tls_count": 16
+      },
+      {
+        "city_group": "new_york",
+        "demand_count": 16317,
+        "provenance": "LibSignal Manhattan observed-flow grid",
+        "scenario": "manhattan_28x7",
+        "suite": "LibSignal",
+        "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/manhattan_28x7/manhattan_28x7.sumocfg",
+        "tls_count": 196
+      }
+    ],
+    "version": 1
+  },
+  "model_families": [
+    "causal_rigid_advantage"
+  ],
+  "parallelism": {
+    "fit_parallel_workers_per_target": 1,
+    "target_executor": "process",
+    "target_workers_actual": 1,
+    "target_workers_requested": 1
+  },
+  "physical_blend_weights": [],
+  "physical_disagreement_caps": [],
+  "protocol": "tsc-physical-residual-progressive-offline-ablation-v2",
+  "target_group_budget": 60,
+  "targets": [
+    {
+      "city_group": "ingolstadt",
+      "elapsed_sec": 5.151682720053941,
+      "excluded_group_ids": [
+        "ingolstadt1:seed2027:11:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed2027:14:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed2027:16:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed2027:17:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed2027:22:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed2027:23:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed2027:24:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed2027:27:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed2027:28:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed2027:29:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed2027:34:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed2027:44:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed2027:59:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed2027:6:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed2027:7:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed2027:9:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:10:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:12:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:15:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:16:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:17:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:18:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:19:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:22:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:23:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:24:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:25:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:27:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:28:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:29:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:39:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:44:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:49:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:59:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:6:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed3037:9:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:10:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:11:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:13:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:16:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:17:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:18:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:20:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:21:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:22:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:23:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:24:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:25:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:27:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:28:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:29:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:34:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:39:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:49:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:54:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:59:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:6:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:7:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:8:cluster_274083968_cluster_1200364014_1200364088",
+        "ingolstadt1:seed4047:9:cluster_274083968_cluster_1200364014_1200364088"
+      ],
+      "model_diagnostics": {
+        "family_elapsed_sec": {
+          "causal_rigid_advantage": 3.72462151106447
+        },
+        "fit": {
+          "causal_rigid_advantage": {
+            "calibration_error": 1.6570880897999578,
+            "candidate_negative_rate": 0.22115572203363376,
+            "candidate_only": true,
+            "causal": true,
+            "context_reference": {
+              "domain_count": 6,
+              "protocol": "network_anchors_city_balanced_scale_v1",
+              "support_anchor_count": 14
+            },
+            "domain_target_scale_protocol": "median-positive-within-domain-action-range-relative-floor-v3-consistent-selectors",
+            "domain_target_scales": {
+              "atlanta": 0.1742424242424292,
+              "cologne": 0.019936204146730363,
+              "hangzhou": 0.00026041666666665186,
+              "ingolstadt": 0.6928571428571435,
+              "new_york": 3.543083900225952e-05,
+              "resco_synthetic": 0.001562500000000036
+            },
+            "estimator": "HistGradientBoostingRegressor",
+            "feature_count": 29,
+            "feature_names": [
+              "total_q",
+              "total_veh",
+              "mean_speed",
+              "mean_occ",
+              "green_q",
+              "reference_green_q",
+              "delta_green_q",
+              "red_q",
+              "reference_red_q",
+              "delta_red_q",
+              "green_down_q",
+              "reference_green_down_q",
+              "delta_green_down_q",
+              "green_down_occ",
+              "reference_green_down_occ",
+              "delta_green_down_occ",
+              "service_pressure",
+              "reference_service_pressure",
+              "delta_service_pressure",
+              "red_pressure",
+              "delta_red_pressure",
+              "switch_indicator",
+              "reference_switch_indicator",
+              "delta_switch_indicator",
+              "clearance_fraction",
+              "reference_clearance_fraction",
+              "delta_clearance_fraction",
+              "current_phase_overlap",
+              "delta_current_phase_overlap"
+            ],
+            "group_target_scale_summary": null,
+            "rows": 30485,
+            "sign_balance": {
+              "enabled": true,
+              "negative_weight_multiplier": 2.2118250135048765,
+              "nonnegative_weight_multiplier": 0.6460429646883928
+            },
+            "target_name": "interval_cost",
+            "target_normalization_protocol": "domain_action_scale_v1",
+            "training_nonzero_sign_accuracy": 0.6360683987274656,
+            "training_rows": 25629,
+            "training_weighted_mae": 1.2584726319417263
+          }
+        },
+        "heldout_city_scenarios": [
+          "ingolstadt1",
+          "ingolstadt21",
+          "ingolstadt7"
+        ],
+        "prior_policy": "spillback_pressure",
+        "prior_selection": {
+          "criterion": "source_only_closed_loop_equal_domain_robust_regret_gated_context_selector",
+          "selected": "spillback_pressure",
+          "selector": "global",
+          "selector_cv": {
+            "global": {
+              "heldout": {
+                "atlanta": {
+                  "actual_relative_regret": 0.02611238322529337,
+                  "selected_policy": "gp_d0_o0_s1"
+                },
+                "cologne": {
+                  "actual_relative_regret": 0.037741765317799505,
+                  "selected_policy": "phase_pressure"
+                },
+                "hangzhou": {
+                  "actual_relative_regret": 0.015259790924852133,
+                  "selected_policy": "gp_d1_o0p02_s1"
+                },
+                "new_york": {
+                  "actual_relative_regret": 0.003845392130974401,
+                  "selected_policy": "spillback_pressure"
+                },
+                "resco_synthetic": {
+                  "actual_relative_regret": 0.0038003504313000036,
+                  "selected_policy": "spillback_pressure"
+                }
+              },
+              "mean_relative_regret": 0.017351936406043884,
+              "robust_relative_regret": 0.030071696243425282,
+              "std_relative_regret": 0.013137274031726081,
+              "worst_relative_regret": 0.037741765317799505
+            },
+            "idw2": {
+              "eligible": false,
+              "heldout": {
+                "atlanta": {
+                  "actual_relative_regret": 0.02611238322529337,
+                  "selected_policy": "gp_d0_o0_s1"
+                },
+                "cologne": {
+                  "actual_relative_regret": 0.052584706761390085,
+                  "selected_policy": "gp_d0p25_o0_s0"
+                },
+                "hangzhou": {
+                  "actual_relative_regret": 0.0013774134028693408,
+                  "selected_policy": "gp_d0p45_o0p04_s1"
+                },
+                "new_york": {
+                  "actual_relative_regret": 0.0002958900750688609,
+                  "selected_policy": "gp_d0p45_o0p04_s1"
+                },
+                "resco_synthetic": {
+                  "actual_relative_regret": 0.0067414702711028895,
+                  "selected_policy": "gp_d0p25_o0_s0"
+                }
+              },
+              "losses_vs_global": 2,
+              "mean_relative_regret": 0.01742237274714491,
+              "required_gain": 0.0030071696243425283,
+              "robust_gain_vs_global": -0.00546769922645788,
+              "robust_relative_regret": 0.03553939546988316,
+              "std_relative_regret": 0.019883384129562913,
+              "wins_vs_global": 2,
+              "worst_relative_regret": 0.052584706761390085
+            },
+            "idw3": {
+              "eligible": false,
+              "heldout": {
+                "atlanta": {
+                  "actual_relative_regret": 0.02611238322529337,
+                  "selected_policy": "gp_d0_o0_s1"
+                },
+                "cologne": {
+                  "actual_relative_regret": 0.037741765317799505,
+                  "selected_policy": "phase_pressure"
+                },
+                "hangzhou": {
+                  "actual_relative_regret": 0.0005977687113884018,
+                  "selected_policy": "phase_pressure"
+                },
+                "new_york": {
+                  "actual_relative_regret": 0.0016161963861329731,
+                  "selected_policy": "phase_pressure"
+                },
+                "resco_synthetic": {
+                  "actual_relative_regret": 0.0067414702711028895,
+                  "selected_policy": "gp_d0p25_o0_s0"
+                }
+              },
+              "losses_vs_global": 1,
+              "mean_relative_regret": 0.014561916782343429,
+              "required_gain": 0.0030071696243425283,
+              "robust_gain_vs_global": 0.002375576269981531,
+              "robust_relative_regret": 0.02769611997344375,
+              "std_relative_regret": 0.014795047446601775,
+              "wins_vs_global": 2,
+              "worst_relative_regret": 0.037741765317799505
+            },
+            "nearest": {
+              "eligible": false,
+              "heldout": {
+                "atlanta": {
+                  "actual_relative_regret": 0.003695402113501324,
+                  "selected_policy": "gp_d1_o0p02_s1"
+                },
+                "cologne": {
+                  "actual_relative_regret": 0.05447044709698178,
+                  "selected_policy": "gp_d0p65_o0_s0"
+                },
+                "hangzhou": {
+                  "actual_relative_regret": 0.0013774134028693408,
+                  "selected_policy": "gp_d0p45_o0p04_s1"
+                },
+                "new_york": {
+                  "actual_relative_regret": 0.0002958900750688609,
+                  "selected_policy": "gp_d0p45_o0p04_s1"
+                },
+                "resco_synthetic": {
+                  "actual_relative_regret": 0.0067414702711028895,
+                  "selected_policy": "gp_d0p25_o0_s0"
+                }
+              },
+              "losses_vs_global": 2,
+              "mean_relative_regret": 0.01331612459190484,
+              "required_gain": 0.0030071696243425283,
+              "robust_gain_vs_global": -0.0020359191958008657,
+              "robust_relative_regret": 0.03210761543922615,
+              "std_relative_regret": 0.02069551629230346,
+              "wins_vs_global": 3,
+              "worst_relative_regret": 0.05447044709698178
+            }
+          },
+          "selector_gate": {
+            "min_context_absolute_improvement": 0.002,
+            "min_context_domains": 5,
+            "min_context_relative_improvement": 0.1,
+            "min_context_win_fraction": 0.6
+          },
+          "source_domain_policy_costs": {
+            "atlanta": {
+              "gp_d0_o0_s1": 21.38576149666723,
+              "gp_d0_o0p02_s0": 20.86486864952669,
+              "gp_d0_o0p02_s1": 21.38576149666723,
+              "gp_d0_o0p04_s0": 20.86486864952669,
+              "gp_d0_o0p04_s1": 21.38576149666723,
+              "gp_d0p25_o0_s0": 20.84478799081387,
+              "gp_d0p25_o0_s1": 21.063294684366774,
+              "gp_d0p25_o0p02_s0": 20.84478799081387,
+              "gp_d0p25_o0p02_s1": 21.063294684366774,
+              "gp_d0p25_o0p04_s0": 20.84478799081387,
+              "gp_d0p25_o0p04_s1": 21.063294684366774,
+              "gp_d0p45_o0_s0": 20.86618495490954,
+              "gp_d0p45_o0_s1": 20.963451520752812,
+              "gp_d0p45_o0p02_s0": 20.86618495490954,
+              "gp_d0p45_o0p02_s1": 20.963451520752812,
+              "gp_d0p45_o0p04_s0": 20.86618495490954,
+              "gp_d0p45_o0p04_s1": 20.963451520752812,
+              "gp_d0p65_o0_s0": 20.841539237103007,
+              "gp_d0p65_o0_s1": 20.910743292443847,
+              "gp_d0p65_o0p02_s0": 20.841539237103007,
+              "gp_d0p65_o0p02_s1": 20.910743292443847,
+              "gp_d0p65_o0p04_s0": 20.841539237103007,
+              "gp_d0p65_o0p04_s1": 20.910743292443847,
+              "gp_d1_o0_s1": 20.918557105248418,
+              "gp_d1_o0p02_s0": 20.860555648910548,
+              "gp_d1_o0p02_s1": 20.918557105248418,
+              "gp_d1_o0p04_s0": 20.860555648910548,
+              "gp_d1_o0p04_s1": 20.918557105248418,
+              "max_pressure": 20.860555648910548,
+              "phase_pressure": 20.86472861703915,
+              "spillback_pressure": 20.86240407774604
+            },
+            "cologne": {
+              "gp_d0_o0_s1": 3.472267609945156,
+              "gp_d0_o0p02_s0": 3.5325533155270974,
+              "gp_d0_o0p02_s1": 3.545136892811764,
+              "gp_d0_o0p04_s0": 3.5325533155270974,
+              "gp_d0_o0p04_s1": 3.545136892811764,
+              "gp_d0p25_o0_s0": 3.6545890488698642,
+              "gp_d0p25_o0_s1": 3.5268921337118635,
+              "gp_d0p25_o0p02_s0": 3.5754566901626443,
+              "gp_d0p25_o0p02_s1": 3.5180350788751418,
+              "gp_d0p25_o0p04_s0": 3.5754566901626443,
+              "gp_d0p25_o0p04_s1": 3.5180350788751418,
+              "gp_d0p45_o0_s0": 3.65584608611654,
+              "gp_d0p45_o0_s1": 3.5607357749103055,
+              "gp_d0p45_o0p02_s0": 3.570009672068481,
+              "gp_d0p45_o0p02_s1": 3.562468676943577,
+              "gp_d0p45_o0p04_s0": 3.570009672068481,
+              "gp_d0p45_o0p04_s1": 3.562468676943577,
+              "gp_d0p65_o0_s0": 3.6611363660930736,
+              "gp_d0p65_o0_s1": 3.567031340744737,
+              "gp_d0p65_o0p02_s0": 3.5764552200671957,
+              "gp_d0p65_o0p02_s1": 3.5652984387114652,
+              "gp_d0p65_o0p04_s0": 3.5764552200671957,
+              "gp_d0p65_o0p04_s1": 3.5652984387114652,
+              "gp_d1_o0_s1": 3.4759036026182635,
+              "gp_d1_o0p02_s0": 3.557476150256333,
+              "gp_d1_o0p02_s1": 3.47201420027692,
+              "gp_d1_o0p04_s0": 3.557476150256333,
+              "gp_d1_o0p04_s1": 3.4720328712752586,
+              "max_pressure": 3.558120299699004,
+              "phase_pressure": 3.603054145403839,
+              "spillback_pressure": 3.4934685285582745
+            },
+            "hangzhou": {
+              "gp_d0_o0_s1": 3.319998627502093,
+              "gp_d0_o0p02_s0": 3.306920401045863,
+              "gp_d0_o0p02_s1": 3.331094754688216,
+              "gp_d0_o0p04_s0": 3.306954898632636,
+              "gp_d0_o0p04_s1": 3.331541186786104,
+              "gp_d0p25_o0_s0": 3.3022021926394616,
+              "gp_d0p25_o0_s1": 3.307762783978704,
+              "gp_d0p25_o0p02_s0": 3.3022021926394616,
+              "gp_d0p25_o0p02_s1": 3.307762783978704,
+              "gp_d0p25_o0p04_s0": 3.3022021926394616,
+              "gp_d0p25_o0p04_s1": 3.307762783978704,
+              "gp_d0p45_o0_s0": 3.3178323765344326,
+              "gp_d0p45_o0_s1": 3.3067506901985877,
+              "gp_d0p45_o0p02_s0": 3.3178323765344326,
+              "gp_d0p45_o0p02_s1": 3.3067506901985877,
+              "gp_d0p45_o0p04_s0": 3.3178323765344326,
+              "gp_d0p45_o0p04_s1": 3.3067506901985877,
+              "gp_d0p65_o0_s0": 3.33457135853595,
+              "gp_d0p65_o0_s1": 3.365108819829534,
+              "gp_d0p65_o0p02_s0": 3.33457135853595,
+              "gp_d0p65_o0p02_s1": 3.365108819829534,
+              "gp_d0p65_o0p04_s0": 3.3346286282327764,
+              "gp_d0p65_o0p04_s1": 3.365108819829534,
+              "gp_d1_o0_s1": 3.3528459459966506,
+              "gp_d1_o0p02_s0": 3.3412759861249355,
+              "gp_d1_o0p02_s1": 3.352593107690728,
+              "gp_d1_o0p04_s0": 3.3412759861249355,
+              "gp_d1_o0p04_s1": 3.352593107690728,
+              "max_pressure": 3.3409616816357808,
+              "phase_pressure": 3.3041761457888996,
+              "spillback_pressure": 3.3412894395666464
+            },
+            "new_york": {
+              "gp_d0_o0_s1": 0.42885317250745036,
+              "gp_d0_o0p02_s0": 0.4309212594464773,
+              "gp_d0_o0p02_s1": 0.4288673186464974,
+              "gp_d0_o0p04_s0": 0.4305184874319413,
+              "gp_d0_o0p04_s1": 0.4288402052133238,
+              "gp_d0p25_o0_s0": 0.42871131816867225,
+              "gp_d0p25_o0_s1": 0.42797454009330166,
+              "gp_d0p25_o0p02_s0": 0.42922332981251654,
+              "gp_d0p25_o0p02_s1": 0.42798593559420073,
+              "gp_d0p25_o0p04_s0": 0.42922332981251654,
+              "gp_d0p25_o0p04_s1": 0.42797454009330166,
+              "gp_d0p45_o0_s0": 0.4289168301331623,
+              "gp_d0p45_o0_s1": 0.42834312560514043,
+              "gp_d0p45_o0p02_s0": 0.4295624442013404,
+              "gp_d0p45_o0p02_s1": 0.42802955285626265,
+              "gp_d0p45_o0p04_s0": 0.4295624442013404,
+              "gp_d0p45_o0p04_s1": 0.4282704301683705,
+              "gp_d0p65_o0_s0": 0.428781655915601,
+              "gp_d0p65_o0_s1": 0.42819537704175936,
+              "gp_d0p65_o0p02_s0": 0.42952275642234716,
+              "gp_d0p65_o0p02_s1": 0.4285136651703195,
+              "gp_d0p65_o0p04_s0": 0.42952275642234716,
+              "gp_d0p65_o0p04_s1": 0.4285843958655551,
+              "gp_d1_o0_s1": 0.42891407949501426,
+              "gp_d1_o0p02_s0": 0.43030354470808657,
+              "gp_d1_o0p02_s1": 0.42913334465024455,
+              "gp_d1_o0p04_s0": 0.4301931262338577,
+              "gp_d1_o0p04_s1": 0.42907283061098744,
+              "max_pressure": 0.42908422611188657,
+              "phase_pressure": 0.42959073647943463,
+              "spillback_pressure": 0.43181993222427606
+            },
+            "resco_synthetic": {
+              "gp_d0_o0_s1": 0.478420556069008,
+              "gp_d0_o0p02_s0": 0.4785408964879852,
+              "gp_d0_o0p02_s1": 0.47786217652495383,
+              "gp_d0_o0p04_s0": 0.47917388709180525,
+              "gp_d0_o0p04_s1": 0.47858421903881704,
+              "gp_d0p25_o0_s0": 0.48122448783117683,
+              "gp_d0p25_o0_s1": 0.47749393484288355,
+              "gp_d0p25_o0p02_s0": 0.48111618145409735,
+              "gp_d0p25_o0p02_s1": 0.47770814078866297,
+              "gp_d0p25_o0p04_s0": 0.48040617298213184,
+              "gp_d0p25_o0p04_s1": 0.4771882701786815,
+              "gp_d0p45_o0_s0": 0.48279132008626,
+              "gp_d0p45_o0_s1": 0.47540001155268025,
+              "gp_d0p45_o0p02_s0": 0.482649318391867,
+              "gp_d0p45_o0p02_s1": 0.4748729205175601,
+              "gp_d0p45_o0p04_s0": 0.4820163277880468,
+              "gp_d0p45_o0p04_s1": 0.47448301756007394,
+              "gp_d0p65_o0_s0": 0.4842137438385705,
+              "gp_d0p65_o0_s1": 0.4766130429759705,
+              "gp_d0p65_o0p02_s0": 0.4839947242760321,
+              "gp_d0p65_o0p02_s1": 0.47634107362908196,
+              "gp_d0p65_o0p04_s0": 0.483884011090573,
+              "gp_d0p65_o0p04_s1": 0.4757417783425755,
+              "gp_d1_o0_s1": 0.48045671595810224,
+              "gp_d1_o0p02_s0": 0.48337376771410967,
+              "gp_d1_o0p02_s1": 0.4804446819162045,
+              "gp_d1_o0p04_s0": 0.4839754698089957,
+              "gp_d1_o0p04_s1": 0.4805313270178681,
+              "max_pressure": 0.48319807070240295,
+              "phase_pressure": 0.4763049715033888,
+              "spillback_pressure": 0.47828336799137394
+            }
+          },
+          "source_domain_relative_regret": {
+            "gp_d0_o0_s1": {
+              "atlanta": 0.02611238322529337,
+              "cologne": 7.298635708801203e-05,
+              "hangzhou": 0.0053892626267099146,
+              "new_york": 0.0008786324141487056,
+              "resco_synthetic": 0.00393753850893408
+            },
+            "gp_d0_o0p02_s0": {
+              "atlanta": 0.0011193708947443233,
+              "cologne": 0.017436309806955524,
+              "hangzhou": 0.0014288066360437456,
+              "new_york": 0.002946719353175642,
+              "resco_synthetic": 0.004057878927911263
+            },
+            "gp_d0_o0p02_s1": {
+              "atlanta": 0.02611238322529337,
+              "cologne": 0.021060597197157697,
+              "hangzhou": 0.008749483030795471,
+              "new_york": 0.00089277855319575,
+              "resco_synthetic": 0.0033791589648798914
+            },
+            "gp_d0_o0p04_s0": {
+              "atlanta": 0.0011193708947443233,
+              "cologne": 0.017436309806955524,
+              "hangzhou": 0.0014392534787143368,
+              "new_york": 0.0025439473386396627,
+              "resco_synthetic": 0.004690869531731312
+            },
+            "gp_d0_o0p04_s1": {
+              "atlanta": 0.02611238322529337,
+              "cologne": 0.021060597197157697,
+              "hangzhou": 0.008884675266716987,
+              "new_york": 0.0008656651200221188,
+              "resco_synthetic": 0.0041012014787430995
+            },
+            "gp_d0p25_o0_s0": {
+              "atlanta": 0.00015587878006054695,
+              "cologne": 0.052584706761390085,
+              "hangzhou": 0.0,
+              "new_york": 0.0007367780753705921,
+              "resco_synthetic": 0.0067414702711028895
+            },
+            "gp_d0p25_o0_s1": {
+              "atlanta": 0.010640070521710253,
+              "cologne": 0.015805791759309757,
+              "hangzhou": 0.0016839039570735283,
+              "new_york": 0.0,
+              "resco_synthetic": 0.003010917282809611
+            },
+            "gp_d0p25_o0p02_s0": {
+              "atlanta": 0.00015587878006054695,
+              "cologne": 0.029793222008560306,
+              "hangzhou": 0.0,
+              "new_york": 0.0012487897192148822,
+              "resco_synthetic": 0.006633163894023408
+            },
+            "gp_d0p25_o0p02_s1": {
+              "atlanta": 0.010640070521710253,
+              "cologne": 0.013254807136028177,
+              "hangzhou": 0.0016839039570735283,
+              "new_york": 1.13955008990696e-05,
+              "resco_synthetic": 0.003225123228589033
+            },
+            "gp_d0p25_o0p04_s0": {
+              "atlanta": 0.00015587878006054695,
+              "cologne": 0.029793222008560306,
+              "hangzhou": 0.0,
+              "new_york": 0.0012487897192148822,
+              "resco_synthetic": 0.005923155422057902
+            },
+            "gp_d0p25_o0p04_s1": {
+              "atlanta": 0.010640070521710253,
+              "cologne": 0.013254807136028177,
+              "hangzhou": 0.0016839039570735283,
+              "new_york": 0.0,
+              "resco_synthetic": 0.0027052526186075454
+            },
+            "gp_d0p45_o0_s0": {
+              "atlanta": 0.0011825286763204443,
+              "cologne": 0.052946755178869355,
+              "hangzhou": 0.004733260710022666,
+              "new_york": 0.0009422900398606271,
+              "resco_synthetic": 0.008308302526186084
+            },
+            "gp_d0p45_o0_s1": {
+              "atlanta": 0.005849485600025759,
+              "cologne": 0.02555334440346158,
+              "hangzhou": 0.0013774134028693408,
+              "new_york": 0.0003685855118387704,
+              "resco_synthetic": 0.0009169939926063075
+            },
+            "gp_d0p45_o0p02_s0": {
+              "atlanta": 0.0011825286763204443,
+              "cologne": 0.028224386808022008,
+              "hangzhou": 0.004733260710022666,
+              "new_york": 0.001587904108038718,
+              "resco_synthetic": 0.008166300831793039
+            },
+            "gp_d0p45_o0p02_s1": {
+              "atlanta": 0.005849485600025759,
+              "cologne": 0.026052450090625383,
+              "hangzhou": 0.0013774134028693408,
+              "new_york": 5.501276296099311e-05,
+              "resco_synthetic": 0.00038990295748614345
+            },
+            "gp_d0p45_o0p04_s0": {
+              "atlanta": 0.0011825286763204443,
+              "cologne": 0.028224386808022008,
+              "hangzhou": 0.004733260710022666,
+              "new_york": 0.001587904108038718,
+              "resco_synthetic": 0.007533310227972878
+            },
+            "gp_d0p45_o0p04_s1": {
+              "atlanta": 0.005849485600025759,
+              "cologne": 0.026052450090625383,
+              "hangzhou": 0.0013774134028693408,
+              "new_york": 0.0002958900750688609,
+              "resco_synthetic": 0.0
+            },
+            "gp_d0p65_o0_s0": {
+              "atlanta": 0.0,
+              "cologne": 0.05447044709698178,
+              "hangzhou": 0.009802296772934989,
+              "new_york": 0.0008071158222993646,
+              "resco_synthetic": 0.009730726278496582
+            },
+            "gp_d0p65_o0_s1": {
+              "atlanta": 0.00332048677180428,
+              "cologne": 0.02736657599506318,
+              "hangzhou": 0.019049901708105506,
+              "new_york": 0.0002208369484577033,
+              "resco_synthetic": 0.002130025415896575
+            },
+            "gp_d0p65_o0p02_s0": {
+              "atlanta": 0.0,
+              "cologne": 0.030080815850910304,
+              "hangzhou": 0.009802296772934989,
+              "new_york": 0.0015482163290455042,
+              "resco_synthetic": 0.009511706715958135
+            },
+            "gp_d0p65_o0p02_s1": {
+              "atlanta": 0.00332048677180428,
+              "cologne": 0.026867470307899374,
+              "hangzhou": 0.019049901708105506,
+              "new_york": 0.0005391250770178657,
+              "resco_synthetic": 0.0018580560690080183
+            },
+            "gp_d0p65_o0p04_s0": {
+              "atlanta": 0.0,
+              "cologne": 0.030080815850910304,
+              "hangzhou": 0.009819639653075349,
+              "new_york": 0.0015482163290455042,
+              "resco_synthetic": 0.009400993530499058
+            },
+            "gp_d0p65_o0p04_s1": {
+              "atlanta": 0.00332048677180428,
+              "cologne": 0.026867470307899374,
+              "hangzhou": 0.019049901708105506,
+              "new_york": 0.0006098557722534204,
+              "resco_synthetic": 0.001258760782501589
+            },
+            "gp_d1_o0_s1": {
+              "atlanta": 0.003695402113501324,
+              "cologne": 0.001120214986745496,
+              "hangzhou": 0.015336357498057786,
+              "new_york": 0.0009395394017125969,
+              "resco_synthetic": 0.005973698398028304
+            },
+            "gp_d1_o0p02_s0": {
+              "atlanta": 0.0009124283763882328,
+              "cologne": 0.02461451625762264,
+              "hangzhou": 0.011832647186949534,
+              "new_york": 0.002329004614784913,
+              "resco_synthetic": 0.008890750154035731
+            },
+            "gp_d1_o0p02_s1": {
+              "atlanta": 0.003695402113501324,
+              "cologne": 0.0,
+              "hangzhou": 0.015259790924852133,
+              "new_york": 0.001158804556942894,
+              "resco_synthetic": 0.005961664356130547
+            },
+            "gp_d1_o0p04_s0": {
+              "atlanta": 0.0009124283763882328,
+              "cologne": 0.02461451625762264,
+              "hangzhou": 0.011832647186949534,
+              "new_york": 0.0022185861405560336,
+              "resco_synthetic": 0.009492452248921757
+            },
+            "gp_d1_o0p04_s1": {
+              "atlanta": 0.003695402113501324,
+              "cologne": 5.377569693416639e-06,
+              "hangzhou": 0.015259790924852133,
+              "new_york": 0.001098290517685785,
+              "resco_synthetic": 0.006048309457794165
+            },
+            "max_pressure": {
+              "atlanta": 0.0009124283763882328,
+              "cologne": 0.024800042412043213,
+              "hangzhou": 0.011737466919110307,
+              "new_york": 0.00110968601858491,
+              "resco_synthetic": 0.00871505314232901
+            },
+            "phase_pressure": {
+              "atlanta": 0.0011126519818105557,
+              "cologne": 0.037741765317799505,
+              "hangzhou": 0.0005977687113884018,
+              "new_york": 0.0016161963861329731,
+              "resco_synthetic": 0.001821953943314858
+            },
+            "spillback_pressure": {
+              "atlanta": 0.001001118027112296,
+              "cologne": 0.006179216743884071,
+              "hangzhou": 0.011836721268706512,
+              "new_york": 0.003845392130974401,
+              "resco_synthetic": 0.0038003504313000036
+            }
+          },
+          "target_context": [
+            4.766666666666667,
+            0.680952380952381,
+            0.620694488408123,
+            0.5,
+            0.05,
+            0.04375,
+            0.375,
+            0.5416666666666666,
+            0.3,
+            0.0,
+            0.0,
+            0.0,
+            0.23570226039551584,
+            0.5501797519791899,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "protocol": "model-internal-validation-only-no-deployment-guard-loo-v1",
+        "source_domains": [
+          "atlanta",
+          "cologne",
+          "hangzhou",
+          "ingolstadt",
+          "new_york",
+          "resco_synthetic"
+        ],
+        "source_scenarios": [
+          "arterial4x4",
+          "atlanta_1x5",
+          "cologne1",
+          "cologne3",
+          "cologne8",
+          "grid4x4",
+          "hangzhou_4x4",
+          "hangzhou_4x4_hetero",
+          "hangzhou_bc_tyc",
+          "hangzhou_kn_hz",
+          "hangzhou_qc_yn",
+          "hangzhou_sb_sx",
+          "manhattan_28x7"
+        ],
+        "target": "ingolstadt1",
+        "target_adaptation_groups": 36,
+        "target_city_group": "ingolstadt"
+      },
+      "offline_evaluation": {
+        "evaluation_group_count": 30,
+        "excluded_group_count": 60,
+        "families": {
+          "causal_rigid_advantage": {
+            "group_count": 30,
+            "mean_context_trust": 1.0,
+            "mean_normalized_action_regret": 0.21010995023742976,
+            "mean_selected_normalized_delta": 0.008842406133182257,
+            "mean_uncertainty": 1.1047253931999719,
+            "optimal_action_rate": 0.4666666666666667,
+            "p90_normalized_action_regret": 1.0,
+            "worst_normalized_action_regret": 1.0
+          }
+        },
+        "physical_blend_weights": [],
+        "physical_disagreement_caps": [],
+        "physical_score_disagreement_range": null,
+        "protocol": "disjoint-target-matched-action-group-offline-regret-v1"
+      },
+      "target": "ingolstadt1",
+      "target_group_budget": 60
+    }
+  ]
+}

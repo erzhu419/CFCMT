@@ -1,0 +1,98 @@
+\section{Learning to Compare Phase Choices}
+The following score construction defines each source-group component. The final controller can also select a target anchor, as described in Section~\ref{sec:source-selector}.
+\subsection{Collecting matched action outcomes}
+After a 60-s warm-up, we save the simulator state and the states of all signal executors. Each candidate phase starts from an exact restoration of this snapshot. The focal signal requests that phase for one 10-s interval and then follows PhasePressure for five more intervals. Other signals follow PhasePressure throughout. Thus, each label measures one intervention followed by a common continuation, rather than a complete rollout of the learned controller.
+
+The branch cost is the mean active-plus-pending vehicle load per controlled lane:
+\begin{equation}
+ Y_g(a)=\frac{1}{60}\sum_{\tau=1}^{60}
+ \frac{N_{\mathrm{active}}(\tau)+N_{\mathrm{pending}}(\tau)}{L_n},
+ \label{eq:cost}
+\end{equation}
+In \eqref{eq:cost}, samples are one second apart and $L_n$ counts distinct incoming lanes controlled by all signals in the network. $N_{\mathrm{active}}(\tau)$ and $N_{\mathrm{pending}}(\tau)$ count active and insertion-pending vehicles across that network at branch second $\tau$, starting from $s_g$ with action $a$. Pending vehicles are included so that restricting insertion does not appear to reduce the training cost. Collection checks deterministic replay and rejects teleports. If any candidate has a junction collision, the whole action group is excluded; the retained groups therefore contain all candidate outcomes. This screening concerns the training groups and does not remove adverse runs from closed-loop evaluation.
+
+A generalized pressure rule supplies a reference phase $r_g$. Its parameters are selected on source networks. The reference used for the external targets maximizes $q_{\mathrm{green}}(a)-0.02o_{\mathrm{down}}(a)$, where the two features summarize the served-queue proxy and downstream occupancy. For lane $\ell$, the queue proxy is $q_\ell=N_{\mathrm{halted},\ell}+0.35N_{\mathrm{vehicles},\ell}+0.025o_\ell$, where $N_{\mathrm{halted},\ell}$ and $N_{\mathrm{vehicles},\ell}$ count halted and total lane vehicles and $o_\ell$ is the simulator-reported lane occupancy; $q_{\mathrm{green}}$ sums the proxy over served incoming lanes. This reference defines the origin of the learned scores. It differs from the PhasePressure continuation, which maximizes the served-queue proxy alone.
+
+Let $c_g(a)=Y_g(a)-Y_g(r_g)$. The normalized label and offline regret are
+\begin{align}
+ \sigma_g&=\max\{\max_aY_g(a)-\min_aY_g(a),10^{-8}\},\nonumber\\
+ z_g(a)&=c_g(a)/\sigma_g,\label{eq:label}\\
+ R_g(\widehat a)&=\{Y_g(\widehat a)-\min_aY_g(a)\}/\sigma_g.
+ \label{eq:regret}
+\end{align}
+The implemented scale also includes $10^{-6}$ times the 75th percentile of $|c_g(a)|$. Since the group includes $c_g(r_g)=0$, this extra term cannot exceed a nonzero group range; \eqref{eq:label} is the equivalent scale. No test outcome is needed at deployment: $\sigma_g$ normalizes training labels and evaluation regret, not the model's runtime input.
+
+\subsection{Why compare costs within a state?}
+Suppose that $Y_g(a)=b_g+\mu_g(a)+e_g(a)$, where $b_g$ is common to the candidates, $\mu_g(a)$ is the action-dependent cost component, and $e_g(a)$ is an action-dependent error. Subtracting the reference gives
+\begin{equation}
+ c_g(a)=\mu_g(a)-\mu_g(r_g)+e_g(a)-e_g(r_g).
+ \label{eq:cancellation}
+\end{equation}
+The common term cancels. Adding a constant to every outcome also leaves $\sigma_g$, the labels, and the optimal action unchanged. Positive rescaling preserves the action ordering; it preserves the normalized values provided neither the original nor the rescaled range activates the numerical floor. These elementary properties motivate the target representation. They do not imply that $e_g(a)$ is small or that phase effects are invariant between networks.
+
+\subsection{Restricted reference predictor}
+The first predictor, $A_g(a)=A_\theta(s_g,a)$, with fitted parameters $\theta$, regresses $z_g(a)$ for non-reference actions and sets $A_g(r_g)=0$. It uses 29 predefined features describing aggregate traffic state, queues served or stopped by the candidate and reference, downstream load, pressure, switching, clearance, and overlap with the current phase. Network identity and unrestricted static context are excluded from its prediction inputs. These restrictions encode an engineering hypothesis about useful traffic variables; they are not a learned causal graph.
+
+We fit histogram-based gradient-boosted trees with squared-error loss. A training domain denotes one geographical or synthetic network group; target examples form an additional domain during adaptation. Base sample weights give each domain equal weight and each action group equal weight within its domain. We then multiply by $\operatorname{clip}(|z_g(a)|,0.25,4)$ and apply capped sign balancing so that the fit does not simply favor the more frequent sign of action improvement. Here $\operatorname{clip}$ limits its first argument to the stated interval. The resulting weights are normalized to mean one. Because of these adjustments, the final total weights need not remain exactly equal across domains.
+
+\subsection{Comparing every pair of phases}
+The second predictor uses a common state vector $x_g\in\R^{23}$ and a phase feature vector $\phi_g(a)\in\R^{40}$. The state features include local traffic, time, elapsed green, queue concentration, and summaries of neighboring signals. Phase features describe demand served, downstream conditions, phase duration, transitions, and the affected road connections. For every unordered pair of actions $a_i,a_j$, training uses
+\begin{equation}
+ \bigl([x_g,\phi_g(a_i)-\phi_g(a_j)],\;
+ t_{gij}=z_g(a_i)-z_g(a_j)\bigr).
+ \label{eq:pairdata}
+\end{equation}
+Square brackets in \eqref{eq:pairdata} denote vector concatenation. The reverse pair is added with the opposite target. Pair weights give equal total weight to domains, to groups within a domain, and to unordered pairs within a group. The same regression family as the reference predictor is used.
+
+At prediction, we enforce antisymmetry explicitly:
+\begin{equation}
+ \widehat\delta_{gij}=\frac{f_\psi(x_g,\phi_i-\phi_j)
+ -f_\psi(x_g,\phi_j-\phi_i)}{2}.
+ \label{eq:antisym}
+\end{equation}
+Here $f_\psi$ is the pairwise regressor with fitted parameters $\psi$, and $\phi_i$ abbreviates $\phi_g(a_i)$. With $K_g=|\mathcal A_g|\geq2$, the action scores are
+\begin{align}
+ \widetilde P_g(a_i)&=\frac{1}{K_g-1}\sum_{j\ne i}\widehat\delta_{gij},\nonumber\\
+ P_g(a_i)&=\widetilde P_g(a_i)-\widetilde P_g(r_g).
+ \label{eq:pairscore}
+\end{align}
+An intersection with only one available action requires no comparison. If all pair predictions are exact, substitution in \eqref{eq:pairscore} gives
+\begin{equation}
+ P_g(a_i)=\frac{K_g}{K_g-1}\{z_g(a_i)-z_g(r_g)\}.
+ \label{eq:recovery}
+\end{equation}
+The factor is positive, so the action ranking is recovered. Its value is retained when combining the pairwise score with the reference predictor; the two score scales are not assumed identical.
+Appendix~\ref{app:score-proofs} gives the derivations of \eqref{eq:cancellation} and \eqref{eq:recovery}.
+
+Both predictors use learning rate 0.05, 100 boosting iterations, at most 15 leaves per tree, and $L_2$ regularization 10, with early stopping disabled. Minimum leaf sizes are 12 for the reference model and 20 for the pairwise model. These settings are fixed before external evaluation.
+
+\subsection{Combining the predictors}
+Each anchored source component uses a convex combination,
+\begin{equation}
+ S_g(a)=(1-\alpha_g)A_g(a)+\alpha_gP_g(a),\qquad
+ \widehat a_g=\argmin_{a\in\mathcal A_g}S_g(a).
+ \label{eq:blend}
+\end{equation}
+Component blend rules are fixed before source selection. The deployed Jinan component uses constant $\alpha_g=0.9$. The Los Angeles source candidates and equal-source comparator use the local rule in \eqref{eq:la-component-blend}, given in Appendix~\ref{app:score-proofs}; the final Los Angeles controller instead uses the target anchor described below.
+
+The component predictors also return heuristic error scores. Let $e_A$ and $e_P$ be the 90th percentiles of absolute \emph{in-sample} residuals for the two models, floored at $10^{-6}$, and let $d_g$ be the distance to the closest training-network context after standardization by the domain-centroid spread. For non-reference actions, define
+\begin{align}
+ u_{A,g}(a)&=e_A(1+0.25d_g),\nonumber\\
+ v_g(a_i)&=\frac{1}{K_g-1}\sum_{j\ne i}
+ \left|\widehat\delta_{gij}-(\widetilde P_g(a_i)-\widetilde P_g(a_j))\right|,\nonumber\\
+ u_{P,g}(a_i)&=(e_P+v_g(a_i))(1+0.25d_g).
+ \label{eq:error_scores}
+\end{align}
+Both error scores in \eqref{eq:error_scores} are set to zero at the reference action. Context is used in these diagnostics, not in direct score prediction. The quantity $v_g$ measures disagreement between pair predictions and aggregated scores; because of the scaling in \eqref{eq:recovery}, it is not a pure measure of inconsistent preference cycles. Neither error score is an independently calibrated probability or confidence interval.
+
+For the normalized regret in \eqref{eq:regret}, the component choice in \eqref{eq:blend} satisfies the general inequality $z_g(\widehat a_g)-\min_a z_g(a)\leq2\|S_g-z_g\|_\infty$. It follows by adding and subtracting the predicted scores at the selected and optimal actions (Appendix~\ref{app:score-proofs}). This bounds component action regret in terms of prediction error, before source selection and execution guarding.
+
+\subsection{Source-group selection and deployment}
+\label{sec:source-selector}
+The final source selector fits a separate instance of the anchored predictor for each source group, using that group's examples together with the target adaptation groups with fixed blend settings. At zero source weight it uses the target anchor. That model uses 117 features and retains its original domain-scaled labels: contrasts are divided by the median positive action-group range in the same training domain, with a numerical floor, then clipped to $[-5,5]$. Its target regressor uses learning rate 0.05, 80 boosting iterations, at most seven leaves, minimum leaf size four, and $L_2$ regularization 16. Its target prediction weight is numerically almost one; a retained source prior can still resolve ties.
+
+Selection uses eight target development seeds in three stages. First, each of seven source groups is tested at source weight 0.75 against the target anchor. The selected source is then tested at weights $\{0,0.25,0.5,0.75,1\}$. A source candidate is eligible only with at least 0.5\% mean waiting improvement, at most 1\% worst-seed regression, and no added collision or teleport incidents per seed. Eligible candidates minimize mean relative waiting change plus half its standard deviation and the positive part of the worst relative change; otherwise selection returns the target anchor. Finally, guard profiles with risk multipliers 0, 0.25, and 0.5 are compared with the selected unguarded controller. Eligible guards do not increase aggregate incidents or exceed 1\% worst-seed regression, and must reduce incidents or improve mean waiting by at least 0.5\%. Selection prioritizes fewer incidents, then the same waiting score; the unguarded controller remains available. All these choices precede the final evaluation.
+
+The resulting Jinan controller uses the Atlanta component at source weight one and guard multiplier 0.5. Its error score is $(1-\alpha_g)u_{A,g}(a)+\alpha_g u_{P,g}(a)$. A learned phase replaces the generalized-pressure reference only when its predicted contrast plus 0.5 times this error score is negative and its normalized pressure deficit is at most one. The deficit is $\max\{\Pi(r_g)-\Pi(a),0\}/\max\{|\Pi(r_g)|,1\}$, where $\Pi$ is the generalized-pressure score defined above. Los Angeles selects zero source weight and the target anchor without this guard.
+
+Learned departures from the pressure reference use sparse coordination. At each decision, a greedy selection admits mutually nonconflicting proposals on the signal conflict and routing graph. A five-interval cooldown gives a minimum 60-s gap between interventions at the same or conflicting signals, with 10-s decisions. Proposals that are blocked or not selected use the pressure reference. Pure MaxPressure and PhasePressure use the common phase executor without this learned-intervention coordinator. The predictors, source weights, guard, and coordination settings remain fixed throughout evaluation.

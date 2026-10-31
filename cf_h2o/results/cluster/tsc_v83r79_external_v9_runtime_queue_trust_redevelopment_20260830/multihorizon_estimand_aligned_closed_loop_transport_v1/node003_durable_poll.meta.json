@@ -1,0 +1,8 @@
+{
+  "cmd": [
+    "scheduler.run_on",
+    "node003",
+    "export BAPR_PYTHON=/home/zhengliang01/scheduleurm_work/conda_envs/csbapr-gpu-py310/bin/python; export LD_LIBRARY_PATH=/cm/local/apps/cuda-driver/libs/535.261.03/lib64; export PATH=/home/zhengliang01/scheduleurm_work/conda_envs/csbapr-gpu-py310/bin:/usr/local/bin:/usr/bin:/bin; if [ ! -d /tmp/scheduleurm_durable_control/cfcmt-v81-estimand-aligned-node003-v1 ]; then\n  printf '__DURABLE_STATE__ ABSENT\\n'\nelif [ -f /tmp/scheduleurm_durable_control/cfcmt-v81-estimand-aligned-node003-v1/done ]; then\n  printf '__DURABLE_STATE__ DONE\\n'\n  printf '__DURABLE_RC__ '; cat /tmp/scheduleurm_durable_control/cfcmt-v81-estimand-aligned-node003-v1/returncode\n  printf '__DURABLE_PID__ '; cat /tmp/scheduleurm_durable_control/cfcmt-v81-estimand-aligned-node003-v1/pid\nelif [ -f /tmp/scheduleurm_durable_control/cfcmt-v81-estimand-aligned-node003-v1/launched ] && [ -f /tmp/scheduleurm_durable_control/cfcmt-v81-estimand-aligned-node003-v1/pid ]; then\n  supervisor_pid=$(cat /tmp/scheduleurm_durable_control/cfcmt-v81-estimand-aligned-node003-v1/pid)\n  if kill -0 \"$supervisor_pid\" 2>/dev/null; then\n    printf '__DURABLE_STATE__ RUNNING\\n'\n  else\n    printf '__DURABLE_STATE__ LOST\\n'\n  fi\n  printf '__DURABLE_PID__ %s\\n' \"$supervisor_pid\"\nelse\n  printf '__DURABLE_STATE__ PENDING\\n'\nfi"
+  ],
+  "returncode": 0
+}

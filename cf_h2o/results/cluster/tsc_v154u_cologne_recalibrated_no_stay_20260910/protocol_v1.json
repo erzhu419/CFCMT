@@ -1,0 +1,63 @@
+{
+  "protocol": "tsc-v154u-cologne-recalibrated-no-stay-closed-loop-v1",
+  "frozen_at_utc": "2026-09-09T16:09:17.073259+00:00",
+  "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+  "frozen_threshold_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154t_cologne_no_stay_oof_threshold_20260909/calibration_v1/frozen_threshold.json",
+  "frozen_threshold": {
+    "protocol": "tsc-v154l-cologne-rigid-oof-threshold-v1",
+    "calibration_protocol": "tsc-v154t-cologne-no-stay-oof-threshold-v1",
+    "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+    "fit_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/result.json",
+    "calibration_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154t_cologne_no_stay_oof_threshold_20260909/calibration_v1/result.json",
+    "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+    "ablation_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154s_cologne_no_stay_closed_loop_20260909/tooling_v1/no_stay_fraction_rigid.py",
+    "threshold": 0.20790450432178334,
+    "mode": "minimum_advantage",
+    "comparison": "predicted_advantage > threshold + 1e-12",
+    "selection_data": "Original 100 native B100 seed-OOF records with fixed post-selection stay veto",
+    "calibration_mean_cost": 0.7990718459100812
+  },
+  "threshold_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154m_cologne_threshold_closed_loop_20260909/tooling_v1/thresholded_fraction_rigid.py",
+  "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+  "geometry_reference": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154e_cologne_bilateral_full_validation_20260909/paired_full_v1/result.json",
+  "conversion_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9",
+  "scratch_root": "/home/zhengliang01/scheduleurm_work/CFCMT_SCRATCH/tsc_v154u_cologne_recalibrated_no_stay_20260910",
+  "evaluation": {
+    "scenario": "cologne1",
+    "seeds": [
+      52282,
+      41242,
+      63792
+    ],
+    "duration_sec": 3600,
+    "warmup_sec": 60,
+    "control_interval_sec": 10,
+    "prediction_horizon_sec": 450,
+    "residual_coordination_mode": "direct",
+    "residual_cooldown_intervals": 0
+  },
+  "controls": {
+    "baseline_summary": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/paper_artifacts/tsc_v154s_cologne_no_stay_closed_loop_v1.json",
+    "no_stay_threshold_zero_tasks": [
+      "t91871",
+      "t91872",
+      "t91873"
+    ],
+    "phase_pressure_tasks": [
+      "t91636",
+      "t91638",
+      "t91640"
+    ]
+  },
+  "analysis": "Equal-seed and paired changes against fixed S threshold-zero and I PP controls; three seeds and prespecified additional seeds52282/63792. Include waiting, system vehicle hours including pending insertions, arrivals, pending insertions, collisions/teleports and uncapped execution accounting. Retain complete colliding runs; invalid runs disable service means.",
+  "new_simulation_count": 3,
+  "new_model_fit_count": 0,
+  "threshold_retuning": false,
+  "limits": [
+    "This is a development comparison on one Cologne1 demand and three previously inspected seeds; seed41242 was used for geometry development.",
+    "The T threshold was frozen using only the original100 training-seed OOF records; evaluation outcomes cannot retune it.",
+    "The S stay-veto rule was chosen after observing development failures. This comparison is not independent confirmation."
+  ],
+  "ablation_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154s_cologne_no_stay_closed_loop_20260909/tooling_v1/no_stay_fraction_rigid.py",
+  "only_change": "Replace threshold0 with the T training-OOF calibrated threshold0.20790450432178334. Preserve the P model, S post-selection stay veto, repaired network, executor, demand, seed roster and timings."
+}

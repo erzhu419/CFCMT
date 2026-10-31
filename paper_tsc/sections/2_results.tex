@@ -137,7 +137,7 @@ across target cities.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{tsc_external_confirmation.pdf}
-\caption{Independent offline and closed-loop confirmation. \textbf{a},
+\caption{Original offline and seven-policy closed-loop confirmation. \textbf{a},
 Seed-held-out normalized action regret for development cities and external
 targets.  Green points show selected CFCMT scores, and grey points show the
 rigid anchor. \textbf{b}, All-departed waiting by policy in Los Angeles
@@ -145,8 +145,9 @@ rigid anchor. \textbf{b}, All-departed waiting by policy in Los Angeles
 \textbf{c}, Paired CFCMT gains in all-departed waiting relative to the non-fixed
 comparators.  Fixed-time results remain visible in panel \textbf{b} and
 \Cref{tab:external-closed-loop}.  Positive values favour CFCMT; intervals are
-descriptive paired hierarchical bootstrap intervals for the two independent
-target cities.}
+descriptive paired hierarchical bootstrap intervals for the original two-seed
+matrix on two target cities.  The ten-new-seed confirmation is reported
+separately in \Cref{fig:v43-dense-fresh10}.}
 \label{fig:external-confirmation}
 \end{figure}
 
@@ -177,7 +178,8 @@ transfer (\Cref{tab:external-comparisons}).  The anchor comparison was therefore
 stronger in offline action regret than in closed-loop waiting.
 
 \begin{table}[t]
-\caption{External 3,600-s closed-loop city-macro results.  Scenarios are
+\caption{Original two-seed, seven-policy external 3,600-s city-macro results.
+Scenarios are
 weighted equally within each city and the two cities are weighted equally.
 Waiting times are seconds; system burden is vehicle-hours.  ``Incidents'' is
 the equal-city mean of unique SUMO junction-collision incidents.}
@@ -188,7 +190,7 @@ the equal-city mean of unique SUMO junction-collision incidents.}
 \end{table}
 
 \begin{table}[t]
-\caption{Paired CFCMT policy contrasts for all-departed waiting.  Positive
+\caption{Original two-seed CFCMT policy contrasts for all-departed waiting.  Positive
 gains favour CFCMT.  Intervals are descriptive, not population-level city
 inference.}
 \label{tab:external-comparisons}
@@ -197,6 +199,62 @@ inference.}
 \resizebox{\textwidth}{!}{\input{tables/external_closed_loop_comparisons.tex}}
 \end{table}
 
+\subsection{Ten new paired seeds confirmed the frozen dense-baseline advantage}
+\label{sec:v43-dense-fresh10}
+
+The frozen V43 CFCMT and dense models were next evaluated on ten new simulator
+seeds across the same four scenarios.  The seed roster, primary comparison and
+analysis were fixed before these outcomes were opened.  All 80 required
+3,600-s rollouts completed with unchanged models, input networks, executor and
+timing; no retraining, new target labels or parameter tuning occurred.
+
+Equal-city all-departed waiting was 150.84 s for CFCMT and 158.67 s for dense,
+a reduction of 7.83 s or 4.93\%
+(\Cref{tab:v43-dense-fresh10,fig:v43-dense-fresh10}).  The preregistered paired
+whole-seed bootstrap gave a CFCMT-minus-dense 95\% interval of
+$[-11.85,-4.11]$ s; the corresponding relative reduction interval was
+2.64--7.31\%.  Nine of ten equal-city seed contrasts improved.  Los Angeles
+improved by 5.43 s on average, with six of ten seeds favourable; Jinan's
+three-demand mean improved by 10.22 s, with all ten seeds favourable.
+Completed-only waiting decreased from 147.49 to 132.88 s, system vehicle-hours
+from 616.49 to 596.15, and completion increased from 87.59\% to 88.66\%.
+
+The prespecified confirmation criterion was met: the primary mean difference
+and its 95\% upper endpoint were below zero.  This new-seed result is reported
+independently of the original 56-rollout matrix and the V91/V98 comparisons;
+all ten seeds were retained.  The exact seed roster and unchanged execution
+settings are given in \Cref{sec:methods-v43-dense-fresh10,sec:supp-v43-dense-fresh10}.
+
+\begin{table}[t]
+\caption{Independent ten-new-seed confirmation of the frozen V43 models.
+Waiting includes every departed vehicle, including unfinished trips.
+Jinan's three demands are weighted equally, followed by equal city and seed
+weights.  Differences are CFCMT minus dense; negative waiting differences
+favour CFCMT.  Seed counts refer to lower all-departed waiting, and secondary
+outcomes use the same aggregation.  Completion differences are in percentage
+points (pp).}
+\label{tab:v43-dense-fresh10}
+\centering
+\small
+\resizebox{\textwidth}{!}{\input{tables/v43_dense_fresh10_confirmation.tex}}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{tsc_v43_dense_fresh10_confirmation.pdf}
+\caption{Independent confirmation on ten new paired simulator seeds
+(80 rollouts).  \textbf{a}, Grey points show equal-city CFCMT-minus-dense
+waiting differences; vertical offsets aid visibility.  The diamond and
+whiskers show the mean and registered 95\% percentile interval from 20,000
+paired whole-seed-block bootstrap replicates, retaining both policies on all
+four scenarios.  \textbf{b}, City-specific differences for the same ten seeds.
+Negative values favour CFCMT.  Relative reduction is computed from the ratio
+of macro means (\Cref{sec:methods-v43-dense-fresh10}); the interval describes
+seed variation within the two fixed networks.}
+\label{fig:v43-dense-fresh10}
+\end{figure}
+
+\FloatBarrier
 \subsection{A fresh near-target-only comparison exposed network-dependent transfer}
 
 The seven-policy V43 matrix omitted the frozen legacy near-target-only

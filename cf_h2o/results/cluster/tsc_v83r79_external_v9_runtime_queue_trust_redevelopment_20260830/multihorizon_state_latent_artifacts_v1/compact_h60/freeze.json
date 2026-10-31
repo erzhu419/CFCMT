@@ -1,0 +1,100 @@
+{
+  "artifact_key": "compact_h60",
+  "candidate_role": "preregistered_primary",
+  "created_at_utc": "2026-08-30T09:41:10.233376+00:00",
+  "fit_diagnostics": {
+    "action_group_count": 19851,
+    "base": {
+      "action_group_count": 19851,
+      "calibration_error": 0.44568640203409815,
+      "config": {
+        "scope": "tls_time_phase_pair",
+        "shrinkage": 20.0,
+        "time_bin_sec": 300,
+        "uncertainty_quantile": 0.9
+      },
+      "phase_pair_count": 64,
+      "protocol": "target-spatiotemporal-action-latent-v1",
+      "row_count": 158808,
+      "target_name": "prefix_mean_cost_60s",
+      "target_scale_summary": {
+        "group_count": 19851,
+        "maximum": 0.19445679468445354,
+        "median": 0.060957735151701,
+        "minimum": 0.0004224225112038904
+      },
+      "tls_phase_pair_count": 768,
+      "tls_time_phase_pair_count": 8792,
+      "training_nonreference_mae": 0.22264908305893205,
+      "uses_future_outcomes_at_prediction": false,
+      "uses_target_labels_at_fit": true
+    },
+    "calibration_error": 0.4560529768291972,
+    "calibration_mode": "leave_self_out_within_cell",
+    "cell_count": 7693,
+    "cell_support": {
+      "maximum": 115,
+      "median": 13.0,
+      "minimum": 1
+    },
+    "config": {
+      "base": {
+        "scope": "tls_time_phase_pair",
+        "shrinkage": 20.0,
+        "time_bin_sec": 300,
+        "uncertainty_quantile": 0.9
+      },
+      "distance_bandwidth": 1.0,
+      "feature_set": "compact_state",
+      "local_shrinkage": 2.0,
+      "neighbor_count": 10,
+      "uncertainty_quantile": 0.9
+    },
+    "feature_names": [
+      "total_q",
+      "total_veh",
+      "mean_speed",
+      "mean_occ",
+      "current_green_elapsed_norm",
+      "queue_concentration",
+      "graph_upstream_q_mean",
+      "graph_downstream_q_mean",
+      "graph_neighbor_q_max",
+      "graph_neighbor_occ_mean",
+      "graph_global_q_per_tls",
+      "graph_focal_q_percentile",
+      "network_active_per_tls"
+    ],
+    "protocol": "target-state-conditioned-spatiotemporal-latent-v1",
+    "row_count": 158808,
+    "target_name": "prefix_mean_cost_60s",
+    "target_scale_summary": {
+      "group_count": 19851,
+      "maximum": 0.19445679468445354,
+      "median": 0.060957735151701,
+      "minimum": 0.0004224225112038904
+    },
+    "training_nonreference_mae": 0.21965604162993452,
+    "uses_future_outcomes_at_prediction": false,
+    "uses_target_labels_at_fit": true
+  },
+  "model_sha256": "2b8bbe0e4ca4aeb9bafa79d28eaa81ef81d5f73a1c712b8e8ca6301f9908ae0e",
+  "originator_config": {
+    "benefit_probability_kind": "calibrated",
+    "enabled": true,
+    "minimum_benefit_probability": 0.0,
+    "minimum_context_trust": 0.25,
+    "objective_name": "control_cost",
+    "risk_multiplier": 0.0,
+    "rollout_value_horizon_sec": 60
+  },
+  "prediction_horizon_sec": 60,
+  "prediction_sha256": "d88641f59a79f1cebd6a2a0939e10299f7bbf55a35bf37f74005380c8b7d6960",
+  "protocol": "tsc-v83r79-multihorizon-state-latent-freeze-result-v1",
+  "selection_eligible_closed_loop": true,
+  "status": "PASS",
+  "target_name": "prefix_mean_cost_60s",
+  "training_group_count": 19851,
+  "training_row_count": 158808,
+  "training_seed_count": 22
+}

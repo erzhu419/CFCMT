@@ -1,0 +1,143 @@
+{
+  "checks": {
+    "all_vehicles_completed_before_cap": false,
+    "exact_controllable_tls": true,
+    "exact_vehicle_demand_arrived": false,
+    "exact_vehicle_demand_departed": false,
+    "exact_vehicle_demand_loaded": false,
+    "no_expected_vehicles": false,
+    "no_pending_vehicles": false,
+    "no_running_vehicles": false,
+    "runtime_exception_free": true,
+    "zero_collisions": false,
+    "zero_teleports": true
+  },
+  "claim_boundary": "Operational preflight never authorizes microscopic admission or controller evaluation. Only a passing full_admission does so.",
+  "created_at_utc": "2026-09-01T05:54:46.982075+00:00",
+  "elapsed_seconds": 4646.664038885967,
+  "error": null,
+  "experiment": "traffic_signal_eth_city_admission",
+  "mode": "full_admission",
+  "observed": {
+    "arrived_vehicles": 25266,
+    "collision_samples": [
+      {
+        "collider": "56953",
+        "lane": "-426602284_0",
+        "pos": 4.3553805772139,
+        "repr": "Collision(collider=56953, victim=32599, colliderType=DEFAULT_VEHTYPE, victimType=DEFAULT_VEHTYPE, colliderSpeed=7.217299770524644, victimSpeed=3.9641191371451776, type=collision, lane=-426602284_0, pos=4.3553805772139)",
+        "time_sec": 12279.0,
+        "type": "collision",
+        "victim": "32599"
+      }
+    ],
+    "controllable_tls_count": 4203,
+    "departed_vehicles": 28398,
+    "ending_teleports": 0,
+    "final_active_vehicles": 3132,
+    "final_min_expected": 10982,
+    "final_pending_vehicles": 5,
+    "final_time_sec": 12279.0,
+    "initial_min_expected": 1,
+    "loaded_vehicle_event_total": 36247,
+    "max_sampled_active_vehicles": 3119,
+    "max_sampled_pending_vehicles": 6,
+    "starting_teleports": 0,
+    "state_sample_interval_sec": 60,
+    "summary": {
+      "arrived": 24925,
+      "collisions": 0,
+      "ended": 24925,
+      "inserted": 28046,
+      "loaded": 36248,
+      "running": 3121,
+      "teleports": 0,
+      "time": 12241.0,
+      "waiting": 5
+    },
+    "termination_reason": "collision_gate_irreversibly_failed",
+    "unique_collision_incidents": 1,
+    "unique_collision_incidents_by_lane": {
+      "-426602284_0": 1
+    }
+  },
+  "operational_preflight_passed": null,
+  "package": {
+    "city_code": "BOS",
+    "demand_inventory": {
+      "canonical_to_taz_attribute_count": 0,
+      "conflicting_destination_taz_attribute_count": 0,
+      "custom_trip_to_taz_attribute_count": 3806510,
+      "depart_span_sec": 43193.96,
+      "duplicate_trip_id_count": 0,
+      "maximum_depart_sec": 50395.74,
+      "minimum_depart_sec": 7201.78,
+      "missing_edge_anchor_count": 0,
+      "missing_required_attribute_count": 0,
+      "missing_taz_anchor_count": 0,
+      "nonmonotonic_departure_count": 0,
+      "other_route_element_counts": {
+        "routes": 1
+      },
+      "trip_count": 3806510,
+      "unique_trip_id_count": 3806510
+    },
+    "network_inventory": {
+      "connection_count": 352275,
+      "edge_count": 161096,
+      "junction_count": 60283,
+      "lane_count": 189716,
+      "noninternal_edge_count": 161096,
+      "traffic_light_count": 4203,
+      "traffic_light_phase_count": 20230,
+      "traffic_light_program_count": 4203
+    },
+    "protocol": "cfcmt-eth-five-city-microscopic-complete-published-package-v5",
+    "scenario": "eth_boston_complete_published_micro"
+  },
+  "passed": false,
+  "protocol": "eth-five-city-strict-libsumo-microscopic-admission-v1",
+  "runtime": {
+    "determinism_environment": {
+      "LANG": "C",
+      "LC_ALL": "C",
+      "PYTHONHASHSEED": "0"
+    },
+    "git_commit": "unknown",
+    "hostname": "node002",
+    "libsumo_version": "1.22.0",
+    "numpy_version": "2.2.6",
+    "platform": "Linux-3.10.0-1062.12.1.el7.x86_64-x86_64-with-glibc2.17",
+    "python_executable": "/home/zhengliang01/scheduleurm_work/conda_envs/freqduet-cpu-py310/bin/python3.10",
+    "python_version": "3.10.20",
+    "scikit_learn_version": "1.7.2",
+    "source_tree_sha256": "714b3838a2d71df68b8840c5d4d8264e595eb89ec866d06c56fb718ab212f804",
+    "sumo_binary": "/home/zhengliang01/scheduleurm_work/runtimes/cfcmt-sumo122-py310-v1/bin/sumo",
+    "sumo_scratch_root": "/dev/shm",
+    "sumo_version": "Eclipse SUMO sumo Version 1.22.0",
+    "thread_limits": {
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1"
+    }
+  },
+  "scientific_admission_passed": false,
+  "setting": {
+    "backend": "libsumo",
+    "begin_time_sec": 7201.0,
+    "city_code": "BOS",
+    "expected_sumo_version": "1.22.0",
+    "expected_traffic_light_count": 4203,
+    "expected_vehicle_count": 3806510,
+    "junction_collision_checks_enabled": true,
+    "maximum_time_sec": 71996.0,
+    "operational_horizon_sec": null,
+    "package_manifest_sha256": "7dae903cf5f3b77263140ac4509d4d6bc9c22c1a2394def35b9a6e21b729636a",
+    "package_root": "/home/zhengliang01/scheduleurm_work/CFCMT_DATA/eth_five_city_584669/boston_complete_published_package_v6",
+    "seed": 5057,
+    "stop_time_sec": 71996.0,
+    "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_DATA/eth_five_city_584669/boston_complete_published_package_v6/microscopic.sumo.cfg",
+    "time_based_teleportation_disabled": true
+  }
+}

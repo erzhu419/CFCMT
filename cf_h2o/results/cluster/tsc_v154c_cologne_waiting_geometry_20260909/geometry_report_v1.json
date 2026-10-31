@@ -1,0 +1,133 @@
+{
+  "protocol": "cologne-internal-waiting-geometry-repair-v1",
+  "parameters": {
+    "vehicle_length_m": 4.3,
+    "vehicle_width_m": 1.8,
+    "foe_vehicle_width_m": 1.8,
+    "length_grid_m": 0.01,
+    "criterion": "front_at_split_passenger_polygon_outside_straight_swept_strip"
+  },
+  "lanes": {
+    "waiting": ":cluster_357187_359543_13_0",
+    "continuation": ":cluster_357187_359543_24_0",
+    "foe": ":cluster_357187_359543_1_1"
+  },
+  "geometry": {
+    "original_split_nominal_m": 8.76,
+    "original_continuation_nominal_m": 19.77,
+    "unrounded_clearance_boundary_nominal_m": 8.487193932616131,
+    "new_split_nominal_m": 8.48,
+    "new_continuation_nominal_m": 20.05,
+    "split_xy_m": [
+      11788.046881453862,
+      13325.914587635907
+    ],
+    "original_front_at_split_clearance_m": -0.0896991515165203,
+    "boundary_body_clearance_m": 0.0023675159789137146,
+    "geometric_retreat_m": 0.28017362378825794,
+    "old_combined_geometry_length_m": 28.531026892007635,
+    "new_combined_geometry_length_m": 28.531026892007635,
+    "combined_nominal_length_m": 28.53,
+    "waiting_geometry_per_nominal_m_before": 1.0006200849580686,
+    "waiting_geometry_per_nominal_m_after": 1.0006200849580378,
+    "continuation_geometry_per_nominal_m_before": 0.9997771850164368,
+    "continuation_geometry_per_nominal_m_after": 0.9997889561877045,
+    "front_at_split_body_xy_m": [
+      [
+        11787.82584662276,
+        13326.407277805729
+      ],
+      [
+        11787.287297237926,
+        13326.560237682545
+      ],
+      [
+        11784.1577545918,
+        13325.156235791334
+      ],
+      [
+        11783.913918315102,
+        13324.652275441716
+      ],
+      [
+        11784.355987977306,
+        13323.666895102073
+      ],
+      [
+        11784.894537362139,
+        13323.513935225257
+      ],
+      [
+        11788.024080008265,
+        13324.917937116468
+      ],
+      [
+        11788.267916284964,
+        13325.421897466085
+      ]
+    ],
+    "finite_foe_projection_range_m": [
+      25.05983318972319,
+      29.476381734455657
+    ]
+  },
+  "semantic_changes": [
+    {
+      "tag": "lane",
+      "id": ":cluster_357187_359543_13_0",
+      "attribute": "length",
+      "old": "8.76",
+      "new": "8.48"
+    },
+    {
+      "tag": "lane",
+      "id": ":cluster_357187_359543_13_0",
+      "attribute": "shape",
+      "old": "11780.25,13322.61 11787.32,13325.43 11788.28,13326.07",
+      "new": "11780.25,13322.61 11787.32,13325.43 11788.046881453862,13325.914587635907"
+    },
+    {
+      "tag": "lane",
+      "id": ":cluster_357187_359543_24_0",
+      "attribute": "length",
+      "old": "19.77",
+      "new": "20.05"
+    },
+    {
+      "tag": "lane",
+      "id": ":cluster_357187_359543_24_0",
+      "attribute": "shape",
+      "old": "11788.28,13326.07 11794.27,13330.09 11799.21,13335.52 11800.23,13340.63",
+      "new": "11788.046881453862,13325.914587635907 11788.28,13326.07 11794.27,13330.09 11799.21,13335.52 11800.23,13340.63"
+    },
+    {
+      "tag": "junction",
+      "id": ":cluster_357187_359543_24_0",
+      "attribute": "x",
+      "old": "11788.28",
+      "new": "11788.046881453862"
+    },
+    {
+      "tag": "junction",
+      "id": ":cluster_357187_359543_24_0",
+      "attribute": "y",
+      "old": "13326.07",
+      "new": "13325.914587635907"
+    }
+  ],
+  "invariants": {
+    "exactly_six_allowed_attribute_changes": true,
+    "old_vertices_preserved_with_one_new_collinear_split": true,
+    "old_split_retained_inside_continuation": true,
+    "combined_geometry_length_preserved": true,
+    "combined_nominal_length_preserved": true,
+    "waiting_prefix_position_mapping_preserved": true,
+    "front_at_split_body_clearance_nonnegative": true,
+    "waiting_body_projects_within_finite_foe_segment": true
+  },
+  "scope": "Only movement13 waiting split against straight2; mirrored movement3 is unchanged.",
+  "distance_mapping": "Waiting prefix preserves its original geometry/logical ratio. Continuation absorbs the shifted nominal length; its internal mapping changes slightly because the two original ratios differed.",
+  "claim_boundary": "Static geometry clearance for the recorded 4.3x1.8m passenger class; no rollout or broader safety admission is implied.",
+  "source_net": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_resco/environments/cologne1/cologne1.net.xml",
+  "output_net": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154c_cologne_waiting_geometry_20260909/package_v1/cologne1.net.xml"
+}

@@ -1,0 +1,119 @@
+{
+  "checks": {
+    "collision_limit": true,
+    "horizon_reached": true,
+    "minimum_controllable_tls": true,
+    "positive_loaded_demand": true,
+    "route_load_success": true,
+    "runtime_exception_free": true,
+    "teleport_fraction_limit": true
+  },
+  "conversion": {
+    "manifest_sha256": "4e3ee5f2e0c8b87420629caabf404aa76c3cdfb908aeb6766df2b27484d68129",
+    "network": {
+      "city": "los_angeles",
+      "connection_count": 638,
+      "controlled_intersection_count": 4,
+      "directed_edge_count": 52,
+      "duplicate_lane_link_count": 70,
+      "intersection_count": 30,
+      "netconvert": {
+        "command": [
+          "/home/zhengliang01/scheduleurm_work/runtimes/cfcmt-sumo122-py310-v1/bin/netconvert",
+          "--node-files",
+          "la_1x4/la_1x4.nod.xml",
+          "--edge-files",
+          "la_1x4/la_1x4.edg.xml",
+          "--output-file",
+          "la_1x4/la_1x4.net.xml",
+          "--no-turnarounds",
+          "true",
+          "--junctions.corner-detail",
+          "5",
+          "--connection-files",
+          "la_1x4/la_1x4.con.xml",
+          "--tllogic-files",
+          "la_1x4/la_1x4.tll.xml"
+        ],
+        "returncode": 0,
+        "stderr_tail": "Warning: Environment variable SUMO_HOME is not set properly, disabling XML validation. Set 'auto' or 'always' for web lookups.\n",
+        "stdout_tail": "Success.\n"
+      },
+      "network": "la_1x4",
+      "route_audit": {
+        "disconnected_route_count": 0,
+        "maximum_route_edges": 18,
+        "minimum_route_edges": 2,
+        "missing_edge_route_count": 0,
+        "route_count": 2203
+      },
+      "source_format": "CityFlow JSON",
+      "source_lane_link_count": 708,
+      "sumocfg": "la_1x4/la_1x4.sumocfg",
+      "vehicle_count": 2203
+    },
+    "protocol": "cfcmt-libsignal-full-external-sumo-conversion-v4",
+    "root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v42r38_external_la_nanchang_20260809/conversion/full_networks_v4",
+    "scenario_input_fingerprint": "8f01cf868b5a9a24cbeb",
+    "tree_sha256": "1a7e04f8ee2e980f184075f9d1b1d5b44836380816c78ee4d87473fcb08efa53"
+  },
+  "elapsed_seconds": 5.732532517053187,
+  "error": null,
+  "experiment": "traffic_signal_external_network_admission",
+  "observed": {
+    "arrived": 877,
+    "collision_samples": [],
+    "controllable_tls_count": 4,
+    "departed": 996,
+    "ending_teleports": 0,
+    "final_active_vehicles": 119,
+    "final_min_expected": 1326,
+    "final_pending_vehicles": 1207,
+    "final_time_sec": 3600.0,
+    "initial_min_expected": 3,
+    "loaded": 2200,
+    "max_active_vehicles": 154,
+    "max_min_expected": 1615,
+    "raw_collision_events": 0,
+    "starting_teleports": 0,
+    "teleport_fraction": 0.0,
+    "unique_collision_incidents": 0
+  },
+  "passed": true,
+  "protocol": "full-horizon-libsumo-route-tls-collision-teleport-admission-v1",
+  "runtime": {
+    "determinism_environment": {
+      "LANG": "C",
+      "LC_ALL": "C",
+      "PYTHONHASHSEED": "0"
+    },
+    "git_commit": "unknown",
+    "hostname": "node001",
+    "libsumo_version": "1.22.0",
+    "numpy_version": "2.2.6",
+    "platform": "Linux-3.10.0-1062.12.1.el7.x86_64-x86_64-with-glibc2.17",
+    "python_executable": "/home/zhengliang01/scheduleurm_work/conda_envs/freqduet-cpu-py310/bin/python3.10",
+    "python_version": "3.10.20",
+    "scikit_learn_version": "1.7.2",
+    "source_tree_sha256": "e5f9e4981a4d7efaa061e24422f9496bff4d37bb273bf65f5cdec3f8fe9515ef",
+    "sumo_binary": "/home/zhengliang01/scheduleurm_work/runtimes/cfcmt-sumo122-py310-v1/bin/sumo",
+    "sumo_scratch_root": "/dev/shm",
+    "sumo_version": "Eclipse SUMO sumo Version 1.22.0",
+    "thread_limits": {
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1"
+    }
+  },
+  "scenario": "la_1x4",
+  "seed": 5057,
+  "setting": {
+    "backend": "libsumo",
+    "horizon_sec": 3600.0,
+    "maximum_collision_count": 0,
+    "maximum_teleport_fraction": 0.01,
+    "minimum_controllable_tls": 1,
+    "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v42r38_external_la_nanchang_20260809/conversion/full_networks_v4/la_1x4/la_1x4.sumocfg"
+  }
+}

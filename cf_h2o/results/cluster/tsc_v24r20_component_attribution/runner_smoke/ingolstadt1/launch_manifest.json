@@ -1,0 +1,52 @@
+{
+  "baseline_result": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v22r18_joint_gate_dev600_20260808/development/budget_000/result.json",
+  "baseline_sha256": "f6356a4a94c6fb88e8a07b724597071912b079e1e6e2cfdd5329b80088f03ee2",
+  "cache_root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v20r16_counterfactual_cache_local",
+  "children": [
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "cf_h2o.eval.traffic_signal_tsc_mechanism_offline_ablation",
+        "--cache-root",
+        "cf_h2o/results/cluster/tsc_v20r16_counterfactual_cache_local",
+        "--baseline-result",
+        "cf_h2o/results/cluster/tsc_v22r18_joint_gate_dev600_20260808/development/budget_000/result.json",
+        "--manifest",
+        "cf_h2o/config/traffic_signal_cross_city_v1.json",
+        "--targets",
+        "ingolstadt1",
+        "--target-group-budget",
+        "0",
+        "--model-families",
+        "causal_rigid_advantage",
+        "--workers",
+        "4",
+        "--fit-parallel-workers",
+        "1",
+        "--target-workers",
+        "1",
+        "--target-executor",
+        "process",
+        "--fit-protocol",
+        "screening",
+        "--out",
+        "cf_h2o/results/cluster/tsc_v24r20_component_attribution/runner_smoke/ingolstadt1/causal_rigid_advantage/result.json"
+      ],
+      "family": "causal_rigid_advantage",
+      "log_path": "cf_h2o/results/cluster/tsc_v24r20_component_attribution/runner_smoke/ingolstadt1/causal_rigid_advantage/run.log",
+      "pid": 2515852,
+      "result_path": "cf_h2o/results/cluster/tsc_v24r20_component_attribution/runner_smoke/ingolstadt1/causal_rigid_advantage/result.json"
+    }
+  ],
+  "hostname": "FATHERSUCKERMSI",
+  "manifest": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_cross_city_v1.json",
+  "manifest_sha256": "b5372c7036b5a8926f0fbf671a416b4dbcf4207db79f7c9c14a67a654f2bfffa",
+  "model_families": [
+    "causal_rigid_advantage"
+  ],
+  "protocol": "parallel-independent-family-processes-v1",
+  "python": "/usr/bin/python3",
+  "started_at_utc": "2026-08-08T16:46:31.576680+00:00",
+  "target": "ingolstadt1"
+}

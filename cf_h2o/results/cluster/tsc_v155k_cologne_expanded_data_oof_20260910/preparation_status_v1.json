@@ -1,0 +1,51 @@
+{
+  "protocol": "tsc-v155k-cologne-expanded-data-oof-v1",
+  "status": "PREPARED_BLOCKED_SSH",
+  "updated_at_utc": "2026-09-10T10:43:39.905902+00:00",
+  "phase": "Staging; no scheduler submission has been reached.",
+  "blocker": "SSH staging failed three times. Independent read-only checks of both configured relay aliases jtl110gpu and jtl110gpu2 then timed out during banner exchange, before authentication; no functioning existing route was found.",
+  "verification": {
+    "focused_tests_passed": 23,
+    "test_files": [
+      "tests/test_cologne_native_bank.py",
+      "tests/test_cologne_native_b195_collection.py",
+      "tests/test_cologne_expanded_data_oof.py"
+    ],
+    "read_only_implementation_review": "PASS",
+    "existing_relay_checks": {
+      "jtl110gpu": "banner_exchange_timeout_exit255",
+      "jtl110gpu2": "banner_exchange_timeout_exit255"
+    }
+  },
+  "accounting": {
+    "new_labels": 0,
+    "new_simulation_branches": 0,
+    "new_model_fits": 0,
+    "retrieved_json_bytes": 0,
+    "submitted_tasks": []
+  },
+  "planned_label_budget": {
+    "original_groups": 100,
+    "additional_groups": 95,
+    "total_groups": 195,
+    "original_labels": 800,
+    "new_action_labels": 760,
+    "total_labels": 1560,
+    "new_native_action_branches": 760,
+    "prefix_replay_cost": "Account separately; native-prefix replay is additional simulation work."
+  },
+  "planned_oof_fits": 3,
+  "planned_full_fits": 0,
+  "refs": {
+    "protocol": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v155k_cologne_expanded_data_oof_20260910/protocol_v1.json",
+    "submit_collection": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v155k_cologne_expanded_data_oof_20260910/submit_collection_v1.py",
+    "submit_oof": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v155k_cologne_expanded_data_oof_20260910/submit_oof_v1.py",
+    "fetch_results": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v155k_cologne_expanded_data_oof_20260910/fetch_results_v1.py"
+  },
+  "continuation": "After SSH recovers, run the saved collection submit script; reuse the frozen protocol and passing tests unless code changes. Fetch only small result JSON, then submit the three-OOF fit after all six native-label shards complete.",
+  "limitations": [
+    "Budget increases fromB100 toB195; any gain is an additional-data result, not an improvement at the originalB100 budget.",
+    "The extra groups add time-point coverage within the same three training seeds, not independent seed diversity.",
+    "The repeated original100-group comparison remains development evidence."
+  ]
+}

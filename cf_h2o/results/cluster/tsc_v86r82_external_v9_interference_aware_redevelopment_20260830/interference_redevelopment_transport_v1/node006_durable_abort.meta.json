@@ -1,0 +1,8 @@
+{
+  "cmd": [
+    "scheduler.run_on",
+    "node006",
+    "export BAPR_PYTHON=/home/zhengliang01/scheduleurm_work/conda_envs/csbapr-gpu-py310/bin/python; export LD_LIBRARY_PATH=/cm/local/apps/cuda-driver/libs/535.261.03/lib64; export PATH=/home/zhengliang01/scheduleurm_work/conda_envs/csbapr-gpu-py310/bin:/usr/local/bin:/usr/bin:/bin; control=/tmp/scheduleurm_durable_control/cfcmt-v86-interference-node006-v1\nif [ ! -f \"$control/pid\" ]; then\n  printf \"__ABORT_STATE__ PID_MISSING\\n\"\n  exit 2\nfi\npid=$(cat \"$control/pid\")\nif kill -0 \"$pid\" 2>/dev/null; then\n  kill -TERM -- \"-$pid\" 2>/dev/null || kill -TERM \"$pid\" 2>/dev/null || true\n  for i in $(seq 1 20); do\n    if ! kill -0 \"$pid\" 2>/dev/null; then break; fi\n    sleep 0.5\n  done\n  if kill -0 \"$pid\" 2>/dev/null; then\n    kill -KILL -- \"-$pid\" 2>/dev/null || kill -KILL \"$pid\" 2>/dev/null || true\n  fi\nfi\nprintf \"%s\\n\" 130 > \"$control/returncode.tmp\"\nmv \"$control/returncode.tmp\" \"$control/returncode\"\nprintf \"%s\\n\" \"aborted: ProcessPoolExecutor spawn produced no workers or results\" >> \"$control/stderr\"\ntouch \"$control/cancelled\"\ntouch \"$control/done\"\nprintf \"__ABORT_STATE__ DONE\\n\"\nprintf \"__ABORT_PID__ %s\\n\" \"$pid\"\n"
+  ],
+  "returncode": 0
+}

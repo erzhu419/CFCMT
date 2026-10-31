@@ -1,0 +1,86 @@
+{
+  "adaptation_classification": "target_simulator_labeled_few_shot_adaptation",
+  "artifact_protocol_sha256": "a1801dd654e2690ce3c57cc6e9e6a3d5de25fa0c76808e89a715c97c97f201fd",
+  "artifact_role": "waiting_aligned_target_spatiotemporal_action_originator",
+  "city": "jinan",
+  "created_at_utc": "2026-08-30T05:31:24.186019+00:00",
+  "fit_diagnostics": {
+    "action_group_count": 19851,
+    "calibration_error": 0.7947567687910462,
+    "config": {
+      "scope": "tls_time_phase_pair",
+      "shrinkage": 20.0,
+      "time_bin_sec": 300,
+      "uncertainty_quantile": 0.9
+    },
+    "phase_pair_count": 64,
+    "protocol": "target-spatiotemporal-action-latent-v1",
+    "row_count": 158808,
+    "target_name": "interval_cost",
+    "target_scale_summary": {
+      "group_count": 19851,
+      "maximum": 0.17471560948742804,
+      "median": 0.05145327011454848,
+      "minimum": 0.0013488136510626525
+    },
+    "tls_phase_pair_count": 768,
+    "tls_time_phase_pair_count": 8792,
+    "training_nonreference_mae": 0.3924619820213608,
+    "uses_future_outcomes_at_prediction": false,
+    "uses_target_labels_at_fit": true
+  },
+  "integrity_gate": {
+    "adaptation_classification_exact": true,
+    "artifact_reload_exact": true,
+    "confirmatory_or_prospective_data_used": false,
+    "development_seed_set_exact": true,
+    "frozen_evidence_chain": true,
+    "future_outcomes_absent_at_prediction": true,
+    "passed": true,
+    "proposal_origin_changed": true,
+    "sealed_seed_overlap_absent": true,
+    "selected_gate_exact": true,
+    "selected_model_exact": true,
+    "training_groups_exact": true,
+    "training_rows_exact": true
+  },
+  "model_sha256": "d56794b3e859933478e9c9f88f74cf1606bfa67a211661197d6cbc63ac651532",
+  "originator_config": {
+    "enabled": true,
+    "minimum_context_trust": 0.75,
+    "objective_name": "control_cost",
+    "risk_multiplier": 0.0,
+    "rollout_value_horizon_sec": 450
+  },
+  "protocol": "tsc-v83r79-waiting-aligned-latent-freeze-result-v1",
+  "scenarios": [
+    "jinan_3x4_real"
+  ],
+  "selected_candidate": {
+    "candidate_key": "tls_time_300s_s20::r0p0::t0p75",
+    "minimum_context_trust": 0.75,
+    "model_key": "tls_time_300s_s20",
+    "model_spec": {
+      "config": {
+        "scope": "tls_time_phase_pair",
+        "shrinkage": 20.0,
+        "time_bin_sec": 300,
+        "uncertainty_quantile": 0.9
+      },
+      "family": "target_spatiotemporal_action_latent",
+      "key": "tls_time_300s_s20"
+    },
+    "oof_bootstrap_ci95": [
+      -0.0025586695892248264,
+      -9.943899903213005e-05
+    ],
+    "oof_equal_seed_mean_delta": -0.0013284584634646803,
+    "retained_group_count_oof": 556,
+    "risk_multiplier": 0.0
+  },
+  "status": "PASS",
+  "training_group_count": 19851,
+  "training_row_count": 158808,
+  "training_seed_count": 22,
+  "zero_shot": false
+}
