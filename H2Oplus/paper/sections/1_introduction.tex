@@ -1,0 +1,58 @@
+\section{Introduction}
+\label{sec:intro}
+
+High-frequency bus systems suffer from a well-known instability: small perturbations in travel time or boarding demand compound into bus \emph{bunching}, where pairs of buses arrive together and leave long service gaps behind them \citep{daganzo2009headway}.
+Real-time holding control---briefly delaying buses that are running early---mitigates bunching and has been studied for decades, most recently through reinforcement learning (RL) \citep{wang2020real, alesiani2018reinforcement}.
+Yet training an RL holding controller by online interaction with an operating fleet is impractical: safety, passenger experience, and revenue all preclude the exploratory rollouts standard RL requires.
+Two natural alternatives exist---purely offline RL on historical operations data, or pure online RL in a low-fidelity simulator---but neither is satisfactory.
+Pure offline RL bounds the policy by the support of the historical dataset and gains nothing from continued interaction; pure online RL discards the operator's accumulated history.
+The hybrid offline-to-online (H2O) RL framework~\citep{niu2022h2o, liu2024h2oplus} combines both: a fixed offline buffer of past operations supplies coverage and warm-starts the policy; a simulator supplies unlimited rollouts for online improvement; and an importance-sampling correction reconciles the two distributions.
+
+This paper asks two empirical questions about H2O+ on bus holding control:
+\textbf{(Q1)} Where does the H2O+ recipe \emph{actually compete with} the natural alternatives---pure offline, pure online, and the best RE-SAC checkpoint from a prior SUMO-environment run included in the offline buffer---on a transit benchmark with realistic dynamics and a real-network corridor, and where does it not?
+\textbf{(Q2)} Among the H2O+ component choices (which discriminator, which target anchoring, which auxiliary stabilisers), which combinations matter for transit?
+The answers shape not just the validation of H2O+ for this domain but also a practical recipe for transit operators.
+\Cref{fig:framework_overview} summarises the study design and evidence chain.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/framework_overview.pdf}
+\caption{Study-level framework adapted from H2O/H2O+ and instantiated for bus holding. The top row shows the generic hybrid offline-to-online template with target-domain data, an imperfect simulator, dynamics-gap estimation, and hybrid updates. The bottom row maps those components to the SUMO/sim-core benchmark, H2O+ variants, offline-to-online baselines, paired SUMO evaluation, and the resulting claim boundary.}
+\label{fig:framework_overview}
+\end{figure*}
+
+\paragraph{Setting}
+Our offline data is 675K transitions collected from four behaviour policies on a SUMO microsimulation built on the real topology, schedule, and fleet of an operating 12-line, 389-bus corridor (we use ``real-topology'' rather than ``real-world'' or ``calibrated digital twin'' throughout, since dwell-time and OD calibration against AVL/APC records is out of scope; see \Cref{sec:disc:calibration}).
+Our online training environment is a lower-fidelity LSTM-based travel-time simulator (sim-core), roughly $40\times$ faster than SUMO per event but with simplified passenger and traffic dynamics.
+Our evaluation environment is the same SUMO microsimulation as the offline-data source, with a fixed 18,000-second operating period.
+Both training and evaluation environments are simulators; we use ``H2O+'' rather than ``sim-to-real'' throughout, and discuss in \Cref{sec:discussion} what additional validation (historical-data replay, gated pilot deployment) a true sim-to-real claim would require.
+
+\paragraph{What we find}
+The Q1 answer is split between the default operating point and the multi-scenario stress grid.
+At the default operating point (single SUMO seed, default OD), pure online RL trained from scratch in sim-core fails ($-1{,}654{\pm}329$K mean over $5$ seeds, with one seed diverging to $-2{,}309$K, worse than no operation), pure offline Cal-QL on the full $675$K-transition buffer reaches $-749{\pm}26$K, and the deployment-relevant H2O+ setting (Stage~2 in the cheap simulator) reaches $-658$K---narrowly above the RE-SAC SUMO expert checkpoint included in $\Doff$ (referred to as ep39 throughout, $-666$K).
+On the complementary $3 \times 3$ scenario grid ($3$ SUMO seeds $\times$ $3$ OD-scale multipliers, paired under common random numbers; \Cref{tab:multiseed}) the top of the ranking shifts: ep39 ($-1{,}634 \pm 253$K), the two H2O+ rows ($-1{,}682$ and $-1{,}697$K), and $1{,}000$-epoch pure-online SAC ($-1{,}739$K, averaged over $3$ training seeds) form a near-tie at the top within $\approx 100$K of one another; H2O+ wins under high demand (OD $= 1.0$) but ep39 leads under reduced demand (OD $\in \{0.6, 0.8\}$).
+The headline gap H2O+ \emph{does} produce reliably is over the unlearned baselines: $25$--$33\%$ over zero-hold ($-2{,}227$K), behaviour cloning ($-2{,}244$K), and Daganzo cooperative holding at any of $\alpha \in \{0.3, 0.4, 0.6\}$ ($-2{,}436$ to $-2{,}511$K).
+The honest framing is therefore: \emph{H2O+ recovers most of the RE-SAC SUMO expert's performance and reliably beats the unlearned controllers, but does not consistently surpass that expert under multi-scenario evaluation}.
+
+On Q2, the picture is more nuanced.
+Across the SUMO-online ablation (\Cref{tab:ablation}, $9$ configurations), the simplest H2O+ variant (TransDisc only) wins; adding a Q-floor anchor on simulator-side Bellman targets does not help on average, and the more elaborate factored DynamicsDiscriminator variant is the worst.
+The same ablation on the SIM-online setting (\Cref{tab:ablation_sim}) gives a different ordering: the action-invariant Contrastive InfoNCE discriminator wins, with the simple TransitionDisc third.
+This flip is consistent with the underlying mechanics of IS reweighting: when online and offline distributions are close (SUMO-online uses the same simulator the offline buffer was collected from), an IS estimator that suppresses online samples is fine, and the simpler discriminator suffices; when they diverge (SIM-online uses a different simulator), the action-marginalised Contrastive variant maintains higher effective sample efficiency.
+
+\paragraph{Contributions}
+\begin{enumerate}
+    \item \textbf{Application study of H2O+ in transit holding control.} We provide the first systematic comparison of H2O+ against pure-offline, pure-online, an unlearned cooperative-holding rule (Daganzo), and the RE-SAC SUMO expert checkpoint ep39 included in the offline buffer, on a SUMO microsimulation of a 12-line, 389-bus corridor with 675K offline transitions. Pure online RL trained from scratch in the cheap simulator at the $200$-epoch parity budget fails ($-1{,}654$K, with a divergent seed); pure offline plateaus at 200K data ($-749$K); the deployment-relevant H2O+ setting (training in the cheap simulator) reaches $-658$K, narrowly above ep39 ($-666$K) at the default operating point. Under multi-scenario evaluation (\Cref{tab:multiseed}), this single-scenario ordering does not generalise: ep39, H2O+, and $1{,}000$-epoch pure-online SAC form a near-tie at the top, with the H2O+ vs ep39 ordering depending on demand level.
+    \item \textbf{Component ablation revealing fidelity-dependent recipe.} The optimal H2O+ discriminator depends on the online--offline distribution gap: Contrastive InfoNCE wins under SIM-online (large gap), TransitionDiscriminator wins under SUMO-online (matched-fidelity oracle), and the factored DynamicsDiscriminator from H2O+'s original prescription is worst in both. The optional Q-floor anchor improves some configurations and hurts others; we therefore treat it as a stabiliser rather than a contribution.
+    \item \textbf{Data-efficiency curve.} On the default operating point, H2O+ with 200K offline transitions reaches a SUMO-eval level that pure offline does not reach with 675K, indicating a practical $3.4\times$ data-efficiency benefit of the online phase \emph{at the default operating point}; we do not measure this ratio on the $3 \times 3$ stress grid.
+    \item \textbf{Multi-scenario robustness and operational metrics.} A $3 \times 3$ stress-test grid (SUMO seeds $\times$ OD-scale multipliers, $297$ paired evaluations across $17$ method rows including five standard offline-to-online RL baselines; \Cref{tab:multiseed}) confirms H2O+ reliably beats unlearned baselines but does not consistently surpass the RE-SAC SUMO expert ep39; we additionally report passenger waiting time, per-line headway CV, and Jain fairness, and surface a reward-shape vs operational-utility divergence (a legacy $200$-epoch pure-online SAC checkpoint has the lowest passenger waiting time despite the worst training reward among the RL methods reported, indicating the shaped composite reward is not a fully faithful proxy for operator value).
+    \item \textbf{Reproducibility artefacts.} Three transit-specific data-pipeline issues---trajectory-buffer isolation, segment-speed rescaling, and observation-normaliser freezing in collection workers---are documented in \Cref{app:impl} as prerequisites for H2O+ to be meaningfully trained on transit data.
+\end{enumerate}
+We position the paper as an empirical evaluation rather than a proposal of new algorithmic modifications: the contribution is the recipe (\emph{which H2O+ components to use under which fidelity gap}) and the evidence (\emph{where H2O+ is competitive with its alternatives on transit holding under deployment constraints, where it is not, and what the operationally honest trade-offs are}).
+
+\paragraph{Paper organization}
+\Cref{sec:related} reviews H2O RL, sim-to-real transfer, and bus holding control.
+\Cref{sec:problem} formalises the multi-fidelity offline-to-online MDP for transit holding.
+\Cref{sec:method} reviews the H2O+ components used in the experiments.
+\Cref{sec:experiments} presents the main results, ablations, and data-efficiency curve.
+\Cref{sec:discussion} discusses what would be required for true sim-to-real and limitations.
+\Cref{sec:conclusion} concludes.

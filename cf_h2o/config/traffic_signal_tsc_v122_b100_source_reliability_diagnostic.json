@@ -1,0 +1,50 @@
+{
+  "protocol": "tsc-v122-b100-source-reliability-diagnostic-v1",
+  "scientific_status": "development-diagnostic-only-never-confirmatory",
+  "estimand_protocol": "one-control-interval-local-mechanisms-plus-pure-halted-queue-rollout-value-v2",
+  "reference_policy": "phase_pressure",
+  "target_name": "prefix_mean_cost_450s",
+  "information_budget": {
+    "target_city": "jinan",
+    "target_groups": 100,
+    "training_predictions": "v120_strict_80_of_100_group_oof",
+    "selector_labels_consumed": 0,
+    "source_groups": [
+      "atlanta",
+      "cologne",
+      "hangzhou",
+      "ingolstadt",
+      "new_york",
+      "resco_synthetic",
+      "salt_lake_city"
+    ]
+  },
+  "diagnostics": {
+    "per_source": [
+      "group_equal_mse",
+      "group_equal_mae",
+      "nonreference_pearson_correlation",
+      "policy_delta_vs_phase_pressure",
+      "harmful_intervention_fraction"
+    ],
+    "source_weighting": [
+      "top1",
+      "top2",
+      "top3",
+      "top5",
+      "top7",
+      "inverse_mse",
+      "softmax_temperature"
+    ],
+    "source_blend_weights": [0.25, 0.5, 0.75, 1.0],
+    "weight_estimation": "leave-current-fold-out",
+    "negative_control": "matched_source_group_permutation_placebo"
+  },
+  "development_gate": {
+    "minimum_policy_improvement_vs_target_only": 0.0005,
+    "minimum_policy_improvement_vs_matched_placebo": 0.0005,
+    "passing_action": "freeze_one_reliability_strategy_for_independent_selector_test",
+    "failing_action": "reject_b100_reliability_weighting_without_selector_test"
+  },
+  "claim_boundary": "V122 explains whether the V121 symmetric aggregate concealed source-specific signal. It is a target-B100 development diagnostic and cannot establish fresh-city efficacy or replace V98."
+}

@@ -1,0 +1,568 @@
+{
+  "behavior": {
+    "delta_target": {
+      "beneficial_overrides": 19,
+      "candidate_benefit_sign_accuracy": 0.4857142857142857,
+      "equal_overrides": 0,
+      "groups": 100,
+      "groupwise_pairwise_ordering_accuracy": 0.511286277319957,
+      "harmful_overrides": 26,
+      "harmful_switch_overrides": 26,
+      "mean_harmful_intervention_regret": 0.004228858024691363,
+      "mean_missed_benefit_regret": 0.013564506172839523,
+      "mean_oracle_regret": 0.017793364197530883,
+      "missed_beneficial_switch_groups": 55,
+      "oracle_actions_selected": 16,
+      "overrides": 45,
+      "predicted_realized_candidate_advantage_correlation": -0.05685167922664566,
+      "total_realized_gain": 0.2967592592592587,
+      "total_realized_harm": 0.4228858024691363
+    },
+    "endpoint_target": {
+      "beneficial_overrides": 21,
+      "candidate_benefit_sign_accuracy": 0.5071428571428571,
+      "equal_overrides": 0,
+      "groups": 100,
+      "groupwise_pairwise_ordering_accuracy": 0.5288427087065568,
+      "harmful_overrides": 26,
+      "harmful_switch_overrides": 26,
+      "mean_harmful_intervention_regret": 0.0033094135802469093,
+      "mean_missed_benefit_regret": 0.01387746913580249,
+      "mean_oracle_regret": 0.017186882716049397,
+      "missed_beneficial_switch_groups": 53,
+      "oracle_actions_selected": 16,
+      "overrides": 47,
+      "predicted_realized_candidate_advantage_correlation": 0.0265921959898346,
+      "total_realized_gain": 0.265462962962962,
+      "total_realized_harm": 0.33094135802469093
+    }
+  },
+  "claim_boundary": "This reused-B100 whole-seed OOF ablation is a development diagnostic. Passing does not authorize deployment, reserve simulation, or a transfer claim; failure closes the direct-endpoint hypothesis without retuning.",
+  "created_at_utc": "2026-09-11T01:22:56.993375+00:00",
+  "decision": {
+    "deployment_authorized": false,
+    "followup_authorized": false,
+    "reserve_executed": false
+  },
+  "elapsed_sec": 2.0866670979885384,
+  "environment": {
+    "numpy": "2.2.6",
+    "python": "3.10.12",
+    "scikit_learn": "1.7.2"
+  },
+  "frozen_design": {
+    "action_difference_feature_names": [
+      "phase_duration_norm",
+      "green_q",
+      "red_q",
+      "green_veh",
+      "red_veh",
+      "green_occ",
+      "red_occ",
+      "green_down_q",
+      "green_down_occ",
+      "green_link_ratio",
+      "green_lane_ratio",
+      "service_pressure",
+      "red_pressure",
+      "switch_indicator",
+      "clearance_fraction",
+      "current_phase_overlap",
+      "green_q_mean",
+      "green_q_max",
+      "green_q_cv",
+      "red_q_max",
+      "red_q_cv",
+      "green_speed_mean",
+      "red_speed_mean",
+      "green_occ_max",
+      "red_occ_max",
+      "green_down_q_max",
+      "green_down_occ_max",
+      "green_down_occ_std",
+      "green_movement_ratio",
+      "green_outgoing_ratio",
+      "green_movement_down_q_mean",
+      "green_movement_down_occ_mean",
+      "green_movement_down_occ_max",
+      "movement_service_pressure",
+      "green_signal_down_q_mean",
+      "green_signal_down_q_max",
+      "green_signal_down_occ_mean",
+      "green_signal_down_occ_max",
+      "green_signal_reach_ratio",
+      "green_corridor_pressure",
+      "native_target_score",
+      "native_target_uncertainty",
+      "native_target_trust",
+      "native_aux_score",
+      "native_aux_uncertainty",
+      "native_aux_trust"
+    ],
+    "folds": [
+      [
+        180314,
+        188625
+      ],
+      [
+        127178,
+        177524
+      ],
+      [
+        163775,
+        150945
+      ],
+      [
+        173412,
+        161481
+      ],
+      [
+        150744,
+        134310
+      ]
+    ],
+    "model_config": {
+      "l2_regularization": 10.0,
+      "learning_rate": 0.05,
+      "max_iter": 100,
+      "max_leaf_nodes": 15,
+      "min_samples_leaf": 20,
+      "random_state": 20260803,
+      "uncertainty_quantile": 0.9
+    },
+    "no_stay_override_of_pp_switch": true,
+    "physical_midpoint_feature_names": [
+      "phase_duration_norm",
+      "green_q",
+      "red_q",
+      "green_veh",
+      "red_veh",
+      "green_occ",
+      "red_occ",
+      "green_down_q",
+      "green_down_occ",
+      "green_link_ratio",
+      "green_lane_ratio",
+      "service_pressure",
+      "red_pressure",
+      "switch_indicator",
+      "clearance_fraction",
+      "current_phase_overlap",
+      "green_q_mean",
+      "green_q_max",
+      "green_q_cv",
+      "red_q_max",
+      "red_q_cv",
+      "green_speed_mean",
+      "red_speed_mean",
+      "green_occ_max",
+      "red_occ_max",
+      "green_down_q_max",
+      "green_down_occ_max",
+      "green_down_occ_std",
+      "green_movement_ratio",
+      "green_outgoing_ratio",
+      "green_movement_down_q_mean",
+      "green_movement_down_occ_mean",
+      "green_movement_down_occ_max",
+      "movement_service_pressure",
+      "green_signal_down_q_mean",
+      "green_signal_down_q_max",
+      "green_signal_down_occ_mean",
+      "green_signal_down_occ_max",
+      "green_signal_reach_ratio",
+      "green_corridor_pressure"
+    ],
+    "representations": {
+      "delta_target": "state_plus_action_difference",
+      "endpoint_target": "state_plus_action_difference_plus_physical_action_midpoint"
+    },
+    "source_prediction_columns_used": false,
+    "state_feature_names": [
+      "total_q",
+      "total_veh",
+      "mean_speed",
+      "mean_occ",
+      "lane_count_norm",
+      "candidate_count_norm",
+      "time_sin",
+      "time_cos",
+      "current_green_elapsed_norm",
+      "queue_concentration",
+      "graph_upstream_q_mean",
+      "graph_downstream_q_mean",
+      "graph_neighbor_q_max",
+      "graph_two_hop_q_mean",
+      "graph_neighbor_occ_mean",
+      "graph_neighbor_pressure_mean",
+      "graph_global_q_per_tls",
+      "graph_global_q_p90",
+      "graph_focal_q_percentile",
+      "graph_focal_to_neighbor_q_ratio",
+      "graph_in_degree_norm",
+      "graph_out_degree_norm",
+      "network_active_per_tls"
+    ],
+    "target_base_prediction_only": true,
+    "threshold": 0.0
+  },
+  "implementation": {
+    "action_ranker": {
+      "path": "cf_h2o/traffic_signal/action_ranker.py",
+      "sha256": "8b4462b2f1228091d57cd66cf02423302b113831f4bb093fd9cf963c8faf48d2"
+    },
+    "config": {
+      "path": "cf_h2o/config/traffic_signal_tsc_v159_native_endpoint_ablation.json",
+      "sha256": "4632d8b946acc19af8e00bdc1b94639c7c95b0d927e79bc5cb80533d6412a16c"
+    },
+    "runner": {
+      "path": "cf_h2o/eval/traffic_signal_v159_native_endpoint_ablation.py",
+      "sha256": "7e7c4e4d8c858bfe6c30cb93aac09485c3d36066da1bff7a4978b3fa031bbbd7"
+    }
+  },
+  "input_bank": {
+    "action_groups": 100,
+    "candidate_rows": 800,
+    "new_simulator_trajectories": 0,
+    "scenarios": [
+      "jinan_3x4_real",
+      "jinan_3x4_real_2000",
+      "jinan_3x4_real_2500"
+    ],
+    "seeds": [
+      180314,
+      188625,
+      127178,
+      177524,
+      163775,
+      150945,
+      173412,
+      161481,
+      150744,
+      134310
+    ],
+    "sha256": "b484411781d8bf9386cc636542bcf5ef57ae9c09e83aaa5443c870379010039b",
+    "size_bytes": 236663
+  },
+  "oof": {
+    "comparisons": {
+      "delta_target_minus_phase_pressure": {
+        "equal_seeds": 0,
+        "improved_seeds": 4,
+        "mean_difference": 0.0012612654320987681,
+        "paired_bootstrap_95": [
+          -0.0009258603395062203,
+          0.003276419753086434
+        ],
+        "per_seed": [
+          {
+            "difference": 0.00391666666666679,
+            "seed": 127178
+          },
+          {
+            "difference": 0.006467592592592553,
+            "seed": 134310
+          },
+          {
+            "difference": 0.0039074074074074705,
+            "seed": 150744
+          },
+          {
+            "difference": 0.002490740740740849,
+            "seed": 150945
+          },
+          {
+            "difference": -0.0005802469135802735,
+            "seed": 161481
+          },
+          {
+            "difference": -0.00014660493827145515,
+            "seed": 163775
+          },
+          {
+            "difference": -0.0024984567901236154,
+            "seed": 173412
+          },
+          {
+            "difference": 0.00399382716049379,
+            "seed": 177524
+          },
+          {
+            "difference": -0.005688271604938455,
+            "seed": 180314
+          },
+          {
+            "difference": 0.0007500000000000284,
+            "seed": 188625
+          }
+        ],
+        "seed_count": 10,
+        "seeds": [
+          127178,
+          134310,
+          150744,
+          150945,
+          161481,
+          163775,
+          173412,
+          177524,
+          180314,
+          188625
+        ],
+        "worse_seeds": 6
+      },
+      "endpoint_target_minus_delta_target": {
+        "equal_seeds": 0,
+        "improved_seeds": 5,
+        "mean_difference": -0.0006064814814814134,
+        "paired_bootstrap_95": [
+          -0.002236280864197459,
+          0.0008122337962963532
+        ],
+        "per_seed": [
+          {
+            "difference": -0.0008518518518518814,
+            "seed": 127178
+          },
+          {
+            "difference": -0.0031450617283950155,
+            "seed": 134310
+          },
+          {
+            "difference": 0.0011481481481481204,
+            "seed": 150744
+          },
+          {
+            "difference": -0.005955246913580181,
+            "seed": 150945
+          },
+          {
+            "difference": 0.002098765432098748,
+            "seed": 161481
+          },
+          {
+            "difference": 0.0022808641975307076,
+            "seed": 163775
+          },
+          {
+            "difference": 0.0008055555555557259,
+            "seed": 173412
+          },
+          {
+            "difference": -0.002555555555555422,
+            "seed": 177524
+          },
+          {
+            "difference": -0.000689814814814449,
+            "seed": 180314
+          },
+          {
+            "difference": 0.0007993827160495126,
+            "seed": 188625
+          }
+        ],
+        "seed_count": 10,
+        "seeds": [
+          127178,
+          134310,
+          150744,
+          150945,
+          161481,
+          163775,
+          173412,
+          177524,
+          180314,
+          188625
+        ],
+        "worse_seeds": 5
+      },
+      "endpoint_target_minus_phase_pressure": {
+        "equal_seeds": 0,
+        "improved_seeds": 3,
+        "mean_difference": 0.0006547839506173547,
+        "paired_bootstrap_95": [
+          -0.0015240740740739777,
+          0.0025435918209877287
+        ],
+        "per_seed": [
+          {
+            "difference": 0.003064814814814909,
+            "seed": 127178
+          },
+          {
+            "difference": 0.003322530864197537,
+            "seed": 134310
+          },
+          {
+            "difference": 0.005055555555555591,
+            "seed": 150744
+          },
+          {
+            "difference": -0.0034645061728393323,
+            "seed": 150945
+          },
+          {
+            "difference": 0.0015185185185184746,
+            "seed": 161481
+          },
+          {
+            "difference": 0.0021342592592592524,
+            "seed": 163775
+          },
+          {
+            "difference": -0.0016929012345678895,
+            "seed": 173412
+          },
+          {
+            "difference": 0.0014382716049383681,
+            "seed": 177524
+          },
+          {
+            "difference": -0.006378086419752904,
+            "seed": 180314
+          },
+          {
+            "difference": 0.001549382716049541,
+            "seed": 188625
+          }
+        ],
+        "seed_count": 10,
+        "seeds": [
+          127178,
+          134310,
+          150744,
+          150945,
+          161481,
+          163775,
+          173412,
+          177524,
+          180314,
+          188625
+        ],
+        "worse_seeds": 7
+      }
+    },
+    "coverage": {
+      "delta_target": 100,
+      "endpoint_target": 100
+    },
+    "endpoint_minus_delta_by_scenario": {
+      "jinan_3x4_real": -0.002011188271604958,
+      "jinan_3x4_real_2000": 0.001571502057613361,
+      "jinan_3x4_real_2500": -0.0009115226337449434
+    },
+    "fold_count": 5,
+    "gate": {
+      "checks": {
+        "bootstrap_upper_passed": false,
+        "every_demand_noninferior_passed": false,
+        "mean_passed": true,
+        "seed_wins_passed": false
+      },
+      "demand_checks": {
+        "jinan_3x4_real": true,
+        "jinan_3x4_real_2000": false,
+        "jinan_3x4_real_2500": true
+      },
+      "passed": false,
+      "specification": {
+        "bootstrap_draws": 10000,
+        "bootstrap_seed": 20260911,
+        "comparison": "endpoint_target_minus_delta_target",
+        "demand_mean_difference_maximum": 0.0,
+        "mean_difference_maximum": -0.0005,
+        "minimum_improved_seeds": 7,
+        "paired_bootstrap_upper_95_maximum": 0.0,
+        "require_every_demand_noninferior": true
+      }
+    },
+    "mean_costs": {
+      "delta_target": 1.025116666666667,
+      "endpoint_target": 1.0245101851851852,
+      "phase_pressure": 1.023855401234568
+    },
+    "scenario_costs": {
+      "delta_target": {
+        "jinan_3x4_real": 1.1777488425925926,
+        "jinan_3x4_real_2000": 0.888588477366255,
+        "jinan_3x4_real_2500": 0.9581352880658436
+      },
+      "endpoint_target": {
+        "jinan_3x4_real": 1.1757376543209876,
+        "jinan_3x4_real_2000": 0.8901599794238684,
+        "jinan_3x4_real_2500": 0.9572237654320986
+      },
+      "phase_pressure": {
+        "jinan_3x4_real": 1.17490625,
+        "jinan_3x4_real_2000": 0.8908698559670782,
+        "jinan_3x4_real_2500": 0.9554398148148148
+      }
+    },
+    "seed_costs": {
+      "delta_target": {
+        "127178": 1.0357222222222222,
+        "134310": 1.0163364197530864,
+        "150744": 1.0107237654320989,
+        "150945": 1.0296543209876543,
+        "161481": 1.0179922839506172,
+        "163775": 1.0287330246913582,
+        "173412": 1.0158626543209877,
+        "177524": 1.0224814814814815,
+        "180314": 1.0419182098765432,
+        "188625": 1.0317422839506172
+      },
+      "endpoint_target": {
+        "127178": 1.0348703703703703,
+        "134310": 1.0131913580246914,
+        "150744": 1.011871913580247,
+        "150945": 1.0236990740740741,
+        "161481": 1.020091049382716,
+        "163775": 1.031013888888889,
+        "173412": 1.0166682098765434,
+        "177524": 1.0199259259259261,
+        "180314": 1.0412283950617287,
+        "188625": 1.0325416666666667
+      },
+      "phase_pressure": {
+        "127178": 1.0318055555555554,
+        "134310": 1.0098688271604939,
+        "150744": 1.0068163580246914,
+        "150945": 1.0271635802469135,
+        "161481": 1.0185725308641975,
+        "163775": 1.0288796296296296,
+        "173412": 1.0183611111111113,
+        "177524": 1.0184876543209878,
+        "180314": 1.0476064814814816,
+        "188625": 1.0309922839506171
+      }
+    },
+    "unit": "whole_seed"
+  },
+  "parent": {
+    "fit_result_path": "cf_h2o/results/cluster/tsc_v158_native_prefix_ranking_calibration_20260911/fit_v1/result.json",
+    "fit_result_protocol": "tsc-v158-jinan-native-prefix-ranking-fit-v1",
+    "fit_result_sha256": "45a236690fe7a18f76057b4f8c45ebb3ba4fd03571dd3624b3741aea1d4438d3",
+    "native_bank_sha256": "b484411781d8bf9386cc636542bcf5ef57ae9c09e83aaa5443c870379010039b",
+    "native_bank_size_bytes": 236663,
+    "protocol": "tsc-v158-jinan-native-prefix-ranking-calibration-v1"
+  },
+  "parent_reproduction": {
+    "maximum_absolute_seed_cost_difference": 0.0,
+    "passed": true,
+    "per_seed_difference": {
+      "127178": 0.0,
+      "134310": 0.0,
+      "150744": 0.0,
+      "150945": 0.0,
+      "161481": 0.0,
+      "163775": 0.0,
+      "173412": 0.0,
+      "177524": 0.0,
+      "180314": 0.0,
+      "188625": 0.0
+    }
+  },
+  "protocol": "tsc-v159-jinan-native-endpoint-ablation-paper-artifact-v1",
+  "scientific_status": "direct_endpoint_hypothesis_closed",
+  "status": "OOF_GATE_FAIL"
+}

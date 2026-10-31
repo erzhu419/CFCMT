@@ -1,0 +1,154 @@
+{
+  "protocol": "tsc-v55r51-external-v9-oof-validated-support-development-v1",
+  "frozen_at_utc": "2026-08-10T02:08:00Z",
+  "claim_boundary": "The repaired-network estimand-aligned artifacts use only adaptation counterfactual records. Seeds shared with adaptation are diagnostic-only; only the eight disjoint development seeds may select a controller.",
+  "parent_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v41_external_v9_full_budget_refit.json",
+    "sha256": "472985aa515aab31849d2072c118b562183beaea9f6bf8f5920f69614ff35548"
+  },
+  "estimand_aligned_joint_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v55r51_external_v9_estimand_aligned_20260810/joint_freeze_audit_v2.json",
+    "sha256": "0bb32c7e12e6e7e7d69d05913bd6d49b53f0fa48fd40278eda462e005aeae406",
+    "decision": "authorize_v9_estimand_aligned_frozen_development_replay"
+  },
+  "city_artifacts": {
+    "los_angeles": {
+      "certificate": {
+        "path": "cf_h2o/results/cluster/tsc_v55r51_external_v9_estimand_aligned_20260810/freeze_v2/los_angeles/freeze.json",
+        "sha256": "ce0750ed14d9b3a51d1cebf63fbdbfb09f4744b1a3a2c634d07606be7b33e1af"
+      },
+      "model": {
+        "path": "cf_h2o/results/cluster/tsc_v55r51_external_v9_estimand_aligned_20260810/freeze_v2/los_angeles/model.pkl",
+        "sha256": "fc67690be53344c6099ab4ddc9311dc5203eb38c39091b96bc6b316cac2f625f"
+      },
+      "deployment_decision": "cfcmt_oof_validated_support_guard",
+      "selected_candidate": "constant_alpha_0p8",
+      "validated_oof_prototypes": 4
+    },
+    "jinan": {
+      "certificate": {
+        "path": "cf_h2o/results/cluster/tsc_v55r51_external_v9_estimand_aligned_20260810/freeze_v2/jinan/freeze.json",
+        "sha256": "66fa73ce3aec23ecc14efc0b86ec2b7d01784b63eef8ccf01a74fec1886c7cac"
+      },
+      "model": {
+        "path": "cf_h2o/results/cluster/tsc_v55r51_external_v9_estimand_aligned_20260810/freeze_v2/jinan/model.pkl",
+        "sha256": "da743e5ed20677b80f04103dbc701d7e30e5ea6e57fd08eb2d5a491307aa28a1"
+      },
+      "deployment_decision": "phase_pressure",
+      "selected_candidate": "constant_alpha_0p8",
+      "validated_oof_prototypes": 7288
+    }
+  },
+  "estimand_contract": {
+    "counterfactual_behavior_policy": "phase_pressure",
+    "counterfactual_rollout_policy": "phase_pressure",
+    "contrast_reference_policy": "phase_pressure",
+    "deployment_fallback_policy": "phase_pressure",
+    "candidate_selection": "two-fold leave-one-adaptation-seed-out",
+    "guard_selection": "fold-max finite-sample conformal safety margin with fold and scenario gates",
+    "deployment_support": "deterministic topology-invariant support fitted only to OOF actions accepted by the frozen guard",
+    "minimum_operational_total_vehicles": 1.0,
+    "activation": "after the 60-second counterfactual warm-up"
+  },
+  "development": {
+    "closed_loop_seeds": [
+      5057,
+      6067,
+      52282,
+      41242,
+      63792,
+      80722,
+      75638,
+      61337,
+      73385,
+      81189
+    ],
+    "adaptation_coupled_diagnostic_seeds": [
+      5057,
+      6067
+    ],
+    "generalization_selection_seeds": [
+      52282,
+      41242,
+      63792,
+      80722,
+      75638,
+      61337,
+      73385,
+      81189
+    ],
+    "status": "repaired_network_frozen_development_replay",
+    "permitted_use": "candidate selection on generalization_selection_seeds only; adaptation-coupled seeds are descriptive diagnostics",
+    "policies": [
+      "cfcmt_oof_validated_mpc",
+      "phase_pressure"
+    ],
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "paired_unit": "scenario_seed"
+  },
+  "validation_reservation": {
+    "closed_loop_seeds": [
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ],
+    "must_not_run_until_development_selector_and_analysis_hash_are_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    }
+  },
+  "prospective_confirmation_reservation": {
+    "closed_loop_seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "must_not_run_until_validation_passes_and_prospective_analysis_is_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "candidate_policies_for_later_freeze": [
+      "cfcmt_oof_validated_mpc",
+      "phase_pressure",
+      "max_pressure",
+      "fixed_time",
+      "rigid_anchor_mpc",
+      "simulator_only_mpc",
+      "h2oplus_style_dense_residual_mpc"
+    ]
+  },
+  "deployment": {
+    "policy": "cfcmt_oof_validated_mpc",
+    "coordination_mode": "sparse",
+    "cooldown": "prediction_horizon_minus_one_control_interval",
+    "failed_city_gate_falls_back_exactly_to_phase_pressure": true,
+    "v9_network_repair_role": "integrity correction after v52 efficacy inspection; all v9 efficacy must be reported separately from v8"
+  }
+}

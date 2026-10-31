@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "matrix_protocol_tag": "v40",
+  "protocol": "cross-fitted-target-anchored-selector-seven-city-development-v40",
+  "expected_sumo_version": "1.22.0",
+  "development_manifest": "cf_h2o/config/traffic_signal_cross_city_v2_saltlake18.json",
+  "capacity_admission_protocol": "cf_h2o/config/traffic_signal_tsc_v22_anchored_pairwise_capacity_admitted.json",
+  "combined_counterfactual_cache_sha256": "14c6dfad87999e55fa86fa942ac0ca2334129f4d1662b3c31a6e4fc7aa74c242",
+  "expanded_source_rule_baseline_sha256": "f9223a7001078d9a6df0e1a2ad4bfe1d2bc59fc2547621f092e8be702596dbfa",
+  "v39b_development_audit_sha256": "91058c229f1bbbaae1de7639af07598a95913d4ac2594d5f2e6f3cb0f3089796",
+  "development": {
+    "target_group_budget": 60,
+    "cross_fit_folds": 5,
+    "groups_per_fold": 12,
+    "target_adaptation_selection_seed": 20260803,
+    "evaluation_targets": [
+      "grid4x4",
+      "arterial4x4",
+      "cologne1",
+      "cologne3",
+      "cologne8",
+      "ingolstadt1",
+      "ingolstadt7",
+      "ingolstadt21",
+      "atlanta_1x5",
+      "hangzhou_4x4",
+      "hangzhou_4x4_hetero",
+      "manhattan_28x7",
+      "saltlake_400s_200w_q1_weekday_peak",
+      "saltlake_state_university_q1_weekday_peak"
+    ],
+    "source_only_capacity_exclusions": {
+      "hangzhou_bc_tyc": 25,
+      "hangzhou_kn_hz": 42,
+      "hangzhou_qc_yn": 33,
+      "hangzhou_sb_sx": 36
+    },
+    "anchored_candidate_protocol": "cf_h2o/config/traffic_signal_tsc_v22_anchored_pairwise_capacity_admitted.json",
+    "selector_grid": {
+      "candidate_scopes": ["constant", "all"],
+      "minimum_oof_relative_improvement": [0.0, 0.01, 0.02, 0.05],
+      "maximum_oof_fold_regression": [0.0, 0.02, 0.05, 0.1],
+      "standard_error_multipliers": [0.0, 0.5, 1.0, 2.0]
+    },
+    "city_meta_selection_gate": {
+      "minimum_macro_relative_improvement": 0.02,
+      "minimum_training_city_improvements": 4,
+      "minimum_global_city_improvements": 5,
+      "maximum_absolute_city_regression": 0.01
+    },
+    "external_holdouts": ["los_angeles", "nanchang"]
+  }
+}

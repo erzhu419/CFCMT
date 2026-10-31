@@ -1,0 +1,43 @@
+{
+  "protocol": "tsc-v154i-cologne-priority-yellow-comparison-v1",
+  "frozen_at_utc": "2026-09-09T12:39:53.207308+00:00",
+  "seeds": [
+    52282,
+    41242,
+    63792
+  ],
+  "arms": [
+    "rigid_target_only",
+    "phase_pressure"
+  ],
+  "new_simulations": 6,
+  "reused_cells": 0,
+  "network": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+  "geometry_reference": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154e_cologne_bilateral_full_validation_20260909/paired_full_v1/result.json",
+  "controller_source": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/85b2b43cd12832c5a1dd",
+  "executor_source": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154i_cologne_priority_yellow_comparison_20260909/tooling_v1/safe_phase_controller.py",
+  "change": "The public SafePhaseExecutor uses G-to-Y and g-to-y for all clearance transitions. Its source must exactly equal the original source with this one branch replacement and explanatory comment.",
+  "fixed": {
+    "simulation_window_sec": [
+      25200,
+      28800
+    ],
+    "duration_sec": 3600,
+    "warmup_sec": 60,
+    "control_interval_sec": 10,
+    "rigid_prediction_horizon_sec": 450,
+    "residual_coordination_mode": "direct",
+    "residual_cooldown_intervals_override": 0,
+    "model": "same fitted V154F rigid model; PP models=None",
+    "occupancy": "original frozen equations",
+    "demand_population": 2015,
+    "geometry": "same parsed bilateral static geometry"
+  },
+  "timing": "Yellow/all-red/min-green rules are unchanged. Subsequent policy requests may change with traffic; this full-run test does not freeze their action trajectories.",
+  "validity": "Complete 3600 steps, matching native collision inventory, zero teleports, unchanged due population and full tripinfo population accounting, 3541 post-warmup samples.",
+  "safety": "Report native incidents and zero-collision seeds for each arm; keep valid colliding cells in every service mean.",
+  "service": "Equal-seed paired rigid-minus-PP mean tripinfo waiting and system vehicle hours, with arrivals and pending/active counts; main three seeds plus prespecified additional seeds52282/63792.",
+  "baseline_comparison": "Keep V154F unmodified; additionally report per-cell yellow-repair minus V154F service and safety changes.",
+  "cost": "One CPU and8192MB per cell;6 new simulations; retrieve only small result JSONs or error log tails.",
+  "limits": "One fixed model, one city, three simulator seeds; no source-transfer or universal safety claim."
+}

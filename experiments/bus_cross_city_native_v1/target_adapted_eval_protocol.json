@@ -1,0 +1,58 @@
+{
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "initialization_updates": 50000,
+  "adaptation_updates": 5000,
+  "target_fit_rows": 12288,
+  "target_union_rows": 16384,
+  "source_rows": 0,
+  "device": "cpu",
+  "evaluation": {
+    "episode_seconds": 24000,
+    "demand_scale": 1.0,
+    "rule": "forward_proportional",
+    "rule_gain": 0.6,
+    "cases": [
+      {
+        "case": 0,
+        "demand_seed": 72501,
+        "sumo_seed": 73501
+      },
+      {
+        "case": 1,
+        "demand_seed": 72502,
+        "sumo_seed": 73502
+      },
+      {
+        "case": 2,
+        "demand_seed": 72503,
+        "sumo_seed": 73503
+      }
+    ],
+    "test_separation": "New fixed demand/SUMO seed realizations, disjoint from fit/stop/calibrate; same pinned timetable and generated route corridors.",
+    "comparison": "Three training seeds, three paired generated demand days; retain every branch/day/seed and compare all-seed means.",
+    "primary_cost": "(2*wait_passenger_seconds+in_vehicle_passenger_seconds)/departed_passengers",
+    "completion": "Report completion rate and departed/completed counts alongside cost.",
+    "interpretation": "Bounded pilot on one target city; no population-level CI or city removal."
+  },
+  "code_boundary": "Existing CFCMT frozen runtime, executor and assets; no mutable Thesis imports or writes.",
+  "name": "cfcmt-bus-target-adapted-eval-v1",
+  "continuation_updates": 0,
+  "model_loss_coefficient": null,
+  "export_training_updates": 0,
+  "world_model_refit_updates": 0,
+  "checkpoint_rule": "All three existing training/adapt/target/seedN/adapted.pt actors; stored counter 5000 and historical 50000 target initialization + 5000 target adaptation = 55000. No fitting, seed or checkpoint selection.",
+  "export_rule": "Read target_pool.h5 config attributes only; construct frozen learner and load existing network parameters with reset_columns=False. Export deployment actor and use the real v7 deployment loader to compare every actor tensor to the stored adapted actor. No replay construction, optimizer/update calls or ModelContinuation construction.",
+  "comparisons": [
+    "full_source_adapted",
+    "strong_rule"
+  ],
+  "reference_policy": "Primary matched phase reference: fixed full-source adapted actors at 55000 historical updates, same seed/case. Reuse the original strong rule. Require paired seeds, horizon, simulator version, line_ids, departed passenger counts and zero ledger error.",
+  "data_boundary": "Local initialization and adaptation both use the original target fit 12288, target union 16384. No replay, source data or world-model loading during export. Only target_pool.h5 configuration attributes are read. No new training simulator events.",
+  "interpretation": "Read-only matched initialization-route diagnostic on three training seeds and three previously analyzed generated target demand days. Neither compared actor used model TD or confidence-weighted continuation at this stage. No prospective test, cross-city population or physical sim-to-real claim. No mutable Thesis access.",
+  "next_decision": "Report all-seed and each-seed costs, all nine paired cases, wait/ride, completion and executed holding. Determine whether the fixed source-initialization route improves the adapted actor over the matched local route; do not retune, continue training, change guards or remove seeds.",
+  "budget_boundary": "Equal historical updates, CPU, IQL configuration, original target-fit unique rows and adaptation stage. Local has 55000 target updates; cross-city has 50000 source + 5000 target updates and retains its original transfer reset rules. This compares the fixed initialization routes, not equal target gradient exposure or equal wall-clock cost."
+}

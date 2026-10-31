@@ -1,0 +1,766 @@
+{
+  "pools": {
+    "target_pool": {
+      "rows": 16384,
+      "config": {
+        "max_hold_seconds": 60.0,
+        "horizon_seconds": 24000.0,
+        "scheduled_headway_scale_seconds": 720.0,
+        "base_dwell_scale_seconds": 130.0,
+        "system_passenger_count_scale": 20000.0,
+        "max_headway_ratio": 5.0,
+        "max_queue_capacity_ratio": 2.0,
+        "max_demand_capacity_ratio": 2.0,
+        "max_system_passenger_count_scaled": 1.25,
+        "waiting_time_value": 2.0,
+        "in_vehicle_time_value": 1.0,
+        "reward_unit_passenger_seconds": 1.0,
+        "discount_gamma_per_minute": 1.0,
+        "max_simultaneous_decisions": 16
+      },
+      "terminal_rows": 8,
+      "nonterminal_discount_values": [
+        1.0
+      ],
+      "terminal_discount_values": [
+        0.0
+      ],
+      "discount_mask_mismatches": 0,
+      "reward_ledger_max_abs_error": 0.0,
+      "reward_ledger_mismatch_rows": 0,
+      "dt_zero_rows": 1888,
+      "dt_zero_nonzero_reward_rows": 0,
+      "clock_max_abs_error_seconds": 0.001377105712890625,
+      "dt_range_seconds": [
+        0.0,
+        91.0
+      ]
+    },
+    "source_pool": {
+      "rows": 16384,
+      "config": {
+        "base_dwell_scale_seconds": 130.0,
+        "discount_gamma_per_minute": 1.0,
+        "horizon_seconds": 24000.0,
+        "in_vehicle_time_value": 1.0,
+        "max_demand_capacity_ratio": 2.0,
+        "max_headway_ratio": 5.0,
+        "max_hold_seconds": 60.0,
+        "max_queue_capacity_ratio": 2.0,
+        "max_simultaneous_decisions": 16,
+        "max_system_passenger_count_scaled": 1.25,
+        "reward_unit_passenger_seconds": 1.0,
+        "scheduled_headway_scale_seconds": 720.0,
+        "system_passenger_count_scale": 20000.0,
+        "waiting_time_value": 2.0
+      },
+      "terminal_rows": 240,
+      "nonterminal_discount_values": [
+        1.0
+      ],
+      "terminal_discount_values": [
+        0.0
+      ],
+      "discount_mask_mismatches": 0,
+      "reward_ledger_max_abs_error": 0.0,
+      "reward_ledger_mismatch_rows": 0,
+      "dt_zero_rows": 5065,
+      "dt_zero_nonzero_reward_rows": 0,
+      "clock_max_abs_error_seconds": 0.0013580322265625,
+      "dt_range_seconds": [
+        0.0,
+        2944.0
+      ]
+    }
+  },
+  "collection_days": [
+    {
+      "case": 0,
+      "split": "fit",
+      "episode_seconds": 24000,
+      "horizon_seconds": 17922.0,
+      "total_rows": 3834,
+      "collected_reward_sum": -7215734.0,
+      "collected_weighted_cost": 7215734.0,
+      "uncollected_initial_weighted_cost": 84979.0,
+      "ledger_reward_telescope_error": 0.0,
+      "passengers": {
+        "accounting_semantics": "one-second integration of SUMO bus-stop waiting counts and transit-vehicle person counts",
+        "legacy_sampled_trip_histories_used_for_welfare": false,
+        "departed_passengers": 3505,
+        "completed_passengers": 3446,
+        "completion_rate": 0.983166904422254,
+        "unfinished_passengers": 59,
+        "state_counts_at_horizon": {
+          "waiting": 59,
+          "in_vehicle": 0,
+          "other_active": 0
+        },
+        "active_state_count_balance_error": 0,
+        "unfinished_departure_seconds": {
+          "n": 59,
+          "mean": 9901.64406779661,
+          "std": 3111.293969433207,
+          "p50": 9844.0,
+          "p90": 14198.4,
+          "p95": 14306.2,
+          "min": 5183.0,
+          "max": 14384.0
+        },
+        "unfinished_elapsed_seconds_at_horizon": {
+          "n": 59,
+          "mean": 8020.35593220339,
+          "std": 3111.293969433207,
+          "p50": 8078.0,
+          "p90": 11660.2,
+          "p95": 12167.599999999999,
+          "min": 3538.0,
+          "max": 12739.0
+        },
+        "completed_journey_seconds": {
+          "n": 3446,
+          "mean": 1258.2379570516541,
+          "std": 799.6313756812813,
+          "p50": 1090.0,
+          "p90": 2339.5,
+          "p95": 2853.0,
+          "min": 69.0,
+          "max": 5244.0
+        },
+        "accrued_wait_seconds_total": 2529739.0,
+        "accrued_wait_seconds_per_departed_passenger": 721.7514978601997,
+        "accrued_in_vehicle_seconds_total": 2241235.0,
+        "accrued_in_vehicle_seconds_per_departed_passenger": 639.4393723252497,
+        "accrued_wait_plus_in_vehicle_seconds_total": 4770974.0,
+        "accrued_wait_plus_in_vehicle_seconds_per_departed_passenger": 1361.1908701854493
+      },
+      "service": {
+        "departed_trips": 119,
+        "completed_trips": 118,
+        "completion_rate": 0.9915966386554622,
+        "active_trips_at_horizon": 1,
+        "completed_trip_duration_seconds": {
+          "n": 118,
+          "mean": 2987.4406779661017,
+          "std": 697.874851543334,
+          "p50": 2879.5,
+          "p90": 3840.5,
+          "p95": 4340.65,
+          "min": 432.0,
+          "max": 4512.0
+        }
+      },
+      "last_transition": {
+        "rewards": -6962.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 59.0,
+        "event_decision_time_seconds": 17863.0,
+        "wait_passenger_seconds": 3481.0,
+        "in_vehicle_passenger_seconds": 0.0
+      }
+    },
+    {
+      "case": 1,
+      "split": "fit",
+      "episode_seconds": 24000,
+      "horizon_seconds": 18116.0,
+      "total_rows": 3834,
+      "collected_reward_sum": -7703377.0,
+      "collected_weighted_cost": 7703377.0,
+      "uncollected_initial_weighted_cost": 70375.0,
+      "ledger_reward_telescope_error": 0.0,
+      "passengers": {
+        "accounting_semantics": "one-second integration of SUMO bus-stop waiting counts and transit-vehicle person counts",
+        "legacy_sampled_trip_histories_used_for_welfare": false,
+        "departed_passengers": 3633,
+        "completed_passengers": 3564,
+        "completion_rate": 0.9810074318744839,
+        "unfinished_passengers": 69,
+        "state_counts_at_horizon": {
+          "waiting": 69,
+          "in_vehicle": 0,
+          "other_active": 0
+        },
+        "active_state_count_balance_error": 0,
+        "unfinished_departure_seconds": {
+          "n": 69,
+          "mean": 9408.27536231884,
+          "std": 3080.508356080869,
+          "p50": 9404.0,
+          "p90": 14170.2,
+          "p95": 14243.6,
+          "min": 4418.0,
+          "max": 14398.0
+        },
+        "unfinished_elapsed_seconds_at_horizon": {
+          "n": 69,
+          "mean": 8707.72463768116,
+          "std": 3080.508356080869,
+          "p50": 8712.0,
+          "p90": 12111.0,
+          "p95": 12427.999999999998,
+          "min": 3718.0,
+          "max": 13698.0
+        },
+        "completed_journey_seconds": {
+          "n": 3564,
+          "mean": 1268.6035353535353,
+          "std": 832.0113129094323,
+          "p50": 1078.0,
+          "p90": 2396.7000000000003,
+          "p95": 2894.7,
+          "min": 58.0,
+          "max": 5291.0
+        },
+        "accrued_wait_seconds_total": 2691015.0,
+        "accrued_wait_seconds_per_departed_passenger": 740.7142857142857,
+        "accrued_in_vehicle_seconds_total": 2391722.0,
+        "accrued_in_vehicle_seconds_per_departed_passenger": 658.3325075695018,
+        "accrued_wait_plus_in_vehicle_seconds_total": 5082737.0,
+        "accrued_wait_plus_in_vehicle_seconds_per_departed_passenger": 1399.0467932837876
+      },
+      "service": {
+        "departed_trips": 119,
+        "completed_trips": 118,
+        "completion_rate": 0.9915966386554622,
+        "active_trips_at_horizon": 1,
+        "completed_trip_duration_seconds": {
+          "n": 118,
+          "mean": 2991.923728813559,
+          "std": 703.9174285878549,
+          "p50": 2892.5,
+          "p90": 3782.7999999999997,
+          "p95": 4283.45,
+          "min": 432.0,
+          "max": 4585.0
+        }
+      },
+      "last_transition": {
+        "rewards": -8280.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 60.0,
+        "event_decision_time_seconds": 18056.0,
+        "wait_passenger_seconds": 4140.0,
+        "in_vehicle_passenger_seconds": 0.0
+      }
+    },
+    {
+      "case": 2,
+      "split": "fit",
+      "episode_seconds": 24000,
+      "horizon_seconds": 18042.0,
+      "total_rows": 3835,
+      "collected_reward_sum": -7570980.0,
+      "collected_weighted_cost": 7570980.0,
+      "uncollected_initial_weighted_cost": 73536.0,
+      "ledger_reward_telescope_error": 0.0,
+      "passengers": {
+        "accounting_semantics": "one-second integration of SUMO bus-stop waiting counts and transit-vehicle person counts",
+        "legacy_sampled_trip_histories_used_for_welfare": false,
+        "departed_passengers": 3522,
+        "completed_passengers": 3462,
+        "completion_rate": 0.9829642248722317,
+        "unfinished_passengers": 60,
+        "state_counts_at_horizon": {
+          "waiting": 60,
+          "in_vehicle": 0,
+          "other_active": 0
+        },
+        "active_state_count_balance_error": 0,
+        "unfinished_departure_seconds": {
+          "n": 60,
+          "mean": 8697.216666666667,
+          "std": 3166.2962434700307,
+          "p50": 7051.5,
+          "p90": 14166.2,
+          "p95": 14280.2,
+          "min": 4202.0,
+          "max": 14393.0
+        },
+        "unfinished_elapsed_seconds_at_horizon": {
+          "n": 60,
+          "mean": 9344.783333333333,
+          "std": 3166.2962434700303,
+          "p50": 10990.5,
+          "p90": 12408.6,
+          "p95": 12508.1,
+          "min": 3649.0,
+          "max": 13840.0
+        },
+        "completed_journey_seconds": {
+          "n": 3462,
+          "mean": 1288.2157712305027,
+          "std": 834.960149159499,
+          "p50": 1106.0,
+          "p90": 2436.8,
+          "p95": 2913.749999999999,
+          "min": 73.0,
+          "max": 5676.0
+        },
+        "accrued_wait_seconds_total": 2662114.0,
+        "accrued_wait_seconds_per_departed_passenger": 755.8529244747302,
+        "accrued_in_vehicle_seconds_total": 2320288.0,
+        "accrued_in_vehicle_seconds_per_departed_passenger": 658.7984099943214,
+        "accrued_wait_plus_in_vehicle_seconds_total": 4982402.0,
+        "accrued_wait_plus_in_vehicle_seconds_per_departed_passenger": 1414.6513344690516
+      },
+      "service": {
+        "departed_trips": 119,
+        "completed_trips": 118,
+        "completion_rate": 0.9915966386554622,
+        "active_trips_at_horizon": 1,
+        "completed_trip_duration_seconds": {
+          "n": 118,
+          "mean": 2986.35593220339,
+          "std": 698.7299409279121,
+          "p50": 2870.5,
+          "p90": 3835.1,
+          "p95": 4228.15,
+          "min": 436.0,
+          "max": 4607.0
+        }
+      },
+      "last_transition": {
+        "rewards": -7200.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 60.0,
+        "event_decision_time_seconds": 17982.0,
+        "wait_passenger_seconds": 3600.0,
+        "in_vehicle_passenger_seconds": 0.0
+      }
+    },
+    {
+      "case": 3,
+      "split": "fit",
+      "episode_seconds": 24000,
+      "horizon_seconds": 17960.0,
+      "total_rows": 3833,
+      "collected_reward_sum": -7185471.0,
+      "collected_weighted_cost": 7185471.0,
+      "uncollected_initial_weighted_cost": 66971.0,
+      "ledger_reward_telescope_error": 0.0,
+      "passengers": {
+        "accounting_semantics": "one-second integration of SUMO bus-stop waiting counts and transit-vehicle person counts",
+        "legacy_sampled_trip_histories_used_for_welfare": false,
+        "departed_passengers": 3483,
+        "completed_passengers": 3430,
+        "completion_rate": 0.9847832328452484,
+        "unfinished_passengers": 53,
+        "state_counts_at_horizon": {
+          "waiting": 53,
+          "in_vehicle": 0,
+          "other_active": 0
+        },
+        "active_state_count_balance_error": 0,
+        "unfinished_departure_seconds": {
+          "n": 53,
+          "mean": 8828.056603773584,
+          "std": 2837.7975710798514,
+          "p50": 8612.0,
+          "p90": 14013.0,
+          "p95": 14182.6,
+          "min": 4861.0,
+          "max": 14369.0
+        },
+        "unfinished_elapsed_seconds_at_horizon": {
+          "n": 53,
+          "mean": 9131.943396226416,
+          "std": 2837.7975710798514,
+          "p50": 9348.0,
+          "p90": 11993.0,
+          "p95": 12438.4,
+          "min": 3591.0,
+          "max": 13099.0
+        },
+        "completed_journey_seconds": {
+          "n": 3430,
+          "mean": 1261.7778425655977,
+          "std": 808.7665481826803,
+          "p50": 1090.0,
+          "p90": 2368.1,
+          "p95": 2836.5499999999997,
+          "min": 61.0,
+          "max": 5668.0
+        },
+        "accrued_wait_seconds_total": 2477929.0,
+        "accrued_wait_seconds_per_departed_passenger": 711.4352569623887,
+        "accrued_in_vehicle_seconds_total": 2296584.0,
+        "accrued_in_vehicle_seconds_per_departed_passenger": 659.3695090439277,
+        "accrued_wait_plus_in_vehicle_seconds_total": 4774513.0,
+        "accrued_wait_plus_in_vehicle_seconds_per_departed_passenger": 1370.8047660063164
+      },
+      "service": {
+        "departed_trips": 119,
+        "completed_trips": 118,
+        "completion_rate": 0.9915966386554622,
+        "active_trips_at_horizon": 1,
+        "completed_trip_duration_seconds": {
+          "n": 118,
+          "mean": 2985.7966101694915,
+          "std": 699.4795447278528,
+          "p50": 2878.5,
+          "p90": 3838.4,
+          "p95": 4353.95,
+          "min": 437.0,
+          "max": 4544.0
+        }
+      },
+      "last_transition": {
+        "rewards": -6466.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 61.0,
+        "event_decision_time_seconds": 17899.0,
+        "wait_passenger_seconds": 3233.0,
+        "in_vehicle_passenger_seconds": 0.0
+      }
+    },
+    {
+      "case": 4,
+      "split": "fit",
+      "episode_seconds": 24000,
+      "horizon_seconds": 17925.0,
+      "total_rows": 3834,
+      "collected_reward_sum": -7549209.0,
+      "collected_weighted_cost": 7549209.0,
+      "uncollected_initial_weighted_cost": 68780.0,
+      "ledger_reward_telescope_error": 0.0,
+      "passengers": {
+        "accounting_semantics": "one-second integration of SUMO bus-stop waiting counts and transit-vehicle person counts",
+        "legacy_sampled_trip_histories_used_for_welfare": false,
+        "departed_passengers": 3495,
+        "completed_passengers": 3430,
+        "completion_rate": 0.9814020028612304,
+        "unfinished_passengers": 65,
+        "state_counts_at_horizon": {
+          "waiting": 65,
+          "in_vehicle": 0,
+          "other_active": 0
+        },
+        "active_state_count_balance_error": 0,
+        "unfinished_departure_seconds": {
+          "n": 65,
+          "mean": 8526.553846153845,
+          "std": 2872.653961446025,
+          "p50": 7068.0,
+          "p90": 13907.2,
+          "p95": 14051.8,
+          "min": 4055.0,
+          "max": 14354.0
+        },
+        "unfinished_elapsed_seconds_at_horizon": {
+          "n": 65,
+          "mean": 9398.446153846155,
+          "std": 2872.653961446025,
+          "p50": 10857.0,
+          "p90": 12143.0,
+          "p95": 12321.6,
+          "min": 3571.0,
+          "max": 13870.0
+        },
+        "completed_journey_seconds": {
+          "n": 3430,
+          "mean": 1270.960641399417,
+          "std": 817.2775963475132,
+          "p50": 1084.5,
+          "p90": 2438.3999999999996,
+          "p95": 2840.9499999999975,
+          "min": 71.0,
+          "max": 5190.0
+        },
+        "accrued_wait_seconds_total": 2685067.0,
+        "accrued_wait_seconds_per_departed_passenger": 768.2595135908441,
+        "accrued_in_vehicle_seconds_total": 2247855.0,
+        "accrued_in_vehicle_seconds_per_departed_passenger": 643.1630901287554,
+        "accrued_wait_plus_in_vehicle_seconds_total": 4932922.0,
+        "accrued_wait_plus_in_vehicle_seconds_per_departed_passenger": 1411.4226037195995
+      },
+      "service": {
+        "departed_trips": 119,
+        "completed_trips": 118,
+        "completion_rate": 0.9915966386554622,
+        "active_trips_at_horizon": 1,
+        "completed_trip_duration_seconds": {
+          "n": 118,
+          "mean": 2980.093220338983,
+          "std": 683.799978092361,
+          "p50": 2880.5,
+          "p90": 3779.4999999999995,
+          "p95": 4277.7,
+          "min": 431.0,
+          "max": 4514.0
+        }
+      },
+      "last_transition": {
+        "rewards": -7670.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 59.0,
+        "event_decision_time_seconds": 17866.0,
+        "wait_passenger_seconds": 3835.0,
+        "in_vehicle_passenger_seconds": 0.0
+      }
+    },
+    {
+      "case": 5,
+      "split": "fit",
+      "episode_seconds": 24000,
+      "horizon_seconds": 17966.0,
+      "total_rows": 3834,
+      "collected_reward_sum": -7486512.0,
+      "collected_weighted_cost": 7486512.0,
+      "uncollected_initial_weighted_cost": 61305.0,
+      "ledger_reward_telescope_error": 0.0,
+      "passengers": {
+        "accounting_semantics": "one-second integration of SUMO bus-stop waiting counts and transit-vehicle person counts",
+        "legacy_sampled_trip_histories_used_for_welfare": false,
+        "departed_passengers": 3574,
+        "completed_passengers": 3515,
+        "completion_rate": 0.9834918858421936,
+        "unfinished_passengers": 59,
+        "state_counts_at_horizon": {
+          "waiting": 59,
+          "in_vehicle": 0,
+          "other_active": 0
+        },
+        "active_state_count_balance_error": 0,
+        "unfinished_departure_seconds": {
+          "n": 59,
+          "mean": 8947.627118644068,
+          "std": 2982.3433270888195,
+          "p50": 8154.0,
+          "p90": 14182.2,
+          "p95": 14257.8,
+          "min": 4967.0,
+          "max": 14400.0
+        },
+        "unfinished_elapsed_seconds_at_horizon": {
+          "n": 59,
+          "mean": 9018.372881355932,
+          "std": 2982.3433270888195,
+          "p50": 9812.0,
+          "p90": 12263.0,
+          "p95": 12468.5,
+          "min": 3566.0,
+          "max": 12999.0
+        },
+        "completed_journey_seconds": {
+          "n": 3515,
+          "mean": 1255.8523470839261,
+          "std": 808.2900376506693,
+          "p50": 1087.0,
+          "p90": 2369.0,
+          "p95": 2817.0,
+          "min": 67.0,
+          "max": 5391.0
+        },
+        "accrued_wait_seconds_total": 2640011.0,
+        "accrued_wait_seconds_per_departed_passenger": 738.6712367095691,
+        "accrued_in_vehicle_seconds_total": 2267795.0,
+        "accrued_in_vehicle_seconds_per_departed_passenger": 634.5257414661444,
+        "accrued_wait_plus_in_vehicle_seconds_total": 4907806.0,
+        "accrued_wait_plus_in_vehicle_seconds_per_departed_passenger": 1373.1969781757134
+      },
+      "service": {
+        "departed_trips": 119,
+        "completed_trips": 118,
+        "completion_rate": 0.9915966386554622,
+        "active_trips_at_horizon": 1,
+        "completed_trip_duration_seconds": {
+          "n": 118,
+          "mean": 2978.084745762712,
+          "std": 690.7158503459766,
+          "p50": 2886.5,
+          "p90": 3792.8999999999996,
+          "p95": 4230.45,
+          "min": 433.0,
+          "max": 4528.0
+        }
+      },
+      "last_transition": {
+        "rewards": -7246.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 61.0,
+        "event_decision_time_seconds": 17905.0,
+        "wait_passenger_seconds": 3599.0,
+        "in_vehicle_passenger_seconds": 48.0
+      }
+    },
+    {
+      "case": 6,
+      "split": "stop",
+      "episode_seconds": 24000,
+      "horizon_seconds": 17987.0,
+      "total_rows": 3832,
+      "collected_reward_sum": -7167406.0,
+      "collected_weighted_cost": 7167406.0,
+      "uncollected_initial_weighted_cost": 75098.0,
+      "ledger_reward_telescope_error": 0.0,
+      "passengers": {
+        "accounting_semantics": "one-second integration of SUMO bus-stop waiting counts and transit-vehicle person counts",
+        "legacy_sampled_trip_histories_used_for_welfare": false,
+        "departed_passengers": 3504,
+        "completed_passengers": 3452,
+        "completion_rate": 0.9851598173515982,
+        "unfinished_passengers": 52,
+        "state_counts_at_horizon": {
+          "waiting": 52,
+          "in_vehicle": 0,
+          "other_active": 0
+        },
+        "active_state_count_balance_error": 0,
+        "unfinished_departure_seconds": {
+          "n": 52,
+          "mean": 8896.365384615385,
+          "std": 2914.6877075432576,
+          "p50": 9179.5,
+          "p90": 13948.0,
+          "p95": 14236.4,
+          "min": 4501.0,
+          "max": 14344.0
+        },
+        "unfinished_elapsed_seconds_at_horizon": {
+          "n": 52,
+          "mean": 9090.634615384615,
+          "std": 2914.6877075432576,
+          "p50": 8807.5,
+          "p90": 12400.7,
+          "p95": 12566.55,
+          "min": 3643.0,
+          "max": 13486.0
+        },
+        "completed_journey_seconds": {
+          "n": 3452,
+          "mean": 1249.8276361529547,
+          "std": 789.0356783949709,
+          "p50": 1082.5,
+          "p90": 2337.9,
+          "p95": 2759.5999999999985,
+          "min": 71.0,
+          "max": 5339.0
+        },
+        "accrued_wait_seconds_total": 2493130.0,
+        "accrued_wait_seconds_per_departed_passenger": 711.509703196347,
+        "accrued_in_vehicle_seconds_total": 2256244.0,
+        "accrued_in_vehicle_seconds_per_departed_passenger": 643.9052511415525,
+        "accrued_wait_plus_in_vehicle_seconds_total": 4749374.0,
+        "accrued_wait_plus_in_vehicle_seconds_per_departed_passenger": 1355.4149543378996
+      },
+      "service": {
+        "departed_trips": 119,
+        "completed_trips": 118,
+        "completion_rate": 0.9915966386554622,
+        "active_trips_at_horizon": 1,
+        "completed_trip_duration_seconds": {
+          "n": 118,
+          "mean": 2979.237288135593,
+          "std": 685.3726003662197,
+          "p50": 2883.0,
+          "p90": 3787.8999999999996,
+          "p95": 4233.4,
+          "min": 432.0,
+          "max": 4581.0
+        }
+      },
+      "last_transition": {
+        "rewards": -7904.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 76.0,
+        "event_decision_time_seconds": 17911.0,
+        "wait_passenger_seconds": 3952.0,
+        "in_vehicle_passenger_seconds": 0.0
+      }
+    },
+    {
+      "case": 7,
+      "split": "calibrate",
+      "episode_seconds": 24000,
+      "horizon_seconds": 18088.0,
+      "total_rows": 3834,
+      "collected_reward_sum": -7347782.0,
+      "collected_weighted_cost": 7347782.0,
+      "uncollected_initial_weighted_cost": 73291.0,
+      "ledger_reward_telescope_error": 0.0,
+      "passengers": {
+        "accounting_semantics": "one-second integration of SUMO bus-stop waiting counts and transit-vehicle person counts",
+        "legacy_sampled_trip_histories_used_for_welfare": false,
+        "departed_passengers": 3493,
+        "completed_passengers": 3425,
+        "completion_rate": 0.9805324935585457,
+        "unfinished_passengers": 68,
+        "state_counts_at_horizon": {
+          "waiting": 68,
+          "in_vehicle": 0,
+          "other_active": 0
+        },
+        "active_state_count_balance_error": 0,
+        "unfinished_departure_seconds": {
+          "n": 68,
+          "mean": 9793.176470588236,
+          "std": 3153.6137193355476,
+          "p50": 9625.0,
+          "p90": 14137.5,
+          "p95": 14328.7,
+          "min": 4429.0,
+          "max": 14399.0
+        },
+        "unfinished_elapsed_seconds_at_horizon": {
+          "n": 68,
+          "mean": 8294.823529411764,
+          "std": 3153.613719335548,
+          "p50": 8463.0,
+          "p90": 12019.7,
+          "p95": 12265.0,
+          "min": 3689.0,
+          "max": 13659.0
+        },
+        "completed_journey_seconds": {
+          "n": 3425,
+          "mean": 1255.749781021898,
+          "std": 800.3789808676266,
+          "p50": 1073.0,
+          "p90": 2361.6,
+          "p95": 2812.7999999999997,
+          "min": 54.0,
+          "max": 5692.0
+        },
+        "accrued_wait_seconds_total": 2594055.0,
+        "accrued_wait_seconds_per_departed_passenger": 742.6438591468651,
+        "accrued_in_vehicle_seconds_total": 2232963.0,
+        "accrued_in_vehicle_seconds_per_departed_passenger": 639.2679645004295,
+        "accrued_wait_plus_in_vehicle_seconds_total": 4827018.0,
+        "accrued_wait_plus_in_vehicle_seconds_per_departed_passenger": 1381.9118236472946
+      },
+      "service": {
+        "departed_trips": 119,
+        "completed_trips": 118,
+        "completion_rate": 0.9915966386554622,
+        "active_trips_at_horizon": 1,
+        "completed_trip_duration_seconds": {
+          "n": 118,
+          "mean": 2986.322033898305,
+          "std": 692.8199267943651,
+          "p50": 2870.0,
+          "p90": 3866.7999999999997,
+          "p95": 4330.5,
+          "min": 435.0,
+          "max": 4491.0
+        }
+      },
+      "last_transition": {
+        "rewards": -8296.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 61.0,
+        "event_decision_time_seconds": 18027.0,
+        "wait_passenger_seconds": 4148.0,
+        "in_vehicle_passenger_seconds": 0.0
+      }
+    }
+  ]
+}

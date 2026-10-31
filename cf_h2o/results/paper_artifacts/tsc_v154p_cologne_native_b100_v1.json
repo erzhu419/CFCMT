@@ -1,0 +1,386 @@
+{
+  "protocol": "tsc-v154p-cologne-native-b100-v1",
+  "status": "PASS",
+  "protocol_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154p_cologne_native_b100_20260909/protocol_v1.json",
+  "collection_tasks": [
+    "t91825",
+    "t91826",
+    "t91827"
+  ],
+  "fit_task": "t91845",
+  "fit_launch": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154p_cologne_native_b100_20260909/fit_launch_cpu_v1.json",
+  "unstarted_scheduler_task": {
+    "id": "t91838",
+    "status": "cancelled_before_launch",
+    "reason": "Missing explicit CPU training declaration; same fit command resubmitted with declaration."
+  },
+  "collection": {
+    "requested_groups": 100,
+    "retained_groups": 100,
+    "retained_rows": 800,
+    "reused_groups": 9,
+    "new_groups": 91,
+    "new_action_branches": 728,
+    "reused_action_branches": 72,
+    "unsafe_native_branches": 0,
+    "unsafe_groups": [],
+    "invalid_groups": [],
+    "per_seed": [
+      {
+        "seed": 2027,
+        "status": "PASS",
+        "rows": 272,
+        "reused_group_count": 3,
+        "new_group_count": 31,
+        "new_branches_attempted": 248,
+        "unsafe_native_branches": 0,
+        "elapsed_sec": 307.03259760700166
+      },
+      {
+        "seed": 3037,
+        "status": "PASS",
+        "rows": 264,
+        "reused_group_count": 3,
+        "new_group_count": 30,
+        "new_branches_attempted": 240,
+        "unsafe_native_branches": 0,
+        "elapsed_sec": 288.5441280058585
+      },
+      {
+        "seed": 4047,
+        "status": "PASS",
+        "rows": 264,
+        "reused_group_count": 3,
+        "new_group_count": 30,
+        "new_branches_attempted": 240,
+        "unsafe_native_branches": 0,
+        "elapsed_sec": 299.85784606286325
+      }
+    ]
+  },
+  "fit_and_calibration": {
+    "protocol": "tsc-v154p-cologne-native-b100-v1",
+    "old_model_and_threshold_unchanged": true,
+    "new_model_fits": 4,
+    "status": "PASS",
+    "full_model_fits": 1,
+    "oof_fold_fits": 3,
+    "training_group_count": 100,
+    "training_row_count": 800,
+    "summed_fold_training_groups": 200,
+    "folds": [
+      {
+        "heldout_seed": 2027,
+        "fit_group_count": 66,
+        "heldout_group_count": 34
+      },
+      {
+        "heldout_seed": 3037,
+        "fit_group_count": 67,
+        "heldout_group_count": 33
+      },
+      {
+        "heldout_seed": 4047,
+        "fit_group_count": 67,
+        "heldout_group_count": 33
+      }
+    ],
+    "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+    "bank": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/bank.npz",
+    "frozen_threshold": {
+      "protocol": "tsc-v154l-cologne-rigid-oof-threshold-v1",
+      "calibration_protocol": "tsc-v154p-cologne-native-b100-v1",
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "fit_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/result.json",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+      "threshold": 0.0,
+      "mode": "minimum_advantage",
+      "comparison": "predicted_advantage > threshold + 1e-12",
+      "selection_data": "Exactly 100 training-seed OOF predictions using native B100 labels",
+      "calibration_mean_cost": 0.7772940186175482
+    },
+    "calibration": {
+      "selected": {
+        "threshold": 0.0,
+        "mode": "minimum_advantage",
+        "groups": 100,
+        "weighting": "equal_seed",
+        "per_seed": {
+          "2027": {
+            "groups": 34,
+            "accepted_overrides": 30,
+            "beneficial": 13,
+            "harmful": 15,
+            "equal_cost": 2,
+            "mean_phase_pressure_cost": 0.6832598039215686,
+            "mean_cost": 0.7109477124183007,
+            "mean_cost_minus_phase_pressure": 0.027687908496732038
+          },
+          "3037": {
+            "groups": 33,
+            "accepted_overrides": 26,
+            "beneficial": 19,
+            "harmful": 5,
+            "equal_cost": 2,
+            "mean_phase_pressure_cost": 0.8685185185185186,
+            "mean_cost": 0.8093686868686869,
+            "mean_cost_minus_phase_pressure": -0.05914983164983166
+          },
+          "4047": {
+            "groups": 33,
+            "accepted_overrides": 22,
+            "beneficial": 15,
+            "harmful": 5,
+            "equal_cost": 2,
+            "mean_phase_pressure_cost": 0.8569781144781146,
+            "mean_cost": 0.8115656565656566,
+            "mean_cost_minus_phase_pressure": -0.045412457912457925
+          }
+        },
+        "accepted_overrides": 78,
+        "beneficial": 47,
+        "harmful": 25,
+        "equal_cost": 6,
+        "mean_cost": 0.7772940186175482,
+        "mean_phase_pressure_cost": 0.8029188123060672,
+        "mean_cost_minus_phase_pressure": -0.025624793688519183
+      },
+      "phase_pressure": {
+        "threshold": null,
+        "mode": "phase_pressure_only",
+        "groups": 100,
+        "weighting": "equal_seed",
+        "per_seed": {
+          "2027": {
+            "groups": 34,
+            "accepted_overrides": 0,
+            "beneficial": 0,
+            "harmful": 0,
+            "equal_cost": 0,
+            "mean_phase_pressure_cost": 0.6832598039215686,
+            "mean_cost": 0.6832598039215686,
+            "mean_cost_minus_phase_pressure": -0.0
+          },
+          "3037": {
+            "groups": 33,
+            "accepted_overrides": 0,
+            "beneficial": 0,
+            "harmful": 0,
+            "equal_cost": 0,
+            "mean_phase_pressure_cost": 0.8685185185185186,
+            "mean_cost": 0.8685185185185186,
+            "mean_cost_minus_phase_pressure": -0.0
+          },
+          "4047": {
+            "groups": 33,
+            "accepted_overrides": 0,
+            "beneficial": 0,
+            "harmful": 0,
+            "equal_cost": 0,
+            "mean_phase_pressure_cost": 0.8569781144781146,
+            "mean_cost": 0.8569781144781146,
+            "mean_cost_minus_phase_pressure": -0.0
+          }
+        },
+        "accepted_overrides": 0,
+        "beneficial": 0,
+        "harmful": 0,
+        "equal_cost": 0,
+        "mean_cost": 0.8029188123060672,
+        "mean_phase_pressure_cost": 0.8029188123060672,
+        "mean_cost_minus_phase_pressure": 0.0
+      },
+      "ungated_rigid": {
+        "threshold": 0.0,
+        "mode": "minimum_advantage",
+        "groups": 100,
+        "weighting": "equal_seed",
+        "per_seed": {
+          "2027": {
+            "groups": 34,
+            "accepted_overrides": 30,
+            "beneficial": 13,
+            "harmful": 15,
+            "equal_cost": 2,
+            "mean_phase_pressure_cost": 0.6832598039215686,
+            "mean_cost": 0.7109477124183007,
+            "mean_cost_minus_phase_pressure": 0.027687908496732038
+          },
+          "3037": {
+            "groups": 33,
+            "accepted_overrides": 26,
+            "beneficial": 19,
+            "harmful": 5,
+            "equal_cost": 2,
+            "mean_phase_pressure_cost": 0.8685185185185186,
+            "mean_cost": 0.8093686868686869,
+            "mean_cost_minus_phase_pressure": -0.05914983164983166
+          },
+          "4047": {
+            "groups": 33,
+            "accepted_overrides": 22,
+            "beneficial": 15,
+            "harmful": 5,
+            "equal_cost": 2,
+            "mean_phase_pressure_cost": 0.8569781144781146,
+            "mean_cost": 0.8115656565656566,
+            "mean_cost_minus_phase_pressure": -0.045412457912457925
+          }
+        },
+        "accepted_overrides": 78,
+        "beneficial": 47,
+        "harmful": 25,
+        "equal_cost": 6,
+        "mean_cost": 0.7772940186175482,
+        "mean_phase_pressure_cost": 0.8029188123060672,
+        "mean_cost_minus_phase_pressure": -0.025624793688519183
+      },
+      "candidate_count": 80
+    },
+    "old_threshold_on_new_oof": {
+      "threshold": 0.3580414874633295,
+      "mode": "minimum_advantage",
+      "groups": 100,
+      "weighting": "equal_seed",
+      "per_seed": {
+        "2027": {
+          "groups": 34,
+          "accepted_overrides": 20,
+          "beneficial": 7,
+          "harmful": 12,
+          "equal_cost": 1,
+          "mean_phase_pressure_cost": 0.6832598039215686,
+          "mean_cost": 0.7155555555555555,
+          "mean_cost_minus_phase_pressure": 0.03229575163398694
+        },
+        "3037": {
+          "groups": 33,
+          "accepted_overrides": 14,
+          "beneficial": 11,
+          "harmful": 2,
+          "equal_cost": 1,
+          "mean_phase_pressure_cost": 0.8685185185185186,
+          "mean_cost": 0.8454882154882155,
+          "mean_cost_minus_phase_pressure": -0.023030303030303033
+        },
+        "4047": {
+          "groups": 33,
+          "accepted_overrides": 14,
+          "beneficial": 10,
+          "harmful": 3,
+          "equal_cost": 1,
+          "mean_phase_pressure_cost": 0.8569781144781146,
+          "mean_cost": 0.8157744107744108,
+          "mean_cost_minus_phase_pressure": -0.041203703703703715
+        }
+      },
+      "accepted_overrides": 48,
+      "beneficial": 28,
+      "harmful": 17,
+      "equal_cost": 3,
+      "mean_cost": 0.7922727272727274,
+      "mean_phase_pressure_cost": 0.8029188123060672,
+      "mean_cost_minus_phase_pressure": -0.010646085033339936
+    },
+    "native_vs_original_labels": {
+      "groups": 100,
+      "rows": 800,
+      "non_reference_rows": 700,
+      "strict_advantage_sign_flips": 264,
+      "optimal_action_set_changed_groups": 59,
+      "mean_native_minus_original": -0.0012611111111111085,
+      "mean_absolute_difference": 0.07942152777777778,
+      "max_absolute_difference": 0.6402777777777777
+    },
+    "new_closed_loop_evaluations": 0,
+    "limitations": [
+      "Selected OOF cost is calibration performance, not independent validation.",
+      "Transfer of the fold-calibrated threshold to the full B100 model awaits closed-loop evaluation."
+    ],
+    "elapsed_sec": 4.035786065040156
+  },
+  "accounting": {
+    "unique_training_groups": 100,
+    "new_label_action_simulations": 728,
+    "reused_native_action_simulations": 72,
+    "new_model_fits": 4,
+    "new_closed_loop_evaluations": 0,
+    "collection_runner_seconds": 895.4345716757234,
+    "fit_runner_seconds": 4.035786065040156,
+    "total_new_runner_seconds": 899.4703577407636,
+    "retrieved_files": [
+      {
+        "path": "collection/seed_2027/result.json",
+        "bytes": 15420,
+        "status": "PASS"
+      },
+      {
+        "path": "collection/seed_3037/result.json",
+        "bytes": 14874,
+        "status": "PASS"
+      },
+      {
+        "path": "collection/seed_4047/result.json",
+        "bytes": 15016,
+        "status": "PASS"
+      },
+      {
+        "path": "fit_v1/result.json",
+        "bytes": 11417
+      },
+      {
+        "path": "fit_v1/frozen_threshold.json",
+        "bytes": 712
+      }
+    ],
+    "retrieved_bytes": 57439,
+    "retrieved_banks_models_or_full_traces": false,
+    "focused_tests_passed": 12
+  },
+  "limitations": [
+    "OOF minimum is calibration performance, not independent validation.",
+    "No new closed-loop performance result has been produced for the native-label model.",
+    "Native versus restored label differences do not identify the specific hidden SUMO state behind restoration divergence."
+  ],
+  "comparison": {
+    "label_units": "Mean halted vehicles per controlled lane over 450 seconds",
+    "calibration_weighting": "equal_seed",
+    "selected_relative_to_pp_percent": -3.191455137901411,
+    "ungated_relative_to_pp_percent": -3.191455137901411
+  },
+  "next_step": {
+    "action": "Freeze this new full B100 model and OOF threshold; compare the same three 3600-second closed-loop trajectories against the original thresholded model and PhasePressure.",
+    "seeds": [
+      52282,
+      41242,
+      63792
+    ],
+    "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+    "frozen_threshold": {
+      "protocol": "tsc-v154l-cologne-rigid-oof-threshold-v1",
+      "calibration_protocol": "tsc-v154p-cologne-native-b100-v1",
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "fit_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/result.json",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+      "threshold": 0.0,
+      "mode": "minimum_advantage",
+      "comparison": "predicted_advantage > threshold + 1e-12",
+      "selection_data": "Exactly 100 training-seed OOF predictions using native B100 labels",
+      "calibration_mean_cost": 0.7772940186175482
+    },
+    "duration_sec": 3600,
+    "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+    "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+    "comparators": "Reuse V154M original-threshold results and V154I PhasePressure results with these same seeds and network.",
+    "metrics": [
+      "collisions",
+      "teleports",
+      "mean_waiting_time",
+      "system_vehicle_hours",
+      "arrivals",
+      "final_pending"
+    ],
+    "retuning": false,
+    "evaluation_status": "NOT_RUN"
+  }
+}

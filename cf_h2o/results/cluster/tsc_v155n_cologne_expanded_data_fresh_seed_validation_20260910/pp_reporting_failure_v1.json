@@ -1,0 +1,44 @@
+{
+  "protocol": "tsc-v155n-cologne-expanded-data-fresh-seed-validation-v1",
+  "recorded_at_utc": "2026-09-10T12:00:11.032776+00:00",
+  "affected_task_ids": [
+    "t92261",
+    "t92264",
+    "t92267",
+    "t92270",
+    "t92273",
+    "t92276"
+  ],
+  "affected_arm": "phase_pressure",
+  "affected_seeds": [
+    152282,
+    141242,
+    163792,
+    252282,
+    241242,
+    263792
+  ],
+  "simulation_reached_post_evaluation_validation": true,
+  "result_json_written": false,
+  "error": "KeyError: 'accepted_overrides'",
+  "cause": "The first N runner expected a learned-model guard counter, while native PhasePressure correctly returns empty guard_audit and residual_deployment dictionaries.",
+  "fix": "Validate empty native-PP audit/deployment dictionaries; leave policy, models=None, network, runtime, timing and seeds unchanged.",
+  "performance_values_inspected_before_fix": false,
+  "rerun_required": true,
+  "resolution": "The scheduler automatically retried each original PP signature. Attempts1-3 repeated the post-simulation KeyError; attempt4 used the corrected staged runner and wrote the unique result.",
+  "effective_pp_task_ids": [
+    "t92317",
+    "t92320",
+    "t92323",
+    "t92326",
+    "t92327",
+    "t92328"
+  ],
+  "pp_key_error_attempt_count": 18,
+  "scientific_configuration_changed": false,
+  "explicit_reporting_fix_batch_result_count": 0,
+  "explicit_reporting_fix_batch_outcome": "The automatic fourth attempts had already written all six PP results, so every reporting-fix1 task and auto-retry stopped at FileExistsError.",
+  "final_result_json_count": 6,
+  "executed_runner_snapshot": "tooling_executed_v1/run_cologne_fresh_seed_validation.py",
+  "post_experiment_local_marker_fix": "Eval complete"
+}

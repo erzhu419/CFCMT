@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "protocol": "tsc-v94-roadnetsz-shenzhen-pre-efficacy-network-admission-v1",
+  "source": {
+    "repository": "https://github.com/zhuliwen/RoadnetSZ",
+    "commit": "80a2785961b9439b6b92637e5cecd42ab5733052",
+    "city": "shenzhen",
+    "network": "fuhua_metavim"
+  },
+  "conversion": {
+    "protocol": "cfcmt-cityflow-full-external-sumo-conversion-v10",
+    "root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v94_shenzhen_unseen_20260831/conversion_v3",
+    "manifest_sha256": "27d4c6f805a51fcf43637a5ea50077b46f667b51d37d2f4ccfef9480e937973d",
+    "tree_sha256": "90ba31634b45a3e7af049c75adece7e80cce91c7960e2df5a9944950a1bf36ea"
+  },
+  "scenarios": [
+    "shenzhen_fuhua_real_1775",
+    "shenzhen_fuhua_2570",
+    "shenzhen_fuhua_4770"
+  ],
+  "seeds": [5057, 6067, 7103, 8171, 9277, 12001, 13007, 14009],
+  "runtime": {
+    "backend": "libsumo",
+    "sumo_version": "1.22.0",
+    "horizon_sec": 3600,
+    "minimum_controllable_tls": 35
+  },
+  "admission": {
+    "maximum_collision_count": 0,
+    "maximum_teleport_fraction": 0,
+    "scenario_rule": "eligible only if every fixed seed passes every admission check",
+    "minimum_eligible_scenarios": 2,
+    "timing": "frozen before any CFCMT, H2O+, source-selector, or policy efficacy rollout on Shenzhen"
+  }
+}

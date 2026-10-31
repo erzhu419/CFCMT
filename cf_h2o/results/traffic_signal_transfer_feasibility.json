@@ -1,0 +1,707 @@
+{
+  "aggregate": {
+    "model": {
+      "cfcmt_fewshot_bias_mpc": {
+        "next_queue_mae": 1.2669022771175225
+      },
+      "cfcmt_global_mpc": {
+        "next_queue_mae": 1.6176246107351724
+      },
+      "cfcmt_weighted_mpc": {
+        "next_queue_mae": 3.3632671363616256
+      },
+      "h2oplus_dense_mpc": {
+        "next_queue_mae": 2.8692096051381197
+      },
+      "sim_mpc": {
+        "next_queue_mae": 3.499880592624708
+      }
+    },
+    "policy": {
+      "cfcmt_fewshot_bias_mpc": {
+        "mean_cost": 268.38469653655864,
+        "mean_green_ns": 0.5484142857142857,
+        "mean_regret": 0.18703345831844292,
+        "oracle_action_accuracy": 0.8231428571428572,
+        "p90_regret": 0.6999341060795561,
+        "win_rate_vs_spillback_pressure": 0.6694285714285714
+      },
+      "cfcmt_global_mpc": {
+        "mean_cost": 268.3925699453048,
+        "mean_green_ns": 0.5505857142857142,
+        "mean_regret": 0.19490686706457733,
+        "oracle_action_accuracy": 0.8171428571428571,
+        "p90_regret": 0.7126563949458536,
+        "win_rate_vs_spillback_pressure": 0.6617142857142857
+      },
+      "cfcmt_weighted_mpc": {
+        "mean_cost": 269.4068391817847,
+        "mean_green_ns": 0.5969428571428572,
+        "mean_regret": 1.2091761035444974,
+        "oracle_action_accuracy": 0.7202857142857143,
+        "p90_regret": 4.703679771991602,
+        "win_rate_vs_spillback_pressure": 0.5848571428571429
+      },
+      "fixed_time": {
+        "mean_cost": 268.873625099608,
+        "mean_green_ns": 0.5,
+        "mean_regret": 0.6759620213678166,
+        "oracle_action_accuracy": 0.732,
+        "p90_regret": 1.3321849120582834,
+        "win_rate_vs_spillback_pressure": 0.659142857142857
+      },
+      "h2oplus_dense_mpc": {
+        "mean_cost": 269.60268002554875,
+        "mean_green_ns": 0.5316000000000001,
+        "mean_regret": 1.4050169473085712,
+        "oracle_action_accuracy": 0.6165714285714285,
+        "p90_regret": 4.838070069468336,
+        "win_rate_vs_spillback_pressure": 0.6134285714285714
+      },
+      "oracle_mpc": {
+        "mean_cost": 268.1976630782402,
+        "mean_green_ns": 0.5487428571428572,
+        "mean_regret": 0.0,
+        "oracle_action_accuracy": 1.0,
+        "p90_regret": 0.0,
+        "win_rate_vs_spillback_pressure": 0.7551428571428571
+      },
+      "queue_pressure": {
+        "mean_cost": 273.5091917777426,
+        "mean_green_ns": 0.515842857142857,
+        "mean_regret": 5.31152869950243,
+        "oracle_action_accuracy": 0.18457142857142855,
+        "p90_regret": 11.241168472018131,
+        "win_rate_vs_spillback_pressure": 0.08028571428571428
+      },
+      "sim_mpc": {
+        "mean_cost": 268.6394041413565,
+        "mean_green_ns": 0.5084714285714287,
+        "mean_regret": 0.441741063116326,
+        "oracle_action_accuracy": 0.7511428571428571,
+        "p90_regret": 0.9473137044388824,
+        "win_rate_vs_spillback_pressure": 0.6725714285714286
+      },
+      "spillback_pressure": {
+        "mean_cost": 271.984744963178,
+        "mean_green_ns": 0.5533571428571429,
+        "mean_regret": 3.7870818849377814,
+        "oracle_action_accuracy": 0.24485714285714288,
+        "p90_regret": 8.969850198495823,
+        "win_rate_vs_spillback_pressure": 0.0
+      }
+    }
+  },
+  "experiment": "traffic_signal_transfer_feasibility_phase0",
+  "methods": {
+    "cfcmt_fewshot_bias_mpc": "source-weighted CFCMT plus passive target residual-bias adaptation",
+    "cfcmt_global_mpc": "parent-restricted mechanism residual trained on pooled source networks",
+    "cfcmt_weighted_mpc": "source-weighted mechanism residual using target static summaries only",
+    "fixed_time": "constant balanced green split",
+    "h2oplus_dense_mpc": "dense residual world model trained on source networks",
+    "oracle_mpc": "true target mechanism for action selection",
+    "queue_pressure": "current queue plus arrival pressure, no downstream occupancy",
+    "sim_mpc": "uncalibrated analytic simulator, one-step MPC",
+    "spillback_pressure": "pressure rule with downstream blocking proxy"
+  },
+  "setting": {
+    "action_grid_green_ns": [
+      0.15,
+      0.3,
+      0.5,
+      0.7,
+      0.85
+    ],
+    "dense_l2": 25.0,
+    "eval_samples_per_network": 700,
+    "fewshot_target_labels": 80,
+    "mechanism_l2": 8.0,
+    "samples_per_network": 1400,
+    "seed": 7,
+    "simulator": "analytic_signal_queue",
+    "transfer_split": "leave_one_network_out",
+    "zero_shot_target_labels": 0
+  },
+  "targets": [
+    {
+      "fewshot_bias": [
+        -0.8134935009773617,
+        -0.30462870219394106,
+        -0.2838940199417517,
+        -1.274017107811252
+      ],
+      "fewshot_samples": 80,
+      "model_metrics": {
+        "cfcmt_fewshot_bias_mpc": {
+          "next_queue_mae": 0.9302690366262116
+        },
+        "cfcmt_global_mpc": {
+          "next_queue_mae": 1.1374894020631927
+        },
+        "cfcmt_weighted_mpc": {
+          "next_queue_mae": 1.5715481379080765
+        },
+        "h2oplus_dense_mpc": {
+          "next_queue_mae": 1.9345633901657908
+        },
+        "sim_mpc": {
+          "next_queue_mae": 1.1864754181738857
+        }
+      },
+      "policy_metrics": {
+        "cfcmt_fewshot_bias_mpc": {
+          "mean_cost": 165.87966247491002,
+          "mean_green_ns": 0.5371428571428571,
+          "mean_regret": 0.1201550766663692,
+          "oracle_action_accuracy": 0.8685714285714285,
+          "p90_regret": 0.37109952364552057,
+          "win_rate_vs_spillback_pressure": 0.7542857142857143
+        },
+        "cfcmt_global_mpc": {
+          "mean_cost": 165.8745777850556,
+          "mean_green_ns": 0.5368571428571429,
+          "mean_regret": 0.11507038681194845,
+          "oracle_action_accuracy": 0.87,
+          "p90_regret": 0.36315469454063437,
+          "win_rate_vs_spillback_pressure": 0.7528571428571429
+        },
+        "cfcmt_weighted_mpc": {
+          "mean_cost": 166.37667558272682,
+          "mean_green_ns": 0.5901428571428572,
+          "mean_regret": 0.6171681844831868,
+          "oracle_action_accuracy": 0.6914285714285714,
+          "p90_regret": 2.1404734611492247,
+          "win_rate_vs_spillback_pressure": 0.6085714285714285
+        },
+        "fixed_time": {
+          "mean_cost": 165.79227912341784,
+          "mean_green_ns": 0.5,
+          "mean_regret": 0.03277172517418608,
+          "oracle_action_accuracy": 0.9628571428571429,
+          "p90_regret": 0.0,
+          "win_rate_vs_spillback_pressure": 0.7871428571428571
+        },
+        "h2oplus_dense_mpc": {
+          "mean_cost": 166.19787394738884,
+          "mean_green_ns": 0.573857142857143,
+          "mean_regret": 0.4383665491451937,
+          "oracle_action_accuracy": 0.71,
+          "p90_regret": 1.958182346568654,
+          "win_rate_vs_spillback_pressure": 0.7014285714285714
+        },
+        "oracle_mpc": {
+          "mean_cost": 165.75950739824364,
+          "mean_green_ns": 0.5085,
+          "mean_regret": 0.0,
+          "oracle_action_accuracy": 1.0,
+          "p90_regret": 0.0,
+          "win_rate_vs_spillback_pressure": 0.8014285714285714
+        },
+        "queue_pressure": {
+          "mean_cost": 171.00421176069307,
+          "mean_green_ns": 0.5820714285714285,
+          "mean_regret": 5.244704362449446,
+          "oracle_action_accuracy": 0.13,
+          "p90_regret": 9.332603261511082,
+          "win_rate_vs_spillback_pressure": 0.11
+        },
+        "sim_mpc": {
+          "mean_cost": 165.81420422310617,
+          "mean_green_ns": 0.5042857142857143,
+          "mean_regret": 0.05469682486253297,
+          "oracle_action_accuracy": 0.9585714285714285,
+          "p90_regret": 0.0,
+          "win_rate_vs_spillback_pressure": 0.7885714285714286
+        },
+        "spillback_pressure": {
+          "mean_cost": 169.90439736971712,
+          "mean_green_ns": 0.6214999999999999,
+          "mean_regret": 4.14488997147345,
+          "oracle_action_accuracy": 0.19857142857142857,
+          "p90_regret": 8.225363567190637,
+          "win_rate_vs_spillback_pressure": 0.0
+        }
+      },
+      "source_networks": [
+        "arterial_peak",
+        "downtown_spillback",
+        "suburban_asymmetric",
+        "event_reversal"
+      ],
+      "target": "grid_balanced",
+      "target_summary": [
+        0.6089285714285715,
+        0.07857142857142854,
+        0.9138888888888889,
+        0.13768926368215254,
+        0.30250000000000005,
+        0.48,
+        0.18
+      ]
+    },
+    {
+      "fewshot_bias": [
+        -1.0665527519032287,
+        -2.0167280160221788,
+        -1.1857634592149042,
+        1.1901821818515084
+      ],
+      "fewshot_samples": 80,
+      "model_metrics": {
+        "cfcmt_fewshot_bias_mpc": {
+          "next_queue_mae": 1.5198144727233909
+        },
+        "cfcmt_global_mpc": {
+          "next_queue_mae": 1.8095084286760361
+        },
+        "cfcmt_weighted_mpc": {
+          "next_queue_mae": 3.1382812193823955
+        },
+        "h2oplus_dense_mpc": {
+          "next_queue_mae": 2.3490325228672795
+        },
+        "sim_mpc": {
+          "next_queue_mae": 4.083822306969006
+        }
+      },
+      "policy_metrics": {
+        "cfcmt_fewshot_bias_mpc": {
+          "mean_cost": 270.4705160013344,
+          "mean_green_ns": 0.7280714285714286,
+          "mean_regret": 0.5204342796461597,
+          "oracle_action_accuracy": 0.5571428571428572,
+          "p90_regret": 2.5133878880671947,
+          "win_rate_vs_spillback_pressure": 0.19714285714285715
+        },
+        "cfcmt_global_mpc": {
+          "mean_cost": 270.5029250735994,
+          "mean_green_ns": 0.7317142857142858,
+          "mean_regret": 0.5528433519112204,
+          "oracle_action_accuracy": 0.5328571428571428,
+          "p90_regret": 2.534670333268537,
+          "win_rate_vs_spillback_pressure": 0.18
+        },
+        "cfcmt_weighted_mpc": {
+          "mean_cost": 270.21531066464337,
+          "mean_green_ns": 0.7852857142857141,
+          "mean_regret": 0.2652289429552377,
+          "oracle_action_accuracy": 0.6228571428571429,
+          "p90_regret": 1.0837468564958144,
+          "win_rate_vs_spillback_pressure": 0.15428571428571428
+        },
+        "fixed_time": {
+          "mean_cost": 272.7726512604491,
+          "mean_green_ns": 0.5,
+          "mean_regret": 2.8225695387610314,
+          "oracle_action_accuracy": 0.1,
+          "p90_regret": 4.549299031871699,
+          "win_rate_vs_spillback_pressure": 0.1357142857142857
+        },
+        "h2oplus_dense_mpc": {
+          "mean_cost": 272.1354483200241,
+          "mean_green_ns": 0.5333571428571429,
+          "mean_regret": 2.185366598336005,
+          "oracle_action_accuracy": 0.13857142857142857,
+          "p90_regret": 3.983866280124482,
+          "win_rate_vs_spillback_pressure": 0.17285714285714285
+        },
+        "oracle_mpc": {
+          "mean_cost": 269.95008172168815,
+          "mean_green_ns": 0.7530714285714285,
+          "mean_regret": 0.0,
+          "oracle_action_accuracy": 1.0,
+          "p90_regret": 0.0,
+          "win_rate_vs_spillback_pressure": 0.48
+        },
+        "queue_pressure": {
+          "mean_cost": 270.77679727967194,
+          "mean_green_ns": 0.8347142857142855,
+          "mean_regret": 0.8267155579837617,
+          "oracle_action_accuracy": 0.5085714285714286,
+          "p90_regret": 2.9002225055073905,
+          "win_rate_vs_spillback_pressure": 0.027142857142857142
+        },
+        "sim_mpc": {
+          "mean_cost": 271.2803685547211,
+          "mean_green_ns": 0.5869285714285715,
+          "mean_regret": 1.3302868330329731,
+          "oracle_action_accuracy": 0.21571428571428572,
+          "p90_regret": 3.188910248308952,
+          "win_rate_vs_spillback_pressure": 0.20714285714285716
+        },
+        "spillback_pressure": {
+          "mean_cost": 270.92392331368313,
+          "mean_green_ns": 0.8182857142857141,
+          "mean_regret": 0.9738415919950296,
+          "oracle_action_accuracy": 0.52,
+          "p90_regret": 2.4149567892970003,
+          "win_rate_vs_spillback_pressure": 0.0
+        }
+      },
+      "source_networks": [
+        "grid_balanced",
+        "downtown_spillback",
+        "suburban_asymmetric",
+        "event_reversal"
+      ],
+      "target": "arterial_peak",
+      "target_summary": [
+        0.6723214285714285,
+        0.5303571428571429,
+        0.9444444444444444,
+        0.6263873490988712,
+        0.3075,
+        0.58,
+        0.3
+      ]
+    },
+    {
+      "fewshot_bias": [
+        0.15987536613595882,
+        0.5027641799669669,
+        3.644234691591996,
+        2.3552529757327925
+      ],
+      "fewshot_samples": 80,
+      "model_metrics": {
+        "cfcmt_fewshot_bias_mpc": {
+          "next_queue_mae": 1.8969115458513948
+        },
+        "cfcmt_global_mpc": {
+          "next_queue_mae": 2.321768123610661
+        },
+        "cfcmt_weighted_mpc": {
+          "next_queue_mae": 4.676256556578604
+        },
+        "h2oplus_dense_mpc": {
+          "next_queue_mae": 4.050449565790261
+        },
+        "sim_mpc": {
+          "next_queue_mae": 6.193783610530181
+        }
+      },
+      "policy_metrics": {
+        "cfcmt_fewshot_bias_mpc": {
+          "mean_cost": 405.2175905940004,
+          "mean_green_ns": 0.4962857142857143,
+          "mean_regret": 0.09024518784173398,
+          "oracle_action_accuracy": 0.9671428571428572,
+          "p90_regret": 0.0,
+          "win_rate_vs_spillback_pressure": 0.8271428571428572
+        },
+        "cfcmt_global_mpc": {
+          "mean_cost": 405.2045079177748,
+          "mean_green_ns": 0.49764285714285716,
+          "mean_regret": 0.07716251161613549,
+          "oracle_action_accuracy": 0.9685714285714285,
+          "p90_regret": 0.0,
+          "win_rate_vs_spillback_pressure": 0.8257142857142857
+        },
+        "cfcmt_weighted_mpc": {
+          "mean_cost": 405.31290921693227,
+          "mean_green_ns": 0.5212857142857142,
+          "mean_regret": 0.18556381077365688,
+          "oracle_action_accuracy": 0.9157142857142857,
+          "p90_regret": 0.0,
+          "win_rate_vs_spillback_pressure": 0.79
+        },
+        "fixed_time": {
+          "mean_cost": 405.12964001218404,
+          "mean_green_ns": 0.5,
+          "mean_regret": 0.0022946060254680233,
+          "oracle_action_accuracy": 0.9885714285714285,
+          "p90_regret": 0.0,
+          "win_rate_vs_spillback_pressure": 0.8285714285714286
+        },
+        "h2oplus_dense_mpc": {
+          "mean_cost": 406.3038570624048,
+          "mean_green_ns": 0.4701428571428572,
+          "mean_regret": 1.1765116562462166,
+          "oracle_action_accuracy": 0.7514285714285714,
+          "p90_regret": 5.383580302678956,
+          "win_rate_vs_spillback_pressure": 0.7314285714285714
+        },
+        "oracle_mpc": {
+          "mean_cost": 405.1273454061586,
+          "mean_green_ns": 0.5022857142857143,
+          "mean_regret": 0.0,
+          "oracle_action_accuracy": 1.0,
+          "p90_regret": 0.0,
+          "win_rate_vs_spillback_pressure": 0.8285714285714286
+        },
+        "queue_pressure": {
+          "mean_cost": 411.9235850703187,
+          "mean_green_ns": 0.3950714285714285,
+          "mean_regret": 6.7962396641601295,
+          "oracle_action_accuracy": 0.08428571428571428,
+          "p90_regret": 10.848951518778552,
+          "win_rate_vs_spillback_pressure": 0.11142857142857143
+        },
+        "sim_mpc": {
+          "mean_cost": 405.3114631963086,
+          "mean_green_ns": 0.49485714285714283,
+          "mean_regret": 0.18411779014993548,
+          "oracle_action_accuracy": 0.95,
+          "p90_regret": 0.0,
+          "win_rate_vs_spillback_pressure": 0.82
+        },
+        "spillback_pressure": {
+          "mean_cost": 409.7212158710436,
+          "mean_green_ns": 0.5388571428571428,
+          "mean_regret": 4.593870464884973,
+          "oracle_action_accuracy": 0.17142857142857143,
+          "p90_regret": 9.085348761712948,
+          "win_rate_vs_spillback_pressure": 0.0
+        }
+      },
+      "source_networks": [
+        "grid_balanced",
+        "arterial_peak",
+        "suburban_asymmetric",
+        "event_reversal"
+      ],
+      "target": "downtown_spillback",
+      "target_summary": [
+        0.6723214285714285,
+        -0.06964285714285699,
+        0.8236111111111111,
+        0.08025566785107598,
+        0.52,
+        0.88,
+        0.38
+      ]
+    },
+    {
+      "fewshot_bias": [
+        -0.16496067958235786,
+        -0.7448049689791117,
+        0.3093126590855645,
+        2.800200708491455
+      ],
+      "fewshot_samples": 80,
+      "model_metrics": {
+        "cfcmt_fewshot_bias_mpc": {
+          "next_queue_mae": 1.0885488193373123
+        },
+        "cfcmt_global_mpc": {
+          "next_queue_mae": 1.6527816652551708
+        },
+        "cfcmt_weighted_mpc": {
+          "next_queue_mae": 2.635705106553972
+        },
+        "h2oplus_dense_mpc": {
+          "next_queue_mae": 2.3120177188583035
+        },
+        "sim_mpc": {
+          "next_queue_mae": 3.00590965817626
+        }
+      },
+      "policy_metrics": {
+        "cfcmt_fewshot_bias_mpc": {
+          "mean_cost": 104.15835953318872,
+          "mean_green_ns": 0.528,
+          "mean_regret": 0.05851272331008573,
+          "oracle_action_accuracy": 0.9357142857142857,
+          "p90_regret": 0.0,
+          "win_rate_vs_spillback_pressure": 0.7357142857142858
+        },
+        "cfcmt_global_mpc": {
+          "mean_cost": 104.16561486034841,
+          "mean_green_ns": 0.5354285714285714,
+          "mean_regret": 0.0657680504697715,
+          "oracle_action_accuracy": 0.9328571428571428,
+          "p90_regret": 0.0,
+          "win_rate_vs_spillback_pressure": 0.7214285714285714
+        },
+        "cfcmt_weighted_mpc": {
+          "mean_cost": 104.34465060350296,
+          "mean_green_ns": 0.5072142857142857,
+          "mean_regret": 0.24480379362430507,
+          "oracle_action_accuracy": 0.8642857142857143,
+          "p90_regret": 0.6611405229499484,
+          "win_rate_vs_spillback_pressure": 0.6985714285714286
+        },
+        "fixed_time": {
+          "mean_cost": 104.4340468210127,
+          "mean_green_ns": 0.5,
+          "mean_regret": 0.33420001113406633,
+          "oracle_action_accuracy": 0.8485714285714285,
+          "p90_regret": 1.385191255812647,
+          "win_rate_vs_spillback_pressure": 0.6842857142857143
+        },
+        "h2oplus_dense_mpc": {
+          "mean_cost": 104.14768538739902,
+          "mean_green_ns": 0.5257857142857144,
+          "mean_regret": 0.04783857752037513,
+          "oracle_action_accuracy": 0.9414285714285714,
+          "p90_regret": 0.0,
+          "win_rate_vs_spillback_pressure": 0.74
+        },
+        "oracle_mpc": {
+          "mean_cost": 104.09984680987863,
+          "mean_green_ns": 0.5278571428571428,
+          "mean_regret": 0.0,
+          "oracle_action_accuracy": 1.0,
+          "p90_regret": 0.0,
+          "win_rate_vs_spillback_pressure": 0.7471428571428571
+        },
+        "queue_pressure": {
+          "mean_cost": 110.20734293060148,
+          "mean_green_ns": 0.40078571428571425,
+          "mean_regret": 6.107496120722851,
+          "oracle_action_accuracy": 0.16428571428571428,
+          "p90_regret": 12.423901137767334,
+          "win_rate_vs_spillback_pressure": 0.09428571428571429
+        },
+        "sim_mpc": {
+          "mean_cost": 104.38793436096827,
+          "mean_green_ns": 0.5014285714285714,
+          "mean_regret": 0.2880875510896384,
+          "oracle_action_accuracy": 0.8542857142857143,
+          "p90_regret": 0.9462770143905374,
+          "win_rate_vs_spillback_pressure": 0.6871428571428572
+        },
+        "spillback_pressure": {
+          "mean_cost": 108.08402166772254,
+          "mean_green_ns": 0.4882857142857142,
+          "mean_regret": 3.984174857843891,
+          "oracle_action_accuracy": 0.25285714285714284,
+          "p90_regret": 9.697775710153769,
+          "win_rate_vs_spillback_pressure": 0.0
+        }
+      },
+      "source_networks": [
+        "grid_balanced",
+        "arterial_peak",
+        "downtown_spillback",
+        "event_reversal"
+      ],
+      "target": "suburban_asymmetric",
+      "target_summary": [
+        0.4107142857142857,
+        -0.07142857142857142,
+        0.9027777777777778,
+        0.38667025860400606,
+        0.235,
+        0.4,
+        0.22
+      ]
+    },
+    {
+      "fewshot_bias": [
+        0.10791578304195149,
+        -0.41975512046150865,
+        -1.5956705565280092,
+        -1.375114633847978
+      ],
+      "fewshot_samples": 80,
+      "model_metrics": {
+        "cfcmt_fewshot_bias_mpc": {
+          "next_queue_mae": 0.8989675110493032
+        },
+        "cfcmt_global_mpc": {
+          "next_queue_mae": 1.1665754340708003
+        },
+        "cfcmt_weighted_mpc": {
+          "next_queue_mae": 4.79454466138508
+        },
+        "h2oplus_dense_mpc": {
+          "next_queue_mae": 3.6999848280089656
+        },
+        "sim_mpc": {
+          "next_queue_mae": 3.0294119692742076
+        }
+      },
+      "policy_metrics": {
+        "cfcmt_fewshot_bias_mpc": {
+          "mean_cost": 396.1973540793598,
+          "mean_green_ns": 0.4525714285714285,
+          "mean_regret": 0.14582002412786613,
+          "oracle_action_accuracy": 0.7871428571428571,
+          "p90_regret": 0.615183118685065,
+          "win_rate_vs_spillback_pressure": 0.8328571428571429
+        },
+        "cfcmt_global_mpc": {
+          "mean_cost": 396.2152240897458,
+          "mean_green_ns": 0.45128571428571423,
+          "mean_regret": 0.16369003451381073,
+          "oracle_action_accuracy": 0.7814285714285715,
+          "p90_regret": 0.6654569469200968,
+          "win_rate_vs_spillback_pressure": 0.8285714285714286
+        },
+        "cfcmt_weighted_mpc": {
+          "mean_cost": 400.78464984111804,
+          "mean_green_ns": 0.5807857142857142,
+          "mean_regret": 4.733115785886101,
+          "oracle_action_accuracy": 0.5071428571428571,
+          "p90_regret": 19.633038019363024,
+          "win_rate_vs_spillback_pressure": 0.6728571428571428
+        },
+        "fixed_time": {
+          "mean_cost": 396.2395082809763,
+          "mean_green_ns": 0.5,
+          "mean_regret": 0.18797422574433117,
+          "oracle_action_accuracy": 0.76,
+          "p90_regret": 0.7264342726070715,
+          "win_rate_vs_spillback_pressure": 0.86
+        },
+        "h2oplus_dense_mpc": {
+          "mean_cost": 399.228535410527,
+          "mean_green_ns": 0.5548571428571428,
+          "mean_regret": 3.1770013552950656,
+          "oracle_action_accuracy": 0.5414285714285715,
+          "p90_regret": 12.864721417969589,
+          "win_rate_vs_spillback_pressure": 0.7214285714285714
+        },
+        "oracle_mpc": {
+          "mean_cost": 396.0515340552319,
+          "mean_green_ns": 0.45199999999999996,
+          "mean_regret": 0.0,
+          "oracle_action_accuracy": 1.0,
+          "p90_regret": 0.0,
+          "win_rate_vs_spillback_pressure": 0.9185714285714286
+        },
+        "queue_pressure": {
+          "mean_cost": 403.63402184742796,
+          "mean_green_ns": 0.36657142857142855,
+          "mean_regret": 7.582487792195968,
+          "oracle_action_accuracy": 0.03571428571428571,
+          "p90_regret": 20.700163936526298,
+          "win_rate_vs_spillback_pressure": 0.05857142857142857
+        },
+        "sim_mpc": {
+          "mean_cost": 396.40305037167855,
+          "mean_green_ns": 0.4548571428571429,
+          "mean_regret": 0.3515163164465498,
+          "oracle_action_accuracy": 0.7771428571428571,
+          "p90_regret": 0.6013812594949232,
+          "win_rate_vs_spillback_pressure": 0.86
+        },
+        "spillback_pressure": {
+          "mean_cost": 401.29016659372354,
+          "mean_green_ns": 0.29985714285714277,
+          "mean_regret": 5.2386325384915615,
+          "oracle_action_accuracy": 0.08142857142857143,
+          "p90_regret": 15.425806164124754,
+          "win_rate_vs_spillback_pressure": 0.0
+        }
+      },
+      "source_networks": [
+        "grid_balanced",
+        "arterial_peak",
+        "downtown_spillback",
+        "suburban_asymmetric"
+      ],
+      "target": "event_reversal",
+      "target_summary": [
+        0.7160714285714286,
+        -0.3178571428571429,
+        0.9236111111111112,
+        0.3223987782579553,
+        0.39,
+        0.7,
+        0.46
+      ]
+    }
+  ]
+}

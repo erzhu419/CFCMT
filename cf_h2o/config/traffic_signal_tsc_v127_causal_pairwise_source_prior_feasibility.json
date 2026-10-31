@@ -1,0 +1,51 @@
+{
+  "protocol": "tsc-v127-causal-pairwise-source-prior-feasibility-v1",
+  "scientific_status": "abundant-target-counterfactual-development-diagnostic",
+  "predecessor": "tsc-v126-source-ranker-feasibility-v1",
+  "reference_policy": "phase_pressure",
+  "target_city": "jinan",
+  "prior_target_group_budget": 500,
+  "source_prior": {
+    "source_group": "atlanta",
+    "source_weight": 0.75,
+    "target_weight": 0.25,
+    "selection_basis": "V123 selected atlanta__source_weight_0.75 in 22 of 22 B500 leave-one-selector-seed folds"
+  },
+  "arms": [
+    "target_only",
+    "source_aligned",
+    "source_placebo"
+  ],
+  "outer_protocol": {
+    "split": "leave_one_selector_seed_out",
+    "ranker_training_seed_count": 16,
+    "calibration_seed_count": 5,
+    "heldout_seed_count": 1,
+    "heldout_seed_labels_used_for_fit_or_calibration": false
+  },
+  "ranker": {
+    "family": "causal_antisymmetric_pairwise_hgb",
+    "learning_rate": 0.05,
+    "max_iter": 100,
+    "max_leaf_nodes": 15,
+    "min_samples_leaf": 20,
+    "l2_regularization": 10.0,
+    "source_channel": "0.75 * (atlanta_b500_score - target_b500_score)",
+    "action_constraint": "nondecreasing_instantaneous_service_pressure"
+  },
+  "calibration_gate": {
+    "retention_fractions": [0.005, 0.01, 0.025, 0.05, 0.1, 0.2],
+    "minimum_interventions": 20,
+    "minimum_mean_effect": 0.0005,
+    "minimum_improving_seed_fraction": 0.8,
+    "one_sided_critical_value": 2.132,
+    "fallback": "exact_phase_pressure"
+  },
+  "development_gate": {
+    "source_aligned_mean_vs_phase_pressure_must_be_at_most": -0.0005,
+    "source_aligned_minus_target_only_mean_must_be_at_most": -0.0005,
+    "source_aligned_minus_source_placebo_mean_must_be_at_most": -0.0005,
+    "all_paired_upper_95_bounds_must_be_negative": true
+  },
+  "claim_boundary": "V127 is an abundant target-counterfactual upper-feasibility experiment. It is not a few-shot target-adaptation or fresh-city confirmation result."
+}

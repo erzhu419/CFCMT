@@ -1,0 +1,102 @@
+{
+  "name": "cfcmt-bus-rule-confirmation-isolated-v1",
+  "reference_experiment": "mcwm_seed_confirmation_v13",
+  "primary_arm": "fixed0250",
+  "training_seeds": [
+    63001,
+    63002,
+    63003,
+    63004,
+    63005,
+    63006,
+    63007,
+    63008,
+    63009,
+    63010,
+    63011,
+    63012,
+    63013,
+    63014,
+    63015,
+    63016,
+    63017,
+    63018,
+    63019,
+    63020
+  ],
+  "scenarios": [
+    "calibrated",
+    "joint50",
+    "joint75"
+  ],
+  "rule": "forward_proportional",
+  "rule_gain": 0.6,
+  "rule_max_hold_seconds": 60.0,
+  "rule_formula": "min(60, max(0, 0.6 * (scheduled_forward_headway - observed_forward_headway)))",
+  "missing_forward_neighbor": "Use scheduled forward headway, as in the existing fixed rule",
+  "evaluation_blocks": [
+    {
+      "demand_seed": 68901,
+      "sumo_seed": 69901
+    },
+    {
+      "demand_seed": 68902,
+      "sumo_seed": 69902
+    },
+    {
+      "demand_seed": 68903,
+      "sumo_seed": 69903
+    },
+    {
+      "demand_seed": 68904,
+      "sumo_seed": 69904
+    },
+    {
+      "demand_seed": 68905,
+      "sumo_seed": 69905
+    }
+  ],
+  "evaluation_demand_scales": [
+    1.0,
+    1.25
+  ],
+  "departure_jitter_seconds": 120,
+  "evaluation_horizon_seconds": 24000,
+  "execution_layer": "early60",
+  "completion_guard": "quarter-load-sixty",
+  "deployment_hold_scale": 1.0,
+  "sumo_version": "SUMO 1.25.0",
+  "new_training_jobs": 0,
+  "new_evaluation_jobs": 11,
+  "training_nodes": [
+    "node001",
+    "node002",
+    "node003",
+    "node004",
+    "node005",
+    "node006"
+  ],
+  "minimum_mean_cost_improvement_seconds": 5.0,
+  "maximum_cell_completion_decrease_percentage_points": 0.1,
+  "paired_ci": {
+    "method": "Student t",
+    "confidence": 0.95,
+    "degrees_of_freedom": 19,
+    "critical_value": 2.093024054408263
+  },
+  "gate": "Allow the next incremental cross-city stage only if the all-20-seed, six-cell equal-weight mean cost delta is at most -5 seconds per departed passenger, its paired training-seed CI95 upper endpoint is below zero, every source-by-demand cell mean cost delta is nonpositive, and every cell mean completion delta is at least -0.1 percentage points. Individual seed regressions are disclosed, not an automatic failure. A failed gate closes this confirmation without changing gain, seeds, or thresholds.",
+  "interpretation": "Strong fixed-rule supplement on the previously analyzed v13 test days, not a wholly unseen target benchmark. Reuse all 20 fresh-seed fixed0250 policies without retraining, development selection, or test-driven coefficient selection. CI varies training initialization conditional on these five paired test days and the fixed source conditions; it does not cover new cities or a population of new days. Existing H2O+, fixed0300, shared_gated and duet comparisons remain descriptive and cannot replace the primary result. No data, checkpoints, or daily results are downloaded locally.",
+  "source_reference_path": "/home/zhengliang01/scheduleurm_work/Thesis/experiments/mcwm_seed_confirmation_v13",
+  "reference_outputs": "reference_snapshot",
+  "execution_code_snapshot": "thesis_snapshot/sumo_eval",
+  "new_rule_evaluation_jobs": 10,
+  "runtime_validation_jobs": 1,
+  "runtime_validation": {
+    "method": "daganzo_duet",
+    "gain": 0.5,
+    "case": 0,
+    "cost_absolute_tolerance_seconds": 1e-08,
+    "completion_absolute_tolerance": 1e-12,
+    "invalid_decision": "INVALID_RUNTIME"
+  }
+}

@@ -1,0 +1,27 @@
+seed: 42
+device: cpu
+
+mcwm:
+  ensemble_size: 5
+  hidden_dim: 200
+  lr: 0.001
+  residual_hidden_dim: 64
+  residual_lr: 0.001
+  train_epochs_sim: 100
+  train_epochs_residual: 50
+  batch_size: 256
+  w_min: 0.05
+  w_max: 5.0
+
+h2o_bridge:
+  trust_warmup_steps: 0
+  jtt_enabled: false
+
+policy_input:
+  use_raw_obs: true
+  use_line_route_static_fields: true
+  forbidden_fields:
+    - city_id
+    - domain_id
+    - real_sim_label
+    - source

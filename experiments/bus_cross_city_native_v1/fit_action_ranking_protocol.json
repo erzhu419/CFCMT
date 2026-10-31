@@ -1,0 +1,56 @@
+{
+  "name": "cfcmt-bus-fit-action-ranking-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "target_fit_rows": 12288,
+  "fit_role": 0,
+  "row_selection": "All original target fit rows only; do not read stop/calibrate state rows or evaluation trajectories.",
+  "stages": {
+    "adapted": {
+      "folder": "source_dense_adaptation",
+      "filename": "adapted.pt",
+      "stored_updates": 5000
+    },
+    "td0": {
+      "folder": "projected_continuation/td0",
+      "filename": "final_learner.pt",
+      "stored_updates": 25000
+    },
+    "td025": {
+      "folder": "projected_continuation/td025",
+      "filename": "final_learner.pt",
+      "stored_updates": 25000
+    }
+  },
+  "candidates": [
+    "recorded",
+    "adapted",
+    "td0",
+    "td025"
+  ],
+  "state_batch_size": 256,
+  "positive_samples_per_state": 8,
+  "common_draw_seed_offset": 91000,
+  "action_equality_tolerance": 1e-05,
+  "execution": "Current canonical execution projection; all actor deterministic and stochastic component queries clipped. Recorded labels checked unchanged. Identical actions excluded from ranking preference denominators.",
+  "groups": "All rows, free execution interval, forced60s interval; other collapsed intervals only if present. Compare unchanged states across all actors and critics.",
+  "critic_reduction": "min-all over two heads separately for each sampled action, then Monte Carlo average; never min of head means.",
+  "actor_objective": "J=-E[min Q]+alpha_stage E[latent log pi]. Gate weighted analytically, positive branch uses eight fixed common Normal draws. Same critic-stage alpha for all candidate actors within a row; diagonal reflects own checkpoint. Initial adapted actor was IQL, so its entry evaluates the prospective SAC objective rather than its original IQL loss.",
+  "gate_partial_derivative": "At fixed positive distribution: Q component=-p(1-p)(E Qplus-Qzero); entropy component=alpha_stage*p(1-p)(logodds+E log fpositive). Negative loss derivative encourages larger gate probability. This is not a full shared-network optimizer step.",
+  "comparisons": "Deterministic Q gaps final-minus-adapted and actor-minus-recorded under all three critics; preference switches only where execution actions differ. Same-state stochastic objective differences and gate-gradient components distinguish Q ranking versus latent entropy pressure.",
+  "training_updates": 0,
+  "world_model_updates": 0,
+  "simulation_events": 0,
+  "evaluation_rows_read": 0,
+  "large_files_downloaded": false,
+  "limits": [
+    "Fit observations can locate learned objective preferences, not realized counterfactual action costs.",
+    "Eight samples approximate the positive branch expectation; fixed draws are not a retuned estimator.",
+    "Gate partial derivatives do not reproduce total shared-network gradients.",
+    "This diagnostic does not select a deployment model, coefficient, threshold or city from the completed evaluation cohort."
+  ],
+  "code_boundary": "Only physical CFCMT-owned frozen runtime; no mutable Thesis reads, imports or writes. Small JSON outputs only."
+}

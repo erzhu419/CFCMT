@@ -1,0 +1,1680 @@
+{
+  "protocol": "tsc-v154y-cologne-spaced-action-counterfactual-v1",
+  "status": "COMPLETE",
+  "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+  "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+  "frozen_threshold": {
+    "protocol": "tsc-v154l-cologne-rigid-oof-threshold-v1",
+    "calibration_protocol": "tsc-v154t-cologne-no-stay-oof-threshold-v1",
+    "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+    "fit_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/result.json",
+    "calibration_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154t_cologne_no_stay_oof_threshold_20260909/calibration_v1/result.json",
+    "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+    "ablation_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154s_cologne_no_stay_closed_loop_20260909/tooling_v1/no_stay_fraction_rigid.py",
+    "threshold": 0.20790450432178334,
+    "mode": "minimum_advantage",
+    "comparison": "predicted_advantage > threshold + 1e-12",
+    "selection_data": "Original 100 native B100 seed-OOF records with fixed post-selection stay veto",
+    "calibration_mean_cost": 0.7990718459100812
+  },
+  "cooldown_intervals": 44,
+  "score_units": "group-normalized predicted score advantage",
+  "gain_units": "native 450-second mean halted vehicles per controlled lane",
+  "label_contract": {
+    "control_interval_sec": 10,
+    "model_action_sec": 10,
+    "pp_continuation_sec": 440,
+    "horizon_sec": 450,
+    "cost_mode": "halted_queue",
+    "controlled_lane_count": 8
+  },
+  "selection_rule": "All accepted intervention times with time+450<=28800; selection does not depend on predicted score or observed benefit.",
+  "expected_pair_count": 21,
+  "valid_pair_count": 21,
+  "missing_pair_count": 0,
+  "seeds": [
+    52282,
+    41242,
+    63792
+  ],
+  "seed_results": [
+    {
+      "seed": 52282,
+      "status": "PASS",
+      "task_id": "t91997",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_52282/result.json",
+      "binding_errors": []
+    },
+    {
+      "seed": 41242,
+      "status": "PASS",
+      "task_id": "t91998",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_41242/result.json",
+      "binding_errors": []
+    },
+    {
+      "seed": 63792,
+      "status": "PASS",
+      "task_id": "t91999",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_63792/result.json",
+      "binding_errors": []
+    }
+  ],
+  "pairs": [
+    {
+      "seed": 52282,
+      "time_sec": 25280.0,
+      "end_time_sec": 25730.0,
+      "predicted_advantage": 0.25241589118669666,
+      "model_cost": 1.1325,
+      "phase_pressure_cost": 1.0683333333333334,
+      "actual_advantage": -0.0641666666666667,
+      "sign": "harmful",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91997",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_52282/result.json",
+      "score_sign_agrees": false
+    },
+    {
+      "seed": 52282,
+      "time_sec": 25860.0,
+      "end_time_sec": 26310.0,
+      "predicted_advantage": 0.43945896830201475,
+      "model_cost": 0.5775,
+      "phase_pressure_cost": 0.7322222222222222,
+      "actual_advantage": 0.1547222222222222,
+      "sign": "beneficial",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91997",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_52282/result.json",
+      "score_sign_agrees": true
+    },
+    {
+      "seed": 52282,
+      "time_sec": 26360.0,
+      "end_time_sec": 26810.0,
+      "predicted_advantage": 0.6878270926978404,
+      "model_cost": 1.2119444444444445,
+      "phase_pressure_cost": 1.1855555555555555,
+      "actual_advantage": -0.026388888888889017,
+      "sign": "harmful",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91997",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_52282/result.json",
+      "score_sign_agrees": false
+    },
+    {
+      "seed": 52282,
+      "time_sec": 26830.0,
+      "end_time_sec": 27280.0,
+      "predicted_advantage": 0.21074964198547852,
+      "model_cost": 0.965,
+      "phase_pressure_cost": 0.8533333333333334,
+      "actual_advantage": -0.11166666666666658,
+      "sign": "harmful",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91997",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_52282/result.json",
+      "score_sign_agrees": false
+    },
+    {
+      "seed": 52282,
+      "time_sec": 27280.0,
+      "end_time_sec": 27730.0,
+      "predicted_advantage": 0.5618743608356042,
+      "model_cost": 0.6416666666666667,
+      "phase_pressure_cost": 0.7636111111111111,
+      "actual_advantage": 0.12194444444444441,
+      "sign": "beneficial",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91997",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_52282/result.json",
+      "score_sign_agrees": true
+    },
+    {
+      "seed": 52282,
+      "time_sec": 27780.0,
+      "end_time_sec": 28230.0,
+      "predicted_advantage": 0.3613025312961152,
+      "model_cost": 0.8280555555555555,
+      "phase_pressure_cost": 0.8375,
+      "actual_advantage": 0.009444444444444478,
+      "sign": "beneficial",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91997",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_52282/result.json",
+      "score_sign_agrees": true
+    },
+    {
+      "seed": 52282,
+      "time_sec": 28260.0,
+      "end_time_sec": 28710.0,
+      "predicted_advantage": 0.37656997885235804,
+      "model_cost": 0.3630555555555556,
+      "phase_pressure_cost": 0.37472222222222223,
+      "actual_advantage": 0.011666666666666659,
+      "sign": "beneficial",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91997",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_52282/result.json",
+      "score_sign_agrees": true
+    },
+    {
+      "seed": 41242,
+      "time_sec": 25280.0,
+      "end_time_sec": 25730.0,
+      "predicted_advantage": 0.27267296643955335,
+      "model_cost": 1.176388888888889,
+      "phase_pressure_cost": 1.216388888888889,
+      "actual_advantage": 0.040000000000000036,
+      "sign": "beneficial",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91998",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_41242/result.json",
+      "score_sign_agrees": true
+    },
+    {
+      "seed": 41242,
+      "time_sec": 25850.0,
+      "end_time_sec": 26300.0,
+      "predicted_advantage": 0.6434278742066531,
+      "model_cost": 1.2919444444444443,
+      "phase_pressure_cost": 0.735,
+      "actual_advantage": -0.5569444444444444,
+      "sign": "harmful",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 13,
+            "collision_event_steps": 13,
+            "unique_collision_incidents": 1,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91998",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_41242/result.json",
+      "score_sign_agrees": false
+    },
+    {
+      "seed": 41242,
+      "time_sec": 26400.0,
+      "end_time_sec": 26850.0,
+      "predicted_advantage": 0.31696602682989033,
+      "model_cost": 1.2938888888888889,
+      "phase_pressure_cost": 1.3527777777777779,
+      "actual_advantage": 0.05888888888888899,
+      "sign": "beneficial",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 13,
+            "collision_event_steps": 13,
+            "unique_collision_incidents": 1,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 13,
+            "collision_event_steps": 13,
+            "unique_collision_incidents": 1,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91998",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_41242/result.json",
+      "score_sign_agrees": true
+    },
+    {
+      "seed": 41242,
+      "time_sec": 26860.0,
+      "end_time_sec": 27310.0,
+      "predicted_advantage": 0.588072295533269,
+      "model_cost": 0.8819444444444444,
+      "phase_pressure_cost": 0.9594444444444444,
+      "actual_advantage": 0.07750000000000001,
+      "sign": "beneficial",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 13,
+            "collision_event_steps": 13,
+            "unique_collision_incidents": 1,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 13,
+            "collision_event_steps": 13,
+            "unique_collision_incidents": 1,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91998",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_41242/result.json",
+      "score_sign_agrees": true
+    },
+    {
+      "seed": 41242,
+      "time_sec": 27310.0,
+      "end_time_sec": 27760.0,
+      "predicted_advantage": 0.4963222501839761,
+      "model_cost": 0.8716666666666667,
+      "phase_pressure_cost": 0.9266666666666666,
+      "actual_advantage": 0.05499999999999994,
+      "sign": "beneficial",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 13,
+            "collision_event_steps": 13,
+            "unique_collision_incidents": 1,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 13,
+            "collision_event_steps": 13,
+            "unique_collision_incidents": 1,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91998",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_41242/result.json",
+      "score_sign_agrees": true
+    },
+    {
+      "seed": 41242,
+      "time_sec": 27780.0,
+      "end_time_sec": 28230.0,
+      "predicted_advantage": 0.6219994708089377,
+      "model_cost": 1.196388888888889,
+      "phase_pressure_cost": 1.0663888888888888,
+      "actual_advantage": -0.13000000000000012,
+      "sign": "harmful",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 13,
+            "collision_event_steps": 13,
+            "unique_collision_incidents": 1,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 13,
+            "collision_event_steps": 13,
+            "unique_collision_incidents": 1,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91998",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_41242/result.json",
+      "score_sign_agrees": false
+    },
+    {
+      "seed": 41242,
+      "time_sec": 28270.0,
+      "end_time_sec": 28720.0,
+      "predicted_advantage": 0.6139112044614979,
+      "model_cost": 0.3277777777777778,
+      "phase_pressure_cost": 0.38472222222222224,
+      "actual_advantage": 0.056944444444444464,
+      "sign": "beneficial",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 13,
+            "collision_event_steps": 13,
+            "unique_collision_incidents": 1,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 13,
+            "collision_event_steps": 13,
+            "unique_collision_incidents": 1,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91998",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_41242/result.json",
+      "score_sign_agrees": true
+    },
+    {
+      "seed": 63792,
+      "time_sec": 25270.0,
+      "end_time_sec": 25720.0,
+      "predicted_advantage": 0.7127129057376553,
+      "model_cost": 0.9958333333333333,
+      "phase_pressure_cost": 1.0644444444444445,
+      "actual_advantage": 0.06861111111111118,
+      "sign": "beneficial",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91999",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_63792/result.json",
+      "score_sign_agrees": true
+    },
+    {
+      "seed": 63792,
+      "time_sec": 25780.0,
+      "end_time_sec": 26230.0,
+      "predicted_advantage": 0.36543776686200935,
+      "model_cost": 0.7788888888888889,
+      "phase_pressure_cost": 0.5688888888888889,
+      "actual_advantage": -0.20999999999999996,
+      "sign": "harmful",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91999",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_63792/result.json",
+      "score_sign_agrees": false
+    },
+    {
+      "seed": 63792,
+      "time_sec": 26400.0,
+      "end_time_sec": 26850.0,
+      "predicted_advantage": 0.3876380943104894,
+      "model_cost": 1.3475,
+      "phase_pressure_cost": 1.103611111111111,
+      "actual_advantage": -0.24388888888888882,
+      "sign": "harmful",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91999",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_63792/result.json",
+      "score_sign_agrees": false
+    },
+    {
+      "seed": 63792,
+      "time_sec": 26860.0,
+      "end_time_sec": 27310.0,
+      "predicted_advantage": 0.2777112468260492,
+      "model_cost": 0.7052777777777778,
+      "phase_pressure_cost": 0.7822222222222223,
+      "actual_advantage": 0.07694444444444448,
+      "sign": "beneficial",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91999",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_63792/result.json",
+      "score_sign_agrees": true
+    },
+    {
+      "seed": 63792,
+      "time_sec": 27310.0,
+      "end_time_sec": 27760.0,
+      "predicted_advantage": 0.7069702521063977,
+      "model_cost": 0.8552777777777778,
+      "phase_pressure_cost": 0.9105555555555556,
+      "actual_advantage": 0.05527777777777776,
+      "sign": "beneficial",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91999",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_63792/result.json",
+      "score_sign_agrees": true
+    },
+    {
+      "seed": 63792,
+      "time_sec": 27760.0,
+      "end_time_sec": 28210.0,
+      "predicted_advantage": 0.29239377845885495,
+      "model_cost": 0.86,
+      "phase_pressure_cost": 1.1672222222222222,
+      "actual_advantage": 0.3072222222222222,
+      "sign": "beneficial",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91999",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_63792/result.json",
+      "score_sign_agrees": true
+    },
+    {
+      "seed": 63792,
+      "time_sec": 28280.0,
+      "end_time_sec": 28730.0,
+      "predicted_advantage": 0.8229057005504622,
+      "model_cost": 0.37,
+      "phase_pressure_cost": 0.3302777777777778,
+      "actual_advantage": -0.039722222222222214,
+      "sign": "harmful",
+      "valid": true,
+      "status": "PASS",
+      "validity_errors": [],
+      "pair_checks": {
+        "both_target_captured": true,
+        "physical_start_exact": true,
+        "pending_start_exact": true,
+        "prefix_decisions_exact": true
+      },
+      "branch_diagnostics": {
+        "model_once_then_pp": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        },
+        "pp_only": {
+          "prefix": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "window": {
+            "raw_collision_events": 0,
+            "collision_event_steps": 0,
+            "unique_collision_incidents": 0,
+            "starting_teleports": 0,
+            "ending_teleports": 0
+          },
+          "runtime_error": null
+        }
+      },
+      "task_id": "t91999",
+      "source_result": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/replay/seed_63792/result.json",
+      "score_sign_agrees": false
+    }
+  ],
+  "summary": {
+    "pair_count": 21,
+    "weighting": "equal_seed",
+    "per_seed": [
+      {
+        "seed": 52282,
+        "pairs": 7,
+        "model_mean_cost": 0.8171031746031746,
+        "phase_pressure_mean_cost": 0.8307539682539683,
+        "mean_actual_advantage": 0.013650793650793636,
+        "mean_predicted_advantage": 0.4128854950223011,
+        "beneficial": 4,
+        "harmful": 3,
+        "tie": 0,
+        "score_sign_agreement_count": 4,
+        "score_sign_disagreement_count": 3,
+        "descriptive_score_gain_association": {
+          "count": 7,
+          "score_units": "group-normalized predicted score advantage",
+          "gain_units": "native 450-second mean halted vehicles per controlled lane",
+          "pearson": 0.4871309652986519,
+          "pearson_unavailable_reason": null,
+          "interpretation": "Descriptive association across differently scaled quantities; it is not a prediction calibration error."
+        }
+      },
+      {
+        "seed": 41242,
+        "pairs": 7,
+        "model_mean_cost": 1.0057142857142858,
+        "phase_pressure_mean_cost": 0.9487698412698413,
+        "mean_actual_advantage": -0.05694444444444443,
+        "mean_predicted_advantage": 0.5076245840662539,
+        "beneficial": 5,
+        "harmful": 2,
+        "tie": 0,
+        "score_sign_agreement_count": 5,
+        "score_sign_disagreement_count": 2,
+        "descriptive_score_gain_association": {
+          "count": 7,
+          "score_units": "group-normalized predicted score advantage",
+          "gain_units": "native 450-second mean halted vehicles per controlled lane",
+          "pearson": -0.4670362369020463,
+          "pearson_unavailable_reason": null,
+          "interpretation": "Descriptive association across differently scaled quantities; it is not a prediction calibration error."
+        }
+      },
+      {
+        "seed": 63792,
+        "pairs": 7,
+        "model_mean_cost": 0.8446825396825397,
+        "phase_pressure_mean_cost": 0.8467460317460318,
+        "mean_actual_advantage": 0.0020634920634920845,
+        "mean_predicted_advantage": 0.5093956778359883,
+        "beneficial": 4,
+        "harmful": 3,
+        "tie": 0,
+        "score_sign_agreement_count": 4,
+        "score_sign_disagreement_count": 3,
+        "descriptive_score_gain_association": {
+          "count": 7,
+          "score_units": "group-normalized predicted score advantage",
+          "gain_units": "native 450-second mean halted vehicles per controlled lane",
+          "pearson": -0.046886651567840436,
+          "pearson_unavailable_reason": null,
+          "interpretation": "Descriptive association across differently scaled quantities; it is not a prediction calibration error."
+        }
+      }
+    ],
+    "score_units": "group-normalized predicted score advantage",
+    "gain_units": "native 450-second mean halted vehicles per controlled lane",
+    "model_mean_cost": 0.8891666666666667,
+    "phase_pressure_mean_cost": 0.8754232804232804,
+    "mean_actual_advantage": -0.013743386243386236,
+    "mean_predicted_advantage": 0.4766352523081811,
+    "model_minus_phase_pressure_percent": 1.5699132694690476,
+    "beneficial": 13,
+    "harmful": 8,
+    "tie": 0,
+    "score_sign_agreement_count": 13,
+    "score_sign_disagreement_count": 8,
+    "descriptive_score_gain_association": {
+      "count": 21,
+      "score_units": "group-normalized predicted score advantage",
+      "gain_units": "native 450-second mean halted vehicles per controlled lane",
+      "pearson": -0.1294284147269468,
+      "pearson_unavailable_reason": null,
+      "interpretation": "Descriptive association across differently scaled quantities; it is not a prediction calibration error."
+    }
+  },
+  "descriptive_extrema": {
+    "best_measured_window": {
+      "seed": 63792,
+      "time_sec": 27760.0,
+      "model_cost": 0.86,
+      "phase_pressure_cost": 1.1672222222222222,
+      "predicted_advantage": 0.29239377845885495,
+      "actual_advantage": 0.3072222222222222,
+      "sign": "beneficial"
+    },
+    "worst_measured_window": {
+      "seed": 41242,
+      "time_sec": 25850.0,
+      "model_cost": 1.2919444444444443,
+      "phase_pressure_cost": 0.735,
+      "predicted_advantage": 0.6434278742066531,
+      "actual_advantage": -0.5569444444444444,
+      "sign": "harmful"
+    }
+  },
+  "accounting": {
+    "planned_new_simulations": 42,
+    "new_simulations_reported": 42,
+    "new_model_fits": 0,
+    "threshold_retuned": false,
+    "spacing_retuned": false,
+    "runner_elapsed_sec_sum": 97.9689098589588,
+    "retrieved_result_count": 3,
+    "task_ids": [
+      "t91997",
+      "t91998",
+      "t91999"
+    ],
+    "retrieved_result_bytes": 262662
+  },
+  "interpretation": "Positive native gain means PP cost exceeds model cost. Model scores use group normalization, while native gains retain halted-vehicle units; signs and descriptive association are reported without subtracting the two scales. The two replay arms cannot reconstruct the original eight-action group normalization. Collisions remain branch diagnostics and do not exclude valid pairs. Summary and extrema require all21 valid pairs and select no threshold or policy.",
+  "collision_accounting": "Prefix and window counts remain separate for each branch; repeated-prefix incidents are not summed as unique experiment-wide incidents.",
+  "limitations": [
+    "Previously inspected Cologne1 development seeds; no independent or cross-city confirmation.",
+    "Counterfactual PP branches share X prefixes, not the full-run PP trajectory; local advantages do not decompose the whole-run difference.",
+    "Three incomplete end windows are excluded by the same time-boundary rule."
+  ],
+  "refs": {
+    "protocol": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/protocol_v1.json",
+    "launch_record": "cf_h2o/results/cluster/tsc_v154y_cologne_spaced_action_counterfactual_20260910/launch_v1.json",
+    "score_unit_prior_artifact": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/paper_artifacts/tsc_v154k_cologne_local_rigid_ranking_v1.json",
+    "training_acceptance_artifact": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/paper_artifacts/tsc_v154t_cologne_no_stay_oof_threshold_v1.json"
+  },
+  "temporal_diagnosis": {
+    "units": "native 450-second mean halted vehicles per controlled lane",
+    "definition": "PP cost minus model cost; positive means model helps.",
+    "equal_seed_mean_advantage_per_150_sec": [
+      0.03892857142857143,
+      -0.010595238095238118,
+      -0.06956349206349205
+    ],
+    "harmful_over_450s_but_beneficial_first_150s": 4,
+    "beneficial_over_450s_but_harmful_first_150s": 5,
+    "windows": [
+      {
+        "seed": 52282,
+        "time_sec": 25280,
+        "actual_advantage": -0.0641666666666667,
+        "advantage_per_150_sec": [
+          0.0016666666666667052,
+          0.011666666666666492,
+          -0.2058333333333333
+        ]
+      },
+      {
+        "seed": 52282,
+        "time_sec": 25860,
+        "actual_advantage": 0.1547222222222222,
+        "advantage_per_150_sec": [
+          0.24583333333333335,
+          0.04583333333333328,
+          0.1725
+        ]
+      },
+      {
+        "seed": 52282,
+        "time_sec": 26360,
+        "actual_advantage": -0.026388888888889017,
+        "advantage_per_150_sec": [
+          0.006666666666666654,
+          -0.05500000000000005,
+          -0.030833333333333268
+        ]
+      },
+      {
+        "seed": 52282,
+        "time_sec": 26830,
+        "actual_advantage": -0.11166666666666658,
+        "advantage_per_150_sec": [
+          -0.28,
+          0.03916666666666668,
+          -0.09416666666666668
+        ]
+      },
+      {
+        "seed": 52282,
+        "time_sec": 27280,
+        "actual_advantage": 0.12194444444444441,
+        "advantage_per_150_sec": [
+          -0.045,
+          -0.029166666666666674,
+          0.44000000000000017
+        ]
+      },
+      {
+        "seed": 52282,
+        "time_sec": 27780,
+        "actual_advantage": 0.009444444444444478,
+        "advantage_per_150_sec": [
+          -0.03249999999999997,
+          0.0,
+          0.06083333333333352
+        ]
+      },
+      {
+        "seed": 52282,
+        "time_sec": 28260,
+        "actual_advantage": 0.011666666666666659,
+        "advantage_per_150_sec": [
+          -0.01749999999999996,
+          0.046666666666666634,
+          0.005833333333333357
+        ]
+      },
+      {
+        "seed": 41242,
+        "time_sec": 25280,
+        "actual_advantage": 0.040000000000000036,
+        "advantage_per_150_sec": [
+          -0.11333333333333329,
+          0.011666666666666603,
+          0.22166666666666646
+        ]
+      },
+      {
+        "seed": 41242,
+        "time_sec": 25850,
+        "actual_advantage": -0.5569444444444444,
+        "advantage_per_150_sec": [
+          -0.22999999999999998,
+          -0.37416666666666676,
+          -1.0666666666666669
+        ]
+      },
+      {
+        "seed": 41242,
+        "time_sec": 26400,
+        "actual_advantage": 0.05888888888888899,
+        "advantage_per_150_sec": [
+          0.010833333333333361,
+          0.01333333333333342,
+          0.15249999999999986
+        ]
+      },
+      {
+        "seed": 41242,
+        "time_sec": 26860,
+        "actual_advantage": 0.07750000000000001,
+        "advantage_per_150_sec": [
+          0.23583333333333334,
+          0.10166666666666657,
+          -0.10500000000000004
+        ]
+      },
+      {
+        "seed": 41242,
+        "time_sec": 27310,
+        "actual_advantage": 0.05499999999999994,
+        "advantage_per_150_sec": [
+          0.035,
+          -0.02833333333333332,
+          0.15833333333333366
+        ]
+      },
+      {
+        "seed": 41242,
+        "time_sec": 27780,
+        "actual_advantage": -0.13000000000000012,
+        "advantage_per_150_sec": [
+          0.019999999999999796,
+          -0.1816666666666667,
+          -0.2283333333333334
+        ]
+      },
+      {
+        "seed": 41242,
+        "time_sec": 28270,
+        "actual_advantage": 0.056944444444444464,
+        "advantage_per_150_sec": [
+          0.0658333333333333,
+          0.055833333333333346,
+          0.04916666666666669
+        ]
+      },
+      {
+        "seed": 63792,
+        "time_sec": 25270,
+        "actual_advantage": 0.06861111111111118,
+        "advantage_per_150_sec": [
+          0.050000000000000044,
+          0.17833333333333334,
+          -0.022500000000000187
+        ]
+      },
+      {
+        "seed": 63792,
+        "time_sec": 25780,
+        "actual_advantage": -0.20999999999999996,
+        "advantage_per_150_sec": [
+          0.13916666666666666,
+          -0.03583333333333333,
+          -0.7333333333333334
+        ]
+      },
+      {
+        "seed": 63792,
+        "time_sec": 26400,
+        "actual_advantage": -0.24388888888888882,
+        "advantage_per_150_sec": [
+          -0.13249999999999995,
+          -0.1858333333333333,
+          -0.4133333333333331
+        ]
+      },
+      {
+        "seed": 63792,
+        "time_sec": 26860,
+        "actual_advantage": 0.07694444444444448,
+        "advantage_per_150_sec": [
+          0.1891666666666667,
+          -0.0591666666666667,
+          0.1008333333333333
+        ]
+      },
+      {
+        "seed": 63792,
+        "time_sec": 27310,
+        "actual_advantage": 0.05527777777777776,
+        "advantage_per_150_sec": [
+          -0.008333333333333331,
+          -0.04583333333333334,
+          0.2200000000000002
+        ]
+      },
+      {
+        "seed": 63792,
+        "time_sec": 27760,
+        "actual_advantage": 0.3072222222222222,
+        "advantage_per_150_sec": [
+          0.7441666666666666,
+          0.3,
+          -0.12250000000000005
+        ]
+      },
+      {
+        "seed": 63792,
+        "time_sec": 28280,
+        "actual_advantage": -0.039722222222222214,
+        "advantage_per_150_sec": [
+          -0.0675,
+          -0.031666666666666676,
+          -0.020000000000000018
+        ]
+      }
+    ],
+    "interpretation": "Early-window sign alone does not determine the original450-second objective; keep the existing horizon."
+  },
+  "outcome": {
+    "description": "All21 paired native-prefix comparisons are valid. Thirteen model actions reduce the original queue cost and eight increase it; the equal-seed mean model cost is1.57% higher than same-state PP.",
+    "score_interpretation": "Eight accepted positive-score actions have negative actual gains. This establishes remaining action-sign/ranking errors on this roster. Group-normalized scores are not raw-cost predictions, so no cross-unit bias or MAE is reported.",
+    "comparison_scope": "Each PP branch begins from the corresponding X native state. This result is a local-action diagnosis, not a new full-run policy comparison."
+  },
+  "validation": {
+    "focused_tests_passed": 16,
+    "test_files": [
+      "tests/test_cologne_spaced_action_counterfactual.py",
+      "tests/test_cologne_spaced_action_counterfactual_summary.py"
+    ],
+    "native_pairs": "All21 physical/executor states, pending-ID lists and prefix-decision histories match exactly between branches; all42 actual traces match the appropriate original X prefix and target treatment.",
+    "costs": "All42 branches have450 samples with consistent active-population accounting.",
+    "units_correction": "Removed direct group-normalized-score minus raw-cost errors from the analysis; the16 distinct focused tests include the corrected unit semantics."
+  },
+  "next_step": {
+    "description": "Audit score signs and correctly scaled prediction residuals for the44 original B100 OOF actions accepted by the frozen T threshold and S stay veto.",
+    "data": "Reuse the original100 native B100 groups, their full eight-action costs and cached training-seed OOF predictions; use T only to identify the already fixed44 accepted actions.",
+    "fixed": [
+      "P model family and fitted model",
+      "T threshold0.20790450432178334",
+      "S stay veto",
+      "X450-second deployment spacing",
+      "original100 B100 group IDs and three OOF seed folds"
+    ],
+    "measures": [
+      "predicted gain sign versus original raw-cost gain sign",
+      "prediction residual using the existing full eight-action group normalization",
+      "raw-cost harm contribution versus each group normalization scale"
+    ],
+    "purpose": "Check whether action errors already occur within training-seed cross fitting and whether group normalization gives little weight to large raw-cost losses, before attributing them to deployment-state changes.",
+    "new_model_fits": 0,
+    "new_labels": 0,
+    "new_simulations": 0,
+    "evaluation_use": "Y is diagnostic context only; do not tune threshold, spacing or group membership using these21 outcomes."
+  }
+}

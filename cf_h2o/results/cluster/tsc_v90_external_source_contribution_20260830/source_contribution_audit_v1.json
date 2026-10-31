@@ -1,0 +1,83 @@
+{
+  "analysis_classification": "post_freeze_frozen_comparator_ablation",
+  "cell_oriented_improvements_seconds": {
+    "jinan/jinan_3x4_real/seed_8081": 1.9218427323272493,
+    "jinan/jinan_3x4_real/seed_9091": 3.8822875297855433,
+    "jinan/jinan_3x4_real_2000/seed_8081": 2.4581901489117968,
+    "jinan/jinan_3x4_real_2000/seed_9091": 0.9140893470790274,
+    "jinan/jinan_3x4_real_2500/seed_8081": 0.9253731343283533,
+    "jinan/jinan_3x4_real_2500/seed_9091": 3.114488532945032,
+    "los_angeles/la_1x4/seed_8081": 12.598660237937281,
+    "los_angeles/la_1x4/seed_9091": -17.492909423109012
+  },
+  "cfcmt_oriented_improvement_seconds": -0.1222063441781529,
+  "cfcmt_relative_improvement": -0.0008199312699649002,
+  "city_oriented_improvements_seconds": {
+    "jinan": 2.202711904229517,
+    "los_angeles": -2.447124592585851
+  },
+  "city_summary": {
+    "jinan": {
+      "causal_target_only_mpc": 96.11595275858495,
+      "cfcmt_selected_mpc": 93.91324085435544
+    },
+    "los_angeles": {
+      "causal_target_only_mpc": 201.9732863147933,
+      "cfcmt_selected_mpc": 204.42041090737916
+    }
+  },
+  "claim_boundary": "This post-freeze ablation reuses a baseline model frozen before the original v43 confirmation and the same eight scenario-seed cells. The decision to add the closed-loop comparator was made after the main outcomes, so intervals are descriptive and the result is not a new preregistered confirmation.",
+  "comparator_selected_for_closed_loop_after_main_outcomes": true,
+  "created_at_utc": "2026-08-30T15:18:01.889157+00:00",
+  "descriptive_bootstrap": {
+    "bootstrap_probability_positive": 0.5338,
+    "ci_is_descriptive_due_to_two_target_cities": true,
+    "improvement_95pct_ci": [
+      -9.970017007847439,
+      7.750362684496839
+    ],
+    "independent_target_city_count": 2,
+    "protocol": "paired-hierarchical-descriptive-bootstrap-v1",
+    "replicates": 10000,
+    "sampling_units": "city_then_scenario_then_seed_with_paired_policies",
+    "seed": 20260898
+  },
+  "improved_cell_count": 7,
+  "macro_summary": {
+    "causal_target_only_mpc": 149.04461953668914,
+    "cfcmt_selected_mpc": 149.1668258808673
+  },
+  "matrix": {
+    "cities": [
+      "los_angeles",
+      "jinan"
+    ],
+    "paired_cells": 8,
+    "scenarios": [
+      "la_1x4",
+      "jinan_3x4_real",
+      "jinan_3x4_real_2000",
+      "jinan_3x4_real_2500"
+    ],
+    "seeds": [
+      8081,
+      9091
+    ],
+    "target_only_rollouts": 8
+  },
+  "original_confirmation_unchanged": true,
+  "primary_metric": "mean_tripinfo_waiting_time",
+  "protocol": "tsc-v90r86-source-contribution-ablation-audit-v1",
+  "safety": {
+    "causal_target_only_mpc": {
+      "collision_incidents": 1,
+      "teleports": 0
+    },
+    "cfcmt_selected_mpc": {
+      "collision_incidents": 0,
+      "teleports": 0
+    }
+  },
+  "status": "PASS",
+  "target_only_model_frozen_before_original_confirmation": true
+}

@@ -1,0 +1,33 @@
+{
+  "protocol": "tsc-v120-cross-fitted-b100-source-predictions-v1",
+  "scientific_status": "training-artifact-only-not-selector-evidence",
+  "estimand_protocol": "one-control-interval-local-mechanisms-plus-pure-halted-queue-rollout-value-v2",
+  "reference_policy": "phase_pressure",
+  "target_name": "prefix_mean_cost_450s",
+  "target_city": "jinan",
+  "target_group_budget": 100,
+  "target_seeds": [5057, 6067],
+  "cross_fit": {
+    "fold_count": 5,
+    "training_groups_per_fold": 80,
+    "heldout_groups_per_fold": 20,
+    "group_disjoint": true,
+    "same_folds_for_target_only_and_all_source_components": true
+  },
+  "models": {
+    "source_group_count": 7,
+    "source_fold_fit_count": 35,
+    "target_only_fold_fit_count": 5,
+    "source_blend_candidate": "identical_to_v115_source_only_loco_selection",
+    "source_model_target_groups_per_fold": 80,
+    "target_only_model_target_groups_per_fold": 80
+  },
+  "output": {
+    "contains_target_labels": false,
+    "contains_action_row_aligned_oof_scores": true,
+    "contains_action_row_aligned_oof_uncertainty": true,
+    "contains_action_row_aligned_oof_trust": true,
+    "selector_labels_consumed": 0
+  },
+  "claim_boundary": "V120 only creates group-disjoint OOF features for V121 gate training. It is not a performance experiment and cannot support a source-transfer claim by itself."
+}

@@ -1,0 +1,985 @@
+{
+  "complete": true,
+  "protocol": "cfcmt-bus-native-fixed-action-replay-v1",
+  "tasks": [
+    "t128526",
+    "t128527",
+    "t128528"
+  ],
+  "new_training_updates": 0,
+  "case": {
+    "case": 0,
+    "demand_seed": 72561,
+    "sumo_seed": 73561
+  },
+  "event_cases": 12,
+  "candidate_entries": 48,
+  "actual_simulations": 16,
+  "actual_baselines": 3,
+  "actual_interventions": 13,
+  "reused_candidate_entries": 35,
+  "all_existing_baselines_exact": true,
+  "all_actual_intervention_prefixes_exact": true,
+  "common_departed": 3496,
+  "common_completed": 3441,
+  "positive_vs_zero_actual_cost": {
+    "better_than_zero": 5,
+    "worse_than_zero": 3,
+    "cost_tie": 4,
+    "identical_execution": 0
+  },
+  "critic_ranking_diagnostics": {
+    "adapted": {
+      "direction_correct": 4,
+      "direction_wrong": 4,
+      "cost_ties": 4,
+      "q_ties_with_nonzero_cost": 0,
+      "picked_better": 3,
+      "picked_worse": 3,
+      "picked_cost_tie": 6,
+      "picked_cost_delta_sum": 11772.0,
+      "picked_cost_delta_by_seed": {
+        "75101": -2377.0,
+        "75102": 23814.0,
+        "75103": -9665.0
+      },
+      "chosen_effect_mean_seconds_per_departed_per_single_intervention": 0.28060640732265446,
+      "chosen_effect_by_seed_mean_seconds_per_departed_per_single_intervention": {
+        "75101": -0.16997997711670482,
+        "75102": 1.702946224256293,
+        "75103": -0.6911470251716247
+      }
+    },
+    "unmasked": {
+      "direction_correct": 4,
+      "direction_wrong": 4,
+      "cost_ties": 4,
+      "q_ties_with_nonzero_cost": 0,
+      "picked_better": 2,
+      "picked_worse": 2,
+      "picked_cost_tie": 8,
+      "picked_cost_delta_sum": 16508.0,
+      "picked_cost_delta_by_seed": {
+        "75101": -2377.0,
+        "75102": 23564.0,
+        "75103": -4679.0
+      },
+      "chosen_effect_mean_seconds_per_departed_per_single_intervention": 0.39349733028222733,
+      "chosen_effect_by_seed_mean_seconds_per_departed_per_single_intervention": {
+        "75101": -0.16997997711670482,
+        "75102": 1.6850686498855836,
+        "75103": -0.33459668192219677
+      }
+    },
+    "masked": {
+      "direction_correct": 4,
+      "direction_wrong": 4,
+      "cost_ties": 4,
+      "q_ties_with_nonzero_cost": 0,
+      "picked_better": 2,
+      "picked_worse": 2,
+      "picked_cost_tie": 8,
+      "picked_cost_delta_sum": 16508.0,
+      "picked_cost_delta_by_seed": {
+        "75101": -2377.0,
+        "75102": 23564.0,
+        "75103": -4679.0
+      },
+      "chosen_effect_mean_seconds_per_departed_per_single_intervention": 0.39349733028222733,
+      "chosen_effect_by_seed_mean_seconds_per_departed_per_single_intervention": {
+        "75101": -0.16997997711670482,
+        "75102": 1.6850686498855836,
+        "75103": -0.33459668192219677
+      }
+    }
+  },
+  "events": [
+    {
+      "seed": 75101,
+      "free_ordinal": 400,
+      "event_index": 400,
+      "time_seconds": 2597.0,
+      "bus_id": "103S_000002",
+      "stop_id": "103S004",
+      "holds_seconds": {
+        "adapted": 0.0,
+        "masked": 0.0,
+        "masked_positive": 0.9779834747314453,
+        "zero": 0.0
+      },
+      "candidate_effects": {
+        "adapted": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked_positive": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "zero": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        }
+      },
+      "positive_minus_zero_cost_passenger_seconds": 0.0,
+      "critic_comparisons": {
+        "adapted": {
+          "positive_minus_zero_min_q": 0.037283897399902344,
+          "highest_q_candidate": "masked_positive",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "unmasked": {
+          "positive_minus_zero_min_q": -0.00334930419921875,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "masked": {
+          "positive_minus_zero_min_q": -0.0027027130126953125,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        }
+      },
+      "prefix_exact": true,
+      "population": {
+        "departed": 3496,
+        "completed_by_candidate": {
+          "adapted": 3441,
+          "masked": 3441,
+          "masked_positive": 3441,
+          "zero": 3441
+        }
+      },
+      "actual_interventions": 1
+    },
+    {
+      "seed": 75101,
+      "free_ordinal": 1200,
+      "event_index": 1307,
+      "time_seconds": 5205.0,
+      "bus_id": "102X_000003",
+      "stop_id": "102X016",
+      "holds_seconds": {
+        "adapted": 0.0,
+        "masked": 0.0,
+        "masked_positive": 2.158257484436035,
+        "zero": 0.0
+      },
+      "candidate_effects": {
+        "adapted": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked_positive": {
+          "generalized_passenger_seconds": -2377.0,
+          "generalized_seconds_per_departed_passenger": -0.6799199084666725,
+          "wait_passenger_seconds": 331.0,
+          "in_vehicle_passenger_seconds": -3039.0
+        },
+        "zero": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        }
+      },
+      "positive_minus_zero_cost_passenger_seconds": -2377.0,
+      "critic_comparisons": {
+        "adapted": {
+          "positive_minus_zero_min_q": 0.048419952392578125,
+          "highest_q_candidate": "masked_positive",
+          "chosen_effect_passenger_seconds": -2377.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "unmasked": {
+          "positive_minus_zero_min_q": 0.019090652465820312,
+          "highest_q_candidate": "masked_positive",
+          "chosen_effect_passenger_seconds": -2377.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "masked": {
+          "positive_minus_zero_min_q": 0.014039993286132812,
+          "highest_q_candidate": "masked_positive",
+          "chosen_effect_passenger_seconds": -2377.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        }
+      },
+      "prefix_exact": true,
+      "population": {
+        "departed": 3496,
+        "completed_by_candidate": {
+          "adapted": 3441,
+          "masked": 3441,
+          "masked_positive": 3441,
+          "zero": 3441
+        }
+      },
+      "actual_interventions": 1
+    },
+    {
+      "seed": 75101,
+      "free_ordinal": 2000,
+      "event_index": 2277,
+      "time_seconds": 8569.0,
+      "bus_id": "107S_000006",
+      "stop_id": "107S023",
+      "holds_seconds": {
+        "adapted": 0.0,
+        "masked": 0.0,
+        "masked_positive": 2.824707508087158,
+        "zero": 0.0
+      },
+      "candidate_effects": {
+        "adapted": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked_positive": {
+          "generalized_passenger_seconds": -8034.0,
+          "generalized_seconds_per_departed_passenger": -2.2980549199082816,
+          "wait_passenger_seconds": -3111.0,
+          "in_vehicle_passenger_seconds": -1812.0
+        },
+        "zero": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        }
+      },
+      "positive_minus_zero_cost_passenger_seconds": -8034.0,
+      "critic_comparisons": {
+        "adapted": {
+          "positive_minus_zero_min_q": -0.014293670654296875,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 8034.0
+        },
+        "unmasked": {
+          "positive_minus_zero_min_q": -0.03821563720703125,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 8034.0
+        },
+        "masked": {
+          "positive_minus_zero_min_q": -0.031589508056640625,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 8034.0
+        }
+      },
+      "prefix_exact": true,
+      "population": {
+        "departed": 3496,
+        "completed_by_candidate": {
+          "adapted": 3441,
+          "masked": 3441,
+          "masked_positive": 3441,
+          "zero": 3441
+        }
+      },
+      "actual_interventions": 1
+    },
+    {
+      "seed": 75101,
+      "free_ordinal": 2800,
+      "event_index": 3218,
+      "time_seconds": 12865.0,
+      "bus_id": "100X_000019",
+      "stop_id": "100X028",
+      "holds_seconds": {
+        "adapted": 0.0,
+        "masked": 0.0,
+        "masked_positive": 1.3521784543991089,
+        "zero": 0.0
+      },
+      "candidate_effects": {
+        "adapted": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked_positive": {
+          "generalized_passenger_seconds": 480.0,
+          "generalized_seconds_per_departed_passenger": 0.13729977116736336,
+          "wait_passenger_seconds": 536.0,
+          "in_vehicle_passenger_seconds": -592.0
+        },
+        "zero": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        }
+      },
+      "positive_minus_zero_cost_passenger_seconds": 480.0,
+      "critic_comparisons": {
+        "adapted": {
+          "positive_minus_zero_min_q": -0.008245468139648438,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "unmasked": {
+          "positive_minus_zero_min_q": -0.001007080078125,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "masked": {
+          "positive_minus_zero_min_q": -0.012218475341796875,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        }
+      },
+      "prefix_exact": true,
+      "population": {
+        "departed": 3496,
+        "completed_by_candidate": {
+          "adapted": 3441,
+          "masked": 3441,
+          "masked_positive": 3441,
+          "zero": 3441
+        }
+      },
+      "actual_interventions": 1
+    },
+    {
+      "seed": 75102,
+      "free_ordinal": 400,
+      "event_index": 400,
+      "time_seconds": 2600.0,
+      "bus_id": "107S_000001",
+      "stop_id": "107S032",
+      "holds_seconds": {
+        "adapted": 4.065511703491211,
+        "masked": 3.024601936340332,
+        "masked_positive": 3.024601936340332,
+        "zero": 0.0
+      },
+      "candidate_effects": {
+        "adapted": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked": {
+          "generalized_passenger_seconds": 10171.0,
+          "generalized_seconds_per_departed_passenger": 2.9093249427919545,
+          "wait_passenger_seconds": 3692.0,
+          "in_vehicle_passenger_seconds": 2787.0
+        },
+        "masked_positive": {
+          "generalized_passenger_seconds": 10171.0,
+          "generalized_seconds_per_departed_passenger": 2.9093249427919545,
+          "wait_passenger_seconds": 3692.0,
+          "in_vehicle_passenger_seconds": 2787.0
+        },
+        "zero": {
+          "generalized_passenger_seconds": 14029.0,
+          "generalized_seconds_per_departed_passenger": 4.01287185354704,
+          "wait_passenger_seconds": 5463.0,
+          "in_vehicle_passenger_seconds": 3103.0
+        }
+      },
+      "positive_minus_zero_cost_passenger_seconds": -3858.0,
+      "critic_comparisons": {
+        "adapted": {
+          "positive_minus_zero_min_q": -0.0011892318725585938,
+          "highest_q_candidate": "zero",
+          "chosen_effect_passenger_seconds": 14029.0,
+          "candidate_cost_regret_passenger_seconds": 14029.0
+        },
+        "unmasked": {
+          "positive_minus_zero_min_q": -0.012495040893554688,
+          "highest_q_candidate": "zero",
+          "chosen_effect_passenger_seconds": 14029.0,
+          "candidate_cost_regret_passenger_seconds": 14029.0
+        },
+        "masked": {
+          "positive_minus_zero_min_q": -0.01380157470703125,
+          "highest_q_candidate": "zero",
+          "chosen_effect_passenger_seconds": 14029.0,
+          "candidate_cost_regret_passenger_seconds": 14029.0
+        }
+      },
+      "prefix_exact": true,
+      "population": {
+        "departed": 3496,
+        "completed_by_candidate": {
+          "adapted": 3441,
+          "masked": 3441,
+          "masked_positive": 3441,
+          "zero": 3441
+        }
+      },
+      "actual_interventions": 2
+    },
+    {
+      "seed": 75102,
+      "free_ordinal": 1200,
+      "event_index": 1316,
+      "time_seconds": 5258.0,
+      "bus_id": "100X_000008",
+      "stop_id": "100X013",
+      "holds_seconds": {
+        "adapted": 0.0,
+        "masked": 0.0,
+        "masked_positive": 3.3049769401550293,
+        "zero": 0.0
+      },
+      "candidate_effects": {
+        "adapted": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked_positive": {
+          "generalized_passenger_seconds": 9535.0,
+          "generalized_seconds_per_departed_passenger": 2.7274027459952777,
+          "wait_passenger_seconds": 4398.0,
+          "in_vehicle_passenger_seconds": 739.0
+        },
+        "zero": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        }
+      },
+      "positive_minus_zero_cost_passenger_seconds": 9535.0,
+      "critic_comparisons": {
+        "adapted": {
+          "positive_minus_zero_min_q": 0.09226703643798828,
+          "highest_q_candidate": "masked_positive",
+          "chosen_effect_passenger_seconds": 9535.0,
+          "candidate_cost_regret_passenger_seconds": 9535.0
+        },
+        "unmasked": {
+          "positive_minus_zero_min_q": 0.00614166259765625,
+          "highest_q_candidate": "masked_positive",
+          "chosen_effect_passenger_seconds": 9535.0,
+          "candidate_cost_regret_passenger_seconds": 9535.0
+        },
+        "masked": {
+          "positive_minus_zero_min_q": 0.004810333251953125,
+          "highest_q_candidate": "masked_positive",
+          "chosen_effect_passenger_seconds": 9535.0,
+          "candidate_cost_regret_passenger_seconds": 9535.0
+        }
+      },
+      "prefix_exact": true,
+      "population": {
+        "departed": 3496,
+        "completed_by_candidate": {
+          "adapted": 3441,
+          "masked": 3441,
+          "masked_positive": 3441,
+          "zero": 3441
+        }
+      },
+      "actual_interventions": 1
+    },
+    {
+      "seed": 75102,
+      "free_ordinal": 2000,
+      "event_index": 2279,
+      "time_seconds": 8606.0,
+      "bus_id": "103S_000006",
+      "stop_id": "103S015",
+      "holds_seconds": {
+        "adapted": 0.0,
+        "masked": 1.3989239931106567,
+        "masked_positive": 1.3989239931106567,
+        "zero": 0.0
+      },
+      "candidate_effects": {
+        "adapted": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked_positive": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "zero": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        }
+      },
+      "positive_minus_zero_cost_passenger_seconds": 0.0,
+      "critic_comparisons": {
+        "adapted": {
+          "positive_minus_zero_min_q": 0.031955718994140625,
+          "highest_q_candidate": "masked",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "unmasked": {
+          "positive_minus_zero_min_q": -0.020978927612304688,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "masked": {
+          "positive_minus_zero_min_q": -0.0137939453125,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        }
+      },
+      "prefix_exact": true,
+      "population": {
+        "departed": 3496,
+        "completed_by_candidate": {
+          "adapted": 3441,
+          "masked": 3441,
+          "masked_positive": 3441,
+          "zero": 3441
+        }
+      },
+      "actual_interventions": 1
+    },
+    {
+      "seed": 75102,
+      "free_ordinal": 2800,
+      "event_index": 3214,
+      "time_seconds": 12844.0,
+      "bus_id": "104X_000008",
+      "stop_id": "104X024",
+      "holds_seconds": {
+        "adapted": 0.0,
+        "masked": 0.0,
+        "masked_positive": 2.609117031097412,
+        "zero": 0.0
+      },
+      "candidate_effects": {
+        "adapted": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked_positive": {
+          "generalized_passenger_seconds": 250.0,
+          "generalized_seconds_per_departed_passenger": 0.07151029748274595,
+          "wait_passenger_seconds": 122.0,
+          "in_vehicle_passenger_seconds": 6.0
+        },
+        "zero": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        }
+      },
+      "positive_minus_zero_cost_passenger_seconds": 250.0,
+      "critic_comparisons": {
+        "adapted": {
+          "positive_minus_zero_min_q": 0.02197265625,
+          "highest_q_candidate": "masked_positive",
+          "chosen_effect_passenger_seconds": 250.0,
+          "candidate_cost_regret_passenger_seconds": 250.0
+        },
+        "unmasked": {
+          "positive_minus_zero_min_q": -0.013034820556640625,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "masked": {
+          "positive_minus_zero_min_q": -0.014247894287109375,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        }
+      },
+      "prefix_exact": true,
+      "population": {
+        "departed": 3496,
+        "completed_by_candidate": {
+          "adapted": 3441,
+          "masked": 3441,
+          "masked_positive": 3441,
+          "zero": 3441
+        }
+      },
+      "actual_interventions": 1
+    },
+    {
+      "seed": 75103,
+      "free_ordinal": 400,
+      "event_index": 400,
+      "time_seconds": 2597.0,
+      "bus_id": "103S_000002",
+      "stop_id": "103S004",
+      "holds_seconds": {
+        "adapted": 0.0,
+        "masked": 0.0,
+        "masked_positive": 2.122959613800049,
+        "zero": 0.0
+      },
+      "candidate_effects": {
+        "adapted": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked_positive": {
+          "generalized_passenger_seconds": -4679.0,
+          "generalized_seconds_per_departed_passenger": -1.338386727688885,
+          "wait_passenger_seconds": -2092.0,
+          "in_vehicle_passenger_seconds": -495.0
+        },
+        "zero": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        }
+      },
+      "positive_minus_zero_cost_passenger_seconds": -4679.0,
+      "critic_comparisons": {
+        "adapted": {
+          "positive_minus_zero_min_q": 0.043689727783203125,
+          "highest_q_candidate": "masked_positive",
+          "chosen_effect_passenger_seconds": -4679.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "unmasked": {
+          "positive_minus_zero_min_q": 0.008977890014648438,
+          "highest_q_candidate": "masked_positive",
+          "chosen_effect_passenger_seconds": -4679.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "masked": {
+          "positive_minus_zero_min_q": 0.00652313232421875,
+          "highest_q_candidate": "masked_positive",
+          "chosen_effect_passenger_seconds": -4679.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        }
+      },
+      "prefix_exact": true,
+      "population": {
+        "departed": 3496,
+        "completed_by_candidate": {
+          "adapted": 3441,
+          "masked": 3441,
+          "masked_positive": 3441,
+          "zero": 3441
+        }
+      },
+      "actual_interventions": 1
+    },
+    {
+      "seed": 75103,
+      "free_ordinal": 1200,
+      "event_index": 1316,
+      "time_seconds": 5246.0,
+      "bus_id": "100X_000006",
+      "stop_id": "100X035",
+      "holds_seconds": {
+        "adapted": 0.0,
+        "masked": 0.0,
+        "masked_positive": 0.8469969034194946,
+        "zero": 0.0
+      },
+      "candidate_effects": {
+        "adapted": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked_positive": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "zero": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        }
+      },
+      "positive_minus_zero_cost_passenger_seconds": 0.0,
+      "critic_comparisons": {
+        "adapted": {
+          "positive_minus_zero_min_q": 0.049503326416015625,
+          "highest_q_candidate": "masked_positive",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "unmasked": {
+          "positive_minus_zero_min_q": 0.0024509429931640625,
+          "highest_q_candidate": "masked_positive",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "masked": {
+          "positive_minus_zero_min_q": -0.0054683685302734375,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        }
+      },
+      "prefix_exact": true,
+      "population": {
+        "departed": 3496,
+        "completed_by_candidate": {
+          "adapted": 3441,
+          "masked": 3441,
+          "masked_positive": 3441,
+          "zero": 3441
+        }
+      },
+      "actual_interventions": 1
+    },
+    {
+      "seed": 75103,
+      "free_ordinal": 2000,
+      "event_index": 2284,
+      "time_seconds": 8608.0,
+      "bus_id": "100X_000012",
+      "stop_id": "100X027",
+      "holds_seconds": {
+        "adapted": 0.0,
+        "masked": 0.0,
+        "masked_positive": 1.4604860544204712,
+        "zero": 0.0
+      },
+      "candidate_effects": {
+        "adapted": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked_positive": {
+          "generalized_passenger_seconds": -4986.0,
+          "generalized_seconds_per_departed_passenger": -1.4262013729980936,
+          "wait_passenger_seconds": -2588.0,
+          "in_vehicle_passenger_seconds": 190.0
+        },
+        "zero": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        }
+      },
+      "positive_minus_zero_cost_passenger_seconds": -4986.0,
+      "critic_comparisons": {
+        "adapted": {
+          "positive_minus_zero_min_q": 0.006786346435546875,
+          "highest_q_candidate": "masked_positive",
+          "chosen_effect_passenger_seconds": -4986.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "unmasked": {
+          "positive_minus_zero_min_q": -0.019075393676757812,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 4986.0
+        },
+        "masked": {
+          "positive_minus_zero_min_q": -0.023534774780273438,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 4986.0
+        }
+      },
+      "prefix_exact": true,
+      "population": {
+        "departed": 3496,
+        "completed_by_candidate": {
+          "adapted": 3441,
+          "masked": 3441,
+          "masked_positive": 3441,
+          "zero": 3441
+        }
+      },
+      "actual_interventions": 1
+    },
+    {
+      "seed": 75103,
+      "free_ordinal": 2800,
+      "event_index": 3226,
+      "time_seconds": 12909.0,
+      "bus_id": "105S_000007",
+      "stop_id": "105S029",
+      "holds_seconds": {
+        "adapted": 0.0,
+        "masked": 0.0,
+        "masked_positive": 0.9210455417633057,
+        "zero": 0.0
+      },
+      "candidate_effects": {
+        "adapted": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "masked_positive": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        },
+        "zero": {
+          "generalized_passenger_seconds": 0.0,
+          "generalized_seconds_per_departed_passenger": 0.0,
+          "wait_passenger_seconds": 0.0,
+          "in_vehicle_passenger_seconds": 0.0
+        }
+      },
+      "positive_minus_zero_cost_passenger_seconds": 0.0,
+      "critic_comparisons": {
+        "adapted": {
+          "positive_minus_zero_min_q": 0.0046672821044921875,
+          "highest_q_candidate": "masked_positive",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "unmasked": {
+          "positive_minus_zero_min_q": -0.010883331298828125,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        },
+        "masked": {
+          "positive_minus_zero_min_q": -0.01171875,
+          "highest_q_candidate": "adapted",
+          "chosen_effect_passenger_seconds": 0.0,
+          "candidate_cost_regret_passenger_seconds": 0.0
+        }
+      },
+      "prefix_exact": true,
+      "population": {
+        "departed": 3496,
+        "completed_by_candidate": {
+          "adapted": 3441,
+          "masked": 3441,
+          "masked_positive": 3441,
+          "zero": 3441
+        }
+      },
+      "actual_interventions": 1
+    }
+  ],
+  "conclusions": [
+    "All fixed native counterfactuals completed with exact prefixes and balanced full-horizon passenger accounting.",
+    "Among8 positive-vs-zero comparisons with nonzero actual cost differences, masked min-Q sign agrees4 times and disagrees4 times;4 cost ties provide no direction evidence.",
+    "Highest-masked-Q candidate selection gives2 lower-cost,2 higher-cost and8 equal-cost interventions; aggregate single-intervention delta+16508 passenger-seconds, mean+0.393497s per departed passenger per event.",
+    "Current evidence does not support replacing deterministic extraction with finite-candidate Q maximization or changing gate on critic preferences alone."
+  ],
+  "next_step": {
+    "kind": "Training-target versus evaluation-objective consistency diagnosis before more extraction or training changes",
+    "scope": "Trace current native reward labels, transition clocks, discounts and target backup against full-horizon2*wait+ride accounting; identify whether observed Q/order differences concern a different objective/continuation or a genuine estimation failure.",
+    "training_updates": 0,
+    "status": "Not started; fixed12-event experiment complete"
+  },
+  "limitations": [
+    "All12 event cases share one previously-used diagnostic demand/SUMO scenario and are correlated; they are not12 independent generalization trials.",
+    "Outcomes condition on adapted continuation and compare four fixed candidates. Means and sums of individual interventions are descriptive and cannot be added into a continuously deployed policy benefit.",
+    "Critics estimate scaled undiscounted IQL/H2O+ continuation values, not calibrated cost labels under adapted deterministic continuation; sign disagreements with that continuation's outcomes do not alone prove Bellman inconsistency or implementation errors.",
+    "Identical actions reuse outcomes; distinct actions with exactly equal actual costs are retained as cost ties. Q ties use the previously fixed candidate order for descriptive selection."
+  ],
+  "evidence": [
+    "native_fixed_action_replay_protocol.json",
+    "native_fixed_action_replay_summary.json"
+  ],
+  "data_boundary": "Aggregated JSON only retrieved; per-event logs and data/checkpoints stay on server; no mutable Thesis access."
+}

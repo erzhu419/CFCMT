@@ -1,0 +1,51 @@
+{
+  "protocol": "tsc-v118r-eth-boston-destination-taz-schema-remediation-v1",
+  "scientific_status": "frozen_after_failed_operational_preflight_and_before_any_repaired_microscopic_or_controller_outcome",
+  "inherits_confirmation_protocol": "traffic_signal_tsc_v118_eth_boston_complete_published_confirmation.json",
+  "failed_evidence": {
+    "artifact": "cf_h2o/results/cluster/tsc_v118_eth_boston_complete_published_20260901/operational_profile_v1/preflight.json",
+    "failure_time_sec": 7696.0,
+    "failure": "FatalTraCIError: Vehicle '54747' has no valid route.",
+    "trip_id": "54747",
+    "published_destination_attribute": "trip_toTaz=120400",
+    "sumo_supported_destination_attribute": "toTaz=120400"
+  },
+  "diagnostic_probe": {
+    "scope": "the_single_first_failing_trip_only",
+    "original_custom_attribute_duarouter_exit_code": 1,
+    "canonical_attribute_duarouter_exit_code": 0,
+    "canonical_probe_route_generated": true
+  },
+  "authorized_remediation": {
+    "operation": "streaming_xml_attribute_rename_trip_toTaz_to_toTaz_for_every_published_trip",
+    "apply_uniformly_to_all_trips_before_any_repaired_run": true,
+    "preserve_trip_id": true,
+    "preserve_departure": true,
+    "preserve_from_and_to_edge_anchors": true,
+    "preserve_from_taz_and_destination_taz_values": true,
+    "preserve_trip_count": true,
+    "allow_trip_removal": false,
+    "allow_edge_substitution": false,
+    "allow_route_repair": false,
+    "allow_ignore_route_errors": false,
+    "remove_passive_output_declarations": true
+  },
+  "required_gates_before_microscopic_retry": {
+    "input_and_output_trip_count_equal": true,
+    "input_and_output_unique_trip_count_equal": true,
+    "all_input_trip_toTaz_attributes_renamed": true,
+    "zero_output_trip_toTaz_attributes": true,
+    "all_output_trips_have_canonical_toTaz": true,
+    "zero_trip_anchor_edge_changes": true,
+    "zero_trip_removals": true,
+    "full_demand_duarouter_validation_required": true,
+    "full_demand_duarouter_ignore_errors": false
+  },
+  "confirmation_contract": {
+    "fresh_seeds_unchanged": true,
+    "arms_unchanged": true,
+    "information_budgets_unchanged": true,
+    "primary_metric_unchanged": true,
+    "confirmation_gates_unchanged": true
+  }
+}

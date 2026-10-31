@@ -1,0 +1,23 @@
+stage: 4
+
+world_model:
+  mode: causal_factored
+  hidden_dim: 128
+  lr: 0.001
+  residual_lr: 0.001
+  weight_decay: 0.0001
+  batch_size: 256
+  train_epochs_sim: 100
+  train_epochs_residual: 100
+  parent_threshold: 0.3
+  alignment_keep_quantile: 0.5
+  use_soft_masks: true
+
+residual_training:
+  paired_mode: true
+  aligned_mode: true
+  distributional_mode: false
+
+outputs:
+  mechanism_outputs: true
+  mechanism_uncertainty: true

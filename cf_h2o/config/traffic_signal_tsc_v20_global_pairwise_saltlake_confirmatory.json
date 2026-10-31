@@ -1,0 +1,72 @@
+{
+  "version": 8,
+  "matrix_protocol_tag": "v38",
+  "protocol": "globally-frozen-pairwise-target-simulator-adaptation-salt-lake-confirmation-v38",
+  "expected_sumo_version": "1.22.0",
+  "manifest": "cf_h2o/config/traffic_signal_saltlake_confirmatory_v1.json",
+  "counterfactual_cache_version": "v19-policy-consistent-one-step-mechanisms-two-pass-20260809",
+  "development_manifest": "cf_h2o/config/traffic_signal_cross_city_v1.json",
+  "combined_manifest": "cf_h2o/config/traffic_signal_cross_city_v2_saltlake18.json",
+  "saltlake_cache_manifest": "cf_h2o/config/traffic_signal_saltlake_confirmatory_v1.json",
+  "development_evidence": {
+    "v37_audit": "cf_h2o/results/cluster/tsc_v37r33_logo_pairwise_20260809/audit/audit.json",
+    "v37_audit_sha256": "15a83a08b64bec3614e72df0ab4bebbb6bfbd118a02d6daa9ca42f16b1624b8f",
+    "frozen_source_counterfactual_cache_sha256": "5b8bac698f2bda045476614b37672edf31d73e50e266e8137baadc9e6349e72c",
+    "frozen_source_rule_baseline_sha256": "25e6291ba9ff7348642baf09498c9c7bea36ef3fd77a7ee6680b289a03201acb"
+  },
+  "saltlake_data_admission": {
+    "audit": "cf_h2o/results/cluster/saltlake_full_admission_local_20260808/admission.json",
+    "audit_sha256": "7da84de7268858a54ce2671c6efc037dae7b38ee32e18b46d121459572c5d14b",
+    "required_status": "PASS",
+    "required_collision_events": 0,
+    "required_teleports": 0,
+    "route_sha256": {
+      "saltlake_400s_200w_q1_weekday_peak": "f60ab1f5d63b3f292abbf549a78ee48bb65388bf6841a3435cfd6ca8e6313db0",
+      "saltlake_state_university_q1_weekday_peak": "094ee431eba138fc1fd4036d5cd5b00b4647c77787e0cbacab58d748386838ca"
+    }
+  },
+  "counterfactual": {
+    "cache_version": "v19-policy-consistent-one-step-mechanisms-two-pass-20260809",
+    "source_seeds": [2027, 3037, 4047],
+    "source_duration_sec": 600.0,
+    "duration_sec": 600.0,
+    "control_interval_sec": 10,
+    "warmup_sec": 60.0,
+    "max_focal_tls": 4,
+    "horizon_intervals": 6,
+    "collection_shards": 16,
+    "behavior_policy": "phase_pressure",
+    "min_tls_coverage": 1.0,
+    "symmetric_group_censoring": "drop-complete-matched-action-group-on-any-branch-safety-event"
+  },
+  "confirmation": {
+    "candidate_family": "causal_antisymmetric_pairwise_advantage",
+    "same_information_fallback": "causal_group_normalized_rigid_advantage",
+    "target_group_budget": 60,
+    "target_group_selection": "deterministic-target-adaptation-split-v3-first-60-complete-action-groups",
+    "target_adaptation_type": "complete-target-simulator-counterfactual-action-groups",
+    "target_scenarios": [
+      "saltlake_400s_200w_q1_weekday_peak",
+      "saltlake_state_university_q1_weekday_peak"
+    ],
+    "source_exclusion": "exclude-all-scenarios-with-city-group-equal-to-salt_lake_city",
+    "fit_protocol": "all-development-source-groups-plus-exactly-60-target-groups",
+    "evaluation_protocol": "all-safe-complete-target-groups-outside-the-fixed-60-group-adaptation-set",
+    "target_specific_family_selection": false,
+    "primary_gate": {
+      "minimum_macro_relative_improvement": 0.10,
+      "minimum_improved_network_count": 2,
+      "required_network_count": 2,
+      "maximum_absolute_network_regression": 0.05
+    }
+  },
+  "cluster": {
+    "cache_assignments": {
+      "node001": ["saltlake_400s_200w_q1_weekday_peak"],
+      "node002": ["saltlake_state_university_q1_weekday_peak"]
+    },
+    "workers_per_cache_job": 128,
+    "cpu_cores_per_job": 160,
+    "ram_mb_per_job": 131072
+  }
+}

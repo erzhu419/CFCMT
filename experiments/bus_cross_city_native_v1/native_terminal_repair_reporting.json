@@ -1,0 +1,74 @@
+{
+  "complete": true,
+  "task": "t128751",
+  "actual_simulations": 1,
+  "new_training_updates": 0,
+  "original_action_replay": {
+    "case": 0,
+    "controls": 3834,
+    "nonterminal_rows": 3833,
+    "all_original_nonterminal_fields_exact": true,
+    "all_executed_actions_exact": true,
+    "old_horizon_seconds": 17922.0,
+    "new_horizon_seconds": 24000.0,
+    "terminal_reward": {
+      "before": -6962.0,
+      "after": -724166.0,
+      "actual_delta": -717204.0,
+      "expected_delta": -717204.0
+    },
+    "terminal_duration": {
+      "before": 59.0,
+      "after": 6137.0,
+      "actual_delta": 6078.0,
+      "expected_delta": 6078.0
+    },
+    "physical_vehicles_at_old_end": [],
+    "expected_agents_at_old_end": 0,
+    "ledger_reward_telescope_error": 0.0
+  },
+  "corrected_pool": {
+    "path": "/home/zhengliang01/scheduleurm_work/CFCMT/experiments/bus_cross_city_native_v1/native_terminal_repair/target_pool.h5",
+    "original_pool_preserved": true,
+    "total_unique_rows": 16384,
+    "role_rows": {
+      "fit": 12288,
+      "stop": 2048,
+      "calibrate": 2048
+    },
+    "corrected_terminal_rows": 8,
+    "corrected_fit_terminal_rows": 6,
+    "changed_fields": {
+      "delta_t_seconds": 8,
+      "next_observations": 8,
+      "raw_next_observations": 8,
+      "rewards": 8,
+      "wait_passenger_seconds": 8
+    },
+    "all_other_field_values_unchanged": true,
+    "total_added_weighted_wait_cost": 5815542.0,
+    "method": "Measured original-action case00 replay; analytic static waiting extension for all eight terminal tails",
+    "new_nonterminal_world_model_labels": 0
+  },
+  "implementation": {
+    "actual_endpoint_required_before_collection_save": true,
+    "actual_endpoint_required_for_pool_assembly": true,
+    "meaningful_tests": "Four target-pool tests pass, including configured24k/actual17.9k rejection"
+  },
+  "next_step": {
+    "training_seeds": [
+      75101,
+      75102,
+      75103
+    ],
+    "source_initializers": "Existing fixed-final50000-update dense source initializers",
+    "target_adaptation_updates": 5000,
+    "target_fit_rows": 12288,
+    "only_change": "Use corrected terminal labels in the independent target pool",
+    "world_model_updates": 0,
+    "new_gate_or_threshold_tuning": false,
+    "evaluation": "Paired original three generated demand/SUMO cases, full24000 seconds; retain old adapted and heuristic references",
+    "training_launched": false
+  },
+  "limitations": "Successful accounting repair is not a controller-performance result. Existing model checkpoints still reflect old terminal labels; all prior outcomes remain archived."
+}

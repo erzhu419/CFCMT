@@ -1,0 +1,37 @@
+{
+  "protocol": "tsc-v150f-fixed-state-future-randomness-v1",
+  "scientific_role": "development_diagnostic_only",
+  "source_manifest": "cf_h2o/config/traffic_signal_cross_city_v2_saltlake18.json",
+  "city_scenarios": {
+    "atlanta": "atlanta_1x5",
+    "cologne": "cologne1",
+    "hangzhou": "hangzhou_bc_tyc",
+    "ingolstadt": "ingolstadt1",
+    "new_york": "manhattan_28x7",
+    "resco_synthetic": "grid4x4",
+    "salt_lake_city": "saltlake_400s_200w_q1_weekday_peak"
+  },
+  "base_seed": 5057,
+  "future_seeds": [9101, 9102, 9103, 9104, 9105],
+  "base_trace_duration_sec": 1200,
+  "warmup_sec": 300,
+  "checkpoint_count": 3,
+  "checkpoint_spacing_sec": 180,
+  "control_interval_sec": 30,
+  "counterfactual_horizon_intervals": 3,
+  "counterfactual_cost_mode": "system_vehicle_load",
+  "snapshot_protocol": {
+    "save_rng": false,
+    "precision": 8,
+    "thread_rngs": 1,
+    "reload_mode": "full_network_load_with_new_future_seed",
+    "behavior_capture": "uninterrupted_first_pass",
+    "action_pairing": "common_future_seed_within_fixed_state"
+  },
+  "integrity_requirements": {
+    "same_seed_exact_replay": true,
+    "rng_state_absent_from_snapshot": true,
+    "minimum_valid_future_pairs_per_checkpoint": 3
+  },
+  "claim_boundary": "This protocol measures fixed-state future-seed variability only. It does not select a source or authorize closed-loop source transfer."
+}

@@ -1,0 +1,101 @@
+{
+  "claim_boundary": "OOF selection uses only the 22 disclosed redevelopment seeds. No confirmatory or prospective seed may be read at this stage.",
+  "diagnostic": {
+    "acceptance_quantiles": [
+      0.025,
+      0.05,
+      0.075,
+      0.1,
+      0.125,
+      0.15,
+      0.2,
+      0.25,
+      0.3,
+      0.4,
+      0.5
+    ],
+    "bootstrap": {
+      "replicates": 10000,
+      "seed": 20260830,
+      "unit": "simulator_seed"
+    },
+    "model": {
+      "l2_regularization": 24.0,
+      "learning_rate": 0.05,
+      "max_iter": 120,
+      "max_leaf_nodes": 7,
+      "min_samples_leaf": 12,
+      "random_state": 20260803,
+      "uncertainty_quantile": 0.9
+    },
+    "selection_rule": {
+      "fallback": "always_veto_to_phase_pressure_if_no_gate_is_feasible",
+      "maximum_bootstrap_95pct_upper_mean_delta": 0.0,
+      "maximum_equal_seed_scenario_mean_delta": -0.001,
+      "maximum_harmful_group_fraction": 0.45,
+      "maximum_worst_seed_mean_delta": 0.01,
+      "minimum_retained_groups_per_city": 50,
+      "minimum_retained_seed_fraction": 0.8
+    }
+  },
+  "frozen_at_utc": "2026-08-30T03:06:41.783172+00:00",
+  "frozen_inputs": {
+    "cache_audit_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v83r79_external_v9_runtime_queue_trust_redevelopment_20260830/waiting_aligned_cache_audit_v1.json",
+    "cache_audit_sha256": "76ca0211eefdf6dd0792261f88e0a299e388070fea3280976bfc0312fe3e7e4a",
+    "cache_protocol_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v67_external_v9_waiting_aligned_redevelopment_cache.json",
+    "cache_protocol_sha256": "445ce678fa1c1c0df8d1649338066807762ba4f1983e87e2123bd44890a76517",
+    "hierarchical_freeze_audit_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/joint_freeze_audit_v1.json",
+    "hierarchical_freeze_audit_sha256": "b113215b8fba6cf322d367b7f007d40e3f6ebd9264fa4422da6a7e00fb549c2b",
+    "manifest_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v39_external_la_jinan_v9_manifest.json",
+    "manifest_sha256": "636e09d8e2f47d5fefaa26b33b0552373b01f185e77e18896c97751c267c356c",
+    "proposal_parent_protocol_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/traffic_signal_tsc_v46_external_v9_hierarchical_closed_loop_development.json",
+    "proposal_parent_protocol_sha256": "cbdd465fa0d5583d7937742afc5f5188901c3708742ed4156d6a78c567586b70"
+  },
+  "future_roots_absent_at_freeze": [
+    "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v83r79_external_v9_runtime_queue_trust_redevelopment_20260830/waiting_aligned_veto_diagnostic_v1",
+    "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v83r79_external_v9_runtime_queue_trust_redevelopment_20260830/waiting_aligned_veto_artifact_v1",
+    "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v83r79_external_v9_runtime_queue_trust_redevelopment_20260830/waiting_aligned_veto_closed_loop_v1",
+    "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v84r80_external_v9_runtime_queue_trust_confirmation_20260830",
+    "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v85r81_external_v9_runtime_queue_trust_prospective_20260830"
+  ],
+  "protocol": "tsc-v83r79-external-v9-waiting-aligned-veto-diagnostic-v1",
+  "stage": "development_only_seed_blocked_waiting_aligned_veto_selection",
+  "training": {
+    "city": "jinan",
+    "collection_shards": 32,
+    "cross_fitting": "leave_one_simulator_seed_out_22_folds",
+    "evaluation_target": "group_normalized_waiting_aligned_delta",
+    "feature_variant": "state_topology_raw_scaled",
+    "proposal_role": "immutable_v60_hierarchical_cfcmt",
+    "scenarios": [
+      "jinan_3x4_real"
+    ],
+    "seeds": [
+      80314,
+      88625,
+      27178,
+      77524,
+      63775,
+      50945,
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ],
+    "target": "450_second_global_halted_queue_integral_candidate_minus_phase_pressure",
+    "target_transform": "raw_scenario_robust_scaled_for_fit",
+    "veto_role": "accept_or_fallback_to_phase_pressure_only"
+  }
+}

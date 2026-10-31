@@ -1,0 +1,26 @@
+stage: 1
+
+local_graph:
+  enabled: false
+  max_front_back: 1
+  station_radius: 1
+  segment_radius: 1
+
+encoder:
+  hidden_dim: 128
+  out_dim: 128
+
+policy_input:
+  keep_z_t: true
+  append_local_embedding: false
+  forbidden_fields:
+    - z_t1
+    - snapshot_t1
+    - next_observations
+    - next_state
+    - future_waiting_count
+    - future_vehicle_positions
+    - source
+    - real_sim_label
+    - domain_id
+    - city_id

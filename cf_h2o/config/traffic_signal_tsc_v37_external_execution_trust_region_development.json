@@ -1,0 +1,183 @@
+{
+  "protocol": "tsc-v51r47-external-execution-trust-region-development-v1",
+  "frozen_at_utc": "2026-08-09T13:53:42Z",
+  "claim_boundary": "Post-v50 method development on the same ten disclosed development seeds. The world model, pressure regularizer, risk/trust parameters, and base candidate definitions remain frozen; only deployment-time sparse coordination and observable-state execution trust regions are varied.",
+  "failed_v50_selection_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v50r46_policy_horizon_expanded_development_20260809/expanded_selection_audit_v1.json",
+    "sha256": "204dad56575cd8ea428adf754cf49764b60ebe45a9dc0b957e83dcf723af840f",
+    "required_status": "PASS",
+    "required_decision": "reject_v50_and_preserve_new_validation_and_prospective_seeds"
+  },
+  "parent_expanded_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v36_external_policy_horizon_expanded_development.json",
+    "sha256": "145836554012d346f800874e739bb481bb8512808ae558268af574bdaa477dfa"
+  },
+  "candidate_grid_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v34_external_policy_horizon_adaptation.json",
+    "sha256": "7f6c8d65083bcad3d50d60015dea7ec218c926123f30d0e01f449ea62b383eb3",
+    "base_candidates_must_not_change": true
+  },
+  "city_deployment_scope": {
+    "los_angeles": {
+      "scenarios": [
+        "la_1x4"
+      ],
+      "mode": "active_development"
+    },
+    "jinan": {
+      "scenarios": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ],
+      "mode": "frozen_phase_pressure_fallback",
+      "reason": "No v50 candidate had negative city-mean waiting-time delta and nonzero intervention coverage under the frozen selection gate."
+    }
+  },
+  "development_grid": {
+    "city": "los_angeles",
+    "seeds": [
+      5057,
+      6067,
+      52282,
+      41242,
+      63792,
+      80722,
+      75638,
+      61337,
+      73385,
+      81189
+    ],
+    "scenario": "la_1x4",
+    "horizon_sec": 3600,
+    "coordination_mode": "sparse",
+    "base_candidates": [
+      "cfcmt_pr_b2_cd3",
+      "cfcmt_pr_b0p25_cd6",
+      "cfcmt_raw_cd6"
+    ],
+    "execution_trust_regions": [
+      {
+        "key": "sparse_only",
+        "enabled": false,
+        "min_priority": 0.0,
+        "min_total_queue": 0.0,
+        "min_total_vehicles": 0.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": null
+      },
+      {
+        "key": "cap1",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 0.0,
+        "min_total_vehicles": 0.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1
+      },
+      {
+        "key": "cap2",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 0.0,
+        "min_total_vehicles": 0.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 2
+      },
+      {
+        "key": "cap1_pri0p5",
+        "enabled": true,
+        "min_priority": 0.5,
+        "min_total_queue": 0.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1
+      },
+      {
+        "key": "cap1_pri1",
+        "enabled": true,
+        "min_priority": 1.0,
+        "min_total_queue": 0.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1
+      },
+      {
+        "key": "cap1_congestion",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 10.0,
+        "min_total_vehicles": 5.0,
+        "max_mean_speed": 7.0,
+        "max_simultaneous_overrides": 1
+      },
+      {
+        "key": "cap1_strong",
+        "enabled": true,
+        "min_priority": 0.5,
+        "min_total_queue": 10.0,
+        "min_total_vehicles": 5.0,
+        "max_mean_speed": 7.0,
+        "max_simultaneous_overrides": 1
+      },
+      {
+        "key": "cap2_strong",
+        "enabled": true,
+        "min_priority": 0.5,
+        "min_total_queue": 10.0,
+        "min_total_vehicles": 5.0,
+        "max_mean_speed": 7.0,
+        "max_simultaneous_overrides": 2
+      }
+    ],
+    "candidate_count": 24,
+    "matrix_size": 240,
+    "selection_rule": {
+      "minimum_city_mean_relative_improvement": 0.005,
+      "maximum_bootstrap_95pct_upper_mean_relative_delta": 0.01,
+      "maximum_seed_level_city_mean_relative_regression": 0.05,
+      "minimum_improved_seed_fraction": 0.6,
+      "minimum_intervened_seed_fraction": 0.8,
+      "method_teleports_must_not_exceed_paired_phase_pressure": true,
+      "method_collision_incidents_must_not_exceed_paired_phase_pressure": true,
+      "robust_score": "mean_relative_delta + 0.5 * seed_delta_std + max(worst_seed_delta, 0)",
+      "fallback": "phase_pressure when no active candidate is feasible"
+    },
+    "bootstrap": {
+      "unit": "seed-level city relative delta",
+      "replicates": 10000,
+      "seed": 20260811,
+      "confidence": 0.95,
+      "interval": "percentile"
+    }
+  },
+  "new_untouched_validation": {
+    "seeds": [
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ],
+    "must_not_run_until_v51_selection_is_hash_frozen": true
+  },
+  "prospective_confirmation_reservation": {
+    "seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "must_not_run_until_new_untouched_validation_passes_and_analysis_is_hash_frozen": true
+  }
+}

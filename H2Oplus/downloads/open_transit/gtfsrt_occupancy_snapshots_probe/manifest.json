@@ -1,0 +1,130 @@
+{
+  "ok": true,
+  "validation_level": "gtfsrt_avl_occupancy_snapshot_probe",
+  "out_dir": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/gtfsrt_occupancy_snapshots_probe",
+  "feeds": [
+    {
+      "source_key": "nyc_mta_bus",
+      "source_label": "NYC MTA Bus",
+      "source_kind": "gtfsrt_io_archive",
+      "archive_date": "2026-05-18",
+      "inventory": {
+        "url": "https://gtfsrt.prod.obanyc.com/vehiclePositions",
+        "base64url": "aHR0cHM6Ly9ndGZzcnQucHJvZC5vYmFueWMuY29tL3ZlaGljbGVQb3NpdGlvbnM",
+        "agency_id": "mta",
+        "agency_name": "Metropolitan Transportation Authority",
+        "system_id": "bus",
+        "system_name": "NYC Bus",
+        "feed_type": "vehicle_positions",
+        "date_min": "2026-03-01",
+        "date_max": "2026-05-18",
+        "total_records": 407320910,
+        "total_bytes": 14863205440,
+        "date_selected": "2026-05-18"
+      },
+      "parquet_url": "https://storage.googleapis.com/parquet.gtfsrt.io/vehicle_positions/date=2026-05-18/base64url=aHR0cHM6Ly9ndGZzcnQucHJvZC5vYmFueWMuY29tL3ZlaGljbGVQb3NpdGlvbnM/data.parquet",
+      "selected_row_groups": [
+        0,
+        949,
+        1899,
+        2849
+      ],
+      "rows": 6250,
+      "snapshots": 4,
+      "vehicles": 3660,
+      "routes": 324,
+      "rows_with_position": 6250,
+      "rows_with_occupancy_status": 1780,
+      "rows_with_occupancy_percentage": 0,
+      "occupancy_status_rate": 0.2848,
+      "occupancy_percentage_rate": 0.0,
+      "occupancy_status_counts": {
+        "FEW_SEATS_AVAILABLE": 259,
+        "FULL": 12,
+        "MANY_SEATS_AVAILABLE": 1477,
+        "STANDING_ROOM_ONLY": 32
+      },
+      "outputs": {
+        "csv": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/gtfsrt_occupancy_snapshots_probe/nyc_mta_bus_vehicle_snapshots.csv",
+        "parquet": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/gtfsrt_occupancy_snapshots_probe/nyc_mta_bus_vehicle_snapshots.parquet",
+        "summary": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/gtfsrt_occupancy_snapshots_probe/nyc_mta_bus_summary.json"
+      }
+    },
+    {
+      "source_key": "septa_bus",
+      "source_label": "SEPTA Bus",
+      "source_kind": "gtfsrt_io_archive",
+      "archive_date": "2026-05-18",
+      "inventory": {
+        "url": "https://www3.septa.org/gtfsrt/septa-pa-us/Vehicle/rtVehiclePosition.pb",
+        "base64url": "aHR0cHM6Ly93d3czLnNlcHRhLm9yZy9ndGZzcnQvc2VwdGEtcGEtdXMvVmVoaWNsZS9ydFZlaGljbGVQb3NpdGlvbi5wYg",
+        "agency_id": "septa",
+        "agency_name": "SEPTA",
+        "system_id": "bus",
+        "system_name": "Bus",
+        "feed_type": "vehicle_positions",
+        "date_min": "2026-01-04",
+        "date_max": "2026-05-18",
+        "total_records": 207114867,
+        "total_bytes": 10277314318,
+        "date_selected": "2026-05-18"
+      },
+      "parquet_url": "https://storage.googleapis.com/parquet.gtfsrt.io/vehicle_positions/date=2026-05-18/base64url=aHR0cHM6Ly93d3czLnNlcHRhLm9yZy9ndGZzcnQvc2VwdGEtcGEtdXMvVmVoaWNsZS9ydFZlaGljbGVQb3NpdGlvbi5wYg/data.parquet",
+      "selected_row_groups": [
+        0,
+        1425,
+        2850,
+        4275
+      ],
+      "rows": 1153,
+      "snapshots": 4,
+      "vehicles": 814,
+      "routes": 130,
+      "rows_with_position": 1152,
+      "rows_with_occupancy_status": 717,
+      "rows_with_occupancy_percentage": 0,
+      "occupancy_status_rate": 0.6218560277536861,
+      "occupancy_percentage_rate": 0.0,
+      "occupancy_status_counts": {
+        "CRUSHED_STANDING_ROOM_ONLY": 3,
+        "EMPTY": 220,
+        "FEW_SEATS_AVAILABLE": 157,
+        "FULL": 10,
+        "MANY_SEATS_AVAILABLE": 317,
+        "STANDING_ROOM_ONLY": 10
+      },
+      "outputs": {
+        "csv": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/gtfsrt_occupancy_snapshots_probe/septa_bus_vehicle_snapshots.csv",
+        "parquet": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/gtfsrt_occupancy_snapshots_probe/septa_bus_vehicle_snapshots.parquet",
+        "summary": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/gtfsrt_occupancy_snapshots_probe/septa_bus_summary.json"
+      }
+    },
+    {
+      "source_key": "mbta_live",
+      "source_label": "MBTA live",
+      "source_kind": "live_gtfsrt",
+      "live_url": "https://cdn.mbta.com/realtime/VehiclePositions.pb",
+      "polls": 1,
+      "rows": 764,
+      "snapshots": 1,
+      "vehicles": 764,
+      "routes": 165,
+      "rows_with_position": 764,
+      "rows_with_occupancy_status": 569,
+      "rows_with_occupancy_percentage": 569,
+      "occupancy_status_rate": 0.7447643979057592,
+      "occupancy_percentage_rate": 0.7447643979057592,
+      "occupancy_status_counts": {
+        "FEW_SEATS_AVAILABLE": 111,
+        "FULL": 15,
+        "MANY_SEATS_AVAILABLE": 443
+      },
+      "outputs": {
+        "csv": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/gtfsrt_occupancy_snapshots_probe/mbta_live_vehicle_snapshots.csv",
+        "parquet": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/gtfsrt_occupancy_snapshots_probe/mbta_live_vehicle_snapshots.parquet",
+        "summary": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/gtfsrt_occupancy_snapshots_probe/mbta_live_summary.json"
+      }
+    }
+  ],
+  "notes": "These are synchronized AVL/vehicle-occupancy snapshots. Occupancy is GTFS-RT crowding status/percentage where available, not exact APC boarding/alighting counts."
+}

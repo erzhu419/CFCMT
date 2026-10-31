@@ -1,0 +1,146 @@
+{
+  "protocol": "tsc-v118-eth-boston-complete-published-independent-confirmation-v1",
+  "scientific_status": "frozen_before_boston_static_inventory_microscopic_or_controller_outcomes",
+  "claim_scope": "independent_complete_published_approximately_12h_external_stress_test_not_full_day",
+  "source": {
+    "doi": "10.3929/ethz-b-000584669",
+    "archive_name": "sumo_sim_perc_mfd.zip",
+    "archive_size_bytes": 658810696,
+    "archive_md5": "802321f1d2c61de527ed579ce9c54842",
+    "license": "CC-BY-NC-4.0",
+    "city_code": "BOS",
+    "known_before_freeze": {
+      "minimum_depart_sec": 7201.78,
+      "maximum_depart_sec": 50395.74,
+      "basis": "v102_streaming_departure_bounds_only"
+    }
+  },
+  "admission": {
+    "sequential_fail_closed": true,
+    "static_package_audit_first": true,
+    "microscopic_seed": 5057,
+    "backend": "libsumo",
+    "sumo_version": "1.22.0",
+    "drain_after_last_depart_sec": 21600,
+    "require_complete_archive_city_unit": true,
+    "require_all_published_trips": true,
+    "allow_route_or_time_sampling": false,
+    "allow_demand_scaling": false,
+    "allow_route_repair": false,
+    "ignore_route_errors": false,
+    "time_to_teleport_sec": -1,
+    "max_depart_delay_sec": -1,
+    "collision_action": "warn",
+    "collision_check_junctions": true,
+    "require_exact_vehicle_conservation": true,
+    "require_zero_collisions": true,
+    "require_zero_starting_and_ending_teleports": true
+  },
+  "deployment": {
+    "city": "boston",
+    "scenario": "eth_boston_complete_published_micro",
+    "full_network_and_complete_published_demand_active": true,
+    "control_interval_sec": 10,
+    "prediction_horizon_sec": 450,
+    "residual_coordination_mode": "sparse",
+    "controlled_traffic_light_count": 4,
+    "controlled_unit_selection": "top_four_mean_incoming_halted_queue_exposure_across_both_passive_adaptation_trajectories_ties_by_tls_id",
+    "uncontrolled_traffic_lights": "published_program",
+    "adaptation_seeds": [
+      5057,
+      6067
+    ],
+    "target_transition_group_budget": 100
+  },
+  "information_arms": {
+    "phase_pressure": {
+      "target_transition_label_budget": 0,
+      "role": "strong_rule_safety_reference"
+    },
+    "target_only_b100": {
+      "target_transition_label_budget": 100,
+      "role": "architecture_matched_source_free_comparator"
+    },
+    "source_selected_b100": {
+      "target_transition_label_budget": 100,
+      "role": "primary_cfcmt_target_offline_adaptation"
+    },
+    "source_selected_b0": {
+      "target_transition_label_budget": 0,
+      "role": "cfcmt_target_label_free_transfer"
+    },
+    "h2oplus_dense_b100": {
+      "target_transition_label_budget": 100,
+      "role": "same_estimand_same_budget_dense_residual_comparator"
+    },
+    "h2oplus_dense_b0": {
+      "target_transition_label_budget": 0,
+      "role": "same_estimand_target_label_free_dense_residual_comparator"
+    }
+  },
+  "fresh_seed_generation": {
+    "algorithm": "python_random_mt19937_unique_randrange_10000000_100000000",
+    "generator_seed": 20260902,
+    "known_config_seed_count_excluded": 486,
+    "generated_before_any_boston_static_microscopic_or_controller_outcome": true,
+    "seed_count": 32
+  },
+  "fresh_seeds": [
+    47069722,
+    91819133,
+    58596411,
+    12738800,
+    85521056,
+    21884234,
+    82268531,
+    57265594,
+    12245550,
+    93267849,
+    70073202,
+    99922256,
+    73451656,
+    71361487,
+    70978151,
+    51924769,
+    83386355,
+    36504231,
+    73041021,
+    94820152,
+    87973808,
+    33056123,
+    80670236,
+    24394135,
+    18704419,
+    14398317,
+    36248715,
+    60481755,
+    56053708,
+    61612535,
+    60721743,
+    73855215
+  ],
+  "primary_comparisons": [
+    "source_selected_b100_vs_h2oplus_dense_b100",
+    "source_selected_b100_vs_target_only_b100",
+    "source_selected_b100_vs_phase_pressure"
+  ],
+  "secondary_comparisons": [
+    "source_selected_b0_vs_h2oplus_dense_b0",
+    "source_selected_b100_vs_source_selected_b0",
+    "h2oplus_dense_b100_vs_h2oplus_dense_b0"
+  ],
+  "confirmation_gate": {
+    "joint_rule": "all_applicable_primary_gates_must_pass",
+    "paired_unit": "same_complete_boston_demand_same_fresh_seed",
+    "primary_metric": "full_network_mean_trip_waiting_time",
+    "bootstrap_replicates": 20000,
+    "bootstrap_seed": 20260902,
+    "maximum_95pct_upper_relative_delta_source_b100_vs_h2oplus_b100": 0.0,
+    "maximum_95pct_upper_relative_delta_source_b100_vs_target_only_b100": 0.0,
+    "maximum_95pct_upper_relative_delta_source_b100_vs_phase_pressure": 0.01,
+    "minimum_active_source_seed_fraction": 0.5,
+    "candidate_collision_incidents_must_not_exceed_phase_in_aggregate": true,
+    "candidate_teleports_must_not_exceed_phase_in_aggregate": true,
+    "no_failed_seed_exclusion": true
+  }
+}

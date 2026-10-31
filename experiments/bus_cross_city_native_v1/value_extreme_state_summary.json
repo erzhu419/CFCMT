@@ -1,0 +1,91 @@
+{
+  "complete": true,
+  "seed": 75101,
+  "scope": "Evidence from existing source initializer, compact source pool and target stop states; no new training or final test access.",
+  "numeric_precision": "Row Q/V numbers retain observed float32 outputs; rounded summaries are explicitly labelled.",
+  "source_example": {
+    "dataset": "source_pool.h5",
+    "h5_row_index": 14584,
+    "uniform256_sample_index": 227,
+    "delta_t_seconds": 3.0,
+    "terminal": 0.0,
+    "q_recorded_min": 211.68362426757812,
+    "value_current": 210.99447631835938,
+    "value_next_batch_forward": -38628492.0,
+    "value_next_single_row_forward": -38628488.0,
+    "float32_batch_vs_single_difference": 4.0,
+    "next_state_min": -1.0,
+    "next_state_max": 10.0,
+    "maximum_feature": "slot_01_line_id",
+    "next_active_events": 2,
+    "next_current_decision_index": 0,
+    "structured_slot_input_min": -1.0,
+    "structured_slot_input_max": 5.0,
+    "single_row_value_layer_max_abs": {
+      "encoder.slot_encoder.network.0": 2.823913097381592,
+      "encoder.slot_encoder.network.2": 7.380984783172607,
+      "encoder.fusion.network.0": 255.44248962402344,
+      "encoder.fusion.network.2": 3381.291259765625,
+      "network.network.0": 123568.4296875,
+      "network.network.2": 1679811.125,
+      "network.network.4": 38628488.0
+    }
+  },
+  "target_stop_example": {
+    "dataset": "target_pool.h5",
+    "h5_row_index": 12405,
+    "stop_sample_index": 117,
+    "delta_t_seconds": 0.0,
+    "terminal": 0.0,
+    "q_recorded_min": -2351223.0,
+    "q_recorded_mean": -2349923.5,
+    "value_current": -8643390.0,
+    "state_min": -1.0,
+    "state_max": 10.0,
+    "maximum_feature": "slot_01_line_id",
+    "active_events": 2,
+    "current_decision_index": 0,
+    "structured_slot_input_min": -1.0,
+    "structured_slot_input_max": 2.106628656387329,
+    "single_row_value_layer_max_abs": {
+      "encoder.slot_encoder.network.0": 2.1662957668304443,
+      "encoder.slot_encoder.network.2": 2.926055431365967,
+      "encoder.fusion.network.0": 79.6530532836914,
+      "encoder.fusion.network.2": 1033.535400390625,
+      "network.network.0": 32710.923828125,
+      "network.network.2": 401856.625,
+      "network.network.4": 8643390.0
+    },
+    "preceding_stop_h5_row": 12404,
+    "preceding_row_iql_target": -8643390.0
+  },
+  "value_parameter_evidence": {
+    "all_reported_parameter_ranges_and_norms_finite": true,
+    "maximum_absolute_parameter": 2.4052250385284424,
+    "maximum_parameter_name": "encoder.fusion.network.0.weight"
+  },
+  "multiple_event_first_token_counts": {
+    "source_fit": {
+      "rows": 16384,
+      "observations": 3779,
+      "next_observations": 3728
+    },
+    "target_fit": {
+      "rows": 12288,
+      "observations": 1305,
+      "next_observations": 1317
+    },
+    "target_stop": {
+      "rows": 2048,
+      "observations": 236,
+      "next_observations": 245
+    },
+    "target_calibrate": {
+      "rows": 2048,
+      "observations": 199,
+      "next_observations": 212
+    }
+  },
+  "conclusion": "Supported, bounded states undergo extreme amplification inside the source-initialized value network before transfer. The statistics are not aggregation errors, and multiple-event first-token states are present in source training data.",
+  "limitations": "This identifies numerical extrapolation in the source initializer, not the isolated causal effect of sparse source compression, undiscounted bootstrapping or a particular layer."
+}

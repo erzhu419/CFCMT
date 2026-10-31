@@ -1,0 +1,61 @@
+{
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "initialization_updates": 50000,
+  "adaptation_updates": 5000,
+  "target_fit_rows": 12288,
+  "target_union_rows": 16384,
+  "source_rows": 3284718,
+  "device": "cpu",
+  "evaluation": {
+    "episode_seconds": 24000,
+    "demand_scale": 1.0,
+    "rule": "forward_proportional",
+    "rule_gain": 0.6,
+    "cases": [
+      {
+        "case": 0,
+        "demand_seed": 72501,
+        "sumo_seed": 73501
+      },
+      {
+        "case": 1,
+        "demand_seed": 72502,
+        "sumo_seed": 73502
+      },
+      {
+        "case": 2,
+        "demand_seed": 72503,
+        "sumo_seed": 73503
+      }
+    ],
+    "test_separation": "New fixed demand/SUMO seed realizations, disjoint from fit/stop/calibrate; same pinned timetable and generated route corridors.",
+    "comparison": "Three training seeds, three paired generated demand days; retain every branch/day/seed and compare all-seed means.",
+    "primary_cost": "(2*wait_passenger_seconds+in_vehicle_passenger_seconds)/departed_passengers",
+    "completion": "Report completion rate and departed/completed counts alongside cost.",
+    "interpretation": "Bounded pilot on one target city; no population-level CI or city removal."
+  },
+  "code_boundary": "Existing CFCMT frozen runtime, executor and assets; no mutable Thesis imports or writes.",
+  "name": "cfcmt-bus-full-source-adapted-eval-v1",
+  "continuation_updates": 0,
+  "model_loss_coefficient": null,
+  "export_training_updates": 0,
+  "world_model_refit_updates": 0,
+  "checkpoint_rule": "All three fixed source_dense_adaptation/seedN/adapted.pt actors; stored counter5000 and historical50000source+5000target=55000. No seed/checkpoint selection.",
+  "export_rule": "Read target_pool.h5 config attributes only; construct frozen learner and load existing network parameters with reset_columns=False. Export deployment actor and use the real v7 deployment loader to compare every actor tensor to the stored adapted actor. No replay construction, optimizer/update calls or ModelContinuation construction.",
+  "comparisons": [
+    "full_source_real",
+    "full_source_model",
+    "strong_rule",
+    "target_model",
+    "cross_city",
+    "target_only"
+  ],
+  "reference_policy": "Primary phase references: same-seed/case completed dense real-TD0 and model-TD0.25 after20000continuation updates. Reuse rule and old local/cross-city results; require paired seeds, horizon, simulator version, line_ids, departed passenger counts and zero ledger error.",
+  "data_boundary": "Same source3284718, target union16384/fit12288 and evaluator. Adapted actor has55000historical updates versus75000in continued arms; deliberate phase diagnostic, not an equal-update-budget method comparison.",
+  "interpretation": "Zero-continuation stage diagnostic on three fixed training seeds and three previously analyzed generated target demand days. Export does not fit any model or add simulator training events. No prospective test, population-level claim or physical sim-to-real claim.",
+  "next_decision": "Compare all three seed means and nine paired cases to determine whether20000offline SAC updates improve or degrade the fixed adapted actor, with wait/ride, completion and executed holding; do not change entropy/backup/actor objective or select seeds in this test."
+}

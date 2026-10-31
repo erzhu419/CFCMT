@@ -1,0 +1,261 @@
+\section{Method}
+\label{sec:method}
+
+This section describes the framework in concrete detail---environments, data, two-stage training schedule, per-epoch interaction, reset mechanisms, and how the discriminator-derived IS weight enters the loss.
+\Cref{sec:method:framework} gives the high-level pipeline.
+\Cref{sec:method:prelim} states the base hybrid Bellman objective and the ensemble SAC backbone.
+\Cref{sec:method:contrastive} reviews the discriminator choices we ablate (TransitionDiscriminator from H2O+ \citep{liu2024h2oplus}, the factored DynamicsDiscriminator variant, and an action-marginalised Contrastive InfoNCE alternative).
+\Cref{sec:method:floor} reviews the optional bootstrap offline-Q floor on sim-side Bellman targets.
+\Cref{sec:method:algo} states the full training loop.
+None of these components are new contributions of this paper; the empirical question (which combination is most effective for transit, how each compares to non-H2O+ baselines) is taken up in \Cref{sec:experiments}.
+
+\subsection{Framework overview}
+\label{sec:method:framework}
+
+\subsubsection{Environments and data}
+\label{sec:method:envs}
+
+The framework operates over three distinct objects, summarised in \Cref{fig:network_topology} (network topology) and \Cref{fig:method_diagram} (training pipeline).
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\linewidth]{figures/method_diagram.pdf}
+\caption{H2O+ training pipeline.
+Stage~1 pretrains an $E{=}5$ Q-ensemble and a SAC policy on $\Doff$.
+Stage~2 alternates: rollout in the low-fidelity simulator $\Msim$ with snapshot reset ($p_{\text{reset}}{=}0.5$), discriminator update on balanced $\Doff$/$\Don$ batches (every 5 steps), and hybrid Bellman update with sim-side IS reweighting.
+Evaluation uses the high-fidelity SUMO environment $\Mreal$.}
+\label{fig:method_diagram}
+\end{figure*}
+
+\textit{Offline buffer.} $\Doff$ contains $N_{\text{off}} = 675\,000$ transitions collected from four behaviour policies executed on the high-fidelity SUMO microsimulation of a 12-line bus corridor.
+The buffer composition is documented in \Cref{app:impl}: a previously trained SAC policy ($26.7\%$), a headway-threshold heuristic ($23.7\%$), an $\epsilon$-random controller ($26.7\%$), and the best RE-SAC checkpoint from a prior SUMO-environment run, which we refer to as \emph{ep39} ($23.0\%$).
+Each transition tuple is $(s_t, a_t, r_t, s_{t+1})$ augmented with a $30$-dimensional structured context vector $z_t = \phi(\xi_t)$, where $\xi_t$ denotes the simulator's full fleet snapshot at the decision instant.
+The map $\phi$ aggregates per-bus headways, dwell phases, on-route counts, and station-load distributions; only $z_t$ is supplied to the dynamics discriminator, factoring per-bus identity and stochastic boarding noise out of the dynamics-gap signal.
+
+\textit{Online training simulator $\Msim$.}
+A reduced-order LSTM travel-time model (denoted \emph{sim-core}) executes approximately $40\times$ faster per decision event than SUMO.
+$\Msim$ replicates the schedule, network topology, and headway-deviation reward of $\Mreal$ but uses a simplified passenger boarding model and deterministic inter-station travel-time conditional on neighbouring traffic state.
+
+\textit{Evaluation environment $\Mreal$.}
+The same SUMO microsimulation used for $\Doff$ collection.
+Throughout, \emph{SUMO eval} refers to a deterministic 18\,000-second SUMO rollout under the trained policy with the same passenger demand and traffic seed as the held-out evaluation profile.
+
+\subsubsection{Two-stage training schedule}
+\label{sec:method:stages}
+
+\textit{Stage 1 (offline pretrain).}
+The $\Ecnt{=}5$-member Q ensemble and the SAC policy $\piphi$ are pretrained on $\Doff$ for $T_1 = 6\times10^4$ gradient steps using the lower-confidence-bound target~\citep{an2021uncertainty} with optional CQL regularisation~\citep{kumar2020cql} (pessimism coefficient $\beta_{\text{LCB}} = 1.0$ in the paper convention $\mu_Q - \beta_{\text{LCB}}\sigma_Q$ of \Cref{eq:lcb}; the codebase uses the opposite sign convention internally, $\mu_Q + \beta\sigma_Q$ with $\beta = -2$, which corresponds to the same effective pessimism as it is normalised by the value scale; mini-batch size $2048$).
+The resulting checkpoint serves as a fixed initialisation for all Stage 2 runs in the main experiments; ablations in \Cref{sec:experiments} replace this initialisation with Cal-QL pretrains over varied $\Doff$ subsamples.
+
+\textit{Stage 2 (hybrid online H2O+).}
+The agent is trained for $T_2 = 200$ epochs.
+Each epoch comprises three steps:
+\begin{enumerate}[leftmargin=2.0em, itemsep=2pt]
+\item \textit{Online rollout.} Execute $\piphi$ in $\Msim$ for $B_{\text{roll}} = 100$ decision events; append the resulting transitions to the online buffer $\Don$.
+\item \textit{Discriminator update.} Every $K_{\text{disc}} = 5$ gradient steps, draw a balanced minibatch from $\Doff$ (label $y = 1$) and $\Don$ (label $y = 0$); update $f_\psi$ via binary cross-entropy or InfoNCE depending on the variant.
+\item \textit{Policy update.} Take $B_{\text{train}} = 100$ SAC gradient steps on the hybrid Bellman loss \eqref{eq:hybrid_bellman}, with sim-batch transitions reweighted by $\wis$.
+\end{enumerate}
+The discriminator is held inactive during the first $T_{\text{disc-warm}} = 5\,000$ gradient steps ($\approx$ first $50$ epochs of Stage~2).
+During this \emph{discriminator warmup}, $\wis \equiv 1$ for all sim transitions; the loss reduces to standard offline-online co-training without IS correction.
+This is distinct from the optional \emph{offline-only warmup} ($N_{\text{warm}}$ epochs of pure offline updates before any online rollouts begin) discussed under stabilisers in \Cref{sec:method:algo}; the two warmups address different concerns and are reported separately in the appendix table.
+
+\subsubsection{Episode termination and snapshot injection}
+\label{sec:method:reset}
+
+A Stage~2 episode in $\Msim$ advances the multi-bus simulation from an initial state $\xi_0$ until one of the following conditions is met:
+(i) the simulation time reaches the daily horizon;
+(ii) the policy commits an out-of-range hold action $\holdt > \holdt_{\max}$ more than $C_{\text{viol}}$ times within a sliding window;
+(iii) the per-episode event budget $B_{\text{ep}}$ is exhausted.
+The choice of initial state $\xi_0$ is critical to the validity of the IS correction.
+With probability $p_{\text{reset}} = 0.5$, $\xi_0$ is drawn from a buffer of recorded SUMO snapshots: each snapshot $\xi^{(k)} \in \Doff$ is the serialised SUMO state (per-bus position, velocity, dwell counter, on-board passenger count, station queue length) captured at the time of offline transition $k$.
+Loading $\xi^{(k)}$ into sim-core initialises the LSTM travel-time model with the corresponding fleet configuration.
+With probability $1 - p_{\text{reset}}$, $\xi_0$ is sampled from a small set of fixed initial seeds; targeted reset using TD-error priorities (JTT~\citep{liu2021jtt}) is implemented but disabled in the main experiments.
+
+This snapshot-injection mechanism aligns the support of the online state distribution $\rho_{\text{on}}$ with that of the offline distribution $\rho_{\text{off}}$.
+Without it, sim-core would only explore the ergodic distribution reachable from the fixed seeds; the IS estimator $\wis(s, a, s')$ would face a covariate-shift discrepancy that the discriminator cannot correct, and the hybrid Bellman loss \eqref{eq:hybrid_bellman} would weight regions of state space where $\Doff$ provides no anchoring.
+
+\subsubsection{Discriminator integration in the Bellman loss}
+\label{sec:method:disc_role}
+
+The discriminator $f_\psi$ does not directly modify policy gradients; it enters only through the importance-sampling weight applied to the simulator-side Bellman residual.
+For a transition $(s, a, s') \in \Don$, the IS weight is
+\begin{equation}
+\wis(s, a, s') = \mathrm{clip}\!\left( \frac{\sigma(f_\psi)}{1 - \sigma(f_\psi)},\; \underline{w},\; \overline{w} \right) \approx \frac{\Preal(s' \mid s, a)}{\Psim(s' \mid s, a)},
+\label{eq:wis}
+\end{equation}
+with $\sigma$ the logistic function and clipping bounds $(\underline{w}, \overline{w}) = (0.1, 5.0)$ for variance control.
+For the InfoNCE variant, the analogous expression is $\wis = \mathrm{clip}(\exp f_\psi, \underline{w}, \overline{w})$ (\Cref{sec:method:contrastive}).
+At each SAC critic update, the per-sample IS weight multiplies the squared Bellman residual on the sim batch (the offline batch contributes unweighted).
+The actor objective uses the LCB-pessimistic Q estimate \eqref{eq:lcb} on a mixture of offline and sim states; the discriminator's gradient is independent of the policy and Q parameters.
+
+\subsubsection{Quantifying the SUMO/SIM dynamics gap}
+\label{sec:method:gap}
+
+A scalar measure of dynamics-gap magnitude is not in general available, but three complementary signals are observed throughout training:
+(i) the discriminator's mean IS weight $\bar{w}_{\text{IS}}$, which in our experiments converges to $\bar{w}_{\text{IS}} \approx 0.28$ for the binary TransitionDiscriminator and $\bar{w}_{\text{IS}} \approx 0.72$ for the InfoNCE Contrastive variant;
+(ii) the per-step reward magnitude ratio $|\E_{\Msim}[r]|\,/\,|\E_{\Mreal}[r]| \approx 0.20$, attributable to the simplified passenger model;
+(iii) the discriminator's action-invariance ratio under random permutations of the action coordinate (\Cref{sec:exp:analysis}), which under \Cref{ass:action_invariance} should approach unity.
+These signals are not a tight upper bound on policy transfer error; their joint behaviour, however, is consistent with the discriminator-choice ordering observed in the Stage~2 ablation (\Cref{sec:experiments}).
+
+\subsection{Preliminaries}
+\label{sec:method:prelim}
+
+We build on a soft actor-critic (SAC) \citep{haarnoja2018soft} backbone with an ensemble of $\Ecnt$ independent critics $\{Q_{\theta_e}\}_{e=1}^{\Ecnt}$.
+The H2O+ objective augments the standard Bellman residual with an importance-sampling (IS) weighted simulator term:
+\begin{equation}
+\begin{aligned}
+\mathcal{L}_{Q} = \;& \E_{(s,a,s',r) \sim \Doff}\!\bigl[ (\Qth(s,a) - y_{\text{off}})^2 \bigr] \\
+ & + \lambda \,\E_{(s,a,s',r) \sim \Don}\!\bigl[ \wis(\Qth(s,a) - y_{\text{sim}})^2 \bigr],
+\end{aligned}
+\label{eq:hybrid_bellman}
+\end{equation}
+where $\Doff$ is the offline dataset, $\Don$ is the online simulator buffer, and $y_{\text{off}}, y_{\text{sim}}$ are the Bellman targets specified below.
+The weighting $\wis(s,a,s') \approx \Preal(s'\mid s,a)/\Psim(s'\mid s,a)$ corrects the dynamics distribution mismatch between $\Msim$ and $\Mreal$.
+
+Our ensemble target builds on the lower-confidence-bound (LCB) formulation of \citet{an2021uncertainty}.
+The base form is
+\begin{equation}
+\begin{aligned}
+Q^{\mathrm{LCB},0}(s, a) &= \mu_Q(s, a) - \beta_{\text{LCB}}\,\sigma_Q(s, a), \\
+\mu_Q &= \tfrac{1}{\Ecnt}\!\sum_{e} Q_{\theta_e}, \;
+\sigma_Q^2 = \tfrac{1}{\Ecnt}\!\sum_{e} (Q_{\theta_e} - \mu_Q)^2.
+\end{aligned}
+\label{eq:lcb}
+\end{equation}
+We follow the implementation conventions established by RE-SAC \citep{an2021uncertainty} and adopt four practical refinements that we treat as implementation choices rather than contributions; we describe them here for reproducibility and ablate the dominant ones in \Cref{sec:exp:sensitivity}.
+First, the per-ensemble TD target is a convex blend of the member's own target and the across-ensemble minimum,
+$Q_{\text{tgt}}^{(e)} = \kappa\,Q^{(e)}_{\text{tgt-indep}} + (1-\kappa)\,\min_{e'} Q^{(e')}_{\text{tgt}}$,
+with $\kappa = 0.8$, providing partial decorrelation between heads while retaining a min-Q safety floor.
+Second, the ensemble standard deviation is clipped to $\sigma_Q \leftarrow \min(\sigma_Q,\,c\cdot \max(|\mu_Q|, 1))$ with $c = 0.5$, preventing the LCB term from dominating during early training when $\sigma_Q$ is mis-calibrated.
+Third, the LCB pessimism is applied in normalised form, $\beta_{\text{LCB}}\,\sigma_Q / \max(|\mu_Q|, 1)$, so that the pessimism magnitude scales with the value scale rather than competing with reward units.
+Fourth, the policy used at evaluation is an exponential-moving-average copy with $\tau = 5\!\times\!10^{-3}$, and the actor objective includes a soft anchor $\lambda_{\text{anc}}\,\lVert \pi_\phi - \pi_{\text{anc}} \rVert^2$ with $\lambda_{\text{anc}} = 0.1$ where $\pi_{\text{anc}}$ is the best-eval policy snapshot, both for stability rather than as algorithmic contributions.
+We denote the resulting target by $\Qlcb$ throughout the paper.
+
+\subsection{Contrastive dynamics discrimination}
+\label{sec:method:contrastive}
+
+\paragraph{Standard DARC estimator}
+DARC \citep{eysenbach2021off} trains a binary classifier $\disc(s, a, s')$ to distinguish real from sim transitions.
+At optimum,
+$\disc^*(s, a, s') = \Preal(s' \mid s, a)/[\Preal(s' \mid s, a) + \Psim(s' \mid s, a)]$,
+yielding $\wis(s,a,s') = \disc^*/(1-\disc^*)$.
+Consistency requires that $P(s' \mid s, a)$ differ detectably in $a$ across the two environments---equivalent to $I(S'; A \mid S)$ being large enough for the classifier to extract an action-specific signal.
+In our transit setting (\Cref{sec:problem:failures}), this condition is borderline: actions are two-dimensional and nearly binary, and state transitions are dominated by exogenous passenger/traffic dynamics.
+We observe DARC classifiers collapsing toward an $a$-independent function on our benchmark, producing nearly uniform IS weights.
+
+\paragraph{Contrastive variant}
+We propose to estimate the action-\emph{marginalised} density ratio directly from $(s, s')$ pairs.
+Let $p_{\text{real}}(s, s')$ and $p_{\text{sim}}(s, s')$ denote the joint marginals of consecutive states in $\Mreal$ and $\Msim$, respectively (marginalised over actions produced by each environment's own data-collection policy).
+A score network $f_\psi : \mathcal{S} \times \mathcal{S} \to \R$ is trained with an InfoNCE objective \citep{oord2018representation}:
+\begin{equation}
+\begin{aligned}
+\mathcal{L}_{\text{NCE}} = -\E_{(s, s^+) \sim p_{\text{real}}}\!\!\biggl[ \log \frac{e^{f_\psi(s, s^+)}}{e^{f_\psi(s, s^+)} + \sum_{k=1}^{K} e^{f_\psi(s, s^-_k)}} \biggr].
+\end{aligned}
+\label{eq:nce}
+\end{equation}
+where $\{s^-_k\}_{k=1}^{K}$ are $K$ negatives drawn from $p_{\text{sim}}(\cdot \mid s)$ by sharing the anchor $s$ with a sim-transition partner in the batch.
+
+\begin{remark}[Heuristic plug-in motivation]
+\label{lem:nce}
+The InfoNCE optimiser approaches $f_\psi^*(s, s') = \log [p_{\text{real}}(s' \mid s) / p_{\text{sim}}(s' \mid s)] + c(s)$ in the limit of infinite capacity and $K \to \infty$ \citep{oord2018representation, ma2018nce}, where $c(s)$ depends only on the anchor $s$.
+We use $\exp f_\psi$ as a \emph{plug-in heuristic estimator} of the IS ratio, not as a calibrated estimator: in the practical training regime $c(s)$ is not normalised away (it would only fully cancel when ratios are compared across samples sharing the same anchor, which is not the structure of the SAC minibatch), and the action-marginalised ratio differs from the action-conditional ratio that H2O+'s objective requires (\Cref{eq:hybrid_bellman}) unless the dynamics gap is action-invariant.
+We therefore rely on the empirical Stage~2 ablation (\Cref{sec:experiments}), not on a theoretical guarantee, to establish that this heuristic IS estimator is competitive in practice.
+\end{remark}
+
+The condition under which $f_\psi^*$ would correspond to the action-conditional IS ratio H2O+ requires is the following:
+
+\begin{assumption}[Action-conditional domain invariance]
+\label{ass:action_invariance}
+The environment label $d \in \{\text{real}, \text{sim}\}$ is conditionally independent of the action given $(s, s')$:
+\begin{equation}
+P(d \mid s, a, s') = P(d \mid s, s') \quad \text{for all admissible } (s, a, s').
+\label{eq:ass1}
+\end{equation}
+\end{assumption}
+
+\begin{remark}[Consequence of combining \Cref{lem:nce} and \Cref{ass:action_invariance}]
+\label{rem:combined}
+If \Cref{ass:action_invariance} holds, then by Bayes' rule $\Preal(s' \mid s, a) / \Psim(s' \mid s, a)$ equals $p_{\text{real}}(s' \mid s) / p_{\text{sim}}(s' \mid s)$ up to an $a$-independent factor.
+Together with \Cref{lem:nce}, this means $\exp f_\psi^*(s, s')$ can be used as a plug-in estimator for $\wis$ in \Cref{eq:hybrid_bellman}.
+We emphasise that this is not a new theoretical result: it is the combination of a standard NCE identification with a \emph{postulated} domain assumption.
+Whether \Cref{ass:action_invariance} actually holds on a given benchmark is an empirical question, addressed below.
+\end{remark}
+
+\paragraph{Where \Cref{ass:action_invariance} can break.}
+\Cref{ass:action_invariance} holds when the simulator and real environment share action semantics up to differences orthogonal to the action---here, passenger boarding variance, traffic on inter-station segments, and stochastic dwell time, none of which are action-modulated in the leading order.
+It fails if $\Msim$ and $\Mreal$ respond qualitatively differently to the same action (e.g.\ one simulator ignores holding altogether).
+
+\paragraph{Empirical verification}
+A tautological verification would simply measure whether $f_\psi$'s output is invariant to action permutation, but this only tests whether the learned model ignores $a$, not whether the underlying ratio is action-invariant.
+A substantive verification instead estimates empirical action-conditional transition densities on a data partition: for each bin $B_k$ of $(s, s')$ pairs, we compute
+\begin{equation}
+\hat{\rho}_k(a) = \hat{P}_{\text{real}}(s' \in B_k \mid s, a) / \hat{P}_{\text{sim}}(s' \in B_k \mid s, a),
+\label{eq:rho_hat}
+\end{equation}
+using histogram estimates, and report $\mathrm{std}_a[\log \hat{\rho}_k(a)] / \mathrm{std}_{k}[\log \hat{\rho}_k(\cdot)]$ as the \emph{action-dependence ratio}.
+A small ratio indicates the conditional density ratio varies primarily in $(s, s')$ rather than in $a$, supporting \Cref{ass:action_invariance}.
+We report this quantity in \Cref{sec:exp:analysis} alongside an inspection of cases where the assumption would fail.
+
+\paragraph{IS weight construction}
+We set $\wis(s, a, s') = \mathrm{clip}\big(\exp f_\psi(s, s'),\, \underline{w},\, \overline{w}\big)$ with $(\underline{w}, \overline{w}) = (0.1, 10)$, and plug into \Cref{eq:hybrid_bellman}.
+Clipping is standard in IS-weighted RL \citep{eysenbach2021off}; fewer than $3\%$ of samples hit either bound in our runs.
+
+\subsection{Bootstrap offline-Q floor on sim targets}
+\label{sec:method:floor}
+
+The second concern raised in \Cref{sec:problem:failures} is that low-fidelity simulators often report rewards on a smaller magnitude than high-fidelity evaluation environments (on our benchmark, the ratio is approximately $0.2$).
+Under this heterogeneity, sim-side Bellman targets $y_{\text{sim}} = r_{\text{sim}} + \gamma\,Q(s', a')$ drift toward the simulator's reward scale and, over many updates, pull the ensemble mean downward away from the offline-data regime.
+An LCB-only target ($y = \Qlcb(s', a')$) does not prevent this drift, because LCB subtracts \emph{disagreement} but does not bound the \emph{mean}.
+
+We use a simple mechanism---a one-sided floor on sim TD targets, bootstrapped from the current Q-network's predictions on offline data:
+\begin{equation}
+\begin{aligned}
+y_{\text{sim}} &= \max\!\bigl(\,r_{\text{sim}} + \gamma\,(1 - \text{done})\,\Qlcb(s', a'),\;q_{\text{floor}}\,\bigr), \\
+q_{\text{floor}} &= \E_{(s,a) \sim \mathcal{B}_{\text{off}}}[\mu_Q(s, a)].
+\end{aligned}
+\label{eq:qfloor}
+\end{equation}
+Here $q_{\text{floor}}$ is a scalar, computed per minibatch from the ensemble mean on the offline portion $\mathcal{B}_{\text{off}}$ of the batch.
+The real-side target $y_{\text{off}} = r_{\text{off}} + \gamma\,(1 - \text{done})\,\Qlcb(s', a')$ is unchanged.
+
+\paragraph{Relation to existing methods}
+The mechanism in \Cref{eq:qfloor} is distinct from Cal-QL \citep{nakamoto2023calql}, which lower-bounds conservative Q-learning by a Monte Carlo reference $Q^{\pi_\beta}$ computed from the behaviour policy.
+Our floor uses only the current Q-network applied to offline $(s, a)$ samples, without MC rollouts or behaviour-policy estimation, and is applied only to sim-side targets, not to the CQL regulariser itself.
+The resulting objective is computationally cheaper than Cal-QL; empirically (\Cref{tab:ablation,tab:ablation_sim}) it has mixed effect---it improves some configurations and slightly hurts others---so we treat it as an optional stabiliser rather than a structural fix for reward-scale drift.
+
+\paragraph{Remark on boundedness}
+We make no formal boundedness claim for $y_{\text{sim}}$: the upper side is unconstrained and relies on the LCB term plus IS-weighted gradient reconciliation with the offline batch to keep updates well-scaled.
+What the floor does guarantee, \emph{by construction}, is that no single sim TD update can lower the target below $q_{\text{floor}}$, which is itself tracked to the offline-batch Q-scale throughout training.
+This is an engineering choice rather than a theorem, and we verify its effect through ablation (\Cref{sec:exp:ablations}).
+
+\subsection{Algorithm}
+\label{sec:method:algo}
+
+\Cref{alg:main} summarises the training loop.
+The offline phase pre-trains the $\Ecnt$-ensemble on $\Doff$ with the LCB target and an optional CQL regulariser \citep{kumar2020cql}, producing the initial $\{\theta_e\}$.
+The online phase alternates between (i) rolling out $\piphi$ in $\Msim$, (ii) updating $f_\psi$ on a balanced batch of $\Doff$ and $\Don$ transitions, (iii) computing sim-side targets via \Cref{eq:qfloor}, and (iv) updating $\{\theta_e\}$ via the hybrid Bellman loss \Cref{eq:hybrid_bellman}.
+A KL anchor to a policy snapshot \citep{zhou2024wsrl} and a warmup phase (pure offline updates for the first $N_{\text{warm}}$ online epochs) are optional stabilisers we ablate separately.
+
+\begin{algorithm}[t]
+\caption{H2O+ training loop (generic). The IS-weight estimator $\wis$ is one of \{TransitionDisc, DynamicsDisc, Contrastive InfoNCE\}; the bootstrap offline-Q floor in $y_{\text{sim}}$ is optional. \Cref{sec:exp:ablations} reports which combination is preferred under which fidelity gap.}
+\label{alg:main}
+\begin{algorithmic}[1]
+\REQUIRE offline $\Doff$, simulator $\Msim$, ensemble size $\Ecnt$, weights $\beta_{\text{LCB}}, \lambda$
+\STATE {\bf Offline phase:} fit $\{Q_{\theta_e}\}_{e=1}^{\Ecnt}$ on $\Doff$ using LCB target with optional CQL regulariser; initialise $\piphi$ by SAC on $\Doff$; initialise $f_\psi$ randomly
+\FOR{$t = 1, \dots, T$}
+  \STATE Roll out $\piphi$ in $\Msim$ for $B_{\text{roll}}$ events, append to $\Don$
+  \STATE Sample balanced batch $(s, s')$: half from $\Doff$ labelled real, half from $\Don$ labelled sim
+  \STATE Update $f_\psi$ by InfoNCE loss \Cref{eq:nce}
+  \STATE Sample hybrid minibatch $\mathcal{B} = \mathcal{B}_{\text{off}} \cup \mathcal{B}_{\text{sim}}$; compute $\wis = \exp f_\psi$ on $\mathcal{B}_{\text{sim}}$
+  \STATE Compute $q_{\text{floor}} \leftarrow \E_{\mathcal{B}_{\text{off}}}[\mu_Q(s, a)]$
+  \STATE Compute sim targets $y_{\text{sim}}$ via \Cref{eq:qfloor}; real targets $y_{\text{off}}$ via LCB
+  \STATE Update $\{\theta_e\}$ by hybrid Bellman loss \Cref{eq:hybrid_bellman}
+  \STATE Update $\piphi$ by SAC actor loss against $\mu_Q$ (optionally + KL anchor)
+\ENDFOR
+\RETURN $\piphi$
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph{Implementation pipeline}
+Three transit-specific pipeline details---trajectory buffer isolation, segment-speed rescaling, and observation-normaliser freezing in collection workers---are prerequisites for sim and SUMO data to be comparable at all on this benchmark.
+We defer their description to \Cref{app:impl:pipeline} as reproducibility artefacts rather than method contributions.

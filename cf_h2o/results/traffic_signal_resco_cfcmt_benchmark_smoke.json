@@ -1,0 +1,605 @@
+{
+  "aggregate": {
+    "cfcmt_phase_fewshot_bias_mpc": {
+      "mean_queue": 6.598445052757701,
+      "mean_tls_queue": 6.782355214100811,
+      "p90_queue": 10.966066117516013,
+      "throughput_ratio": 0.7684455225389124
+    },
+    "cfcmt_phase_fewshot_selector_mpc": {
+      "mean_queue": 6.998730439272206,
+      "mean_tls_queue": 7.236068417752096,
+      "p90_queue": 11.613914752258252,
+      "throughput_ratio": 0.7635435617545987
+    },
+    "cfcmt_phase_global_mpc": {
+      "mean_queue": 6.598445052757701,
+      "mean_tls_queue": 6.782355214100811,
+      "p90_queue": 10.966066117516013,
+      "throughput_ratio": 0.7684455225389124
+    },
+    "cfcmt_phase_passive_policy_selector_mpc": {
+      "mean_queue": 6.598445052757701,
+      "mean_tls_queue": 6.782355214100811,
+      "p90_queue": 10.966066117516013,
+      "throughput_ratio": 0.7684455225389124
+    },
+    "cfcmt_phase_trust_mpc": {
+      "mean_queue": 6.598445052757701,
+      "mean_tls_queue": 6.782355214100811,
+      "p90_queue": 10.966066117516013,
+      "throughput_ratio": 0.7684455225389124
+    },
+    "fixed_program": {
+      "mean_queue": 18.64459326940286,
+      "mean_tls_queue": 19.060280735184058,
+      "p90_queue": 33.81105888420821,
+      "throughput_ratio": 0.6016042780748663
+    },
+    "h2oplus_dense_phase_mpc": {
+      "mean_queue": 6.598447522697902,
+      "mean_tls_queue": 6.782359910427524,
+      "p90_queue": 10.966066117516013,
+      "throughput_ratio": 0.7684455225389124
+    },
+    "phase_pressure": {
+      "mean_queue": 7.226461988891927,
+      "mean_tls_queue": 7.6965366551540555,
+      "p90_queue": 11.992030951535174,
+      "throughput_ratio": 0.7736001617141701
+    },
+    "phase_spillback_pressure": {
+      "mean_queue": 7.0584349878006085,
+      "mean_tls_queue": 7.5374082303993895,
+      "p90_queue": 11.614080722139594,
+      "throughput_ratio": 0.7736001617141701
+    },
+    "sim_generic_phase_mpc": {
+      "mean_queue": 6.998730439272206,
+      "mean_tls_queue": 7.236068417752096,
+      "p90_queue": 11.613914752258252,
+      "throughput_ratio": 0.7635435617545987
+    },
+    "sim_source_avg_phase_mpc": {
+      "mean_queue": 6.998730439272206,
+      "mean_tls_queue": 7.236068417752096,
+      "p90_queue": 11.613914752258252,
+      "throughput_ratio": 0.7635435617545987
+    },
+    "sim_target_static_phase_mpc": {
+      "mean_queue": 6.998730439272206,
+      "mean_tls_queue": 7.236068417752096,
+      "p90_queue": 11.613914752258252,
+      "throughput_ratio": 0.7635435617545987
+    }
+  },
+  "experiment": "traffic_signal_resco_cfcmt_phase_transfer",
+  "setting": {
+    "cfcmt_l2": 5.0,
+    "collect_duration_sec": 180.0,
+    "control_interval_sec": 10,
+    "dense_l2": 18.0,
+    "duration_sec": 180.0,
+    "env_root": "H2Oplus/downloads/traffic_signal_resco/environments",
+    "fewshot_duration_sec": 90.0,
+    "policies": [
+      "fixed_program",
+      "phase_pressure",
+      "phase_spillback_pressure",
+      "sim_generic_phase_mpc",
+      "sim_source_avg_phase_mpc",
+      "sim_target_static_phase_mpc",
+      "h2oplus_dense_phase_mpc",
+      "cfcmt_phase_global_mpc",
+      "cfcmt_phase_trust_mpc",
+      "cfcmt_phase_fewshot_bias_mpc",
+      "cfcmt_phase_fewshot_selector_mpc",
+      "cfcmt_phase_passive_policy_selector_mpc"
+    ],
+    "policy_seed_protocol": "same SUMO seed for every policy within each target scenario",
+    "scenarios": [
+      "cologne1",
+      "ingolstadt1"
+    ],
+    "seed": 131,
+    "warmup_sec": 20.0
+  },
+  "source_transition_counts": {
+    "cologne1": 18,
+    "ingolstadt1": 18
+  },
+  "targets": [
+    {
+      "fewshot_bias": 0.0,
+      "fewshot_policy_selector_policy": "sim_target_static_phase_mpc",
+      "fewshot_policy_selector_scores": {
+        "cfcmt_phase_fewshot_bias_mpc": 2.4405173925594967,
+        "cfcmt_phase_global_mpc": 2.4405173925594967,
+        "cfcmt_phase_trust_mpc": 2.4405173925594967,
+        "h2oplus_dense_phase_mpc": 2.4405173925594967,
+        "phase_pressure": 2.750478064599525,
+        "phase_spillback_pressure": 2.609115516017452,
+        "sim_target_static_phase_mpc": 2.4405173925594967
+      },
+      "fewshot_selector_method": "sim_generic_phase_mpc",
+      "fewshot_selector_scores": {
+        "cfcmt_phase_fewshot_bias_mpc": 3.0421302194305766,
+        "cfcmt_phase_global_mpc": 3.0421302194305766,
+        "cfcmt_phase_trust_mpc": 3.252006325132216,
+        "h2oplus_dense_phase_mpc": 3.069342358378451,
+        "sim_generic_phase_mpc": 2.5642452167002867,
+        "sim_source_avg_phase_mpc": 3.092095646349366,
+        "sim_target_static_phase_mpc": 3.6055537879373722
+      },
+      "fewshot_snapshot_count": 9,
+      "fewshot_transition_count": 9,
+      "policy_metrics": {
+        "cfcmt_phase_fewshot_bias_mpc": {
+          "action_counts": {
+            "cluster_357187_359543": 18
+          },
+          "arrived": 73,
+          "departed": 97,
+          "intervals": 18,
+          "mean_queue": 4.885101830892722,
+          "mean_tls_queue": 5.46049361716986,
+          "ok": true,
+          "p90_queue": 7.263047924104705,
+          "policy": "cfcmt_phase_fewshot_bias_mpc",
+          "remaining": 24,
+          "scenario": "cologne1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7525773195876289
+        },
+        "cfcmt_phase_fewshot_selector_mpc": {
+          "action_counts": {
+            "cluster_357187_359543": 18
+          },
+          "arrived": 73,
+          "departed": 97,
+          "intervals": 18,
+          "mean_queue": 4.885101830892722,
+          "mean_tls_queue": 5.46049361716986,
+          "ok": true,
+          "p90_queue": 7.263047924104705,
+          "policy": "cfcmt_phase_fewshot_selector_mpc",
+          "remaining": 24,
+          "scenario": "cologne1",
+          "selector_method": "sim_generic_phase_mpc",
+          "selector_policy": null,
+          "throughput_ratio": 0.7525773195876289
+        },
+        "cfcmt_phase_global_mpc": {
+          "action_counts": {
+            "cluster_357187_359543": 18
+          },
+          "arrived": 73,
+          "departed": 97,
+          "intervals": 18,
+          "mean_queue": 4.885101830892722,
+          "mean_tls_queue": 5.46049361716986,
+          "ok": true,
+          "p90_queue": 7.263047924104705,
+          "policy": "cfcmt_phase_global_mpc",
+          "remaining": 24,
+          "scenario": "cologne1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7525773195876289
+        },
+        "cfcmt_phase_passive_policy_selector_mpc": {
+          "action_counts": {
+            "cluster_357187_359543": 18
+          },
+          "arrived": 73,
+          "departed": 97,
+          "intervals": 18,
+          "mean_queue": 4.885101830892722,
+          "mean_tls_queue": 5.46049361716986,
+          "ok": true,
+          "p90_queue": 7.263047924104705,
+          "policy": "cfcmt_phase_passive_policy_selector_mpc",
+          "remaining": 24,
+          "scenario": "cologne1",
+          "selector_method": null,
+          "selector_policy": "sim_target_static_phase_mpc",
+          "throughput_ratio": 0.7525773195876289
+        },
+        "cfcmt_phase_trust_mpc": {
+          "action_counts": {
+            "cluster_357187_359543": 18
+          },
+          "arrived": 73,
+          "departed": 97,
+          "intervals": 18,
+          "mean_queue": 4.885101830892722,
+          "mean_tls_queue": 5.46049361716986,
+          "ok": true,
+          "p90_queue": 7.263047924104705,
+          "policy": "cfcmt_phase_trust_mpc",
+          "remaining": 24,
+          "scenario": "cologne1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7525773195876289
+        },
+        "fixed_program": {
+          "action_counts": {},
+          "arrived": 57,
+          "departed": 99,
+          "intervals": 18,
+          "mean_queue": 14.523308227772741,
+          "mean_tls_queue": 15.420765238295804,
+          "ok": true,
+          "p90_queue": 26.631867606803517,
+          "policy": "fixed_program",
+          "remaining": 42,
+          "scenario": "cologne1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.5757575757575758
+        },
+        "h2oplus_dense_phase_mpc": {
+          "action_counts": {
+            "cluster_357187_359543": 18
+          },
+          "arrived": 73,
+          "departed": 97,
+          "intervals": 18,
+          "mean_queue": 4.885106770773124,
+          "mean_tls_queue": 5.460503009823286,
+          "ok": true,
+          "p90_queue": 7.263047924104705,
+          "policy": "h2oplus_dense_phase_mpc",
+          "remaining": 24,
+          "scenario": "cologne1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7525773195876289
+        },
+        "phase_pressure": {
+          "action_counts": {
+            "cluster_357187_359543": 18
+          },
+          "arrived": 74,
+          "departed": 97,
+          "intervals": 18,
+          "mean_queue": 6.141135703161173,
+          "mean_tls_queue": 7.288856499276348,
+          "ok": true,
+          "p90_queue": 9.31497759214303,
+          "policy": "phase_pressure",
+          "remaining": 23,
+          "scenario": "cologne1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7628865979381443
+        },
+        "phase_spillback_pressure": {
+          "action_counts": {
+            "cluster_357187_359543": 18
+          },
+          "arrived": 74,
+          "departed": 97,
+          "intervals": 18,
+          "mean_queue": 5.805081700978537,
+          "mean_tls_queue": 6.970599649767017,
+          "ok": true,
+          "p90_queue": 8.559077133351868,
+          "policy": "phase_spillback_pressure",
+          "remaining": 23,
+          "scenario": "cologne1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7628865979381443
+        },
+        "sim_generic_phase_mpc": {
+          "action_counts": {
+            "cluster_357187_359543": 18
+          },
+          "arrived": 73,
+          "departed": 97,
+          "intervals": 18,
+          "mean_queue": 4.885101830892722,
+          "mean_tls_queue": 5.46049361716986,
+          "ok": true,
+          "p90_queue": 7.263047924104705,
+          "policy": "sim_generic_phase_mpc",
+          "remaining": 24,
+          "scenario": "cologne1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7525773195876289
+        },
+        "sim_source_avg_phase_mpc": {
+          "action_counts": {
+            "cluster_357187_359543": 18
+          },
+          "arrived": 73,
+          "departed": 97,
+          "intervals": 18,
+          "mean_queue": 4.885101830892722,
+          "mean_tls_queue": 5.46049361716986,
+          "ok": true,
+          "p90_queue": 7.263047924104705,
+          "policy": "sim_source_avg_phase_mpc",
+          "remaining": 24,
+          "scenario": "cologne1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7525773195876289
+        },
+        "sim_target_static_phase_mpc": {
+          "action_counts": {
+            "cluster_357187_359543": 18
+          },
+          "arrived": 73,
+          "departed": 97,
+          "intervals": 18,
+          "mean_queue": 4.885101830892722,
+          "mean_tls_queue": 5.46049361716986,
+          "ok": true,
+          "p90_queue": 7.263047924104705,
+          "policy": "sim_target_static_phase_mpc",
+          "remaining": 24,
+          "scenario": "cologne1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7525773195876289
+        }
+      },
+      "source_scenarios": [
+        "ingolstadt1"
+      ],
+      "source_transition_count": 18,
+      "target": "cologne1"
+    },
+    {
+      "fewshot_bias": 0.0,
+      "fewshot_policy_selector_policy": "phase_spillback_pressure",
+      "fewshot_policy_selector_scores": {
+        "cfcmt_phase_fewshot_bias_mpc": 4.990528657241111,
+        "cfcmt_phase_global_mpc": 4.990528657241111,
+        "cfcmt_phase_trust_mpc": 4.990528657241111,
+        "h2oplus_dense_phase_mpc": 4.990528657241111,
+        "phase_pressure": 4.990528657241111,
+        "phase_spillback_pressure": 4.9905187903036765,
+        "sim_target_static_phase_mpc": 4.9905187903036765
+      },
+      "fewshot_selector_method": "sim_target_static_phase_mpc",
+      "fewshot_selector_scores": {
+        "cfcmt_phase_fewshot_bias_mpc": 3.3227693356807624,
+        "cfcmt_phase_global_mpc": 3.3227693356807624,
+        "cfcmt_phase_trust_mpc": 2.803146809083468,
+        "h2oplus_dense_phase_mpc": 3.163800384504563,
+        "sim_generic_phase_mpc": 3.758539364593269,
+        "sim_source_avg_phase_mpc": 2.94538638888342,
+        "sim_target_static_phase_mpc": 2.650608636655913
+      },
+      "fewshot_snapshot_count": 9,
+      "fewshot_transition_count": 9,
+      "policy_metrics": {
+        "cfcmt_phase_fewshot_bias_mpc": {
+          "action_counts": {
+            "cluster_274083968_cluster_1200364014_1200364088": 18
+          },
+          "arrived": 80,
+          "departed": 102,
+          "intervals": 18,
+          "mean_queue": 8.31178827462268,
+          "mean_tls_queue": 8.104216811031762,
+          "ok": true,
+          "p90_queue": 14.66908431092732,
+          "policy": "cfcmt_phase_fewshot_bias_mpc",
+          "remaining": 22,
+          "scenario": "ingolstadt1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7843137254901961
+        },
+        "cfcmt_phase_fewshot_selector_mpc": {
+          "action_counts": {
+            "cluster_274083968_cluster_1200364014_1200364088": 18
+          },
+          "arrived": 79,
+          "departed": 102,
+          "intervals": 18,
+          "mean_queue": 9.11235904765169,
+          "mean_tls_queue": 9.011643218334333,
+          "ok": true,
+          "p90_queue": 15.964781580411797,
+          "policy": "cfcmt_phase_fewshot_selector_mpc",
+          "remaining": 23,
+          "scenario": "ingolstadt1",
+          "selector_method": "sim_target_static_phase_mpc",
+          "selector_policy": null,
+          "throughput_ratio": 0.7745098039215687
+        },
+        "cfcmt_phase_global_mpc": {
+          "action_counts": {
+            "cluster_274083968_cluster_1200364014_1200364088": 18
+          },
+          "arrived": 80,
+          "departed": 102,
+          "intervals": 18,
+          "mean_queue": 8.31178827462268,
+          "mean_tls_queue": 8.104216811031762,
+          "ok": true,
+          "p90_queue": 14.66908431092732,
+          "policy": "cfcmt_phase_global_mpc",
+          "remaining": 22,
+          "scenario": "ingolstadt1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7843137254901961
+        },
+        "cfcmt_phase_passive_policy_selector_mpc": {
+          "action_counts": {
+            "cluster_274083968_cluster_1200364014_1200364088": 18
+          },
+          "arrived": 80,
+          "departed": 102,
+          "intervals": 18,
+          "mean_queue": 8.31178827462268,
+          "mean_tls_queue": 8.104216811031762,
+          "ok": true,
+          "p90_queue": 14.66908431092732,
+          "policy": "cfcmt_phase_passive_policy_selector_mpc",
+          "remaining": 22,
+          "scenario": "ingolstadt1",
+          "selector_method": null,
+          "selector_policy": "phase_spillback_pressure",
+          "throughput_ratio": 0.7843137254901961
+        },
+        "cfcmt_phase_trust_mpc": {
+          "action_counts": {
+            "cluster_274083968_cluster_1200364014_1200364088": 18
+          },
+          "arrived": 80,
+          "departed": 102,
+          "intervals": 18,
+          "mean_queue": 8.31178827462268,
+          "mean_tls_queue": 8.104216811031762,
+          "ok": true,
+          "p90_queue": 14.66908431092732,
+          "policy": "cfcmt_phase_trust_mpc",
+          "remaining": 22,
+          "scenario": "ingolstadt1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7843137254901961
+        },
+        "fixed_program": {
+          "action_counts": {},
+          "arrived": 64,
+          "departed": 102,
+          "intervals": 18,
+          "mean_queue": 22.765878311032978,
+          "mean_tls_queue": 22.699796232072316,
+          "ok": true,
+          "p90_queue": 40.99025016161289,
+          "policy": "fixed_program",
+          "remaining": 38,
+          "scenario": "ingolstadt1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.6274509803921569
+        },
+        "h2oplus_dense_phase_mpc": {
+          "action_counts": {
+            "cluster_274083968_cluster_1200364014_1200364088": 18
+          },
+          "arrived": 80,
+          "departed": 102,
+          "intervals": 18,
+          "mean_queue": 8.31178827462268,
+          "mean_tls_queue": 8.104216811031762,
+          "ok": true,
+          "p90_queue": 14.66908431092732,
+          "policy": "h2oplus_dense_phase_mpc",
+          "remaining": 22,
+          "scenario": "ingolstadt1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7843137254901961
+        },
+        "phase_pressure": {
+          "action_counts": {
+            "cluster_274083968_cluster_1200364014_1200364088": 18
+          },
+          "arrived": 80,
+          "departed": 102,
+          "intervals": 18,
+          "mean_queue": 8.31178827462268,
+          "mean_tls_queue": 8.104216811031762,
+          "ok": true,
+          "p90_queue": 14.66908431092732,
+          "policy": "phase_pressure",
+          "remaining": 22,
+          "scenario": "ingolstadt1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7843137254901961
+        },
+        "phase_spillback_pressure": {
+          "action_counts": {
+            "cluster_274083968_cluster_1200364014_1200364088": 18
+          },
+          "arrived": 80,
+          "departed": 102,
+          "intervals": 18,
+          "mean_queue": 8.31178827462268,
+          "mean_tls_queue": 8.104216811031762,
+          "ok": true,
+          "p90_queue": 14.66908431092732,
+          "policy": "phase_spillback_pressure",
+          "remaining": 22,
+          "scenario": "ingolstadt1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7843137254901961
+        },
+        "sim_generic_phase_mpc": {
+          "action_counts": {
+            "cluster_274083968_cluster_1200364014_1200364088": 18
+          },
+          "arrived": 79,
+          "departed": 102,
+          "intervals": 18,
+          "mean_queue": 9.11235904765169,
+          "mean_tls_queue": 9.011643218334333,
+          "ok": true,
+          "p90_queue": 15.964781580411797,
+          "policy": "sim_generic_phase_mpc",
+          "remaining": 23,
+          "scenario": "ingolstadt1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7745098039215687
+        },
+        "sim_source_avg_phase_mpc": {
+          "action_counts": {
+            "cluster_274083968_cluster_1200364014_1200364088": 18
+          },
+          "arrived": 79,
+          "departed": 102,
+          "intervals": 18,
+          "mean_queue": 9.11235904765169,
+          "mean_tls_queue": 9.011643218334333,
+          "ok": true,
+          "p90_queue": 15.964781580411797,
+          "policy": "sim_source_avg_phase_mpc",
+          "remaining": 23,
+          "scenario": "ingolstadt1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7745098039215687
+        },
+        "sim_target_static_phase_mpc": {
+          "action_counts": {
+            "cluster_274083968_cluster_1200364014_1200364088": 18
+          },
+          "arrived": 79,
+          "departed": 102,
+          "intervals": 18,
+          "mean_queue": 9.11235904765169,
+          "mean_tls_queue": 9.011643218334333,
+          "ok": true,
+          "p90_queue": 15.964781580411797,
+          "policy": "sim_target_static_phase_mpc",
+          "remaining": 23,
+          "scenario": "ingolstadt1",
+          "selector_method": null,
+          "selector_policy": null,
+          "throughput_ratio": 0.7745098039215687
+        }
+      },
+      "source_scenarios": [
+        "cologne1"
+      ],
+      "source_transition_count": 18,
+      "target": "ingolstadt1"
+    }
+  ]
+}

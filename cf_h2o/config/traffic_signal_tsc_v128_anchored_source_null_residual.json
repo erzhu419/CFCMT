@@ -1,0 +1,54 @@
+{
+  "protocol": "tsc-v128-anchored-source-null-residual-feasibility-v1",
+  "scientific_status": "abundant-target-counterfactual-development-diagnostic",
+  "predecessor": "tsc-v127-causal-pairwise-source-prior-feasibility-v1",
+  "reference_policy": "phase_pressure",
+  "target_city": "jinan",
+  "prior_target_group_budget": 500,
+  "anchored_prior": {
+    "source_group": "atlanta",
+    "source_weight": 0.75,
+    "target_weight": 0.25,
+    "aligned_offset": "target_b500 + 0.75 * (atlanta_b500 - target_b500)",
+    "placebo": "within-seed whole-action-group permutation of the incremental source offset"
+  },
+  "arms": [
+    "target_only",
+    "source_aligned",
+    "source_placebo",
+    "adaptive_source_null",
+    "adaptive_placebo_null"
+  ],
+  "outer_protocol": {
+    "split": "leave_one_selector_seed_out",
+    "residual_training_seed_count": 11,
+    "source_null_calibration_seed_count": 10,
+    "heldout_seed_count": 1,
+    "heldout_seed_labels_used_for_fit_or_calibration": false
+  },
+  "residual_ranker": {
+    "family": "causal_reference_contrast_hgb",
+    "learning_rate": 0.05,
+    "max_iter": 100,
+    "max_leaf_nodes": 15,
+    "min_samples_leaf": 20,
+    "l2_regularization": 10.0,
+    "prior_role": "fixed_offset_not_model_feature",
+    "action_constraint": "nondecreasing_instantaneous_service_pressure"
+  },
+  "calibration_gate": {
+    "retention_fractions": [0.005, 0.01, 0.025, 0.05, 0.1, 0.2],
+    "minimum_interventions": 40,
+    "minimum_mean_effect": 0.0005,
+    "minimum_improving_seed_fraction": 0.8,
+    "one_sided_critical_value": 1.833,
+    "fallback": "target_only_then_exact_phase_pressure"
+  },
+  "development_gate": {
+    "adaptive_source_null_mean_vs_phase_pressure_must_be_at_most": -0.0005,
+    "adaptive_source_null_minus_target_only_mean_must_be_at_most": -0.0005,
+    "adaptive_source_null_minus_adaptive_placebo_null_mean_must_be_at_most": -0.0005,
+    "all_paired_upper_95_bounds_must_be_negative": true
+  },
+  "claim_boundary": "V128 is an abundant target-counterfactual source-null feasibility experiment. It is not a few-shot target-adaptation or fresh-city confirmation result."
+}

@@ -1,0 +1,361 @@
+{
+  "complete": true,
+  "stage": "read-only training/evaluation objective audit",
+  "new_training_updates": 0,
+  "new_simulations": 0,
+  "evidence": [
+    "native_value_objective_data_audit.json",
+    "native_fixed_action_replay_summary.json",
+    "training_protocol.json"
+  ],
+  "objective": {
+    "cost": "2 * accrued wait seconds + accrued in-vehicle seconds",
+    "reward": "negative adjacent global passenger-ledger cost increment",
+    "reward_scale": 0.0001,
+    "nonterminal_discount": 1.0,
+    "terminal_discount": 0.0,
+    "qdelta_gamma": 0.9,
+    "qdelta_gamma_role": "Auxiliary normalized model-confidence propagation, not passenger-return discount"
+  },
+  "pool_field_audit": {
+    "target_pool": {
+      "rows": 16384,
+      "config": {
+        "max_hold_seconds": 60.0,
+        "horizon_seconds": 24000.0,
+        "scheduled_headway_scale_seconds": 720.0,
+        "base_dwell_scale_seconds": 130.0,
+        "system_passenger_count_scale": 20000.0,
+        "max_headway_ratio": 5.0,
+        "max_queue_capacity_ratio": 2.0,
+        "max_demand_capacity_ratio": 2.0,
+        "max_system_passenger_count_scaled": 1.25,
+        "waiting_time_value": 2.0,
+        "in_vehicle_time_value": 1.0,
+        "reward_unit_passenger_seconds": 1.0,
+        "discount_gamma_per_minute": 1.0,
+        "max_simultaneous_decisions": 16
+      },
+      "terminal_rows": 8,
+      "nonterminal_discount_values": [
+        1.0
+      ],
+      "terminal_discount_values": [
+        0.0
+      ],
+      "discount_mask_mismatches": 0,
+      "reward_ledger_max_abs_error": 0.0,
+      "reward_ledger_mismatch_rows": 0,
+      "dt_zero_rows": 1888,
+      "dt_zero_nonzero_reward_rows": 0,
+      "clock_max_abs_error_seconds": 0.001377105712890625,
+      "dt_range_seconds": [
+        0.0,
+        91.0
+      ]
+    },
+    "source_pool": {
+      "rows": 16384,
+      "config": {
+        "base_dwell_scale_seconds": 130.0,
+        "discount_gamma_per_minute": 1.0,
+        "horizon_seconds": 24000.0,
+        "in_vehicle_time_value": 1.0,
+        "max_demand_capacity_ratio": 2.0,
+        "max_headway_ratio": 5.0,
+        "max_hold_seconds": 60.0,
+        "max_queue_capacity_ratio": 2.0,
+        "max_simultaneous_decisions": 16,
+        "max_system_passenger_count_scaled": 1.25,
+        "reward_unit_passenger_seconds": 1.0,
+        "scheduled_headway_scale_seconds": 720.0,
+        "system_passenger_count_scale": 20000.0,
+        "waiting_time_value": 2.0
+      },
+      "terminal_rows": 240,
+      "nonterminal_discount_values": [
+        1.0
+      ],
+      "terminal_discount_values": [
+        0.0
+      ],
+      "discount_mask_mismatches": 0,
+      "reward_ledger_max_abs_error": 0.0,
+      "reward_ledger_mismatch_rows": 0,
+      "dt_zero_rows": 5065,
+      "dt_zero_nonzero_reward_rows": 0,
+      "clock_max_abs_error_seconds": 0.0013580322265625,
+      "dt_range_seconds": [
+        0.0,
+        2944.0
+      ]
+    }
+  },
+  "collection_days": [
+    {
+      "case": 0,
+      "role": "fit",
+      "configured_horizon_seconds": 24000,
+      "actual_terminal_seconds": 17922.0,
+      "unaccounted_seconds": 6078.0,
+      "waiting_at_terminal": 59,
+      "in_vehicle_at_terminal": 0,
+      "departed": 3505,
+      "completed_bus_trips": 118,
+      "departed_bus_trips": 119,
+      "reward_telescope_error": 0.0,
+      "last_transition": {
+        "rewards": -6962.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 59.0,
+        "event_decision_time_seconds": 17863.0,
+        "wait_passenger_seconds": 3481.0,
+        "in_vehicle_passenger_seconds": 0.0
+      },
+      "existing_waiters_unaccrued_tail_passenger_seconds": 717204.0,
+      "existing_waiters_unaccrued_tail_seconds_per_departed": 204.62310984308132
+    },
+    {
+      "case": 1,
+      "role": "fit",
+      "configured_horizon_seconds": 24000,
+      "actual_terminal_seconds": 18116.0,
+      "unaccounted_seconds": 5884.0,
+      "waiting_at_terminal": 69,
+      "in_vehicle_at_terminal": 0,
+      "departed": 3633,
+      "completed_bus_trips": 118,
+      "departed_bus_trips": 119,
+      "reward_telescope_error": 0.0,
+      "last_transition": {
+        "rewards": -8280.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 60.0,
+        "event_decision_time_seconds": 18056.0,
+        "wait_passenger_seconds": 4140.0,
+        "in_vehicle_passenger_seconds": 0.0
+      },
+      "existing_waiters_unaccrued_tail_passenger_seconds": 811992.0,
+      "existing_waiters_unaccrued_tail_seconds_per_departed": 223.5045417010735
+    },
+    {
+      "case": 2,
+      "role": "fit",
+      "configured_horizon_seconds": 24000,
+      "actual_terminal_seconds": 18042.0,
+      "unaccounted_seconds": 5958.0,
+      "waiting_at_terminal": 60,
+      "in_vehicle_at_terminal": 0,
+      "departed": 3522,
+      "completed_bus_trips": 118,
+      "departed_bus_trips": 119,
+      "reward_telescope_error": 0.0,
+      "last_transition": {
+        "rewards": -7200.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 60.0,
+        "event_decision_time_seconds": 17982.0,
+        "wait_passenger_seconds": 3600.0,
+        "in_vehicle_passenger_seconds": 0.0
+      },
+      "existing_waiters_unaccrued_tail_passenger_seconds": 714960.0,
+      "existing_waiters_unaccrued_tail_seconds_per_departed": 202.99829642248721
+    },
+    {
+      "case": 3,
+      "role": "fit",
+      "configured_horizon_seconds": 24000,
+      "actual_terminal_seconds": 17960.0,
+      "unaccounted_seconds": 6040.0,
+      "waiting_at_terminal": 53,
+      "in_vehicle_at_terminal": 0,
+      "departed": 3483,
+      "completed_bus_trips": 118,
+      "departed_bus_trips": 119,
+      "reward_telescope_error": 0.0,
+      "last_transition": {
+        "rewards": -6466.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 61.0,
+        "event_decision_time_seconds": 17899.0,
+        "wait_passenger_seconds": 3233.0,
+        "in_vehicle_passenger_seconds": 0.0
+      },
+      "existing_waiters_unaccrued_tail_passenger_seconds": 640240.0,
+      "existing_waiters_unaccrued_tail_seconds_per_departed": 183.81854722939994
+    },
+    {
+      "case": 4,
+      "role": "fit",
+      "configured_horizon_seconds": 24000,
+      "actual_terminal_seconds": 17925.0,
+      "unaccounted_seconds": 6075.0,
+      "waiting_at_terminal": 65,
+      "in_vehicle_at_terminal": 0,
+      "departed": 3495,
+      "completed_bus_trips": 118,
+      "departed_bus_trips": 119,
+      "reward_telescope_error": 0.0,
+      "last_transition": {
+        "rewards": -7670.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 59.0,
+        "event_decision_time_seconds": 17866.0,
+        "wait_passenger_seconds": 3835.0,
+        "in_vehicle_passenger_seconds": 0.0
+      },
+      "existing_waiters_unaccrued_tail_passenger_seconds": 789750.0,
+      "existing_waiters_unaccrued_tail_seconds_per_departed": 225.9656652360515
+    },
+    {
+      "case": 5,
+      "role": "fit",
+      "configured_horizon_seconds": 24000,
+      "actual_terminal_seconds": 17966.0,
+      "unaccounted_seconds": 6034.0,
+      "waiting_at_terminal": 59,
+      "in_vehicle_at_terminal": 0,
+      "departed": 3574,
+      "completed_bus_trips": 118,
+      "departed_bus_trips": 119,
+      "reward_telescope_error": 0.0,
+      "last_transition": {
+        "rewards": -7246.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 61.0,
+        "event_decision_time_seconds": 17905.0,
+        "wait_passenger_seconds": 3599.0,
+        "in_vehicle_passenger_seconds": 48.0
+      },
+      "existing_waiters_unaccrued_tail_passenger_seconds": 712012.0,
+      "existing_waiters_unaccrued_tail_seconds_per_departed": 199.2199216564074
+    },
+    {
+      "case": 6,
+      "role": "stop",
+      "configured_horizon_seconds": 24000,
+      "actual_terminal_seconds": 17987.0,
+      "unaccounted_seconds": 6013.0,
+      "waiting_at_terminal": 52,
+      "in_vehicle_at_terminal": 0,
+      "departed": 3504,
+      "completed_bus_trips": 118,
+      "departed_bus_trips": 119,
+      "reward_telescope_error": 0.0,
+      "last_transition": {
+        "rewards": -7904.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 76.0,
+        "event_decision_time_seconds": 17911.0,
+        "wait_passenger_seconds": 3952.0,
+        "in_vehicle_passenger_seconds": 0.0
+      },
+      "existing_waiters_unaccrued_tail_passenger_seconds": 625352.0,
+      "existing_waiters_unaccrued_tail_seconds_per_departed": 178.46803652968038
+    },
+    {
+      "case": 7,
+      "role": "calibrate",
+      "configured_horizon_seconds": 24000,
+      "actual_terminal_seconds": 18088.0,
+      "unaccounted_seconds": 5912.0,
+      "waiting_at_terminal": 68,
+      "in_vehicle_at_terminal": 0,
+      "departed": 3493,
+      "completed_bus_trips": 118,
+      "departed_bus_trips": 119,
+      "reward_telescope_error": 0.0,
+      "last_transition": {
+        "rewards": -8296.0,
+        "discounts": 0.0,
+        "terminals": 1,
+        "delta_t_seconds": 61.0,
+        "event_decision_time_seconds": 18027.0,
+        "wait_passenger_seconds": 4148.0,
+        "in_vehicle_passenger_seconds": 0.0
+      },
+      "existing_waiters_unaccrued_tail_passenger_seconds": 804032.0,
+      "existing_waiters_unaccrued_tail_seconds_per_departed": 230.18379616375609
+    }
+  ],
+  "observed_terminal_horizon_mismatch": {
+    "affected_target_terminal_rows": 8,
+    "affected_fit_terminal_rows": 6,
+    "all_nonterminal_pool_reward_labels_match_ledger": true,
+    "all_discount_labels_match_terminal_masks": true,
+    "full_day_rewards_telescope_only_to_actual_early_end": true,
+    "tail_cost_semantics": "Continuation of existing waiting counts with no further bus service; verify against case00 full-horizon replay before relabeling",
+    "fit_unaccrued_existing_waiter_tail_sum": 4386158.0
+  },
+  "actual_counterfactual_horizon": {
+    "saved_baseline_and_candidate_entries": 51,
+    "actual_simulations": 16,
+    "all_ledger_endpoints_24000": true,
+    "all_waiting_55": true,
+    "all_in_vehicle_zero": true
+  },
+  "backup": {
+    "adapted": "1e-4 * r + (1-terminal) * V_expectile(next_state)",
+    "expectile": 0.7,
+    "entropy_off_continuation": "1e-4 * r + (1-terminal) * [0.1 * V(next_state) + 0.9 * E_hybrid_actor Q_target(next_state, action)]",
+    "policy_alignment": "Expectile value and stochastic hybrid continuation are not exact adapted deterministic-continuation returns"
+  },
+  "source_code_evidence": [
+    {
+      "file": "native_runtime.py",
+      "lines": "104-126",
+      "finding": "Current CFCMT-owned loader forces full horizon; old collected H5 terminal endpoints precede this correction"
+    },
+    {
+      "file": "collect_native.py",
+      "lines": "138-148",
+      "finding": "Terminal reward telescopes to env.done ledger, without checking its actual time equals configured horizon"
+    },
+    {
+      "file": "target_pool.py",
+      "lines": "28-52",
+      "finding": "Assembly verifies configured metadata and terminal row, not actual collection endpoint"
+    },
+    {
+      "file": "frozen runtime/H2Oplus/bus_h2o/mdp_contract_v7.py",
+      "lines": "152-153,607-632",
+      "finding": "Finite-horizon V7 requires gamma1; passenger-ledger reward weights2/1"
+    },
+    {
+      "file": "frozen runtime/H2Oplus/bus_h2o/sumo_env/rl_bridge.py",
+      "lines": "1489-1511",
+      "finding": "Original bridge ends on horizon or no expected SUMO agents; bus cleanup does not clear waiting-passenger ledger"
+    },
+    {
+      "file": "frozen runtime/H2Oplus/bus_h2o/passenger_time.py",
+      "lines": "67-79",
+      "finding": "Normal tick continues accruing waiting count times elapsed seconds"
+    },
+    {
+      "file": "frozen runtime/H2Oplus/SimpleSAC/transit_v3/trainer.py",
+      "lines": "440-489,572-585,870-891",
+      "finding": "Hybrid stochastic continuation and IQL expectile backups differ from deterministic evaluation continuation"
+    }
+  ],
+  "decision": "Fix target terminal horizon alignment before another actor gate/Q-max intervention",
+  "corrections": "Previous discounted-Q descriptions corrected to undiscounted scaled continuation values; measured Q, action and cost records unchanged",
+  "next_step": {
+    "fit_case": 0,
+    "rule": "Choose case00 by fixed case order; no reward/Q selection",
+    "action": "Replay original collection executed actions through24000 with current accounting; verify original prefix and all nonterminal transitions, then compare the last terminal reward/state",
+    "if_matched": "Make a separate CFCMT-owned corrected target pool, retain all original row positions/splits/budgets and old pool; change only affected terminal rewards/durations/terminal states",
+    "training_launched": false
+  },
+  "limitations": [
+    "Observed missing terminal costs are a real training/evaluation mismatch, not proof that their repair will improve action ranking or beat the heuristic.",
+    "IQL/H2O+ values also use different continuations; one conditional adapted replay is not a global Bellman-consistency test.",
+    "Source H5 field audit covers the 16384-row compact reference; the actual dense initializer contract is supported here by frozen V7 code, not a new full dense-data scan."
+  ]
+}

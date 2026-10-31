@@ -1,0 +1,58 @@
+{
+  "name": "cfcmt-bus-native-fixed-action-replay-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "actors": {
+    "adapted": {
+      "folder": "source_dense_adapted_eval",
+      "filename": "policy.pt"
+    },
+    "masked": {
+      "folder": "free_execution_actor/td025",
+      "filename": "policy.pt"
+    }
+  },
+  "case": {
+    "case": 0,
+    "demand_seed": 72561,
+    "sumo_seed": 73561
+  },
+  "episode_seconds": 24000,
+  "asset_folder": "native_action_replay",
+  "free_ordinals": [
+    400,
+    1200,
+    2000,
+    2800
+  ],
+  "candidate_names": [
+    "adapted",
+    "masked",
+    "masked_positive",
+    "zero"
+  ],
+  "source_preference_folder": "native_actor_preference",
+  "source_preference_protocol": "cfcmt-bus-native-actor-preference-v1",
+  "selection": "Zero-based chronological free-control ordinal400,1200,2000,2800 along each seed-specific adapted native prefix; free means native projected execution interval lower<upper. Keep all four candidates even when identical. No Q, action-gap, cost, or outcome selection.",
+  "baseline": "Adapted actor alone drives entire24000s. Match prior all-event diagnosis ledger, population, service, and cost exactly.",
+  "intervention": "Replay adapted prefix from reset. At one selected event execute the nominated projected action once; remaining same-time slots are recomputed with new actual prior and adapted actor; all subsequent decisions adapted.",
+  "same_prefix_checks": "Every prefix event batch identity/time, every prior executed control action; equality at selected raw/canonical state, same-time prior, causal arrival tracker, passenger ledger, and all candidate actions.",
+  "reuse": "Exactly identical projected execution actions within the same selected event share one measured outcome; equality to adapted action shares the baseline. Record reused_from and identical_execution. Reused entries are not independent simulations.",
+  "expected_event_cases": 12,
+  "expected_candidate_entries": 48,
+  "expected_actual_simulations": 16,
+  "critic_source": "Previously recorded three-stage twin-head/min-Q scores on exactly matched native selected states, server-side events.jsonl. Read only; no refit, recomputation, or role in event selection.",
+  "primary_cost": "(2*accrued_wait_passenger_seconds+accrued_in_vehicle_passenger_seconds)/all_departed_passengers at24000s; report total/component differences and completion.",
+  "ranking_comparison": "Higher learned min-Q prefers a candidate; lower measured full-horizon cost prefers a candidate. Actual cost ties and identical actions are retained separately; Q is not equated numerically to undiscounted cost.",
+  "new_training_updates": 0,
+  "code_boundary": "CFCMT-owned frozen snapshot only; no mutable Thesis access. Remote code/smallJSON/log only, no H5/CSV/checkpoint downloads.",
+  "limits": [
+    "Three training seeds share one previously-used diagnostic demand/SUMO case; twelve event cases are correlated mechanism diagnostics, not twelve independent performance trials.",
+    "Single-action effects are conditional on adapted continuation and the fixed candidate set, not effects of continuously deploying a new extraction rule.",
+    "Learned critics use scaled undiscounted IQL/H2O+ continuation values, not calibrated cost labels under adapted deterministic continuation. Sign/order agreement with full-horizon adapted-continuation cost is descriptive, not a proof of global calibration.",
+    "Fixed ordinals are kept when actors agree; this campaign does not represent only disagreement states or the earlier maximum-divergence event."
+  ]
+}

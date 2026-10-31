@@ -1,0 +1,15 @@
+\begin{abstract}
+Bus holding control is a natural online reinforcement learning (RL) problem, but exploratory training on real fleets is impractical.
+Hybrid offline-to-online RL (H2O+) combines a historical buffer with simulator interaction.
+In transit, however, the online environment available for learning is often a cheaper, lower-fidelity simulator rather than the high-fidelity environment used for evaluation.
+We study this multi-fidelity setting on a real-topology SUMO benchmark with 12 lines, 389 buses, and 675K offline transitions.
+
+We evaluate H2O+ component choices and standard alternatives under a default scenario and a $3 \times 3$ stress grid of SUMO seeds and demand scales.
+Two transit-specific effects shape the recipe: sparse holding actions weaken action-conditioned dynamics discrimination, making an action-marginalised contrastive discriminator preferable under SIM-online training, while reward-scale mismatch makes offline-Q anchoring a stabilizer rather than a uniformly beneficial component.
+On the stress grid, deployment-relevant H2O+ Contrastive improves cumulative reward by +502K over zero-hold and is close to RLPD (+2K, $p = 0.99$) while trailing WSRL by 15K.
+The same-fidelity SUMO-online oracle improves by +546K.
+The RE-SAC SUMO expert ep39 remains strongest on average (+593K), so H2O+ should be read as recovering most expert performance under cheaper online interaction, not as consistently improving over that expert.
+
+Operational metrics expose an important calibration gap: policies with high shaped reward do not dominate total passenger travel time.
+The paper therefore contributes an empirical recipe and boundary conditions for applying H2O+ to transit holding, together with a multi-scenario benchmark protocol and deployment caveats for future calibration against operational data.
+\end{abstract}

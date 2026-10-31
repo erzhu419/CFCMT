@@ -1,0 +1,173 @@
+{
+  "name": "cfcmt-bus-cross-city-native-v1",
+  "stage": "Native target data interface admission; no trained-policy performance claim",
+  "source_city": "Changsha",
+  "target_city": "Halifax",
+  "prerequisite": "bus_thesis_rule_confirmation_v1 PASS; fixed0250 vs forward_proportional gain0.6",
+  "asset_selection": {
+    "start_hour": 7,
+    "service_hours": 4,
+    "max_directional_services": 12,
+    "minimum_departures_in_window": 2,
+    "ordering": "Original route, direction, pattern and service id, before any control outcomes",
+    "require_positive_apc": true,
+    "required_tables": [
+      "stop_news.xlsx",
+      "route_news.xlsx",
+      "time_table.xlsx",
+      "passenger_OD.xlsx"
+    ],
+    "network": "GTFS-derived route corridors; APC-apportioned demand, generated destinations; not a measured city road network",
+    "scheduled_service_date": "2026-05-19",
+    "calendar_rule": "Earliest weekday in the pinned GTFS feed with active weekday service and without a holiday exception; keep the original 12-service subset",
+    "calendar_provenance": "Actual trip_id/service_id and full stop signatures from GTFS; never merge mutually exclusive calendar services or clamp zero scheduled headways"
+  },
+  "smoke": {
+    "episode_seconds": 1800,
+    "asset_episode_seconds": 24000,
+    "demand_seed": 72101,
+    "sumo_seed": 73101,
+    "action_seed": 74101,
+    "methods": [
+      "zero",
+      "mixture"
+    ],
+    "execution_layer": "early60",
+    "completion_guard": "quarter-load-sixty",
+    "deployment_hold_scale": 1.0,
+    "max_proposed_hold_seconds": 60.0,
+    "mixture_zero_probability": 0.8,
+    "mixture_positive_beta": [
+      1.0,
+      3.0
+    ],
+    "sumo_version": "1.25.0"
+  },
+  "observation": {
+    "raw_state_dimension": 245,
+    "canonical_state_dimension": 229,
+    "event_slots": 16,
+    "max_line_categories": 12,
+    "arrival_rate": "Only actual observed passenger arrivals during the previous 1800 seconds; no future planned APC arrivals",
+    "arrival_rate_window_seconds": 1800,
+    "canonical_line_indices": "Contiguous 0..n-1 with the same station_max mapping"
+  },
+  "cost": "(2 * accrued_wait_passenger_seconds + accrued_in_vehicle_passenger_seconds) / departed_passengers",
+  "transition": "Record full native joint action sequence, executed hold, passenger-ledger delta reward, elapsed seconds and terminal tail; report dt=0 rows separately from physical boundary rows",
+  "planned_training": {
+    "status": "Not launched; training interface must be frozen before use",
+    "target_unique_transition_budget": 16384,
+    "target_splits": {
+      "fit": 12288,
+      "stop": 2048,
+      "calibrate": 2048
+    },
+    "world_model_fit_rows_within_fit": 8192,
+    "budget_accounting": "Unique union of target outcomes exposed to training or selection, including normalization/runtime calibration; all phases reuse only their allowed rows",
+    "split_rule": "Disjoint complete demand/SUMO day trajectories for fit, stop, calibrate and final test; no random row split across a day",
+    "branches": {
+      "target_only": "Target fit initialization, target fit adaptation, target replay continuation",
+      "same_city": "Same target initialization and adaptation, then target-city low-fidelity continuation with normalized confidence",
+      "cross_city": "Source-city initialization replaces target initialization, then identical target adaptation and target-city low-fidelity continuation"
+    },
+    "compute_accounting": "Same initialization, adaptation and continuation update counts across branches; source history is reported separately",
+    "transfer": "Controller parameters only; reset target adaptation optimizer and RNG identically",
+    "model_loss_coefficient": 0.25,
+    "checkpoint_rule": "Fixed final checkpoint; no target test-driven selection",
+    "world_model_fit_eligibility": "At most 8192 positive-dt nonterminal rows from the fixed fit pool. Report actual eligible fit/stop/calibrate counts; do not expand the 16384-row target union to fill these caps.",
+    "initialization_comparison": "Cross-city replaces target initialization with source initialization; C-minus-B is the replacement effect under equal total updates and target data budget, not an extra-source effect with identical target gradient exposure."
+  },
+  "interpretation": "Admission verifies an actionable causal passenger-state interface and accounting, not cross-city transfer superiority. Retain the selected city and negative results; do not change line selection according to performance.",
+  "collection_cases": [
+    {
+      "case": 0,
+      "trajectory_id": 12201,
+      "split": "fit",
+      "demand_seed": 72201,
+      "sumo_seed": 73201,
+      "action_seed": 74201,
+      "episode_seconds": 24000,
+      "method": "mixture",
+      "target_rows": 2048
+    },
+    {
+      "case": 1,
+      "trajectory_id": 12202,
+      "split": "fit",
+      "demand_seed": 72202,
+      "sumo_seed": 73202,
+      "action_seed": 74202,
+      "episode_seconds": 24000,
+      "method": "mixture",
+      "target_rows": 2048
+    },
+    {
+      "case": 2,
+      "trajectory_id": 12203,
+      "split": "fit",
+      "demand_seed": 72203,
+      "sumo_seed": 73203,
+      "action_seed": 74203,
+      "episode_seconds": 24000,
+      "method": "mixture",
+      "target_rows": 2048
+    },
+    {
+      "case": 3,
+      "trajectory_id": 12204,
+      "split": "fit",
+      "demand_seed": 72204,
+      "sumo_seed": 73204,
+      "action_seed": 74204,
+      "episode_seconds": 24000,
+      "method": "mixture",
+      "target_rows": 2048
+    },
+    {
+      "case": 4,
+      "trajectory_id": 12205,
+      "split": "fit",
+      "demand_seed": 72205,
+      "sumo_seed": 73205,
+      "action_seed": 74205,
+      "episode_seconds": 24000,
+      "method": "mixture",
+      "target_rows": 2048
+    },
+    {
+      "case": 5,
+      "trajectory_id": 12206,
+      "split": "fit",
+      "demand_seed": 72206,
+      "sumo_seed": 73206,
+      "action_seed": 74206,
+      "episode_seconds": 24000,
+      "method": "mixture",
+      "target_rows": 2048
+    },
+    {
+      "case": 6,
+      "trajectory_id": 12207,
+      "split": "stop",
+      "demand_seed": 72207,
+      "sumo_seed": 73207,
+      "action_seed": 74207,
+      "episode_seconds": 24000,
+      "method": "mixture",
+      "target_rows": 2048
+    },
+    {
+      "case": 7,
+      "trajectory_id": 12208,
+      "split": "calibrate",
+      "demand_seed": 72208,
+      "sumo_seed": 73208,
+      "action_seed": 74208,
+      "episode_seconds": 24000,
+      "method": "mixture",
+      "target_rows": 2048
+    }
+  ],
+  "target_pool_rule": "Each fixed full-day case contributes 2048 distinct uniformly-spaced raw transition indices, including its terminal tail; no reward-driven selection or replacement days. Store the source global trajectory id and native split. Six fit days, one stop day, one calibrate day.",
+  "smoke_data_in_target_pool": false
+}

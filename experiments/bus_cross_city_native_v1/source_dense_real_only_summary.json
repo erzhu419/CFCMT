@@ -1,0 +1,1431 @@
+{
+  "protocol": "cfcmt-bus-full-source-real-td-v1",
+  "complete": true,
+  "ready": 3,
+  "expected": 3,
+  "expected_evaluations": 9,
+  "admission": false,
+  "results": {
+    "75101": {
+      "training": {
+        "complete": true,
+        "protocol": "cfcmt-bus-full-source-real-td-v1",
+        "seed": 75101,
+        "branch": "cross_city",
+        "variant": "full_source_real_td",
+        "initialization_updates": 50000,
+        "adaptation_updates": 5000,
+        "continuation_updates": 20000,
+        "total_policy_updates": 75000,
+        "target_unique_rows": 16384,
+        "actor_target_fit_rows": 12288,
+        "source_rows": 3284718,
+        "target_online_training_events": 0,
+        "continuation_real_td_coefficient": 1.0,
+        "continuation_model_td_coefficient": 0.0,
+        "world_model_artifact": "/home/zhengliang01/scheduleurm_work/CFCMT/experiments/bus_cross_city_native_v1/training/models/seed75101/model.pt",
+        "world_model_refit_updates": 0,
+        "config": {
+          "ensemble_size": 2,
+          "hidden_dim": 256,
+          "batch_size": 256,
+          "reward_scale": 0.0001,
+          "critic_loss": "huber",
+          "huber_delta": 1.0,
+          "activation": "relu",
+          "actor_layer_norm": false,
+          "critic_layer_norm": false,
+          "value_layer_norm": false,
+          "online_fraction": 0.0,
+          "actor_learning_rate": 0.0003,
+          "critic_learning_rate": 0.0003,
+          "value_learning_rate": 0.0003,
+          "alpha_learning_rate": 0.0003,
+          "ratio_learning_rate": 0.0001,
+          "soft_target_rate": 0.005,
+          "target_subset_size": 2,
+          "target_subset_replacement": false,
+          "target_entropy": 0.0,
+          "initial_temperature": 1.0,
+          "backup_entropy": true,
+          "bootstrap_probability": 1.0,
+          "offline_objective": "iql",
+          "online_backup": "h2oplus",
+          "actor_q_reduction": "min-all",
+          "online_actor_update_interval": 1,
+          "online_actor_batch_mode": "latest",
+          "online_update_order": "actor-before-critic",
+          "offline_cql_alpha": 0.0,
+          "online_cql_alpha": 0.0,
+          "cql_n_actions": 10,
+          "cql_max_target_backup": false,
+          "mixed_backup_lambda": 0.1,
+          "iql_expectile": 0.7,
+          "iql_advantage_temperature": 3.0,
+          "iql_max_weight": 100.0,
+          "ratio_min_weight": 1e-05,
+          "ratio_max_weight": 1.0,
+          "use_ratio_correction": false,
+          "ratio_update_interval": 4,
+          "gradient_clip_norm": null,
+          "cql_penalty_subset_size": null,
+          "cql_penalty_subset_replacement": false,
+          "offline_update_order": "critic-before-actor",
+          "temperature_state_source": "actor",
+          "offline_temperature_action_samples": 1
+        },
+        "checkpoint_selection": "fixed final",
+        "admission": false,
+        "evaluation_cases": 3,
+        "evaluation_seconds": 24000
+      },
+      "evaluation": {
+        "0": {
+          "complete": true,
+          "case": 0,
+          "training_seed": 75101,
+          "demand_seed": 72501,
+          "sumo_seed": 73501,
+          "horizon_seconds": 24000.0,
+          "simulator_version": [
+            22,
+            "SUMO 1.25.0"
+          ],
+          "line_ids": [
+            "100X",
+            "101S",
+            "102X",
+            "103S",
+            "104X",
+            "105S",
+            "106X",
+            "107S",
+            "108X",
+            "109S",
+            "110X",
+            "111X"
+          ],
+          "cost": 2322.139508290452,
+          "departed": 3498,
+          "completed": 3440,
+          "completion": 0.9834190966266438,
+          "ledger_balance_error": 0,
+          "wait_seconds": 842.2172670097199,
+          "ride_seconds": 637.704974271012,
+          "decision_events": 3834,
+          "mean_executed_hold_seconds": 9.491746889562362,
+          "positive_holds": 2085,
+          "service_departed": 119,
+          "service_completed": 119
+        },
+        "2": {
+          "complete": true,
+          "case": 2,
+          "training_seed": 75101,
+          "demand_seed": 72503,
+          "sumo_seed": 73503,
+          "horizon_seconds": 24000.0,
+          "simulator_version": [
+            22,
+            "SUMO 1.25.0"
+          ],
+          "line_ids": [
+            "100X",
+            "101S",
+            "102X",
+            "103S",
+            "104X",
+            "105S",
+            "106X",
+            "107S",
+            "108X",
+            "109S",
+            "110X",
+            "111X"
+          ],
+          "cost": 2321.444229172433,
+          "departed": 3613,
+          "completed": 3554,
+          "completion": 0.9836700802657071,
+          "ledger_balance_error": 0,
+          "wait_seconds": 840.3196789371714,
+          "ride_seconds": 640.8048712980902,
+          "decision_events": 3836,
+          "mean_executed_hold_seconds": 9.69684111913501,
+          "positive_holds": 2080,
+          "service_departed": 119,
+          "service_completed": 119
+        },
+        "1": {
+          "complete": true,
+          "case": 1,
+          "training_seed": 75101,
+          "demand_seed": 72502,
+          "sumo_seed": 73502,
+          "horizon_seconds": 24000.0,
+          "simulator_version": [
+            22,
+            "SUMO 1.25.0"
+          ],
+          "line_ids": [
+            "100X",
+            "101S",
+            "102X",
+            "103S",
+            "104X",
+            "105S",
+            "106X",
+            "107S",
+            "108X",
+            "109S",
+            "110X",
+            "111X"
+          ],
+          "cost": 2320.850705004147,
+          "departed": 3617,
+          "completed": 3554,
+          "completion": 0.9825822504838264,
+          "ledger_balance_error": 0,
+          "wait_seconds": 842.5076029858999,
+          "ride_seconds": 635.8354990323472,
+          "decision_events": 3833,
+          "mean_executed_hold_seconds": 9.574515904765697,
+          "positive_holds": 2064,
+          "service_departed": 119,
+          "service_completed": 119
+        }
+      }
+    },
+    "75102": {
+      "training": {
+        "complete": true,
+        "protocol": "cfcmt-bus-full-source-real-td-v1",
+        "seed": 75102,
+        "branch": "cross_city",
+        "variant": "full_source_real_td",
+        "initialization_updates": 50000,
+        "adaptation_updates": 5000,
+        "continuation_updates": 20000,
+        "total_policy_updates": 75000,
+        "target_unique_rows": 16384,
+        "actor_target_fit_rows": 12288,
+        "source_rows": 3284718,
+        "target_online_training_events": 0,
+        "continuation_real_td_coefficient": 1.0,
+        "continuation_model_td_coefficient": 0.0,
+        "world_model_artifact": "/home/zhengliang01/scheduleurm_work/CFCMT/experiments/bus_cross_city_native_v1/training/models/seed75102/model.pt",
+        "world_model_refit_updates": 0,
+        "config": {
+          "ensemble_size": 2,
+          "hidden_dim": 256,
+          "batch_size": 256,
+          "reward_scale": 0.0001,
+          "critic_loss": "huber",
+          "huber_delta": 1.0,
+          "activation": "relu",
+          "actor_layer_norm": false,
+          "critic_layer_norm": false,
+          "value_layer_norm": false,
+          "online_fraction": 0.0,
+          "actor_learning_rate": 0.0003,
+          "critic_learning_rate": 0.0003,
+          "value_learning_rate": 0.0003,
+          "alpha_learning_rate": 0.0003,
+          "ratio_learning_rate": 0.0001,
+          "soft_target_rate": 0.005,
+          "target_subset_size": 2,
+          "target_subset_replacement": false,
+          "target_entropy": 0.0,
+          "initial_temperature": 1.0,
+          "backup_entropy": true,
+          "bootstrap_probability": 1.0,
+          "offline_objective": "iql",
+          "online_backup": "h2oplus",
+          "actor_q_reduction": "min-all",
+          "online_actor_update_interval": 1,
+          "online_actor_batch_mode": "latest",
+          "online_update_order": "actor-before-critic",
+          "offline_cql_alpha": 0.0,
+          "online_cql_alpha": 0.0,
+          "cql_n_actions": 10,
+          "cql_max_target_backup": false,
+          "mixed_backup_lambda": 0.1,
+          "iql_expectile": 0.7,
+          "iql_advantage_temperature": 3.0,
+          "iql_max_weight": 100.0,
+          "ratio_min_weight": 1e-05,
+          "ratio_max_weight": 1.0,
+          "use_ratio_correction": false,
+          "ratio_update_interval": 4,
+          "gradient_clip_norm": null,
+          "cql_penalty_subset_size": null,
+          "cql_penalty_subset_replacement": false,
+          "offline_update_order": "critic-before-actor",
+          "temperature_state_source": "actor",
+          "offline_temperature_action_samples": 1
+        },
+        "checkpoint_selection": "fixed final",
+        "admission": false,
+        "evaluation_cases": 3,
+        "evaluation_seconds": 24000
+      },
+      "evaluation": {
+        "0": {
+          "complete": true,
+          "case": 0,
+          "training_seed": 75102,
+          "demand_seed": 72501,
+          "sumo_seed": 73501,
+          "horizon_seconds": 24000.0,
+          "simulator_version": [
+            22,
+            "SUMO 1.25.0"
+          ],
+          "line_ids": [
+            "100X",
+            "101S",
+            "102X",
+            "103S",
+            "104X",
+            "105S",
+            "106X",
+            "107S",
+            "108X",
+            "109S",
+            "110X",
+            "111X"
+          ],
+          "cost": 2308.3413379073754,
+          "departed": 3498,
+          "completed": 3442,
+          "completion": 0.9839908519153803,
+          "ledger_balance_error": 0,
+          "wait_seconds": 828.4951400800458,
+          "ride_seconds": 651.3510577472841,
+          "decision_events": 3834,
+          "mean_executed_hold_seconds": 12.214852730992813,
+          "positive_holds": 3719,
+          "service_departed": 119,
+          "service_completed": 119
+        },
+        "2": {
+          "complete": true,
+          "case": 2,
+          "training_seed": 75102,
+          "demand_seed": 72503,
+          "sumo_seed": 73503,
+          "horizon_seconds": 24000.0,
+          "simulator_version": [
+            22,
+            "SUMO 1.25.0"
+          ],
+          "line_ids": [
+            "100X",
+            "101S",
+            "102X",
+            "103S",
+            "104X",
+            "105S",
+            "106X",
+            "107S",
+            "108X",
+            "109S",
+            "110X",
+            "111X"
+          ],
+          "cost": 2334.696650982563,
+          "departed": 3613,
+          "completed": 3555,
+          "completion": 0.9839468585662884,
+          "ledger_balance_error": 0,
+          "wait_seconds": 839.3362856352062,
+          "ride_seconds": 656.0240797121505,
+          "decision_events": 3836,
+          "mean_executed_hold_seconds": 12.426641715797318,
+          "positive_holds": 3738,
+          "service_departed": 119,
+          "service_completed": 119
+        },
+        "1": {
+          "complete": true,
+          "case": 1,
+          "training_seed": 75102,
+          "demand_seed": 72502,
+          "sumo_seed": 73502,
+          "horizon_seconds": 24000.0,
+          "simulator_version": [
+            22,
+            "SUMO 1.25.0"
+          ],
+          "line_ids": [
+            "100X",
+            "101S",
+            "102X",
+            "103S",
+            "104X",
+            "105S",
+            "106X",
+            "107S",
+            "108X",
+            "109S",
+            "110X",
+            "111X"
+          ],
+          "cost": 2331.3417196571745,
+          "departed": 3617,
+          "completed": 3555,
+          "completion": 0.9828587226983688,
+          "ledger_balance_error": 0,
+          "wait_seconds": 840.3035664915676,
+          "ride_seconds": 650.7345866740393,
+          "decision_events": 3833,
+          "mean_executed_hold_seconds": 12.51823470242926,
+          "positive_holds": 3732,
+          "service_departed": 119,
+          "service_completed": 119
+        }
+      }
+    },
+    "75103": {
+      "training": {
+        "complete": true,
+        "protocol": "cfcmt-bus-full-source-real-td-v1",
+        "seed": 75103,
+        "branch": "cross_city",
+        "variant": "full_source_real_td",
+        "initialization_updates": 50000,
+        "adaptation_updates": 5000,
+        "continuation_updates": 20000,
+        "total_policy_updates": 75000,
+        "target_unique_rows": 16384,
+        "actor_target_fit_rows": 12288,
+        "source_rows": 3284718,
+        "target_online_training_events": 0,
+        "continuation_real_td_coefficient": 1.0,
+        "continuation_model_td_coefficient": 0.0,
+        "world_model_artifact": "/home/zhengliang01/scheduleurm_work/CFCMT/experiments/bus_cross_city_native_v1/training/models/seed75103/model.pt",
+        "world_model_refit_updates": 0,
+        "config": {
+          "ensemble_size": 2,
+          "hidden_dim": 256,
+          "batch_size": 256,
+          "reward_scale": 0.0001,
+          "critic_loss": "huber",
+          "huber_delta": 1.0,
+          "activation": "relu",
+          "actor_layer_norm": false,
+          "critic_layer_norm": false,
+          "value_layer_norm": false,
+          "online_fraction": 0.0,
+          "actor_learning_rate": 0.0003,
+          "critic_learning_rate": 0.0003,
+          "value_learning_rate": 0.0003,
+          "alpha_learning_rate": 0.0003,
+          "ratio_learning_rate": 0.0001,
+          "soft_target_rate": 0.005,
+          "target_subset_size": 2,
+          "target_subset_replacement": false,
+          "target_entropy": 0.0,
+          "initial_temperature": 1.0,
+          "backup_entropy": true,
+          "bootstrap_probability": 1.0,
+          "offline_objective": "iql",
+          "online_backup": "h2oplus",
+          "actor_q_reduction": "min-all",
+          "online_actor_update_interval": 1,
+          "online_actor_batch_mode": "latest",
+          "online_update_order": "actor-before-critic",
+          "offline_cql_alpha": 0.0,
+          "online_cql_alpha": 0.0,
+          "cql_n_actions": 10,
+          "cql_max_target_backup": false,
+          "mixed_backup_lambda": 0.1,
+          "iql_expectile": 0.7,
+          "iql_advantage_temperature": 3.0,
+          "iql_max_weight": 100.0,
+          "ratio_min_weight": 1e-05,
+          "ratio_max_weight": 1.0,
+          "use_ratio_correction": false,
+          "ratio_update_interval": 4,
+          "gradient_clip_norm": null,
+          "cql_penalty_subset_size": null,
+          "cql_penalty_subset_replacement": false,
+          "offline_update_order": "critic-before-actor",
+          "temperature_state_source": "actor",
+          "offline_temperature_action_samples": 1
+        },
+        "checkpoint_selection": "fixed final",
+        "admission": false,
+        "evaluation_cases": 3,
+        "evaluation_seconds": 24000
+      },
+      "evaluation": {
+        "0": {
+          "complete": true,
+          "case": 0,
+          "training_seed": 75103,
+          "demand_seed": 72501,
+          "sumo_seed": 73501,
+          "horizon_seconds": 24000.0,
+          "simulator_version": [
+            22,
+            "SUMO 1.25.0"
+          ],
+          "line_ids": [
+            "100X",
+            "101S",
+            "102X",
+            "103S",
+            "104X",
+            "105S",
+            "106X",
+            "107S",
+            "108X",
+            "109S",
+            "110X",
+            "111X"
+          ],
+          "cost": 2319.1489422527156,
+          "departed": 3498,
+          "completed": 3440,
+          "completion": 0.9834190966266438,
+          "ledger_balance_error": 0,
+          "wait_seconds": 836.6363636363636,
+          "ride_seconds": 645.8762149799886,
+          "decision_events": 3833,
+          "mean_executed_hold_seconds": 11.458175561398836,
+          "positive_holds": 3640,
+          "service_departed": 119,
+          "service_completed": 119
+        },
+        "2": {
+          "complete": true,
+          "case": 2,
+          "training_seed": 75103,
+          "demand_seed": 72503,
+          "sumo_seed": 73503,
+          "horizon_seconds": 24000.0,
+          "simulator_version": [
+            22,
+            "SUMO 1.25.0"
+          ],
+          "line_ids": [
+            "100X",
+            "101S",
+            "102X",
+            "103S",
+            "104X",
+            "105S",
+            "106X",
+            "107S",
+            "108X",
+            "109S",
+            "110X",
+            "111X"
+          ],
+          "cost": 2333.787157486853,
+          "departed": 3613,
+          "completed": 3555,
+          "completion": 0.9839468585662884,
+          "ledger_balance_error": 0,
+          "wait_seconds": 840.3077774702464,
+          "ride_seconds": 653.1716025463604,
+          "decision_events": 3836,
+          "mean_executed_hold_seconds": 11.616147932655744,
+          "positive_holds": 3645,
+          "service_departed": 119,
+          "service_completed": 119
+        },
+        "1": {
+          "complete": true,
+          "case": 1,
+          "training_seed": 75103,
+          "demand_seed": 72502,
+          "sumo_seed": 73502,
+          "horizon_seconds": 24000.0,
+          "simulator_version": [
+            22,
+            "SUMO 1.25.0"
+          ],
+          "line_ids": [
+            "100X",
+            "101S",
+            "102X",
+            "103S",
+            "104X",
+            "105S",
+            "106X",
+            "107S",
+            "108X",
+            "109S",
+            "110X",
+            "111X"
+          ],
+          "cost": 2347.599944705557,
+          "departed": 3617,
+          "completed": 3553,
+          "completion": 0.9823057782692839,
+          "ledger_balance_error": 0,
+          "wait_seconds": 849.8913464196849,
+          "ride_seconds": 647.8172518661875,
+          "decision_events": 3833,
+          "mean_executed_hold_seconds": 11.671438884927932,
+          "positive_holds": 3633,
+          "service_departed": 119,
+          "service_completed": 119
+        }
+      }
+    }
+  },
+  "interpretation": "Single TD-weight ablation on the same three previously analyzed generated demand days, three training seeds in one target corridor city; not prospective test evidence or physical sim-to-real. real TD uses existing offline target rows, not new simulator interactions.",
+  "comparison": {
+    "paired_evaluations": 9,
+    "all_seed_case_mean": {
+      "actual": {
+        "cost": 2326.5944661621415,
+        "completion": 0.9833488437798257,
+        "wait_seconds": 840.0016698517672,
+        "ride_seconds": 646.5911264586066,
+        "mean_executed_hold_seconds": 11.185399493518332,
+        "positive_hold_fraction": 0.8211463460164014
+      },
+      "references": {
+        "full_source_model": {
+          "cost": 2332.940455193255,
+          "completion": 0.9833795969243346,
+          "wait_seconds": 839.4247749776191,
+          "ride_seconds": 654.0909052380161,
+          "mean_executed_hold_seconds": 12.683222085626014,
+          "positive_hold_fraction": 0.9849881613981901
+        },
+        "strong_rule": {
+          "cost": 2318.793199460133,
+          "completion": 0.9832238091253925,
+          "wait_seconds": 837.3285974949977,
+          "ride_seconds": 644.1360044701374,
+          "mean_executed_hold_seconds": 9.136355753757693,
+          "positive_hold_fraction": 0.48204930786660455
+        },
+        "target_model": {
+          "cost": 2325.424683251904,
+          "completion": 0.9834430912801899,
+          "wait_seconds": 836.6973955365848,
+          "ride_seconds": 652.0298921787338,
+          "mean_executed_hold_seconds": 11.031974083649073,
+          "positive_hold_fraction": 0.747813021978723
+        },
+        "cross_city": {
+          "cost": 2325.144316873573,
+          "completion": 0.9834113270974824,
+          "wait_seconds": 837.6976460597533,
+          "ride_seconds": 649.7490247540668,
+          "mean_executed_hold_seconds": 11.842362003176413,
+          "positive_hold_fraction": 0.9376345628784425
+        },
+        "target_only": {
+          "cost": 2333.5756229284875,
+          "completion": 0.9834134171929994,
+          "wait_seconds": 839.5929199218114,
+          "ride_seconds": 654.3897830848649,
+          "mean_executed_hold_seconds": 12.121874382057975,
+          "positive_hold_fraction": 0.823603701919933
+        }
+      },
+      "differences": {
+        "full_source_model": {
+          "cost": -6.345989031113277,
+          "cost_percent": -0.27201675966425776,
+          "completion_pp": -0.0030753144508954833,
+          "wait_seconds": 0.5768948741481381,
+          "ride_seconds": -7.499778779409553
+        },
+        "strong_rule": {
+          "cost": 7.801266702008434,
+          "cost_percent": 0.3364365008412455,
+          "completion_pp": 0.012503465443314266,
+          "wait_seconds": 2.6730723567695804,
+          "ride_seconds": 2.455121988469159
+        },
+        "target_model": {
+          "cost": 1.1697829102377,
+          "cost_percent": 0.05030405493941264,
+          "completion_pp": -0.009424750036424179,
+          "wait_seconds": 3.304274315182397,
+          "ride_seconds": -5.438765720127208
+        },
+        "cross_city": {
+          "cost": 1.4501492885683547,
+          "cost_percent": 0.06236814111040853,
+          "completion_pp": -0.00624833176566808,
+          "wait_seconds": 2.304023792013936,
+          "ride_seconds": -3.1578982954601997
+        },
+        "target_only": {
+          "cost": -6.9811567663459755,
+          "cost_percent": -0.2991613684061831,
+          "completion_pp": -0.0064573413173674155,
+          "wait_seconds": 0.40874992995588855,
+          "ride_seconds": -7.798656626258321
+        }
+      }
+    },
+    "by_seed": {
+      "75101": {
+        "actual": {
+          "cost": 2321.478147489011,
+          "completion": 0.9832238091253925,
+          "wait_seconds": 841.6815163109304,
+          "ride_seconds": 638.1151148671498,
+          "mean_executed_hold_seconds": 9.58770130448769,
+          "positive_hold_fraction": 0.5415105215288492
+        },
+        "references": {
+          "full_source_model": {
+            "cost": 2332.4103518253505,
+            "completion": 0.9833160685589196,
+            "wait_seconds": 839.8580838912931,
+            "ride_seconds": 652.694184042764,
+            "mean_executed_hold_seconds": 12.550704829991261,
+            "positive_hold_fraction": 0.9942623884145593
+          },
+          "strong_rule": {
+            "cost": 2318.793199460133,
+            "completion": 0.9832238091253925,
+            "wait_seconds": 837.3285974949978,
+            "ride_seconds": 644.1360044701376,
+            "mean_executed_hold_seconds": 9.136355753757693,
+            "positive_hold_fraction": 0.4820493078666046
+          },
+          "target_model": {
+            "cost": 2324.5393269429283,
+            "completion": 0.9835988110600126,
+            "wait_seconds": 834.3840831710362,
+            "ride_seconds": 655.7711606008555,
+            "mean_executed_hold_seconds": 11.282179674862297,
+            "positive_hold_fraction": 0.693644181427603
+          },
+          "cross_city": {
+            "cost": 2330.9366674162843,
+            "completion": 0.9837862610129826,
+            "wait_seconds": 832.9768855848257,
+            "ride_seconds": 664.982896246633,
+            "mean_executed_hold_seconds": 14.147561234287352,
+            "positive_hold_fraction": 1.0
+          },
+          "target_only": {
+            "cost": 2344.0229433428735,
+            "completion": 0.9833191016735152,
+            "wait_seconds": 841.8600117525369,
+            "ride_seconds": 660.3029198377995,
+            "mean_executed_hold_seconds": 13.01316158732127,
+            "positive_hold_fraction": 0.8728052790735488
+          }
+        },
+        "differences": {
+          "full_source_model": {
+            "cost": -10.93220433633951,
+            "cost_percent": -0.46870844694133423,
+            "completion_pp": -0.009225943352708654,
+            "wait_seconds": 1.8234324196373564,
+            "ride_seconds": -14.579069175614222
+          },
+          "strong_rule": {
+            "cost": 2.6849480288778977,
+            "cost_percent": 0.11579074966681004,
+            "completion_pp": 0.0,
+            "wait_seconds": 4.3529188159326395,
+            "ride_seconds": -6.020889602987722
+          },
+          "target_model": {
+            "cost": -3.061179453917248,
+            "cost_percent": -0.13168972529034806,
+            "completion_pp": -0.037500193462003395,
+            "wait_seconds": 7.297433139894224,
+            "ride_seconds": -17.656045733705696
+          },
+          "cross_city": {
+            "cost": -9.4585199272733,
+            "cost_percent": -0.40578193562665743,
+            "completion_pp": -0.056245188759007636,
+            "wait_seconds": 8.70463072610471,
+            "ride_seconds": -26.867781379483176
+          },
+          "target_only": {
+            "cost": -22.544795853862524,
+            "cost_percent": -0.9617992826346141,
+            "completion_pp": -0.009529254812268295,
+            "wait_seconds": -0.17849544160651476,
+            "ride_seconds": -22.187804970649722
+          }
+        }
+      },
+      "75102": {
+        "actual": {
+          "cost": 2324.793236182371,
+          "completion": 0.9835988110600126,
+          "wait_seconds": 836.0449974022731,
+          "ride_seconds": 652.7032413778246,
+          "mean_executed_hold_seconds": 12.386576383073129,
+          "positive_hold_fraction": 0.9727025512757006
+        },
+        "references": {
+          "full_source_model": {
+            "cost": 2331.253026408467,
+            "completion": 0.9834113611070423,
+            "wait_seconds": 839.0814323085018,
+            "ride_seconds": 653.0901617914634,
+            "mean_executed_hold_seconds": 12.59478975201977,
+            "positive_hold_fraction": 0.9920013446334046
+          },
+          "strong_rule": {
+            "cost": 2318.793199460133,
+            "completion": 0.9832238091253925,
+            "wait_seconds": 837.3285974949978,
+            "ride_seconds": 644.1360044701376,
+            "mean_executed_hold_seconds": 9.136355753757693,
+            "positive_hold_fraction": 0.4820493078666046
+          },
+          "target_model": {
+            "cost": 2320.4717581770365,
+            "completion": 0.9832238091253925,
+            "wait_seconds": 839.120053330017,
+            "ride_seconds": 642.2316515170024,
+            "mean_executed_hold_seconds": 9.891283393565892,
+            "positive_hold_fraction": 0.8093372765514996
+          },
+          "cross_city": {
+            "cost": 2326.7709096076564,
+            "completion": 0.983131651720545,
+            "wait_seconds": 842.1655718202619,
+            "ride_seconds": 642.4397659671328,
+            "mean_executed_hold_seconds": 10.31984073194518,
+            "positive_hold_fraction": 0.8234226016480012
+          },
+          "target_only": {
+            "cost": 2327.59103861712,
+            "completion": 0.9834144962503175,
+            "wait_seconds": 839.7092717943588,
+            "ride_seconds": 648.1724950284024,
+            "mean_executed_hold_seconds": 11.222775175088126,
+            "positive_hold_fraction": 0.737372876905947
+          }
+        },
+        "differences": {
+          "full_source_model": {
+            "cost": -6.459790226096175,
+            "cost_percent": -0.27709519957377343,
+            "completion_pp": 0.018744995297026446,
+            "wait_seconds": -3.036434906228692,
+            "ride_seconds": -0.3869204136387907
+          },
+          "strong_rule": {
+            "cost": 6.000036722237837,
+            "cost_percent": 0.2587568707565116,
+            "completion_pp": 0.037500193462003395,
+            "wait_seconds": -1.2836000927246687,
+            "ride_seconds": 8.567236907687061
+          },
+          "target_model": {
+            "cost": 4.321478005334484,
+            "cost_percent": 0.18623273436128518,
+            "completion_pp": 0.037500193462003395,
+            "wait_seconds": -3.075055927743847,
+            "ride_seconds": 10.471589860822178
+          },
+          "cross_city": {
+            "cost": -1.9776734252855022,
+            "cost_percent": -0.08499648234036845,
+            "completion_pp": 0.046715933946761545,
+            "wait_seconds": -6.1205744179887915,
+            "ride_seconds": 10.263475410691854
+          },
+          "target_only": {
+            "cost": -2.7978024347489736,
+            "cost_percent": -0.12020163286120994,
+            "completion_pp": 0.0184314809695052,
+            "wait_seconds": -3.6642743920856446,
+            "ride_seconds": 4.530746349422202
+          }
+        }
+      },
+      "75103": {
+        "actual": {
+          "cost": 2333.5120148150418,
+          "completion": 0.983223911154072,
+          "wait_seconds": 842.2784958420983,
+          "ride_seconds": 648.9550231308455,
+          "mean_executed_hold_seconds": 11.58192079299417,
+          "positive_hold_fraction": 0.9492259652446542
+        },
+        "references": {
+          "full_source_model": {
+            "cost": 2335.1579873459464,
+            "completion": 0.9834113611070423,
+            "wait_seconds": 839.3348087330625,
+            "ride_seconds": 656.4883698798213,
+            "mean_executed_hold_seconds": 12.904171674867014,
+            "positive_hold_fraction": 0.9687007511466065
+          },
+          "strong_rule": {
+            "cost": 2318.793199460133,
+            "completion": 0.9832238091253925,
+            "wait_seconds": 837.3285974949978,
+            "ride_seconds": 644.1360044701376,
+            "mean_executed_hold_seconds": 9.136355753757693,
+            "positive_hold_fraction": 0.4820493078666046
+          },
+          "target_model": {
+            "cost": 2331.2629646357473,
+            "completion": 0.983506653655165,
+            "wait_seconds": 836.5880501087017,
+            "ride_seconds": 658.0868644183437,
+            "mean_executed_hold_seconds": 11.922459182519033,
+            "positive_hold_fraction": 0.7404576079570663
+          },
+          "cross_city": {
+            "cost": 2317.725373596779,
+            "completion": 0.9833160685589196,
+            "wait_seconds": 837.950480774172,
+            "ride_seconds": 641.8244120484345,
+            "mean_executed_hold_seconds": 11.059684043296713,
+            "positive_hold_fraction": 0.9894810869873264
+          },
+          "target_only": {
+            "cost": 2329.1128868254696,
+            "completion": 0.983506653655165,
+            "wait_seconds": 837.2094762185385,
+            "ride_seconds": 654.6939343883928,
+            "mean_executed_hold_seconds": 12.129686383764529,
+            "positive_hold_fraction": 0.8606329497803035
+          }
+        },
+        "differences": {
+          "full_source_model": {
+            "cost": -1.6459725309046007,
+            "cost_percent": -0.07048655978841722,
+            "completion_pp": -0.018744995297026446,
+            "wait_seconds": 2.9436871090358636,
+            "ride_seconds": -7.533346748975873
+          },
+          "strong_rule": {
+            "cost": 14.718815354908656,
+            "cost_percent": 0.6347618821003755,
+            "completion_pp": 1.0202867950503958e-05,
+            "wait_seconds": 4.949898347100543,
+            "ride_seconds": 4.819018660707911
+          },
+          "target_model": {
+            "cost": 2.2490501792944997,
+            "cost_percent": 0.09647346581709657,
+            "completion_pp": -0.02827425010929474,
+            "wait_seconds": 5.6904457333965865,
+            "ride_seconds": -9.131841287498219
+          },
+          "cross_city": {
+            "cost": 15.786641218262957,
+            "cost_percent": 0.6811264784906049,
+            "completion_pp": -0.00921574048475815,
+            "wait_seconds": 4.328015067926344,
+            "ride_seconds": 7.130611082410951
+          },
+          "target_only": {
+            "cost": 4.399127989572207,
+            "cost_percent": 0.18887568801219093,
+            "completion_pp": -0.02827425010929474,
+            "wait_seconds": 5.069019623559825,
+            "ride_seconds": -5.738911257547329
+          }
+        }
+      }
+    },
+    "pairs": [
+      {
+        "seed": 75101,
+        "case": 0,
+        "actual": {
+          "cost": 2322.139508290452,
+          "completion": 0.9834190966266438,
+          "wait_seconds": 842.2172670097199,
+          "ride_seconds": 637.704974271012,
+          "mean_executed_hold_seconds": 9.491746889562362,
+          "positive_hold_fraction": 0.5438184663536776
+        },
+        "references": {
+          "full_source_model": {
+            "cost": 2328.068324757004,
+            "completion": 0.9834190966266438,
+            "wait_seconds": 838.368782161235,
+            "ride_seconds": 651.330760434534,
+            "mean_executed_hold_seconds": 12.43126243073056,
+            "positive_hold_fraction": 0.9940010432968179
+          },
+          "strong_rule": {
+            "cost": 2307.4445397369927,
+            "completion": 0.9834190966266438,
+            "wait_seconds": 831.6578044596913,
+            "ride_seconds": 644.12893081761,
+            "mean_executed_hold_seconds": 9.015725561741682,
+            "positive_hold_fraction": 0.4869587897756912
+          },
+          "target_model": {
+            "cost": 2308.83047455689,
+            "completion": 0.9839908519153803,
+            "wait_seconds": 826.9762721555174,
+            "ride_seconds": 654.8779302458548,
+            "mean_executed_hold_seconds": 11.191981530836241,
+            "positive_hold_fraction": 0.699791340636411
+          },
+          "cross_city": {
+            "cost": 2314.9205260148656,
+            "completion": 0.9842767295597484,
+            "wait_seconds": 825.3187535734705,
+            "ride_seconds": 664.2830188679245,
+            "mean_executed_hold_seconds": 14.015486851668818,
+            "positive_hold_fraction": 1.0
+          },
+          "target_only": {
+            "cost": 2331.283304745569,
+            "completion": 0.983704974271012,
+            "wait_seconds": 835.6386506575186,
+            "ride_seconds": 660.0060034305317,
+            "mean_executed_hold_seconds": 12.880221680315984,
+            "positive_hold_fraction": 0.8708583355074354
+          }
+        }
+      },
+      {
+        "seed": 75101,
+        "case": 1,
+        "actual": {
+          "cost": 2320.850705004147,
+          "completion": 0.9825822504838264,
+          "wait_seconds": 842.5076029858999,
+          "ride_seconds": 635.8354990323472,
+          "mean_executed_hold_seconds": 9.574515904765697,
+          "positive_hold_fraction": 0.5384816070962692
+        },
+        "references": {
+          "full_source_model": {
+            "cost": 2342.263478020459,
+            "completion": 0.9825822504838264,
+            "wait_seconds": 845.6596627038982,
+            "ride_seconds": 650.9441526126624,
+            "mean_executed_hold_seconds": 12.675451810167752,
+            "positive_hold_fraction": 0.9945212627184973
+          },
+          "strong_rule": {
+            "cost": 2317.6582803428255,
+            "completion": 0.9825822504838264,
+            "wait_seconds": 838.7448161459773,
+            "ride_seconds": 640.1686480508708,
+            "mean_executed_hold_seconds": 9.127895911275454,
+            "positive_hold_fraction": 0.4831724497782416
+          },
+          "target_model": {
+            "cost": 2325.184959911529,
+            "completion": 0.9828587226983688,
+            "wait_seconds": 836.7984517555985,
+            "ride_seconds": 651.5880564003318,
+            "mean_executed_hold_seconds": 11.290439711673248,
+            "positive_hold_fraction": 0.6858857291938429
+          },
+          "cross_city": {
+            "cost": 2340.580591650539,
+            "completion": 0.9831351949129112,
+            "wait_seconds": 838.7984517555985,
+            "ride_seconds": 662.983688139342,
+            "mean_executed_hold_seconds": 14.254731437539792,
+            "positive_hold_fraction": 1.0
+          },
+          "target_only": {
+            "cost": 2351.9742880840477,
+            "completion": 0.9825822504838264,
+            "wait_seconds": 847.1943599668233,
+            "ride_seconds": 657.5855681504008,
+            "mean_executed_hold_seconds": 13.139376612049215,
+            "positive_hold_fraction": 0.8768588572919385
+          }
+        }
+      },
+      {
+        "seed": 75101,
+        "case": 2,
+        "actual": {
+          "cost": 2321.444229172433,
+          "completion": 0.9836700802657071,
+          "wait_seconds": 840.3196789371714,
+          "ride_seconds": 640.8048712980902,
+          "mean_executed_hold_seconds": 9.69684111913501,
+          "positive_hold_fraction": 0.5422314911366006
+        },
+        "references": {
+          "full_source_model": {
+            "cost": 2326.8992526985885,
+            "completion": 0.9839468585662884,
+            "wait_seconds": 835.5458068087462,
+            "ride_seconds": 655.807639081096,
+            "mean_executed_hold_seconds": 12.545400249075467,
+            "positive_hold_fraction": 0.9942648592283628
+          },
+          "strong_rule": {
+            "cost": 2331.276778300581,
+            "completion": 0.9836700802657071,
+            "wait_seconds": 841.5831718793247,
+            "ride_seconds": 648.1104345419319,
+            "mean_executed_hold_seconds": 9.265445788255946,
+            "positive_hold_fraction": 0.4760166840458811
+          },
+          "target_model": {
+            "cost": 2339.6025463603655,
+            "completion": 0.9839468585662884,
+            "wait_seconds": 839.3775256019928,
+            "ride_seconds": 660.8474951563798,
+            "mean_executed_hold_seconds": 11.364117782077402,
+            "positive_hold_fraction": 0.6952554744525548
+          },
+          "cross_city": {
+            "cost": 2337.3088845834486,
+            "completion": 0.9839468585662884,
+            "wait_seconds": 834.8134514254083,
+            "ride_seconds": 667.6819817326322,
+            "mean_executed_hold_seconds": 14.172465413653441,
+            "positive_hold_fraction": 1.0
+          },
+          "target_only": {
+            "cost": 2348.8112371990037,
+            "completion": 0.9836700802657071,
+            "wait_seconds": 842.7470246332688,
+            "ride_seconds": 663.3171879324661,
+            "mean_executed_hold_seconds": 13.019886469598607,
+            "positive_hold_fraction": 0.8706986444212722
+          }
+        }
+      },
+      {
+        "seed": 75102,
+        "case": 0,
+        "actual": {
+          "cost": 2308.3413379073754,
+          "completion": 0.9839908519153803,
+          "wait_seconds": 828.4951400800458,
+          "ride_seconds": 651.3510577472841,
+          "mean_executed_hold_seconds": 12.214852730992813,
+          "positive_hold_fraction": 0.9700052164840898
+        },
+        "references": {
+          "full_source_model": {
+            "cost": 2315.419954259577,
+            "completion": 0.983704974271012,
+            "wait_seconds": 831.8787878787879,
+            "ride_seconds": 651.6623785020012,
+            "mean_executed_hold_seconds": 12.497533362060436,
+            "positive_hold_fraction": 0.9913905557004957
+          },
+          "strong_rule": {
+            "cost": 2307.4445397369927,
+            "completion": 0.9834190966266438,
+            "wait_seconds": 831.6578044596913,
+            "ride_seconds": 644.12893081761,
+            "mean_executed_hold_seconds": 9.015725561741682,
+            "positive_hold_fraction": 0.4869587897756912
+          },
+          "target_model": {
+            "cost": 2311.4614065180103,
+            "completion": 0.9834190966266438,
+            "wait_seconds": 834.9239565465981,
+            "ride_seconds": 641.6134934248141,
+            "mean_executed_hold_seconds": 9.828028445016178,
+            "positive_hold_fraction": 0.8038090268719019
+          },
+          "cross_city": {
+            "cost": 2313.8684962835905,
+            "completion": 0.9834190966266438,
+            "wait_seconds": 836.1452258433391,
+            "ride_seconds": 641.5780445969125,
+            "mean_executed_hold_seconds": 10.206120397663291,
+            "positive_hold_fraction": 0.8228541612314114
+          },
+          "target_only": {
+            "cost": 2309.6846769582617,
+            "completion": 0.9839908519153803,
+            "wait_seconds": 831.0694682675814,
+            "ride_seconds": 647.5457404230989,
+            "mean_executed_hold_seconds": 11.072172902186338,
+            "positive_hold_fraction": 0.735263432446531
+          }
+        }
+      },
+      {
+        "seed": 75102,
+        "case": 1,
+        "actual": {
+          "cost": 2331.3417196571745,
+          "completion": 0.9828587226983688,
+          "wait_seconds": 840.3035664915676,
+          "ride_seconds": 650.7345866740393,
+          "mean_executed_hold_seconds": 12.51823470242926,
+          "positive_hold_fraction": 0.9736498825984868
+        },
+        "references": {
+          "full_source_model": {
+            "cost": 2347.685374619851,
+            "completion": 0.9825822504838264,
+            "wait_seconds": 848.1039535526679,
+            "ride_seconds": 651.4774675145148,
+            "mean_executed_hold_seconds": 12.716789596484467,
+            "positive_hold_fraction": 0.9924341247064962
+          },
+          "strong_rule": {
+            "cost": 2317.6582803428255,
+            "completion": 0.9825822504838264,
+            "wait_seconds": 838.7448161459773,
+            "ride_seconds": 640.1686480508708,
+            "mean_executed_hold_seconds": 9.127895911275454,
+            "positive_hold_fraction": 0.4831724497782416
+          },
+          "target_model": {
+            "cost": 2312.9187171689246,
+            "completion": 0.9825822504838264,
+            "wait_seconds": 837.74923970141,
+            "ride_seconds": 637.4202377661045,
+            "mean_executed_hold_seconds": 9.905058684779496,
+            "positive_hold_fraction": 0.813983824680407
+          },
+          "cross_city": {
+            "cost": 2332.99695880564,
+            "completion": 0.9823057782692839,
+            "wait_seconds": 846.5170030411944,
+            "ride_seconds": 639.9629527232513,
+            "mean_executed_hold_seconds": 10.380423340199044,
+            "positive_hold_fraction": 0.8262457605009131
+          },
+          "target_only": {
+            "cost": 2347.8675698092343,
+            "completion": 0.9823057782692839,
+            "wait_seconds": 851.5479679292231,
+            "ride_seconds": 644.771633950788,
+            "mean_executed_hold_seconds": 11.31362422041939,
+            "positive_hold_fraction": 0.7388468562483694
+          }
+        }
+      },
+      {
+        "seed": 75102,
+        "case": 2,
+        "actual": {
+          "cost": 2334.696650982563,
+          "completion": 0.9839468585662884,
+          "wait_seconds": 839.3362856352062,
+          "ride_seconds": 656.0240797121505,
+          "mean_executed_hold_seconds": 12.426641715797318,
+          "positive_hold_fraction": 0.9744525547445255
+        },
+        "references": {
+          "full_source_model": {
+            "cost": 2330.653750345973,
+            "completion": 0.9839468585662884,
+            "wait_seconds": 837.2615554940493,
+            "ride_seconds": 656.1306393578743,
+            "mean_executed_hold_seconds": 12.570046297514402,
+            "positive_hold_fraction": 0.9921793534932221
+          },
+          "strong_rule": {
+            "cost": 2331.276778300581,
+            "completion": 0.9836700802657071,
+            "wait_seconds": 841.5831718793247,
+            "ride_seconds": 648.1104345419319,
+            "mean_executed_hold_seconds": 9.265445788255946,
+            "positive_hold_fraction": 0.4760166840458811
+          },
+          "target_model": {
+            "cost": 2337.035150844174,
+            "completion": 0.9836700802657071,
+            "wait_seconds": 844.6869637420426,
+            "ride_seconds": 647.6612233600886,
+            "mean_executed_hold_seconds": 9.940763050902001,
+            "positive_hold_fraction": 0.8102189781021898
+          },
+          "cross_city": {
+            "cost": 2333.447273733739,
+            "completion": 0.9836700802657071,
+            "wait_seconds": 843.8344865762524,
+            "ride_seconds": 645.7783005812345,
+            "mean_executed_hold_seconds": 10.3729784579732,
+            "positive_hold_fraction": 0.8211678832116789
+          },
+          "target_only": {
+            "cost": 2325.220869083864,
+            "completion": 0.9839468585662884,
+            "wait_seconds": 836.5103791862718,
+            "ride_seconds": 652.2001107113202,
+            "mean_executed_hold_seconds": 11.282528402658647,
+            "positive_hold_fraction": 0.7380083420229405
+          }
+        }
+      },
+      {
+        "seed": 75103,
+        "case": 0,
+        "actual": {
+          "cost": 2319.1489422527156,
+          "completion": 0.9834190966266438,
+          "wait_seconds": 836.6363636363636,
+          "ride_seconds": 645.8762149799886,
+          "mean_executed_hold_seconds": 11.458175561398836,
+          "positive_hold_fraction": 0.9496477954604748
+        },
+        "references": {
+          "full_source_model": {
+            "cost": 2325.844768439108,
+            "completion": 0.983704974271012,
+            "wait_seconds": 835.7441395082905,
+            "ride_seconds": 654.3564894225271,
+            "mean_executed_hold_seconds": 12.739194509474876,
+            "positive_hold_fraction": 0.9637359770414818
+          },
+          "strong_rule": {
+            "cost": 2307.4445397369927,
+            "completion": 0.9834190966266438,
+            "wait_seconds": 831.6578044596913,
+            "ride_seconds": 644.12893081761,
+            "mean_executed_hold_seconds": 9.015725561741682,
+            "positive_hold_fraction": 0.4869587897756912
+          },
+          "target_model": {
+            "cost": 2315.4725557461406,
+            "completion": 0.9839908519153803,
+            "wait_seconds": 829.1878216123499,
+            "ride_seconds": 657.0969125214408,
+            "mean_executed_hold_seconds": 11.805172529352449,
+            "positive_hold_fraction": 0.7375423949908688
+          },
+          "cross_city": {
+            "cost": 2314.7315608919384,
+            "completion": 0.9834190966266438,
+            "wait_seconds": 837.1060606060606,
+            "ride_seconds": 640.5194396798171,
+            "mean_executed_hold_seconds": 10.953125206330945,
+            "positive_hold_fraction": 0.9890453834115805
+          },
+          "target_only": {
+            "cost": 2306.5408805031448,
+            "completion": 0.9839908519153803,
+            "wait_seconds": 826.7115494568325,
+            "ride_seconds": 653.1177815894797,
+            "mean_executed_hold_seconds": 12.04655954075407,
+            "positive_hold_fraction": 0.8596765779864372
+          }
+        }
+      },
+      {
+        "seed": 75103,
+        "case": 1,
+        "actual": {
+          "cost": 2347.599944705557,
+          "completion": 0.9823057782692839,
+          "wait_seconds": 849.8913464196849,
+          "ride_seconds": 647.8172518661875,
+          "mean_executed_hold_seconds": 11.671438884927932,
+          "positive_hold_fraction": 0.9478215496999739
+        },
+        "references": {
+          "full_source_model": {
+            "cost": 2346.9308819463645,
+            "completion": 0.9825822504838264,
+            "wait_seconds": 845.8960464473321,
+            "ride_seconds": 655.1387890517003,
+            "mean_executed_hold_seconds": 13.044244226077005,
+            "positive_hold_fraction": 0.9723454213409862
+          },
+          "strong_rule": {
+            "cost": 2317.6582803428255,
+            "completion": 0.9825822504838264,
+            "wait_seconds": 838.7448161459773,
+            "ride_seconds": 640.1686480508708,
+            "mean_executed_hold_seconds": 9.127895911275454,
+            "positive_hold_fraction": 0.4831724497782416
+          },
+          "target_model": {
+            "cost": 2335.5175559856234,
+            "completion": 0.9825822504838264,
+            "wait_seconds": 840.1810893005253,
+            "ride_seconds": 655.1553773845728,
+            "mean_executed_hold_seconds": 12.023254615284586,
+            "positive_hold_fraction": 0.7448473780328724
+          },
+          "cross_city": {
+            "cost": 2317.201271772187,
+            "completion": 0.9825822504838264,
+            "wait_seconds": 838.9839646115565,
+            "ride_seconds": 639.2333425490738,
+            "mean_executed_hold_seconds": 11.143823870068706,
+            "positive_hold_fraction": 0.990086094442995
+          },
+          "target_only": {
+            "cost": 2344.6552391484656,
+            "completion": 0.9825822504838264,
+            "wait_seconds": 845.8288636991982,
+            "ride_seconds": 652.9975117500691,
+            "mean_executed_hold_seconds": 12.209267993866542,
+            "positive_hold_fraction": 0.8612053222019306
+          }
+        }
+      },
+      {
+        "seed": 75103,
+        "case": 2,
+        "actual": {
+          "cost": 2333.787157486853,
+          "completion": 0.9839468585662884,
+          "wait_seconds": 840.3077774702464,
+          "ride_seconds": 653.1716025463604,
+          "mean_executed_hold_seconds": 11.616147932655744,
+          "positive_hold_fraction": 0.950208550573514
+        },
+        "references": {
+          "full_source_model": {
+            "cost": 2332.6983116523666,
+            "completion": 0.9839468585662884,
+            "wait_seconds": 836.364240243565,
+            "ride_seconds": 659.9698311652367,
+            "mean_executed_hold_seconds": 12.929076289049155,
+            "positive_hold_fraction": 0.9700208550573514
+          },
+          "strong_rule": {
+            "cost": 2331.276778300581,
+            "completion": 0.9836700802657071,
+            "wait_seconds": 841.5831718793247,
+            "ride_seconds": 648.1104345419319,
+            "mean_executed_hold_seconds": 9.265445788255946,
+            "positive_hold_fraction": 0.4760166840458811
+          },
+          "target_model": {
+            "cost": 2342.7987821754773,
+            "completion": 0.9839468585662884,
+            "wait_seconds": 840.39523941323,
+            "ride_seconds": 662.0083033490174,
+            "mean_executed_hold_seconds": 11.938950402920062,
+            "positive_hold_fraction": 0.7389830508474576
+          },
+          "cross_city": {
+            "cost": 2321.2432881262107,
+            "completion": 0.9839468585662884,
+            "wait_seconds": 837.761417104899,
+            "ride_seconds": 645.7204539164129,
+            "mean_executed_hold_seconds": 11.082103053490487,
+            "positive_hold_fraction": 0.9893117831074035
+          },
+          "target_only": {
+            "cost": 2336.142540824799,
+            "completion": 0.9839468585662884,
+            "wait_seconds": 839.0880154995848,
+            "ride_seconds": 657.9665098256297,
+            "mean_executed_hold_seconds": 12.133231616672978,
+            "positive_hold_fraction": 0.8610169491525423
+          }
+        }
+      }
+    ],
+    "interpretation": "Executed holding and equal-weight case/seed costs; previously analyzed fixed demand cases. Admission is interface-only."
+  }
+}

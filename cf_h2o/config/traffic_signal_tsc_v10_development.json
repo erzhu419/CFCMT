@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "protocol": "network-anchor-generalized-source-rule-cache-strict-leave-one-city-out-v14",
+  "expected_sumo_version": "1.22.0",
+  "counterfactual_cache_version": "v13-least-covered-focal-two-pass-hash-deterministic-20260803-1",
+  "manifest": "cf_h2o/config/traffic_signal_cross_city_v1.json",
+  "counterfactual": {
+    "source_seeds": [2027, 3037, 4047],
+    "source_duration_sec": 600.0,
+    "control_interval_sec": 10,
+    "warmup_sec": 60.0,
+    "max_focal_tls": 4,
+    "horizon_intervals": 6,
+    "collection_shards": 16,
+    "behavior_policy": "phase_pressure",
+    "min_tls_coverage": 1.0
+  },
+  "cache_assignments": {
+    "node001": ["manhattan_28x7"],
+    "node002": ["grid4x4", "arterial4x4", "atlanta_1x5"],
+    "node003": ["cologne1", "cologne3", "cologne8"],
+    "node004": ["ingolstadt1", "ingolstadt7", "ingolstadt21"],
+    "node005": ["hangzhou_4x4", "hangzhou_4x4_hetero"],
+    "node006": ["hangzhou_bc_tyc", "hangzhou_kn_hz", "hangzhou_qc_yn", "hangzhou_sb_sx"]
+  },
+  "development": {
+    "evaluation_seeds": [131, 337, 911],
+    "evaluation_duration_sec": 600.0,
+    "source_policy_seeds": [1709, 2027],
+    "source_rule_grid": "generalized",
+    "source_selector_min_context_domains": 5,
+    "target_group_budgets": [0, 8, 16, 32, 60, 120],
+    "target_calibration_seeds": [4047],
+    "target_calibration_fraction": 0.4,
+    "min_target_calibration_groups": 4,
+    "target_guard_selection_mode": "strict_worst_domain",
+    "target_closed_loop_selection_seeds": [],
+    "policies": [
+      "fixed_program",
+      "max_pressure",
+      "phase_pressure",
+      "spillback_pressure",
+      "selected_source_prior",
+      "simulator_contrast_guard",
+      "dense_contrast_guard",
+      "causal_core_advantage_contrast_mpc",
+      "causal_core_advantage_contrast_regularized",
+      "causal_core_advantage_contrast_guard",
+      "cfcmt_mechanism_contrast_mpc",
+      "cfcmt_mechanism_contrast_regularized",
+      "cfcmt_mechanism_contrast_guard",
+      "causal_target_adapter_contrast_guard",
+      "causal_target_only_contrast_guard"
+    ]
+  },
+  "cluster": {
+    "nodes": ["node001", "node002", "node003", "node004", "node005", "node006"],
+    "workers_per_job": 96,
+    "cpu_cores_per_job": 100,
+    "ram_mb_per_job": 65536
+  }
+}

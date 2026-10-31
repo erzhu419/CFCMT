@@ -1,0 +1,296 @@
+{
+  "status": "complete; all six tasks DONE, all18 evaluations paired and collected",
+  "formal_tasks": [
+    "t124972",
+    "t124973",
+    "t124974",
+    "t124975",
+    "t124976",
+    "t124977"
+  ],
+  "expected_evaluations": 18,
+  "branches": [
+    "source_adapted",
+    "target_adapted"
+  ],
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "horizon_seconds": 24000,
+  "checkpoint_count": 6,
+  "new_training_updates": 0,
+  "world_model_refit_updates": 0,
+  "source_action_contract": "Source original actions are directly executed physical holding; target actions also label physical execution after its state-dependent guard. Existing labels need no rewriting for this execution-space intervention.",
+  "projection_admission": {
+    "fit_labels_max_action_error": 0.0,
+    "fit_labels_changed_rows": 0,
+    "idempotence_max_action_error": 0.0,
+    "formerly_shrunk_rows_preserved": 2010
+  },
+  "intervention": "Only the learned actor deployment mapping changes: project desired execution onto the original guard reachable interval, retaining floors and state-dependent maxima. Rule and zero references retain their original proposal mapping.",
+  "fixed_references": [
+    "same-checkpoint original mapping",
+    "strong rule",
+    "zero autonomous proposals"
+  ],
+  "next_step": {
+    "kind": "Prospective generated-demand confirmation of the fixed interface",
+    "design": "Fix execution projection and all six existing actors. Predefine three unused demand/SUMO realizations on the same corridor timetable, then evaluate source9/local9/rule3=21 cases without training.",
+    "purpose": "Check whether the source-initialization benefit and rule comparison persist beyond the repeatedly analyzed old cases, separately.",
+    "selection": "Keep all seeds and cases; no checkpoint, threshold, floor, parameter or city selection.",
+    "submitted": true,
+    "status": "complete; fresh demand confirmation collected",
+    "protocol": "fresh_confirmation_protocol.json",
+    "formal_tasks": [
+      "t124988",
+      "t124989",
+      "t124990",
+      "t124991",
+      "t124992",
+      "t124993",
+      "t124994"
+    ],
+    "results": "fresh_confirmation_reporting.json"
+  },
+  "limitations": [
+    "This tests the deployment-interface correction for already fitted55k IQL actors, without retraining. It does not by itself repair SAC/model continuation Q/WM queries or TD backups.",
+    "The original reachable action range is retained, but the learned mapping within that range changes.",
+    "Three previously analyzed generated target demand cases are a diagnostic, not prospective or broad cross-city confirmation."
+  ],
+  "provenance": {
+    "protocol": "executed_action_eval_protocol.json",
+    "source_audit": "source_action_contract_audit.json",
+    "target_audit": "action_semantics_audit.json",
+    "local_downloads": "Small JSON and code excerpts only",
+    "large_remote_files_downloaded": false,
+    "mutable_thesis_accessed": false,
+    "summary": "executed_action_eval_summary.json",
+    "downloaded_summary_bytes": 30941,
+    "independent_recalculation": "All18 results and seed/case comparison counts independently recomputed and matched."
+  },
+  "complete": true,
+  "all_seed_case": {
+    "source_adapted": {
+      "actual": {
+        "cost": 2317.3908973117454,
+        "completion": 0.9832566523654184,
+        "wait_seconds": 837.8611232372828,
+        "ride_seconds": 641.6686508371804,
+        "mean_executed_hold_seconds": 8.377714059717514,
+        "positive_hold_fraction": 0.17964035451238825
+      },
+      "references": {
+        "original": {
+          "cost": 2318.620490559514,
+          "completion": 0.9831941690477617,
+          "wait_seconds": 838.411427704491,
+          "ride_seconds": 641.7976351505326,
+          "mean_executed_hold_seconds": 8.349061383454758,
+          "positive_hold_fraction": 0.1792638275126162
+        },
+        "rule": {
+          "cost": 2318.793199460133,
+          "completion": 0.9832238091253925,
+          "wait_seconds": 837.3285974949977,
+          "ride_seconds": 644.1360044701374,
+          "mean_executed_hold_seconds": 9.136355753757693,
+          "positive_hold_fraction": 0.48204930786660455
+        },
+        "zero": {
+          "cost": 2326.1304157021054,
+          "completion": 0.9830394943156975,
+          "wait_seconds": 842.7707862490183,
+          "ride_seconds": 640.5888432040688,
+          "mean_executed_hold_seconds": 7.9909279923931145,
+          "positive_hold_fraction": 0.13318213320655187
+        }
+      },
+      "differences": {
+        "original": {
+          "cost": -1.229593247768662,
+          "completion": 6.24833176566808e-05,
+          "wait_seconds": -0.5503044672082069,
+          "ride_seconds": -0.12898431335224814,
+          "mean_executed_hold_seconds": 0.02865267626275525,
+          "positive_hold_fraction": 0.00037652699977205883
+        },
+        "rule": {
+          "cost": -1.4023021483876619,
+          "completion": 3.284324002583716e-05,
+          "wait_seconds": 0.5325257422850882,
+          "ride_seconds": -2.4673536329570425,
+          "mean_executed_hold_seconds": -0.758641694040179,
+          "positive_hold_fraction": -0.3024089533542163
+        },
+        "zero": {
+          "cost": -8.73951839035999,
+          "completion": 0.00021715804972088915,
+          "wait_seconds": -4.909663011735574,
+          "ride_seconds": 1.0798076331116135,
+          "mean_executed_hold_seconds": 0.38678606732439924,
+          "positive_hold_fraction": 0.04645822130583638
+        }
+      },
+      "better_cases": {
+        "original": 4,
+        "rule": 4,
+        "zero": 7
+      },
+      "by_seed": {
+        "75101": {
+          "cost": 2319.534812627122,
+          "cost_minus_original": -3.11820885637826
+        },
+        "75102": {
+          "cost": 2307.6011314888733,
+          "cost_minus_original": -5.7076541504114475
+        },
+        "75103": {
+          "cost": 2325.0367478192416,
+          "cost_minus_original": 5.137083263483116
+        }
+      },
+      "cost_percent_changes": {
+        "original": -0.053031242187976384,
+        "rule": -0.060475515829274865,
+        "zero": -0.3757105934974891
+      },
+      "by_seed_cost_minus_rule": {
+        "75101": 0.7416131669888273,
+        "75102": -11.192067971259803,
+        "75103": 6.243548359108445
+      },
+      "better_seed_means": {
+        "original": 2,
+        "rule": 1,
+        "zero": 3
+      }
+    },
+    "target_adapted": {
+      "actual": {
+        "cost": 2323.4818518393513,
+        "completion": 0.9830702134506466,
+        "wait_seconds": 841.5271833014402,
+        "ride_seconds": 640.4274852364708,
+        "mean_executed_hold_seconds": 8.150631960467217,
+        "positive_hold_fraction": 0.2080324069149417
+      },
+      "references": {
+        "original": {
+          "cost": 2321.900181364894,
+          "completion": 0.9831009325855958,
+          "wait_seconds": 840.5893796106031,
+          "ride_seconds": 640.7214221436877,
+          "mean_executed_hold_seconds": 8.029173989671209,
+          "positive_hold_fraction": 0.20666956160329328
+        },
+        "rule": {
+          "cost": 2318.793199460133,
+          "completion": 0.9832238091253925,
+          "wait_seconds": 837.3285974949977,
+          "ride_seconds": 644.1360044701374,
+          "mean_executed_hold_seconds": 9.136355753757693,
+          "positive_hold_fraction": 0.48204930786660455
+        },
+        "zero": {
+          "cost": 2326.1304157021054,
+          "completion": 0.9830394943156975,
+          "wait_seconds": 842.7707862490183,
+          "ride_seconds": 640.5888432040688,
+          "mean_executed_hold_seconds": 7.9909279923931145,
+          "positive_hold_fraction": 0.13318213320655187
+        }
+      },
+      "differences": {
+        "original": {
+          "cost": 1.5816704744574963,
+          "completion": -3.071913494923084e-05,
+          "wait_seconds": 0.9378036908370859,
+          "ride_seconds": -0.2939369072169029,
+          "mean_executed_hold_seconds": 0.1214579707960084,
+          "positive_hold_fraction": 0.0013628453116484307
+        },
+        "rule": {
+          "cost": 4.688652379218183,
+          "completion": -0.00015359567474593216,
+          "wait_seconds": 4.198585806442566,
+          "ride_seconds": -3.708519233666607,
+          "mean_executed_hold_seconds": -0.9857237932904752,
+          "positive_hold_fraction": -0.27401690095166287
+        },
+        "zero": {
+          "cost": -2.648563862754145,
+          "completion": 3.071913494911982e-05,
+          "wait_seconds": -1.243602947578097,
+          "ride_seconds": -0.16135796759795085,
+          "mean_executed_hold_seconds": 0.15970396807410303,
+          "positive_hold_fraction": 0.07485027370838984
+        }
+      },
+      "better_cases": {
+        "original": 3,
+        "rule": 3,
+        "zero": 8
+      },
+      "by_seed": {
+        "75101": {
+          "cost": 2324.1782298469384,
+          "cost_minus_original": 3.086105310843019
+        },
+        "75102": {
+          "cost": 2323.9973438352176,
+          "cost_minus_original": -0.2950341301439039
+        },
+        "75103": {
+          "cost": 2322.269981835898,
+          "cost_minus_original": 1.9539402426729187
+        }
+      },
+      "cost_percent_changes": {
+        "original": 0.06811965850865025,
+        "rule": 0.20220226539864816,
+        "zero": -0.11386136584928828
+      },
+      "by_seed_cost_minus_rule": {
+        "75101": 5.385030386805283,
+        "75102": 5.204144375084525,
+        "75103": 3.476782375764742
+      },
+      "better_seed_means": {
+        "original": 1,
+        "rule": 0,
+        "zero": 3
+      }
+    }
+  },
+  "source_minus_target": {
+    "cost": -6.090954527605845,
+    "completion": 0.00018643891477176933,
+    "wait_seconds": -3.6660600641574774,
+    "ride_seconds": 1.2411656007095644,
+    "mean_executed_hold_seconds": 0.2270820992502962,
+    "positive_hold_fraction": -0.028392052402553464
+  },
+  "action_changes": {
+    "source_adapted": {
+      "events": 34508,
+      "changed_events": 827,
+      "changed_fraction": 0.023965457285267184,
+      "interpretation": "Old mapping replay on the new closed-loop trajectory states; not an old-policy counterfactual performance result."
+    },
+    "target_adapted": {
+      "events": 34509,
+      "changed_events": 2356,
+      "changed_fraction": 0.06827204497377495,
+      "interpretation": "Old mapping replay on the new closed-loop trajectory states; not an old-policy counterfactual performance result."
+    }
+  },
+  "source_vs_target": {
+    "cost_seconds": -6.090954527605845,
+    "better_seed_means": 2,
+    "better_case_pairs": 6
+  },
+  "conclusion": "Execution-space projection preserves all real fit labels. With fixed checkpoints it lowers source-route mean cost by1.2296 seconds but raises local-route mean cost by1.5817 seconds. Source is1.4023 seconds below the rule on the mean yet only one of three seed means wins; this is neither stable rule superiority nor a full explanation of the prior performance problem."
+}

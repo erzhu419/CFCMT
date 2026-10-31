@@ -1,0 +1,538 @@
+\section{Methods}
+
+\subsection{Problem definition and information budget}
+
+Let $c$ denote a city group, $n$ a network, $g$ a matched action group,
+$s_g$ its complete simulator state and $\mathcal{A}_g$ the feasible green
+stages of the focal signal.  The phase executor constructs this set from
+the original SUMO \texttt{tlLogic} and enforces minimum green, yellow and
+all-red transitions.  The learner requests a feasible stage, which the
+executor translates into the corresponding signal sequence.
+
+The external evaluation uses target offline adaptation.  Available
+information comprises (i) a frozen source counterfactual bank, (ii) target
+network, demand and signal files, (iii) target counterfactual action groups
+from an uncalibrated SUMO model, and (iv) target state observed during
+deployment.  The simulator parameters are not calibrated against target field
+data, but item (iii) provides labelled target transitions before deployment.
+The experiment therefore evaluates target offline adaptation rather than
+zero-shot transfer.  Passive traffic observations without action outcomes
+would provide a weaker information budget than the one evaluated here.
+
+\subsection{Matched counterfactual action groups}
+\label{sec:methods-matched-groups}
+
+After a 60-s warm-up, we save the complete SUMO simulation and all
+signal-executor states.  Each focal action $a\in\mathcal{A}_g$ starts from
+the same exactly restored state and is applied for one 10-s control interval.
+The focal signal then follows PhasePressure for five additional intervals.
+All other signals follow PhasePressure throughout the branch.  Candidate cost
+is the mean number of active or pending vehicles per controlled lane over
+60 one-second samples, with lower values preferred:
+\begin{equation}
+ Y_g(a)=\frac{1}{H}\sum_{\tau=1}^{H}
+ \frac{N_{\mathrm{active}}(\tau)+N_{\mathrm{pending}}(\tau)}{L_n},
+ \qquad H=60.
+ \label{eq:counterfactual-cost}
+\end{equation}
+Here $\tau\in\{1,\ldots,H\}$ indexes one-second samples,
+$N_{\mathrm{active}}(\tau)$ and $N_{\mathrm{pending}}(\tau)$ are the active
+and insertion-pending vehicle counts, respectively, and $L_n$ is the number
+of controlled lanes in network $n$.  Thus \Cref{eq:counterfactual-cost} uses a
+dimensionless sample count as its summation limit.  Including pending vehicles
+prevents a phase from being rewarded for delaying insertion.  The branch collector uses
+\texttt{libsumo}, checks replay determinism, fails on teleports, and censors an
+entire matched group when any branch has a junction collision.  Group-level
+censoring preserves each retained group's complete candidate set.
+
+A generalized pressure policy $\pi_r$, selected using source-only closed-loop
+cost, supplies one reference action $r_g=\pi_r(s_g)$.  For the frozen external
+models, its specification is \texttt{gp\_d0\_o0p02\_s0}.  Let
+$Q_{0.75}(\cdot)$ denote the empirical 75th percentile.  The implementation
+uses the numerical floor $\eta_g$, within-group scale $\sigma_g$ and normalized
+contrast $z_g(a)$ defined jointly by
+\begin{equation}
+\begin{aligned}
+ \eta_g &= \max\!\left\{10^{-8},
+     10^{-6}Q_{0.75}\bigl(\{|Y_g(a)|:a\in\mathcal A_g\}\bigr)\right\},\\
+ \sigma_g &= \max\!\left\{
+      \max_{a\in\mathcal A_g}Y_g(a)-\min_{a\in\mathcal A_g}Y_g(a),
+      \eta_g\right\},\\
+ z_g(a) &= \frac{Y_g(a)-Y_g(r_g)}{\sigma_g}.
+\end{aligned}
+\label{eq:normalized-contrast}
+\end{equation}
+The reference has $z_g(r_g)=0$.  For a selected action $\widehat a_g$,
+evaluation uses the normalized action regret in
+\begin{equation}
+ \operatorname{Reg}_g(\widehat a_g)
+ =\frac{Y_g(\widehat a_g)-\min_{a\in\mathcal{A}_g}Y_g(a)}{\sigma_g}.
+ \label{eq:action-regret}
+\end{equation}
+All reported offline regret values use \Cref{eq:action-regret}.
+
+\begin{assumption}[action-common domain error]
+\label{ass:action-common-error}
+At one restored state, the candidate cost admits the decomposition
+\begin{equation}
+ Y_g(a)=b_g+q_g(a)+e_g(a),
+ \label{eq:additive-nuisance}
+\end{equation}
+where $b_g$ is a state-specific term shared by every candidate, $q_g(a)$ is
+the action-dependent component intended to transfer, and $e_g(a)$ is the
+remaining action-dependent error.
+\end{assumption}
+
+\begin{proposition}[action-common cancellation and rank invariance]
+\label{prop:exact-cancellation}
+Under \Cref{ass:action-common-error}, $b_g$ cancels exactly from every
+candidate-versus-reference numerator.  Adding any state-specific constant to
+all candidate outcomes leaves the action ordering and regret minimizer
+unchanged.  It also leaves the numerical values of $z_g(a)$ unchanged whenever
+the within-group range, rather than the relative floor $\eta_g$, determines
+$\sigma_g$.
+\end{proposition}
+\begin{proof}
+For any $a\in\mathcal A_g$, subtracting the reference outcome in
+\Cref{eq:additive-nuisance} gives
+$Y_g(a)-Y_g(r_g)=q_g(a)-q_g(r_g)+e_g(a)-e_g(r_g)$, so $b_g$ cancels.  A common
+additive constant cancels from every difference and does not change the raw
+within-group range.  Because $\sigma_g>0$, any change in its numerical floor
+rescales all contrasts by the same positive factor and cannot change their
+ordering.  If the range is the active term in \Cref{eq:normalized-contrast},
+$\sigma_g$ itself is unchanged, which also preserves every normalized value.
+\end{proof}
+
+This proposition motivates the estimand but does not remove action-dependent
+simulator error.  Exact state restoration is therefore a protocol requirement,
+not merely a variance-reduction device.
+
+\subsection{Parent-restricted rigid anchor}
+
+Let $\theta$ denote the fitted anchor parameters and define
+$A_g(a):=A_\theta(s_g,a)$.  The anchor directly regresses $z_g(a)$ for
+non-reference candidates and assigns zero to the reference.  Its 29 declared parents comprise
+local total queue, vehicle count, speed and occupancy; candidate and reference
+green/red queue; downstream queue and occupancy; service and red pressure;
+switch and clearance indicators; and current-phase overlap.  City identifiers,
+static target context and unrestricted graph embeddings are excluded from the
+direct predictor.  The parent set encodes a predefined modelling hypothesis
+about local action mechanisms rather than a structure inferred from field
+observations.
+
+The estimator is a \texttt{HistGradientBoostingRegressor} with 100 boosting
+iterations, at most 15 leaves, minimum leaf size 12 and $\ell_2$ regularization
+10.  Each city domain receives equal total weight, each matched action group
+receives equal weight within a domain, and negative versus non-negative
+candidate contrasts are reweighted so the dominant sign does not determine
+the fit.  Targets are normalized independently by $\sigma_g$.  The action-level
+anchor uncertainty $u_{A,g}(a)$ is calibrated from the 90th-percentile absolute
+residual on source leave-one-domain predictions.
+
+\subsection{Antisymmetric all-action correction}
+\label{sec:methods-pairwise}
+
+The correction model uses every unordered pair $\{a_i,a_j\}\subset
+\mathcal{A}_g$, with $i\ne j$ indexing candidate actions.  Let $x_g$ contain
+23 action-common state parents and $\phi_g(a)$ contain 40 phase-local action
+parents.  With square brackets denoting vector concatenation, the training
+design $d_{gij}$ and normalized pair target $t_{gij}$ are
+\begin{equation}
+ d_{gij}=\left[x_g,\,\phi_g(a_i)-\phi_g(a_j)\right],\qquad
+ t_{gij}=\frac{Y_g(a_i)-Y_g(a_j)}{\sigma_g}.
+ \label{eq:pair-design}
+\end{equation}
+Every row defined in \Cref{eq:pair-design} is augmented by its reverse
+$(d_{gji},-t_{gij})$.  Let $\psi$ denote the fitted pairwise-model parameters.
+At prediction, the regressor $f_\psi$ is explicitly antisymmetrized,
+\begin{equation}
+ \widehat\delta_{gij}=\tfrac{1}{2}\left[
+ f_\psi(x_g,\phi_g(a_i)-\phi_g(a_j))
+ -f_\psi(x_g,\phi_g(a_j)-\phi_g(a_i))\right],
+ \label{eq:antisymmetry}
+\end{equation}
+and converted first to the unshifted all-pair score $\widetilde P_g$ and then
+to the reference-shifted score $P_g(a):=P_\psi(s_g,a)$:
+\begin{equation}
+\begin{aligned}
+ \widetilde P_g(a_i)&=\frac{1}{K_g-1}
+       \sum_{j\neq i}\widehat\delta_{gij},
+ &K_g&=|\mathcal{A}_g|,\\
+ P_g(a_i)&=\widetilde P_g(a_i)-\widetilde P_g(r_g).
+\end{aligned}
+ \label{eq:borda-score}
+\end{equation}
+Thus $P_g(r_g)=0$.  Pair-cycle inconsistency augments the 90th-percentile
+residual in the action-level pairwise uncertainty $u_{P,g}(a)$.
+
+\begin{proposition}[antisymmetry and ranking recovery]
+\label{prop:pairwise-recovery}
+\Cref{eq:antisymmetry} gives
+$\widehat\delta_{gji}=-\widehat\delta_{gij}$.  If
+$\widehat\delta_{gij}=z_g(a_i)-z_g(a_j)$ for every pair, then
+\begin{equation}
+\begin{aligned}
+ \widetilde P_g(a_i)&=\frac{K_g}{K_g-1}
+ \left[z_g(a_i)-\overline z_g\right],\\
+ P_g(a_i)&=\frac{K_g}{K_g-1}
+ \left[z_g(a_i)-z_g(r_g)\right].
+\end{aligned}
+ \label{eq:pairwise-recovery}
+\end{equation}
+Here $\overline z_g=K_g^{-1}\sum_{a\in\mathcal A_g}z_g(a)$.  The positive
+scale preserves $\arg\min_a z_g(a)$.
+\end{proposition}
+\begin{proof}
+Swapping $i$ and $j$ in \Cref{eq:antisymmetry} negates the expression.  Under
+the stated exact-pair condition, summing in \Cref{eq:borda-score} yields
+\Cref{eq:pairwise-recovery}; subtracting a common mean and multiplying by a
+positive constant cannot change the minimizer.
+\end{proof}
+
+The pairwise model uses the same gradient-boosting family as the anchor.  Its
+state parents comprise local aggregate state, time, queue concentration and
+signal-graph neighbourhood summaries; its action parents include phase
+duration, queue, occupancy, downstream load, service pressure, transition and
+graph-action summaries.  Context values are used only to calibrate support and
+uncertainty and are excluded from the direct prediction features.
+
+\subsection{Anchored interpolation and local cap}
+\label{sec:methods-blend}
+
+For one action group, the deployed score is
+\begin{equation}
+ S_g(a)=(1-\alpha_g)A_g(a)+\alpha_gP_g(a),
+ \qquad 0\leq\alpha_g\leq1.
+ \label{eq:anchored-blend}
+\end{equation}
+Candidate selectors include constant choices
+$\alpha_g\in\{0,0.1,\ldots,1\}$ and local confidence-capped weights.  For the
+local form, for any action-indexed vector $v_g$ define
+$\operatorname{range}(v_g)=\max_{a\in\mathcal A_g}v_g(a)-
+\min_{a\in\mathcal A_g}v_g(a)$.  Let
+\begin{equation}
+\begin{aligned}
+ a_{A,g}&=\arg\min_{a\in\mathcal A_g}A_g(a),
+ &a_{P,g}&=\arg\min_{a\in\mathcal A_g}P_g(a),\\
+ h_g &= \max\{\operatorname{range}(A_g),
+                  \operatorname{median}_{a}u_{A,g}(a),10^{-6}\},\\
+ D_g &= \operatorname{range}(P_g-A_g)/h_g,\\
+ M_g &= \max\{P_g(a_{A,g})-P_g(a_{P,g}),0\}/h_g,\\
+ U_g &= \{u_{P,g}(a_{A,g})+u_{P,g}(a_{P,g})\}/h_g.
+\end{aligned}
+\label{eq:local-diagnostics}
+\end{equation}
+Here $h_g$ is the local score scale, $D_g$ the normalized score disagreement,
+$M_g$ the pairwise preference margin and $U_g$ its uncertainty sum.  With
+perturbation cap $\kappa$ and confidence multiplier $\zeta$, the diagnostics
+in \Cref{eq:local-diagnostics} determine the local weight
+\begin{equation}
+ \alpha_g=\min\{1,\kappa/\max(D_g,10^{-12})\}
+           \mathbf{1}\{M_g\geq\zeta U_g\},
+ \label{eq:local-alpha}
+\end{equation}
+where $\mathbf{1}\{\cdot\}$ is the indicator function.
+
+\begin{proposition}[blend and decision-error bounds]
+\label{prop:blend-bounds}
+For a group-constant $\alpha_g$, if the non-negative constants
+$\varepsilon_A$ and $\varepsilon_P$ bound the anchor and pairwise uniform
+score errors, respectively, so that
+$\|A_g-z_g\|_\infty\leq\varepsilon_A$ and
+$\|P_g-z_g\|_\infty\leq\varepsilon_P$, then
+\begin{equation}
+ \|S_g-z_g\|_\infty
+ \leq(1-\alpha_g)\varepsilon_A+\alpha_g\varepsilon_P.
+ \label{eq:blend-error-bound}
+\end{equation}
+For $\widehat a_g=\arg\min_{a\in\mathcal A_g} S_g(a)$ and
+$a_g^*=\arg\min_{a\in\mathcal A_g} z_g(a)$,
+\begin{equation}
+ z_g(\widehat a_g)-z_g(a_g^*)
+ \leq2\|S_g-z_g\|_\infty.
+ \label{eq:decision-bound}
+\end{equation}
+Here $\|v_g\|_\infty=\max_{a\in\mathcal A_g}|v_g(a)|$.
+\end{proposition}
+\begin{proof}
+The error bound in \Cref{eq:blend-error-bound} follows from convexity of the
+sup norm.  The decision bound in \Cref{eq:decision-bound} follows
+by adding and subtracting $S_g(\widehat a_g)$ and $S_g(a_g^*)$, using the
+minimizing property of $\widehat a_g$, and bounding each remaining discrepancy
+by $\|S_g-z_g\|_\infty$.
+\end{proof}
+These are deterministic conditional bounds, not guarantees that either fitted
+error is small in a new city.
+
+\begin{corollary}[bounded local perturbation]
+\label{cor:bounded-local-perturbation}
+Whenever the confidence indicator in \Cref{eq:local-alpha} passes,
+\begin{equation}
+ \operatorname{range}(S_g-A_g)
+ =\alpha_g\operatorname{range}(P_g-A_g)\leq \kappa h_g.
+ \label{eq:cap-bound}
+\end{equation}
+When it fails, $S_g=A_g$.  Thus \Cref{eq:cap-bound} bounds score
+perturbation relative to the anchor, but it is not a queue-stability or safety
+guarantee.
+\end{corollary}
+
+\subsection{Seed-blocked target selection and full refit}
+
+For each external city, we retain all valid groups from adaptation seeds
+5057 and 6067.  In fold one, both models are fitted on the source bank and
+target seed 5057; target seed 6067 evaluates every candidate $\alpha_g$.
+Fold two reverses the target seeds.  An admissible candidate must match or
+improve the anchor's mean OOF regret and regress by at most 0.1 in either
+complete-seed fold.  The selector minimizes mean OOF regret among admissible
+candidates, with deterministic tie breaking.  Los Angeles selects
+$(\kappa,\zeta)=(1,0.25)$ and Jinan selects constant $\alpha_g=0.9$.
+
+After the choice is frozen, the model is fitted once on the source bank plus
+all target adaptation groups: 165 groups for Los Angeles and 911 for Jinan.
+The OOF models are discarded.  CFCMT and the learned baselines share the
+same target group identifiers and full-refit call.  Serialized models are
+reloaded and checked before deployment.  The seed-8171 evaluation cache is required
+to be absent at the joint freeze and the diagnostic-only seed 7079 is
+permanently excluded from V43 selection and confirmation.
+
+\subsection{Closed-loop controller and comparators}
+
+At each 10-s decision time, the runtime enumerates every currently feasible
+phase, evaluates its frozen 60-s action score and requests the phase with the
+minimum deployed score $S_g(a)$.  The phase executor enforces physical
+transition timing.
+No uncertainty guard, pressure fallback or target closed-loop tuning is active
+in the final V43 policy.  The pressure reference is recomputed only to create
+the zero coordinate required by the contrast model.
+
+The same-protocol comparators are fixed time, MaxPressure, PhasePressure,
+simulator-only contrast MPC, the rigid anchor alone and a dense residual.  The
+dense residual receives the same matched action contrasts and refit budget
+but allows unrestricted feature/context mixing in a dense residual world
+model.  It is labelled H2O$^+$-style because it combines a simulator with a
+learned residual.  It does not reproduce the original H2O$^+$ algorithm,
+optimizer or online training loop.  Because both methods use matched action
+contrasts, subtracting the reference action alone cannot explain any CFCMT
+advantage.
+
+Official RESCO and LibSignal controllers retain their upstream state, reward,
+timing and training definitions.  These runs assess execution under the
+native protocols rather than the paired CFCMT comparison.
+
+\subsection{Legacy near-target-only source-contribution test}
+
+The original source-contribution test uses the pre-existing
+\texttt{causal\_target\_only} model family.  This comparator has the same causal
+action-advantage features, target domain and target adaptation groups as the
+corresponding baseline artifact.  It sets prior group strength to zero and the
+maximum target weight to one.  Both external artifacts had more than four
+target groups and selected target weights numerically equal to one.  A source
+submodel is still fitted and retained; its coefficient in the deployed mean,
+uncertainty and trust predictions is zero, but its prior can resolve exact
+action ties.  We therefore designate this frozen arm the legacy near-target-only
+comparator.  Its retained tie-breaking prior distinguishes it from a strict
+zero-source-row estimator.
+
+The first deployment of this frozen comparator, V90, reused the eight V43
+scenario--seed cells and was specified only after the original seven-policy
+outcomes were known.  V90 is therefore post-hoc.  The subsequent V91 protocol
+was frozen before any V91 outcome, with neither model refitted.  A deterministic
+generator produced 64 seeds disjoint from every seed-valued field in V43 and
+V89 and from the two V90 closed-loop seeds.  Four scenarios and two policies
+gave 512 required rollout identities, all of which completed.
+
+For policy $\pi$, city $c$, demand scenario $m$ in the city-specific set
+$\mathcal M_c$ and seed index $k$, let $W^\pi_{c,m,k}$ be the all-departed
+mean waiting time.  With the external city set
+$\mathcal C=\{\text{Los Angeles},\text{Jinan}\}$, the scenario and equal-city
+means are
+\begin{equation}
+ \bar W^{\pi}_{c,k}=|\mathcal M_c|^{-1}
+   \sum_{m\in\mathcal M_c} W^{\pi}_{c,m,k},\qquad
+ \bar W^{\pi}_{k}=|\mathcal C|^{-1}
+   \sum_{c\in\mathcal C} \bar W^{\pi}_{c,k}.
+ \label{eq:waiting-aggregation}
+\end{equation}
+Using the aggregation in \Cref{eq:waiting-aggregation}, the paired relative
+waiting effect is
+\begin{equation}
+ \rho_k=\frac{\bar W^{\mathrm{CFCMT}}_k-
+              \bar W^{\mathrm{legacy}}_k}
+             {\bar W^{\mathrm{legacy}}_k},
+ \label{eq:source-contribution}
+\end{equation}
+where $\pi=\mathrm{legacy}$ denotes the frozen legacy near-target-only
+comparator and negative values favour CFCMT.  The primary estimate is the mean of
+$\rho_k$ over 64 seeds, with 20,000 paired-seed bootstrap replicates.  The
+predeclared joint gate required a non-positive mean and interval upper bound,
+non-positive means in both cities, at most 5\% worst-seed regression, at least
+50\% improved seeds, one-sided exact sign-test probability value
+$p_{\mathrm{sign}}\leq0.05$, no excess
+teleports or collision incidents, all identities and no failed-seed exclusion.
+Failure of any component rejects the source-contribution confirmation.
+
+\subsection{Post-V91 target-offline conditional source selection}
+
+V98 is a separate post-V91 successor and is not part of the frozen V43 method.
+Target models were refitted after repairing topology context, with one candidate
+component for each of seven source-city groups.  Five scenario-and-seed-blocked
+folds evaluated source masses $\{0,0.25,0.5,0.75,1\}$ on a balanced B100 subset
+of target counterfactual groups.  A source component was admitted only when its
+mean normalized-regret improvement exceeded 0.5\%, its one-sided 95\% upper
+confidence bound was below zero and its worst fold regressed by less than 1\%.
+Failure of any gate selected the exact target-only model.  This rule returned
+source mass zero for Los Angeles and Hangzhou source mass one for Jinan before
+the fresh confirmation rollouts were observed.
+
+The strict comparator uses the corrected
+\texttt{causal\_target\_only\_v2} estimator and fits target rows only.  The fresh
+Jinan confirmation used 56 deterministic seeds produced by NumPy's 64-bit
+Permuted Congruential Generator (PCG64), excluded from V93 and the earlier V98
+confirmation.  Three
+demand scenarios and two policies gave 336
+completed rollouts.  Waiting was averaged equally across the three scenarios
+within each seed; uncertainty used a paired-seed bootstrap, and the paired
+Wilcoxon statistic was computed over the 56 seed means.
+
+The selector uses no target closed-loop outcome, although the full V98
+protocol incorporates earlier closed-loop development.  Both Jinan arms share
+a pressure-guard risk multiplier of 0.5 inherited from that development.
+The strict zero-source-row comparator also has lower model capacity than the
+source-aware estimator.  V98 therefore evaluates the frozen conditional
+protocol without isolating source-row contribution at fixed architecture.
+
+\subsection{Separate post-freeze execution-layer stress test}
+
+The V86--V89 track is a distinct successor experiment on
+\texttt{jinan\_3x4\_real}.  Its originator predicts a 120-s target-simulator cost
+from target-state and action features; the executor permits at most one
+network-wide override and requires at least 120 s between effective phase
+switches.  The method was selected only from 54 disclosed adaptive seeds.
+Unlimited cooldown stays and a one-stay-per-cooldown variant were evaluated on
+the same adaptive partition and could not replace the legacy executor.
+
+Before any V89 rollout, a deterministic generator selected 64 new seeds after
+excluding the 54 adaptive seeds and eight separately sealed V85 seeds.  Each
+seed paired the frozen executor with PhasePressure under the same target
+scenario.  The preregistered joint rule required non-positive mean relative
+waiting difference, a non-positive paired-bootstrap 95\% upper bound, no more
+than 5\% worst-seed regression, at least 50\% improved seeds, one-sided exact
+sign-test $p_{\mathrm{sign}}\leq0.05$, at least 75\% active seeds, no aggregate excess in
+teleports or collision incidents, closed phase accounting and all 128 rollout
+identities.  Twenty thousand paired bootstrap replicates were fixed in the
+protocol.  No failed seed was excluded, and V85 remained sealed.  This track is
+reported as a stress test and is not part of V43 method selection.
+
+\subsection{Networks, splits and experimental execution}
+
+Development uses 18 networks in seven groups.  Source model seeds are 2027 and
+3037 and the excluded development evaluation seed is 4047.  The successful
+development stage uses up to 100 target-style groups inside each held-out
+source-city exercise.  External confirmation uses one Los Angeles network and
+one Jinan geometry with three demand files.  Jinan scenarios are weighted
+equally before city aggregation, preventing that city from receiving triple
+the weight of Los Angeles.
+
+The original closed-loop matrix runs four scenarios, two seeds and seven
+policies for 56 paired rollouts.  Every rollout uses SUMO 1.22.0,
+\texttt{libsumo} and a 3,600-s simulation horizon with a 60-s warm-up.
+The experiment was parallelized
+across cluster workers, while numerical libraries were restricted to one
+thread per process to avoid nested oversubscription.  Each rollout records its
+result and \texttt{tripinfo} hashes, source snapshot identity, model identity,
+SUMO version and metric population.
+
+The fresh source-contribution confirmation uses the same four scenarios,
+simulator version, warm-up, horizon, action executor and metric implementation.
+Only the two frozen policies and 64 fresh seeds differ, producing 512 rollouts.
+Six process-isolated shards ran on six nodes with 22 workers per node.  Full
+rollout records remain on the execution host; six complete shard summaries and
+the launch and audit manifests are materialized with the manuscript evidence.
+
+\subsection{Independent confirmation of the frozen V43 dense comparison}
+\label{sec:methods-v43-dense-fresh10}
+
+After the original two-seed results, a separate protocol fixed ten new seeds
+and the analysis before any new rollout.  Python's Mersenne Twister generator,
+initialized with 20261022, drew unique integers from 10,000,000 through
+99,999,999, excluding 567 seed values recorded in 159 existing configuration
+files, including used and reserved seeds.  The resulting roster is given in
+\Cref{sec:supp-v43-dense-fresh10}.  Each seed paired the original CFCMT and dense
+artifacts on Los Angeles and all three Jinan demands, producing 80 required
+rollouts.  The original source snapshot, converted networks, SUMO version,
+models and selected blends were retained, as were the sparse executor,
+10-s control interval, 60-s prediction horizon, warm-up and simulation end
+time.  There was no refitting, additional label collection, model selection or
+parameter tuning.
+
+The primary contrast was the equal-city mean waiting difference, CFCMT minus
+dense, in seconds per departed vehicle.  Within each seed, the three Jinan
+demands were averaged equally, followed by equal city weights and then equal
+weights across the ten seeds.  The relative contrast divided the difference
+of the two macro means by the dense macro mean; it did not average seed-level
+percentages.  Twenty thousand paired percentile bootstrap replicates used
+PCG64 initialized with 20261022.  Each draw resampled ten complete seed blocks,
+preserving both policies on all four scenarios together and keeping cities
+fixed.  Confirmation required all 80 identities to be valid and complete,
+the primary mean difference to be negative and its two-sided 95\% upper
+endpoint to be below zero.  Missing or failed runs could not be replaced by
+new seeds or encoded as zero.  Secondary metrics and both city effects were
+retained, with no pooling with the original matrix, V91 or V98.
+
+\subsection{Outcomes, aggregation and uncertainty}
+
+The preregistered closed-loop primary is mean vehicle waiting time.  The
+implementation computes it over all departed vehicles, including unfinished
+\texttt{tripinfo} records whose waiting and duration are accrued to the fixed
+horizon.  We additionally report completed-only waiting, system vehicle-hours,
+unfinished fraction, completion ratio, throughput, mean queue per lane,
+teleports, emergency stops and junction collisions.  Together, these outcomes
+account for withheld departures and unfinished trips that could otherwise
+make a controller appear effective.
+Trip-based waiting includes vehicles departing during warm-up.  Queue and
+system-burden samples begin at the end of warm-up.  Completion is the number
+of arrived vehicles divided by departed vehicles plus vehicles still pending
+departure at the horizon.
+
+Scenario-seed results are first averaged within scenario, scenarios are
+averaged equally within city and the two external cities are averaged equally.
+All policy contrasts remain paired on city, scenario and seed.  Offline
+uncertainty uses 10,000 paired action-group bootstrap replicates.  For the
+original seven-policy matrix, uncertainty uses 10,000 paired hierarchical
+replicates that sample city, then
+scenario, then seed.  With only two independent target cities, these intervals
+describe sensitivity of the observed matrix; they are not estimates of a
+general population of cities.  No multiplicity-adjusted claim or universal
+city-level significance is made.
+The ten-new-seed dense confirmation instead uses the whole-seed-block
+procedure in \Cref{sec:methods-v43-dense-fresh10}; its interval describes
+seed variation within the two fixed target networks.
+
+The V91 source-contribution interval instead resamples the 64 paired seed
+statistics in \Cref{eq:source-contribution} 20,000 times.  The exact sign test
+uses the number of seeds with $\rho_k<0$.  City-specific relative differences
+are secondary diagnostics because the independent city count remains two.
+
+Raw SUMO collision events are consolidated by participant, lane and time into
+unique junction incidents.  Teleports are a hard validity failure; collisions
+are retained as outcomes in closed loop and compared pairwise.  The original
+matrix requires all 56 authorized records, exact provenance identities, complete
+population accounting, readable \texttt{tripinfo} hashes and zero teleports.
+The independent dense confirmation requires all 80 registered identities,
+unchanged models and execution settings, complete vehicle accounting and zero
+teleports; every seed remains in the report.  The V91 integrity audit
+analogously requires all 512 frozen identities and
+retains every seed regardless of performance or incident status.
+
+\subsection{Meaning of ``causal''}
+
+CFCMT follows two causal design commitments.  Candidate actions intervene
+from a common restored simulator state, and direct predictors are restricted
+to declared local parent sets.  \Cref{prop:exact-cancellation} is algebraic under
+\Cref{ass:action-common-error}, while \Cref{prop:pairwise-recovery,prop:blend-bounds}
+and \Cref{cor:bounded-local-perturbation} concern score construction.  The
+study does not identify a causal graph from observational traffic, prove that
+the declared parents are invariant in the field, or estimate effects of signal
+interventions in Los Angeles or Jinan.  ``Causal'' therefore describes the
+model and counterfactual simulation design, not field causal identification.

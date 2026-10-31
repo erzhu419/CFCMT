@@ -1,0 +1,89 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Why these two issues matter beyond transit}
+
+The two issues isolated in \Cref{sec:problem:failures}---weak action-conditional signal under sparse actions, and reward-scale drift under multi-fidelity training---are not specific to bus holding.
+Both arise from structural properties that appear in other multi-fidelity RL domains.
+
+\paragraph{Sparse-action domains}
+Any setting where the action space is low-dimensional or nearly discrete, and where inter-decision dynamics are dominated by exogenous factors, exhibits a small $I(S'; A \mid S)$.
+Examples beyond transit include ramp metering, signal phase selection, crew dispatching, and demand-responsive transit---all problems where an agent makes one decision per event and the intervening dynamics are governed by traffic and passengers.
+In such domains, a DARC-style factored discriminator's access to an action-specific signal is limited.
+The contrastive alternative, conditioning only on $(s, s')$, is directly applicable subject to \Cref{ass:action_invariance} holding on domain data.
+
+\paragraph{Multi-fidelity simulators with reward-magnitude gaps}
+Reward-scale differences between fidelity levels are common: simplified contact models in robotics produce smaller effort penalties, simplified demand models in power systems produce smaller headroom-violation penalties, and so on.
+Whenever the simulator and evaluation environments report rewards on different magnitudes, an LCB-only sim-side target drifts toward the simulator's scale over repeated updates.
+A one-sided bootstrap Q-floor offers a cheap fix that does not require pre-computed MC returns or reward statistics, but it is not the only option---explicit reward rescaling or learned reward calibration are equally reasonable first-line treatments (and we evaluate a rescaling baseline in \Cref{sec:experiments}).
+
+\subsection[Calibration of the high-fidelity simulator against the real corridor]{Calibration of $\Mreal$ against the real corridor}
+\label{sec:disc:calibration}
+
+We use ``real corridor'' to refer to the topology, schedule, and bus fleet of an existing 12-line, 389-bus high-frequency operating area; the SUMO microsimulation $\Mreal$ replays this topology under a fixed passenger origin--destination (OD) profile and a single deterministic traffic seed.
+This is sufficient to establish that the framework produces meaningful behaviour on a realistic-scale network, but it is \emph{not} a calibration claim: route-level travel-time error against AVL/APC observations, dwell-time fitting against IC-card data, OD validation against passenger-survey or AFC records, and train/calibration/test day separation are all out of scope for this version.
+Future validation should report (i) route-level travel-time MAPE and headway-distribution overlap against an aligned real operating day, (ii) dwell-time fitting error, (iii) bunching-rate and headway-CV agreement between $\Mreal$ and the observed corridor, and (iv) explicit calibration vs.\ test-day separation.
+Until those validations are available, results in this paper should be read as evidence on a real-topology synthetic-demand benchmark rather than on a calibrated digital twin.
+
+\subsection{Remaining evaluation-scope gaps}
+\label{sec:disc:eval_scope}
+
+The multi-scenario evaluation in \Cref{sec:exp:multiseed} (Tab.~\ref{tab:multiseed}) covers $3$ SUMO seeds $\times$ $3$ OD scales = $9$ scenarios per method under common random numbers, addressing the basic generalisation question.
+Three gaps remain.
+First, the OD profile is a single workday template scaled multiplicatively; we have not evaluated weekend OD, special-event peaks, or empirically observed day-to-day variation drawn from real ridership records.
+Second, no incident scenarios (link blockage, lane closure, signal failure) are included; the policy's robustness to non-stationary disturbances is therefore unknown.
+Third, there is no train/calibration/test day separation: all $9$ scenarios share the same underlying network model, with only seed and demand-scale perturbation.
+These extensions are consistent with the calibration roadmap in \Cref{sec:disc:calibration} and should be reported jointly when AVL/APC-validated $\Mreal$ becomes available.
+
+\subsection{Reward shape vs operational utility}
+\label{sec:disc:operational}
+
+The composite reward used during training---a weighted sum of headway-deviation magnitude, holding penalty, and forward-looking headway error---is a learning-side proxy, not a direct measure of operator value.
+\Cref{tab:multiseed} surfaces a concrete instance: $200$-epoch pure-online SAC has the worst cumulative reward among the four RL rows reported but the lowest mean passenger waiting time and lowest headway CV; the $1{,}000$-epoch pure-online SAC retrain trades some of that waiting-time advantage for higher reward, sitting closer to H2O+ on the reward axis but with passenger waiting closer to the rest.
+The mechanism is straightforward: the per-second holding penalty dominates the future bunching reduction the hold buys, so policies that hold less are reward-favoured even when they leave passengers waiting marginally longer.
+For deployment this means cumulative reward should be read as a proxy, not a target; the passenger-side columns of \Cref{tab:multiseed} and \Cref{tab:passenger_full} are diagnostic comparison points that still require calibration against observed passenger records before they can support an operational-benefit claim.
+We do not retune the reward weights here---that would change the optimisation landscape across the entire ablation matrix---but flag this as a calibration step required before any operator pilot.
+
+\subsection{Limitations}
+
+\paragraph{Action-conditional domain invariance may not hold elsewhere}
+\Cref{ass:action_invariance} requires that the simulator and real environment share action semantics up to the gap in state-transition distributions.
+On our benchmark the data-level test reports $\hat{r} = 0.156$ (\Cref{sec:exp:analysis}), well below the working $0.30$ threshold we adopt; the contrastive discriminator's IS-weight estimates are therefore plausibly grounded on this benchmark, though the threshold itself is a heuristic and the test's coverage is limited to state regions densely represented in $\Doff$.
+On a different benchmark---e.g.\ a sim that ignores hold commands while the real system honours them---the assumption can fail, in which case the contrastive variant should be replaced by an action-conditioned discriminator (TransDisc or DynamicsDisc).
+The data-level test in \Cref{sec:exp:analysis} (and the script \texttt{verify\_assumption1.py}) is the recommended pre-deployment check.
+
+\paragraph{Data composition sensitivity}
+The offline-Q floor is only as informative as the offline dataset is diverse.
+Our $\Doff$ combines four behaviour policies (SAC, heuristic, $\epsilon$-random, RE-SAC SUMO expert ep39); homogeneous offline data from a single policy would yield a narrow $q_{\text{floor}}$ that may not span the Q-scale actually encountered during online training.
+For practitioners, this suggests deliberately diversifying offline data collection where possible.
+
+\paragraph{The offline-Q floor is an engineering fix, not a theorem}
+The bootstrap floor in \Cref{eq:qfloor} is a one-sided, scalar-level anchor; it does not eliminate all effects of reward-scale mismatch.
+A policy that is optimal in $\Msim$ and slightly suboptimal in $\Mreal$ can still be preferred under the hybrid loss when the sim gradient dominates.
+Near-optimal policy transfer likely still requires either explicit reward calibration \citep{hanna2017grounded} or curriculum rollout schedules, neither of which this paper studies.
+
+\paragraph{Single-corridor evaluation}
+Our benchmark is a single 12-line corridor.
+Although the offline dataset is large and the evaluation episode is long, generalisation across corridors---networks of different size, demand patterns, or operating agencies---is not tested here.
+We discuss this as the main direction for replication below.
+
+\subsection{Deployment considerations}
+
+The framework is designed with practical deployment in mind: offline data is cheaply collected from existing operational records, online interactions occur in a simulator under the agency's control, and no policy update requires touching live fleets.
+Nonetheless, a responsible deployment pipeline should include at least three additional gates.
+First, policy outputs should be reviewed against operational constraints (e.g., maximum allowed hold time per stop) before activation.
+Second, the trained policy should be first evaluated on held-out historical operating days in the SUMO-like environment, not on live passengers.
+Third, rollout should begin on a single route or off-peak window and expand gradually based on measured service indicators.
+None of these precautions are unique to our method, but all are necessary when deploying any RL policy in a real transit network.
+
+\subsection{Toward true sim-to-real and open questions}
+
+This paper deliberately studies a \emph{multi-fidelity sim-to-sim} problem; establishing sim-to-real transfer requires two further steps that we identify but do not undertake.
+First, historical-data replay: given operator AVL/GPS records, evaluate the trained policy by replaying observed arrival events and comparing simulated vs observed holding outcomes.
+Second, gated pilot deployment: instrument a single route or off-peak window with supervisor approval, starting with constrained action ranges and expanding based on measured service indicators.
+Both steps face institutional and data-access constraints orthogonal to the methodological questions addressed here.
+
+Beyond transit, three extensions warrant investigation.
+Integrating the offline-Q floor with \emph{distributional} RL (e.g., IQN, DSAC) would give explicit risk-sensitive quantile anchors.
+Extending to three or more simulators of increasing fidelity---a true \emph{multi-fidelity hierarchy}---would allow cheap rollouts for exploration and expensive rollouts for critical evaluation, with the discriminator and Q-floor applied pairwise.
+Joint timetable-and-holding optimisation under a multi-fidelity dynamics gap is a natural next problem already of operational interest; it would require extending the current event-level holding policy to a higher-level timetable or dispatch decision layer.

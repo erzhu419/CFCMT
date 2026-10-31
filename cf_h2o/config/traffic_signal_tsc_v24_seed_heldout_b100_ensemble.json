@@ -1,0 +1,121 @@
+{
+  "protocol": "tsc-v41r37-seed-heldout-b100-cross-fitted-ensemble-development-v1",
+  "frozen_at_utc": "2026-08-09T00:24:08Z",
+  "manifest": "cf_h2o/config/traffic_signal_cross_city_v2_saltlake18.json",
+  "manifest_sha256": "8c5259597a24e7558a698f38219780f5f8a0ae246daa682282263adfd8e24ec1",
+  "combined_counterfactual_cache_sha256": "14c6dfad87999e55fa86fa942ac0ca2334129f4d1662b3c31a6e4fc7aa74c242",
+  "expanded_source_rule_baseline_sha256": "f9223a7001078d9a6df0e1a2ad4bfe1d2bc59fc2547621f092e8be702596dbfa",
+  "v40_audit_sha256": "760ec21f9a63b6ffaa1bb75b53ea7a00c616bde46118100177363ff6c4488a89",
+  "development": {
+    "target_group_budget": 100,
+    "adaptation_seeds": [
+      2027,
+      3037
+    ],
+    "evaluation_seeds": [
+      4047
+    ],
+    "selection_seed": 20260803,
+    "cross_fit_folds": 5,
+    "groups_per_fold": 20,
+    "model_training_groups_per_fold": 80,
+    "deployment_model": "five-model score-level ensemble",
+    "ensemble_uncertainty": "sqrt(mean(within_model_uncertainty_squared + between_model_score_deviation_squared))",
+    "evaluation_targets": [
+      "grid4x4",
+      "arterial4x4",
+      "cologne3",
+      "cologne8",
+      "ingolstadt7",
+      "ingolstadt21",
+      "atlanta_1x5",
+      "hangzhou_4x4",
+      "hangzhou_4x4_hetero",
+      "manhattan_28x7",
+      "saltlake_400s_200w_q1_weekday_peak",
+      "saltlake_state_university_q1_weekday_peak"
+    ],
+    "source_only_capacity_exclusions": {
+      "cologne1": 76,
+      "ingolstadt1": 90,
+      "hangzhou_bc_tyc": 25,
+      "hangzhou_kn_hz": 42,
+      "hangzhou_qc_yn": 33,
+      "hangzhou_sb_sx": 36
+    },
+    "base_families": [
+      "causal_group_normalized_rigid_advantage",
+      "causal_antisymmetric_pairwise_advantage"
+    ],
+    "candidate_grid": {
+      "constant_alpha": [
+        0.0,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        1.0
+      ],
+      "local_disagreement_cap": [
+        0.25,
+        0.5,
+        1.0,
+        2.0,
+        4.0
+      ],
+      "local_confidence_multiplier": [
+        0.0,
+        0.25,
+        0.5,
+        1.0
+      ]
+    },
+    "selector_grid": {
+      "candidate_scopes": [
+        "constant",
+        "all"
+      ],
+      "minimum_oof_relative_improvement": [
+        0.0,
+        0.01,
+        0.02,
+        0.05
+      ],
+      "maximum_oof_fold_regression": [
+        0.0,
+        0.02,
+        0.05,
+        0.1
+      ],
+      "standard_error_multipliers": [
+        0.0,
+        0.5,
+        1.0,
+        2.0
+      ]
+    },
+    "nested_city_gate": {
+      "minimum_macro_relative_improvement": 0.02,
+      "minimum_improved_heldout_cities": 5,
+      "maximum_absolute_city_regression": 0.01
+    }
+  },
+  "external_confirmation": {
+    "status": "sealed",
+    "development_reuse_prohibited": true,
+    "networks": [
+      "la_1x4",
+      "nanchang"
+    ],
+    "fresh_simulator_seeds": [
+      5057,
+      6067
+    ],
+    "require_v41_development_gate": true
+  }
+}

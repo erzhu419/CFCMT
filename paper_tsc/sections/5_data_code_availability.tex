@@ -1,0 +1,60 @@
+\section{Data and Code Availability}
+
+The source benchmark combines public scenarios executed with SUMO
+\citep{lopez2018microscopic}, including RESCO benchmark networks
+\citep{ault2021reinforcement}, with public traffic-signal benchmark files
+distributed by LibSignal \citep{mei2022libsignal}.  The external Los Angeles
+input is the public LibSignal \texttt{LA\_1x4} benchmark
+\citep{mei2022libsignal}, represented by a CityFlow roadnet and flow file
+\citep{zhang2019cityflow}.  The files are fixed at LibSignal repository commit
+\href{https://github.com/DaRL-LibSignal/LibSignal/commit/127af9f93902778e556de2eedb2b606c4c9447e6}{\texttt{127af9f}}.
+The Jinan inputs are the roadnet and three real-flow variants distributed with
+the public CoLight \texttt{Jinan/3\_4} benchmark \citep{wei2019colight}, fixed
+at repository commit
+\href{https://github.com/wingsweihua/colight/commit/04440b722e7f36d7043a3f2ad8e40c3df301fad3}{\texttt{04440b7}}.
+Conversion to SUMO, route conservation, signal-link identity, collision-free
+admission and exact source hashes are recorded in the V8 conversion manifest.
+
+The manuscript source-data directory contains comma-separated values (CSV)
+files for every new figure and table.  A manifest links the development audit,
+source and adaptation caches, deployment models, held-out result and
+closed-loop aggregate through Secure Hash Algorithm 256-bit (SHA-256) digests.
+The source-contribution table retains the final-V43 legacy near-target-only
+label in the V90 and V91 audits.  A separate controller-comparison table reports
+the V91 and V98 audits independently.  Its V98 row compares a preselected
+controller with a lower-capacity target model fitted without source rows.
+The manifest also links the metadata-only audit of all 336 remote V98 result
+identities, which required no transfer of raw result files.
+
+The independent ten-new-seed V43 dense confirmation has a separate frozen
+protocol and 80 complete rollout summaries.  Its figure-generation script
+exports per-rollout, paired-seed, scenario, city and overall CSV tables,
+including the registered 20,000-replicate seed-block bootstrap intervals.
+The original models and raw \texttt{tripinfo} files remain in the execution
+archive; this confirmation adds no training data or fitted models.
+
+The seven-city source-gate CSV and LaTeX table are regenerated from the frozen
+V145, V146 and V148 aggregate JavaScript Object Notation (JSON) files; all
+three decisions remain rejected.  The post-V148 source-remedy CSV and table
+use the canonical V150A, V150C, V150I--V150L, V151A--V153A and V156A--V159
+result JSON files, together with the V157B bound arm manifest.  They retain the
+failed source-identity and closed-loop decisions and mark the V123/V157A
+all-budget comparison as confounded by domain handling.  The corrected V157B
+B100 pass remains limited to its reused-selector estimand.  The incomplete
+V157C artifact retains seed 27178 as invalid at its fixed 480-s checkpoint;
+the remaining two seeds are reported descriptively.
+
+The V158 artifact records the completed ten-seed native-prefix OOF failure and
+the unrun reserve.  The V159 artifact binds the target-only direct-endpoint
+ablation to the unchanged V158 native B100 bank, with no new simulator
+trajectories.  Both failed OOF decisions and the withheld reserve evaluations
+are retained.  Their estimates and interpretation are reported in
+\Cref{sec:supp-source-remedy}.
+
+The 512 full V91 rollout records remain in the execution archive, with six
+complete shard summaries available locally.  A persistent public archive and
+its digital object identifier (DOI) have not yet been provided for the code
+snapshot, converted networks, configuration files, model artifacts, aggregate
+JSON, per-rollout results, \texttt{tripinfo} files and figure-generation
+scripts.  Public distribution remains subject to the licences of the upstream
+benchmark files.

@@ -1,0 +1,245 @@
+{
+  "protocol": "tsc-v52r48-external-estimand-aligned-global-cooldown-development-v1",
+  "frozen_at_utc": "2026-08-10T00:14:06Z",
+  "claim_boundary": "Post-v51 method development on the same ten disclosed development seeds. The source-trained causal world model, target label-free support, pressure prior, risk parameters, base candidate definitions, and statistical gates remain frozen. Only a network-wide prior-only recovery window aligned to the first-action rollout estimand and disclosed observable queue support thresholds are varied.",
+  "failed_v51_selection_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v51r47_execution_trust_region_development_20260809/execution_trust_region_selection_audit_v1.json",
+    "sha256": "e4a898c4d57f3e93aeb60eb10f53c65947edd2b660e88db186957df89d11863b",
+    "required_status": "PASS",
+    "required_decision": "reject_v51_and_preserve_new_validation_and_prospective_seeds"
+  },
+  "parent_execution_trust_region_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v37_external_execution_trust_region_development.json",
+    "sha256": "961fd0a0c5ecf9246b328f11ef35198339418d5a8f6992d660df2205ea6bb87f"
+  },
+  "candidate_grid_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v34_external_policy_horizon_adaptation.json",
+    "sha256": "7f6c8d65083bcad3d50d60015dea7ec218c926123f30d0e01f449ea62b383eb3",
+    "base_candidates_must_not_change": true
+  },
+  "city_deployment_scope": {
+    "los_angeles": {
+      "scenarios": [
+        "la_1x4"
+      ],
+      "mode": "active_development"
+    },
+    "jinan": {
+      "scenarios": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ],
+      "mode": "frozen_phase_pressure_fallback",
+      "reason": "No v50 candidate had negative city-mean waiting-time delta and nonzero intervention coverage under the frozen selection gate; v51 did not reopen Jinan."
+    }
+  },
+  "development_grid": {
+    "city": "los_angeles",
+    "seeds": [
+      5057,
+      6067,
+      52282,
+      41242,
+      63792,
+      80722,
+      75638,
+      61337,
+      73385,
+      81189
+    ],
+    "scenario": "la_1x4",
+    "horizon_sec": 3600,
+    "control_interval_sec": 10,
+    "model_prediction_horizon_sec": 60,
+    "coordination_mode": "sparse",
+    "base_candidates": [
+      "cfcmt_pr_b2_cd3",
+      "cfcmt_pr_b0p25_cd6"
+    ],
+    "excluded_base_candidate": {
+      "key": "cfcmt_raw_cd6",
+      "reason": "All five intervening v51 raw variants had positive mean waiting-time deltas; exclusion was fixed before v52 outcomes."
+    },
+    "execution_trust_regions": [
+      {
+        "key": "h60_q0",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 0.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 5
+      },
+      {
+        "key": "h60_q1",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 1.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 5
+      },
+      {
+        "key": "h60_q5",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 5.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 5
+      },
+      {
+        "key": "h60_q10",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 10.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 5
+      },
+      {
+        "key": "h90_q0",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 0.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 8
+      },
+      {
+        "key": "h90_q1",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 1.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 8
+      },
+      {
+        "key": "h90_q5",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 5.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 8
+      },
+      {
+        "key": "h90_q10",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 10.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 8
+      },
+      {
+        "key": "h120_q0",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 0.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 11
+      },
+      {
+        "key": "h120_q1",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 1.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 11
+      },
+      {
+        "key": "h120_q5",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 5.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 11
+      },
+      {
+        "key": "h120_q10",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 10.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 11
+      }
+    ],
+    "candidate_count": 24,
+    "matrix_size": 240,
+    "estimand_alignment": {
+      "training_estimand": "one focal residual action followed by network-wide pressure-prior rollout",
+      "deployment_contract": "after one executed residual, all intersections use the pressure prior for the disclosed global recovery window",
+      "primary_window_sec": 60,
+      "longer_window_sensitivity_sec": [
+        90,
+        120
+      ]
+    },
+    "selection_rule": {
+      "minimum_city_mean_relative_improvement": 0.005,
+      "maximum_bootstrap_95pct_upper_mean_relative_delta": 0.01,
+      "maximum_seed_level_city_mean_relative_regression": 0.05,
+      "minimum_improved_seed_fraction": 0.6,
+      "minimum_intervened_seed_fraction": 0.8,
+      "method_teleports_must_not_exceed_paired_phase_pressure": true,
+      "method_collision_incidents_must_not_exceed_paired_phase_pressure": true,
+      "robust_score": "mean_relative_delta + 0.5 * seed_delta_std + max(worst_seed_delta, 0)",
+      "fallback": "phase_pressure when no active candidate is feasible"
+    },
+    "bootstrap": {
+      "unit": "seed-level city relative delta",
+      "replicates": 10000,
+      "seed": 20260812,
+      "confidence": 0.95,
+      "interval": "percentile"
+    }
+  },
+  "new_untouched_validation": {
+    "seeds": [
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ],
+    "must_not_run_until_v52_selection_is_hash_frozen": true
+  },
+  "prospective_confirmation_reservation": {
+    "seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "must_not_run_until_new_untouched_validation_passes_and_analysis_is_hash_frozen": true
+  }
+}

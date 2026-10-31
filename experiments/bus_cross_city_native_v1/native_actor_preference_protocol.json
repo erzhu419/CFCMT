@@ -1,0 +1,74 @@
+{
+  "name": "cfcmt-bus-native-actor-preference-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "actors": {
+    "adapted": {
+      "folder": "source_dense_adapted_eval",
+      "filename": "policy.pt"
+    },
+    "masked": {
+      "folder": "free_execution_actor/td025",
+      "filename": "policy.pt"
+    }
+  },
+  "critic_stages": {
+    "adapted": {
+      "folder": "source_dense_adaptation",
+      "filename": "adapted.pt",
+      "stored_updates": 5000
+    },
+    "unmasked": {
+      "folder": "entropy_free_continuation/td025",
+      "filename": "final_learner.pt",
+      "stored_updates": 25000
+    },
+    "masked": {
+      "folder": "free_execution_actor/td025",
+      "filename": "final_learner.pt",
+      "stored_updates": 25000
+    }
+  },
+  "case": {
+    "case": 0,
+    "demand_seed": 72561,
+    "sumo_seed": 73561
+  },
+  "episode_seconds": 24000,
+  "asset_folder": "native_action_replay",
+  "candidate_names": [
+    "adapted",
+    "masked",
+    "masked_positive",
+    "zero"
+  ],
+  "critic_batch_size": 256,
+  "selection": "All nonterminal control events along each seed-specific adapted55k native trajectory, including identical actor actions and collapsed execution intervals. No Q, action-gap, outcome, or cost selection.",
+  "execution": "Only adapted actor drives every actual decision and same-time prior. Other candidates are read-only and projected onto the same frozen guard execution interval.",
+  "conditional_positive_candidate": "Actual frozen actor positive_action_and_log_prob with deterministic=True, projected using the native raw state; not sampled or optimized. The positive branch uses sigmoid, not tanh.",
+  "critic_definition": "Each stored twin critic scores all four projected candidates; report twin-min gaps and agreement of individual head directions.",
+  "grouping": [
+    "all",
+    "free",
+    "collapsed",
+    "free_actor_different",
+    "free_actor_same",
+    "free_masked_zero",
+    "free_masked_positive",
+    "free_gate_zero",
+    "free_gate_positive"
+  ],
+  "primary_diagnosis": "Frequency and sign of candidate-preference disagreements, particularly masked deterministic gate versus its own conditional-positive/zero Q ordering. Strict signed counts with reported gap distribution; no calibrated benefit threshold.",
+  "code_boundary": "CFCMT-owned frozen snapshot only; no mutable Thesis access. Remote code/smallJSON/log only, no H5/CSV/checkpoint downloads.",
+  "new_training_updates": 0,
+  "output": "Per-event compact JSONL stays on server; pull only per-seed aggregated summaries.",
+  "limits": [
+    "Three training seeds share one already-used diagnostic demand/SUMO case; events are correlated and not independent performance trials.",
+    "IQL deterministic actor extraction need not maximize critic Q; disagreement alone is not an implementation error.",
+    "Discounted learned critic preferences are not true action costs. No counterfactual action is executed in this phase.",
+    "The four fixed candidates diagnose finite action preferences, not a continuous-action optimum or global critic calibration."
+  ]
+}

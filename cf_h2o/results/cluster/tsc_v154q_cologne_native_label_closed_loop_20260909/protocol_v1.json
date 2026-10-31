@@ -1,0 +1,59 @@
+{
+  "protocol": "tsc-v154q-cologne-native-label-closed-loop-v1",
+  "frozen_at_utc": "2026-09-09T15:32:20.134049+00:00",
+  "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+  "frozen_threshold_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/frozen_threshold.json",
+  "frozen_threshold": {
+    "protocol": "tsc-v154l-cologne-rigid-oof-threshold-v1",
+    "calibration_protocol": "tsc-v154p-cologne-native-b100-v1",
+    "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+    "fit_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/result.json",
+    "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+    "threshold": 0.0,
+    "mode": "minimum_advantage",
+    "comparison": "predicted_advantage > threshold + 1e-12",
+    "selection_data": "Exactly 100 training-seed OOF predictions using native B100 labels",
+    "calibration_mean_cost": 0.7772940186175482
+  },
+  "threshold_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154m_cologne_threshold_closed_loop_20260909/tooling_v1/thresholded_fraction_rigid.py",
+  "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+  "geometry_reference": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154e_cologne_bilateral_full_validation_20260909/paired_full_v1/result.json",
+  "conversion_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9",
+  "scratch_root": "/home/zhengliang01/scheduleurm_work/CFCMT_SCRATCH/tsc_v154q_cologne_native_label_closed_loop_20260909",
+  "evaluation": {
+    "scenario": "cologne1",
+    "seeds": [
+      52282,
+      41242,
+      63792
+    ],
+    "duration_sec": 3600,
+    "warmup_sec": 60,
+    "control_interval_sec": 10,
+    "prediction_horizon_sec": 450,
+    "residual_coordination_mode": "direct",
+    "residual_cooldown_intervals": 0
+  },
+  "controls": {
+    "baseline_summary": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/paper_artifacts/tsc_v154m_cologne_threshold_closed_loop_v1.json",
+    "original_thresholded_tasks": [
+      "t91746",
+      "t91747",
+      "t91748"
+    ],
+    "phase_pressure_tasks": [
+      "t91636",
+      "t91638",
+      "t91640"
+    ]
+  },
+  "analysis": "Equal-seed summaries and all three paired changes for waiting, system vehicle hours, arrivals and collision/teleport counts. Keep valid colliding runs in service summaries.",
+  "new_simulation_count": 3,
+  "new_model_fit_count": 0,
+  "threshold_retuning": false,
+  "limits": [
+    "One repaired Cologne1 demand and three existing evaluation seeds; seed41242 was used in geometry development.",
+    "The new model and threshold0 were frozen in V154P before this evaluation; no closed-loop retuning.",
+    "This compares the native-label model with its new OOF threshold against the old model with its old threshold; it does not isolate their separate effects."
+  ]
+}

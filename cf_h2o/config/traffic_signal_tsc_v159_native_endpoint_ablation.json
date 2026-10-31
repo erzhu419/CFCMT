@@ -1,0 +1,212 @@
+{
+  "action_selection": {
+    "no_stay_override_of_pp_switch": true,
+    "reference_policy": "phase_pressure",
+    "threshold": 0.0
+  },
+  "claim_boundary": "This reused-B100 whole-seed OOF ablation is a development diagnostic. Passing does not authorize deployment, reserve simulation, or a transfer claim; failure closes the direct-endpoint hypothesis without retuning.",
+  "crossfit": {
+    "fold_count": 5,
+    "folds": [
+      [
+        180314,
+        188625
+      ],
+      [
+        127178,
+        177524
+      ],
+      [
+        163775,
+        150945
+      ],
+      [
+        173412,
+        161481
+      ],
+      [
+        150744,
+        134310
+      ]
+    ],
+    "unit": "whole_seed"
+  },
+  "decision_rule": "pass_only_authorizes_a_separate_endpoint_source_contribution_stage",
+  "development": {
+    "action_groups": 100,
+    "candidate_actions_per_group": 8,
+    "candidate_rows": 800,
+    "new_simulator_trajectories": 0,
+    "scenarios": [
+      "jinan_3x4_real",
+      "jinan_3x4_real_2000",
+      "jinan_3x4_real_2500"
+    ],
+    "seeds": [
+      180314,
+      188625,
+      127178,
+      177524,
+      163775,
+      150945,
+      173412,
+      161481,
+      150744,
+      134310
+    ]
+  },
+  "development_gate": {
+    "bootstrap_draws": 10000,
+    "bootstrap_seed": 20260911,
+    "comparison": "endpoint_target_minus_delta_target",
+    "demand_mean_difference_maximum": 0.0,
+    "mean_difference_maximum": -0.0005,
+    "minimum_improved_seeds": 7,
+    "paired_bootstrap_upper_95_maximum": 0.0,
+    "require_every_demand_noninferior": true
+  },
+  "model": {
+    "action_difference_feature_names": [
+      "phase_duration_norm",
+      "green_q",
+      "red_q",
+      "green_veh",
+      "red_veh",
+      "green_occ",
+      "red_occ",
+      "green_down_q",
+      "green_down_occ",
+      "green_link_ratio",
+      "green_lane_ratio",
+      "service_pressure",
+      "red_pressure",
+      "switch_indicator",
+      "clearance_fraction",
+      "current_phase_overlap",
+      "green_q_mean",
+      "green_q_max",
+      "green_q_cv",
+      "red_q_max",
+      "red_q_cv",
+      "green_speed_mean",
+      "red_speed_mean",
+      "green_occ_max",
+      "red_occ_max",
+      "green_down_q_max",
+      "green_down_occ_max",
+      "green_down_occ_std",
+      "green_movement_ratio",
+      "green_outgoing_ratio",
+      "green_movement_down_q_mean",
+      "green_movement_down_occ_mean",
+      "green_movement_down_occ_max",
+      "movement_service_pressure",
+      "green_signal_down_q_mean",
+      "green_signal_down_q_max",
+      "green_signal_down_occ_mean",
+      "green_signal_down_occ_max",
+      "green_signal_reach_ratio",
+      "green_corridor_pressure",
+      "native_target_score",
+      "native_target_uncertainty",
+      "native_target_trust",
+      "native_aux_score",
+      "native_aux_uncertainty",
+      "native_aux_trust"
+    ],
+    "config": {
+      "l2_regularization": 10.0,
+      "learning_rate": 0.05,
+      "max_iter": 100,
+      "max_leaf_nodes": 15,
+      "min_samples_leaf": 20,
+      "random_state": 20260803,
+      "uncertainty_quantile": 0.9
+    },
+    "family": "HistGradientBoostingRegressor",
+    "physical_midpoint_feature_names": [
+      "phase_duration_norm",
+      "green_q",
+      "red_q",
+      "green_veh",
+      "red_veh",
+      "green_occ",
+      "red_occ",
+      "green_down_q",
+      "green_down_occ",
+      "green_link_ratio",
+      "green_lane_ratio",
+      "service_pressure",
+      "red_pressure",
+      "switch_indicator",
+      "clearance_fraction",
+      "current_phase_overlap",
+      "green_q_mean",
+      "green_q_max",
+      "green_q_cv",
+      "red_q_max",
+      "red_q_cv",
+      "green_speed_mean",
+      "red_speed_mean",
+      "green_occ_max",
+      "red_occ_max",
+      "green_down_q_max",
+      "green_down_occ_max",
+      "green_down_occ_std",
+      "green_movement_ratio",
+      "green_outgoing_ratio",
+      "green_movement_down_q_mean",
+      "green_movement_down_occ_mean",
+      "green_movement_down_occ_max",
+      "movement_service_pressure",
+      "green_signal_down_q_mean",
+      "green_signal_down_q_max",
+      "green_signal_down_occ_mean",
+      "green_signal_down_occ_max",
+      "green_signal_reach_ratio",
+      "green_corridor_pressure"
+    ],
+    "representations": {
+      "delta_target": "state_plus_action_difference",
+      "endpoint_target": "state_plus_action_difference_plus_physical_action_midpoint"
+    },
+    "source_prediction_columns_used": false,
+    "state_feature_names": [
+      "total_q",
+      "total_veh",
+      "mean_speed",
+      "mean_occ",
+      "lane_count_norm",
+      "candidate_count_norm",
+      "time_sin",
+      "time_cos",
+      "current_green_elapsed_norm",
+      "queue_concentration",
+      "graph_upstream_q_mean",
+      "graph_downstream_q_mean",
+      "graph_neighbor_q_max",
+      "graph_two_hop_q_mean",
+      "graph_neighbor_occ_mean",
+      "graph_neighbor_pressure_mean",
+      "graph_global_q_per_tls",
+      "graph_global_q_p90",
+      "graph_focal_q_percentile",
+      "graph_focal_to_neighbor_q_ratio",
+      "graph_in_degree_norm",
+      "graph_out_degree_norm",
+      "network_active_per_tls"
+    ],
+    "target_base_prediction_only": true
+  },
+  "parent_v158": {
+    "fit_result_path": "cf_h2o/results/cluster/tsc_v158_native_prefix_ranking_calibration_20260911/fit_v1/result.json",
+    "fit_result_protocol": "tsc-v158-jinan-native-prefix-ranking-fit-v1",
+    "fit_result_sha256": "45a236690fe7a18f76057b4f8c45ebb3ba4fd03571dd3624b3741aea1d4438d3",
+    "native_bank_sha256": "b484411781d8bf9386cc636542bcf5ef57ae9c09e83aaa5443c870379010039b",
+    "native_bank_size_bytes": 236663,
+    "protocol": "tsc-v158-jinan-native-prefix-ranking-calibration-v1"
+  },
+  "protocol": "tsc-v159-jinan-native-endpoint-ablation-v1",
+  "purpose": "target_only_test_of_direct_physical_action_endpoint_information",
+  "scientific_status": "prepared_not_run"
+}

@@ -1,0 +1,327 @@
+{
+  "protocol": "cfcmt-bus-full-source-continuation-v1",
+  "complete": true,
+  "ready": 1,
+  "expected": 1,
+  "expected_evaluations": 1,
+  "admission": true,
+  "results": {
+    "75101": {
+      "training": {
+        "complete": true,
+        "protocol": "cfcmt-bus-full-source-continuation-v1",
+        "seed": 75101,
+        "branch": "cross_city",
+        "variant": "full_source",
+        "initialization_updates": 50000,
+        "adaptation_updates": 5000,
+        "continuation_updates": 4,
+        "total_policy_updates": 55004,
+        "target_unique_rows": 16384,
+        "actor_target_fit_rows": 12288,
+        "source_rows": 3284718,
+        "target_online_training_events": 0,
+        "continuation_real_td_coefficient": 0.75,
+        "continuation_model_td_coefficient": 0.25,
+        "world_model_artifact": "/home/zhengliang01/scheduleurm_work/CFCMT/experiments/bus_cross_city_native_v1/training/models/seed75101/model.pt",
+        "world_model_refit_updates": 0,
+        "config": {
+          "ensemble_size": 2,
+          "hidden_dim": 256,
+          "batch_size": 256,
+          "reward_scale": 0.0001,
+          "critic_loss": "huber",
+          "huber_delta": 1.0,
+          "activation": "relu",
+          "actor_layer_norm": false,
+          "critic_layer_norm": false,
+          "value_layer_norm": false,
+          "online_fraction": 0.0,
+          "actor_learning_rate": 0.0003,
+          "critic_learning_rate": 0.0003,
+          "value_learning_rate": 0.0003,
+          "alpha_learning_rate": 0.0003,
+          "ratio_learning_rate": 0.0001,
+          "soft_target_rate": 0.005,
+          "target_subset_size": 2,
+          "target_subset_replacement": false,
+          "target_entropy": 0.0,
+          "initial_temperature": 1.0,
+          "backup_entropy": true,
+          "bootstrap_probability": 1.0,
+          "offline_objective": "iql",
+          "online_backup": "h2oplus",
+          "actor_q_reduction": "min-all",
+          "online_actor_update_interval": 1,
+          "online_actor_batch_mode": "latest",
+          "online_update_order": "actor-before-critic",
+          "offline_cql_alpha": 0.0,
+          "online_cql_alpha": 0.0,
+          "cql_n_actions": 10,
+          "cql_max_target_backup": false,
+          "mixed_backup_lambda": 0.1,
+          "iql_expectile": 0.7,
+          "iql_advantage_temperature": 3.0,
+          "iql_max_weight": 100.0,
+          "ratio_min_weight": 1e-05,
+          "ratio_max_weight": 1.0,
+          "use_ratio_correction": false,
+          "ratio_update_interval": 4,
+          "gradient_clip_norm": null,
+          "cql_penalty_subset_size": null,
+          "cql_penalty_subset_replacement": false,
+          "offline_update_order": "critic-before-actor",
+          "temperature_state_source": "actor",
+          "offline_temperature_action_samples": 1
+        },
+        "checkpoint_selection": "fixed final",
+        "admission": true,
+        "evaluation_cases": 1,
+        "evaluation_seconds": 24000
+      },
+      "evaluation": {
+        "0": {
+          "complete": true,
+          "case": 0,
+          "training_seed": 75101,
+          "demand_seed": 72501,
+          "sumo_seed": 73501,
+          "horizon_seconds": 24000.0,
+          "simulator_version": [
+            22,
+            "SUMO 1.25.0"
+          ],
+          "line_ids": [
+            "100X",
+            "101S",
+            "102X",
+            "103S",
+            "104X",
+            "105S",
+            "106X",
+            "107S",
+            "108X",
+            "109S",
+            "110X",
+            "111X"
+          ],
+          "cost": 2316.483990851915,
+          "departed": 3498,
+          "completed": 3440,
+          "completion": 0.9834190966266438,
+          "ledger_balance_error": 0,
+          "wait_seconds": 837.7141223556318,
+          "ride_seconds": 641.0557461406518,
+          "decision_events": 3834,
+          "mean_executed_hold_seconds": 7.867960761939105,
+          "positive_holds": 511,
+          "service_departed": 119,
+          "service_completed": 119
+        }
+      }
+    }
+  },
+  "interpretation": "Remediation comparison on three previously analyzed generated test demand cases in one target corridor city; disjoint from fit but not prospective unseen test evidence or physical sim-to-real.",
+  "comparison": {
+    "paired_evaluations": 1,
+    "all_seed_case_mean": {
+      "actual": {
+        "cost": 2316.483990851915,
+        "completion": 0.9834190966266438,
+        "wait_seconds": 837.7141223556318,
+        "ride_seconds": 641.0557461406518,
+        "mean_executed_hold_seconds": 7.867960761939105,
+        "positive_hold_fraction": 0.1332811684924361
+      },
+      "references": {
+        "strong_rule": {
+          "cost": 2307.4445397369927,
+          "completion": 0.9834190966266438,
+          "wait_seconds": 831.6578044596913,
+          "ride_seconds": 644.12893081761,
+          "mean_executed_hold_seconds": 9.015725561741682,
+          "positive_hold_fraction": 0.4869587897756912
+        },
+        "target_model": {
+          "cost": 2308.83047455689,
+          "completion": 0.9839908519153803,
+          "wait_seconds": 826.9762721555174,
+          "ride_seconds": 654.8779302458548,
+          "mean_executed_hold_seconds": 11.191981530836241,
+          "positive_hold_fraction": 0.699791340636411
+        },
+        "cross_city": {
+          "cost": 2314.9205260148656,
+          "completion": 0.9842767295597484,
+          "wait_seconds": 825.3187535734705,
+          "ride_seconds": 664.2830188679245,
+          "mean_executed_hold_seconds": 14.015486851668818,
+          "positive_hold_fraction": 1.0
+        },
+        "target_only": {
+          "cost": 2331.283304745569,
+          "completion": 0.983704974271012,
+          "wait_seconds": 835.6386506575186,
+          "ride_seconds": 660.0060034305317,
+          "mean_executed_hold_seconds": 12.880221680315984,
+          "positive_hold_fraction": 0.8708583355074354
+        }
+      },
+      "differences": {
+        "strong_rule": {
+          "cost": 9.039451114922485,
+          "cost_percent": 0.39175160916122476,
+          "completion_pp": 0.0,
+          "wait_seconds": 6.056317895940538,
+          "ride_seconds": -3.073184676958249
+        },
+        "target_model": {
+          "cost": 7.653516295025383,
+          "cost_percent": 0.33148888059848763,
+          "completion_pp": -0.05717552887364308,
+          "wait_seconds": 10.737850200114394,
+          "ride_seconds": -13.822184105203064
+        },
+        "cross_city": {
+          "cost": 1.5634648370496507,
+          "cost_percent": 0.06753859665934858,
+          "completion_pp": -0.08576329331045907,
+          "wait_seconds": 12.395368782161313,
+          "ride_seconds": -23.227272727272748
+        },
+        "target_only": {
+          "cost": -14.799313893653562,
+          "cost_percent": -0.6348140469898285,
+          "completion_pp": -0.028587764436815988,
+          "wait_seconds": 2.0754716981132333,
+          "ride_seconds": -18.950257289879914
+        }
+      }
+    },
+    "by_seed": {
+      "75101": {
+        "actual": {
+          "cost": 2316.483990851915,
+          "completion": 0.9834190966266438,
+          "wait_seconds": 837.7141223556318,
+          "ride_seconds": 641.0557461406518,
+          "mean_executed_hold_seconds": 7.867960761939105,
+          "positive_hold_fraction": 0.1332811684924361
+        },
+        "references": {
+          "strong_rule": {
+            "cost": 2307.4445397369927,
+            "completion": 0.9834190966266438,
+            "wait_seconds": 831.6578044596913,
+            "ride_seconds": 644.12893081761,
+            "mean_executed_hold_seconds": 9.015725561741682,
+            "positive_hold_fraction": 0.4869587897756912
+          },
+          "target_model": {
+            "cost": 2308.83047455689,
+            "completion": 0.9839908519153803,
+            "wait_seconds": 826.9762721555174,
+            "ride_seconds": 654.8779302458548,
+            "mean_executed_hold_seconds": 11.191981530836241,
+            "positive_hold_fraction": 0.699791340636411
+          },
+          "cross_city": {
+            "cost": 2314.9205260148656,
+            "completion": 0.9842767295597484,
+            "wait_seconds": 825.3187535734705,
+            "ride_seconds": 664.2830188679245,
+            "mean_executed_hold_seconds": 14.015486851668818,
+            "positive_hold_fraction": 1.0
+          },
+          "target_only": {
+            "cost": 2331.283304745569,
+            "completion": 0.983704974271012,
+            "wait_seconds": 835.6386506575186,
+            "ride_seconds": 660.0060034305317,
+            "mean_executed_hold_seconds": 12.880221680315984,
+            "positive_hold_fraction": 0.8708583355074354
+          }
+        },
+        "differences": {
+          "strong_rule": {
+            "cost": 9.039451114922485,
+            "cost_percent": 0.39175160916122476,
+            "completion_pp": 0.0,
+            "wait_seconds": 6.056317895940538,
+            "ride_seconds": -3.073184676958249
+          },
+          "target_model": {
+            "cost": 7.653516295025383,
+            "cost_percent": 0.33148888059848763,
+            "completion_pp": -0.05717552887364308,
+            "wait_seconds": 10.737850200114394,
+            "ride_seconds": -13.822184105203064
+          },
+          "cross_city": {
+            "cost": 1.5634648370496507,
+            "cost_percent": 0.06753859665934858,
+            "completion_pp": -0.08576329331045907,
+            "wait_seconds": 12.395368782161313,
+            "ride_seconds": -23.227272727272748
+          },
+          "target_only": {
+            "cost": -14.799313893653562,
+            "cost_percent": -0.6348140469898285,
+            "completion_pp": -0.028587764436815988,
+            "wait_seconds": 2.0754716981132333,
+            "ride_seconds": -18.950257289879914
+          }
+        }
+      }
+    },
+    "pairs": [
+      {
+        "seed": 75101,
+        "case": 0,
+        "actual": {
+          "cost": 2316.483990851915,
+          "completion": 0.9834190966266438,
+          "wait_seconds": 837.7141223556318,
+          "ride_seconds": 641.0557461406518,
+          "mean_executed_hold_seconds": 7.867960761939105,
+          "positive_hold_fraction": 0.1332811684924361
+        },
+        "references": {
+          "strong_rule": {
+            "cost": 2307.4445397369927,
+            "completion": 0.9834190966266438,
+            "wait_seconds": 831.6578044596913,
+            "ride_seconds": 644.12893081761,
+            "mean_executed_hold_seconds": 9.015725561741682,
+            "positive_hold_fraction": 0.4869587897756912
+          },
+          "target_model": {
+            "cost": 2308.83047455689,
+            "completion": 0.9839908519153803,
+            "wait_seconds": 826.9762721555174,
+            "ride_seconds": 654.8779302458548,
+            "mean_executed_hold_seconds": 11.191981530836241,
+            "positive_hold_fraction": 0.699791340636411
+          },
+          "cross_city": {
+            "cost": 2314.9205260148656,
+            "completion": 0.9842767295597484,
+            "wait_seconds": 825.3187535734705,
+            "ride_seconds": 664.2830188679245,
+            "mean_executed_hold_seconds": 14.015486851668818,
+            "positive_hold_fraction": 1.0
+          },
+          "target_only": {
+            "cost": 2331.283304745569,
+            "completion": 0.983704974271012,
+            "wait_seconds": 835.6386506575186,
+            "ride_seconds": 660.0060034305317,
+            "mean_executed_hold_seconds": 12.880221680315984,
+            "positive_hold_fraction": 0.8708583355074354
+          }
+        }
+      }
+    ],
+    "interpretation": "Executed holding and equal-weight case/seed costs; previously analyzed fixed demand cases. Admission is interface-only."
+  }
+}

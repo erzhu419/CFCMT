@@ -1,0 +1,145 @@
+{
+  "rule_cost": 2318.793199460133,
+  "rule_completion_percent": 98.32238091253926,
+  "rule_positive_fraction": 0.48204816134921324,
+  "rule_mean_hold": 9.136355753757693,
+  "branches": {
+    "target_only": {
+      "cost": 2333.5756229284875,
+      "cost_delta_rule": 14.78242346835461,
+      "completion_delta_rule_pp": 0.01896080676067798,
+      "by_seed": [
+        {
+          "seed": 75101,
+          "cost": 2344.0229433428735,
+          "cost_delta_rule": 25.22974388274027,
+          "completion_delta_rule_pp": 0.009529254812271997
+        },
+        {
+          "seed": 75102,
+          "cost": 2327.59103861712,
+          "cost_delta_rule": 8.79783915698681,
+          "completion_delta_rule_pp": 0.0190687124925056
+        },
+        {
+          "seed": 75103,
+          "cost": 2329.1128868254696,
+          "cost_delta_rule": 10.319687365336753,
+          "completion_delta_rule_pp": 0.028284452977256347
+        }
+      ],
+      "percent_delta_rule": 0.6375050380429047,
+      "completion_percent": 98.34134171929993,
+      "wait_delta_rule": 2.264322426813616,
+      "ride_delta_rule": 10.253778614727329,
+      "mean_hold": 12.121874382057975,
+      "positive_hold_fraction": 0.8236010084910308
+    },
+    "target_model": {
+      "cost": 2325.424683251904,
+      "cost_delta_rule": 6.631483791770734,
+      "completion_delta_rule_pp": 0.02192821547975325,
+      "by_seed": [
+        {
+          "seed": 75101,
+          "cost": 2324.5393269429283,
+          "cost_delta_rule": 5.746127482794994,
+          "completion_delta_rule_pp": 0.037500193462003395
+        },
+        {
+          "seed": 75102,
+          "cost": 2320.4717581770365,
+          "cost_delta_rule": 1.6785587169032017,
+          "completion_delta_rule_pp": 0.0
+        },
+        {
+          "seed": 75103,
+          "cost": 2331.2629646357473,
+          "cost_delta_rule": 12.469765175614006,
+          "completion_delta_rule_pp": 0.028284452977256347
+        }
+      ],
+      "percent_delta_rule": 0.2859885820483988,
+      "completion_percent": 98.34430912801902,
+      "wait_delta_rule": -0.6312019584128039,
+      "ride_delta_rule": 7.893887708596253,
+      "mean_hold": 11.031974083649073,
+      "positive_hold_fraction": 0.7478119747290326
+    },
+    "cross_city": {
+      "cost": 2325.144316873573,
+      "cost_delta_rule": 6.351117413440129,
+      "completion_delta_rule_pp": 0.018751797208993448,
+      "by_seed": [
+        {
+          "seed": 75101,
+          "cost": 2330.9366674162843,
+          "cost_delta_rule": 12.14346795615135,
+          "completion_delta_rule_pp": 0.05624518875902244
+        },
+        {
+          "seed": 75102,
+          "cost": 2326.7709096076564,
+          "cost_delta_rule": 7.977710147523491,
+          "completion_delta_rule_pp": -0.00921574048475075
+        },
+        {
+          "seed": 75103,
+          "cost": 2317.725373596779,
+          "cost_delta_rule": -1.0678258633544526,
+          "completion_delta_rule_pp": 0.009225943352708654
+        }
+      ],
+      "percent_delta_rule": 0.27389753492975616,
+      "completion_percent": 98.34113270974824,
+      "wait_delta_rule": 0.3690485647554801,
+      "ride_delta_rule": 5.613020283929156,
+      "mean_hold": 11.842362003176412,
+      "positive_hold_fraction": 0.9376376492407558
+    }
+  },
+  "model_minus_target_only": {
+    "75101": -19.483616399945276,
+    "75102": -7.1192804400834575,
+    "75103": 2.1500778102777076
+  },
+  "cross_minus_model": {
+    "75101": 6.397340473356053,
+    "75102": 6.299151430619986,
+    "75103": -13.537591038968458
+  },
+  "integrity": {
+    "training_complete": 9,
+    "evaluation_complete": 30,
+    "update_budget_per_route": 75000,
+    "evaluation_horizon_seconds": 24000,
+    "paired_departed_counts_match": true,
+    "all_passenger_balance_errors_zero": true,
+    "reported_cost_matches_passenger_components": true
+  },
+  "stage_q_diagnostics": {
+    "75101": {
+      "source_initialization_q": 217.76947021484375,
+      "source_adapted_target_q": 607.5562744140625,
+      "cross_city_final_q": 650.538330078125,
+      "target_adapted_q": -40.44589614868164,
+      "target_model_final_q": -38.17245101928711
+    },
+    "75102": {
+      "source_initialization_q": -8.839616775512695,
+      "source_adapted_target_q": -6.0016889572143555,
+      "cross_city_final_q": -7.283658504486084,
+      "target_adapted_q": -41.25825881958008,
+      "target_model_final_q": -37.006622314453125
+    },
+    "75103": {
+      "source_initialization_q": 48.5733757019043,
+      "source_adapted_target_q": 139.510009765625,
+      "cross_city_final_q": 134.91978454589844,
+      "target_adapted_q": -42.379844665527344,
+      "target_model_final_q": -35.8568115234375
+    }
+  },
+  "diagnostic_interpretation": "Source initialization already has very large positive Q estimates in two seeds; target adaptation does not resolve their value scale. These are last logged minibatches, not identical-state before/after measurements. Normalized model confidence does not directly calibrate transferred critic/value tensors.",
+  "decision": "No stable cross-city benefit and no branch beats the strong rule in its all-seed mean. Retain the fixed-final pilot as negative evidence; investigate source initialization/value transfer before choosing another training experiment."
+}

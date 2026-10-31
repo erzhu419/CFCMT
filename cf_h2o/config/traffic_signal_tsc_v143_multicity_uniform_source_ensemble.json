@@ -1,0 +1,18 @@
+{
+  "protocol": "tsc-v143-multicity-uniform-source-ensemble-v1",
+  "scientific_role": "seven-city-complete-holdout-development-not-confirmation",
+  "target_city_groups": ["atlanta", "cologne", "hangzhou", "ingolstadt", "new_york", "resco_synthetic", "salt_lake_city"],
+  "target_budget": 25,
+  "source_seed_inventory": [2027, 3037, 4047],
+  "reference_policy": "phase_pressure",
+  "arms": ["target_only_causal", "pooled_h2oplus", "uniform_cfcmt", "matched_source_placebo"],
+  "uniform_source_rule": "equal mass across all six non-target city components",
+  "city_gate": {
+    "minimum_mean_improvement": 0.0005,
+    "one_sided_confidence": 0.95,
+    "minimum_improving_cities": 5,
+    "maximum_city_regression": 0.01,
+    "required_comparators": ["target_only_causal", "pooled_h2oplus", "matched_source_placebo"]
+  },
+  "successor_boundary": "A pass authorizes a separately frozen untouched-city protocol; it is not itself confirmation."
+}

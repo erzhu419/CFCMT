@@ -1,0 +1,444 @@
+{
+  "component_root": "cf_h2o/results/cluster/tsc_v30r26_boosted_rollout_value_20260809/stage_a",
+  "created_at_utc": "2026-08-08T20:36:39.107326+00:00",
+  "decision": "boosted_rollout_value_residual_failed_no_promotion",
+  "families": [
+    "cfcmt_boosted_direct_rollout_value_rigid_residual"
+  ],
+  "frozen_cache": {
+    "aggregate_sha256": "5b8bac698f2bda045476614b37672edf31d73e50e266e8137baadc9e6349e72c",
+    "cache_root": "/home/zhengliang01/scheduleurm_work/CFCMT_CACHE/tsc_v25r21_policy_consistent_20260809",
+    "collection_shards": 16,
+    "file_count": 768,
+    "groups_by_scenario": {
+      "arterial4x4": 648,
+      "atlanta_1x5": 609,
+      "cologne1": 76,
+      "cologne3": 306,
+      "cologne8": 560,
+      "grid4x4": 648,
+      "hangzhou_4x4": 631,
+      "hangzhou_4x4_hetero": 634,
+      "hangzhou_bc_tyc": 25,
+      "hangzhou_kn_hz": 42,
+      "hangzhou_qc_yn": 33,
+      "hangzhou_sb_sx": 36,
+      "ingolstadt1": 90,
+      "ingolstadt21": 291,
+      "ingolstadt7": 271,
+      "manhattan_28x7": 572
+    },
+    "protocol": "embedded-identity-read-only-complete-shard-load-v1",
+    "rows_by_scenario": {
+      "arterial4x4": 3240,
+      "atlanta_1x5": 2131,
+      "cologne1": 608,
+      "cologne3": 1113,
+      "cologne8": 1745,
+      "grid4x4": 5184,
+      "hangzhou_4x4": 5048,
+      "hangzhou_4x4_hetero": 5072,
+      "hangzhou_bc_tyc": 200,
+      "hangzhou_kn_hz": 336,
+      "hangzhou_qc_yn": 264,
+      "hangzhou_sb_sx": 288,
+      "ingolstadt1": 270,
+      "ingolstadt21": 930,
+      "ingolstadt7": 817,
+      "manhattan_28x7": 5148
+    },
+    "scenario_count": 16,
+    "seeds": [
+      2027,
+      3037,
+      4047
+    ],
+    "unique_identities": 768,
+    "used_file_count": 768
+  },
+  "group_counts": {
+    "atlanta_1x5": 609,
+    "cologne1": 76,
+    "grid4x4": 648,
+    "hangzhou_4x4": 631,
+    "ingolstadt1": 90,
+    "manhattan_28x7": 572
+  },
+  "integrity_passed": true,
+  "integrity_rows": [
+    {
+      "city_group": "resco_synthetic",
+      "evaluation_group_count": 648,
+      "family": "cfcmt_boosted_direct_rollout_value_rigid_residual",
+      "holdout": {
+        "heldout_city_scenarios": [
+          "arterial4x4",
+          "grid4x4"
+        ],
+        "source_domains": [
+          "atlanta",
+          "cologne",
+          "hangzhou",
+          "ingolstadt",
+          "new_york"
+        ],
+        "source_scenario_count": 14,
+        "target_adaptation_groups": 0
+      },
+      "mean_normalized_action_regret": 0.3452862811921732,
+      "optimal_action_rate": 0.5632716049382716,
+      "result_path": "cf_h2o/results/cluster/tsc_v30r26_boosted_rollout_value_20260809/stage_a/grid4x4/cfcmt_boosted_direct_rollout_value_rigid_residual/result.json",
+      "result_sha256": "a2be3b430c4c85e60b51c1847ed2f59fbce55f332cca6081cc744778d52735ad",
+      "rollout_value_fit": {
+        "estimator": "HistGradientBoostingRegressor",
+        "mechanism_enabled": true,
+        "mechanism_estimator_protocol": "causal_boosted_v1",
+        "mechanism_name": "terminal_clearance",
+        "pair_excluded_core_fit_count": 10,
+        "pair_excluded_mechanism_fit_count": 10,
+        "parent_names": [
+          "total_q",
+          "network_active_per_tls",
+          "delta_green_q",
+          "delta_switch_indicator"
+        ],
+        "parent_variant": "minimal",
+        "selected_alpha": 0.1,
+        "source_domain_count": 5,
+        "stack_enabled": false,
+        "stack_weight": 0.0,
+        "target_name": "terminal_system_load"
+      },
+      "target": "grid4x4"
+    },
+    {
+      "city_group": "cologne",
+      "evaluation_group_count": 76,
+      "family": "cfcmt_boosted_direct_rollout_value_rigid_residual",
+      "holdout": {
+        "heldout_city_scenarios": [
+          "cologne1",
+          "cologne3",
+          "cologne8"
+        ],
+        "source_domains": [
+          "atlanta",
+          "hangzhou",
+          "ingolstadt",
+          "new_york",
+          "resco_synthetic"
+        ],
+        "source_scenario_count": 13,
+        "target_adaptation_groups": 0
+      },
+      "mean_normalized_action_regret": 0.2853987446620108,
+      "optimal_action_rate": 0.2894736842105263,
+      "result_path": "cf_h2o/results/cluster/tsc_v30r26_boosted_rollout_value_20260809/stage_a/cologne1/cfcmt_boosted_direct_rollout_value_rigid_residual/result.json",
+      "result_sha256": "9b71b22f615e449a470758f73b9426e698880b455240c50bb996713532a8323b",
+      "rollout_value_fit": {
+        "estimator": "HistGradientBoostingRegressor",
+        "mechanism_enabled": true,
+        "mechanism_estimator_protocol": "causal_boosted_v1",
+        "mechanism_name": "terminal_clearance",
+        "pair_excluded_core_fit_count": 10,
+        "pair_excluded_mechanism_fit_count": 10,
+        "parent_names": [
+          "total_q",
+          "network_active_per_tls",
+          "delta_green_q",
+          "delta_switch_indicator"
+        ],
+        "parent_variant": "minimal",
+        "selected_alpha": 0.1,
+        "source_domain_count": 5,
+        "stack_enabled": false,
+        "stack_weight": 0.0,
+        "target_name": "terminal_system_load"
+      },
+      "target": "cologne1"
+    },
+    {
+      "city_group": "ingolstadt",
+      "evaluation_group_count": 90,
+      "family": "cfcmt_boosted_direct_rollout_value_rigid_residual",
+      "holdout": {
+        "heldout_city_scenarios": [
+          "ingolstadt1",
+          "ingolstadt21",
+          "ingolstadt7"
+        ],
+        "source_domains": [
+          "atlanta",
+          "cologne",
+          "hangzhou",
+          "new_york",
+          "resco_synthetic"
+        ],
+        "source_scenario_count": 13,
+        "target_adaptation_groups": 0
+      },
+      "mean_normalized_action_regret": 0.15250211799502988,
+      "optimal_action_rate": 0.4666666666666667,
+      "result_path": "cf_h2o/results/cluster/tsc_v30r26_boosted_rollout_value_20260809/stage_a/ingolstadt1/cfcmt_boosted_direct_rollout_value_rigid_residual/result.json",
+      "result_sha256": "ce90d9af3f215a873e08d4cf840dd7a8dae06a199cc0d2994bd54f4d05c919ed",
+      "rollout_value_fit": {
+        "estimator": "HistGradientBoostingRegressor",
+        "mechanism_enabled": true,
+        "mechanism_estimator_protocol": "causal_boosted_v1",
+        "mechanism_name": "terminal_clearance",
+        "pair_excluded_core_fit_count": 10,
+        "pair_excluded_mechanism_fit_count": 10,
+        "parent_names": [
+          "total_q",
+          "network_active_per_tls",
+          "delta_green_q",
+          "delta_switch_indicator"
+        ],
+        "parent_variant": "minimal",
+        "selected_alpha": 0.1,
+        "source_domain_count": 5,
+        "stack_enabled": true,
+        "stack_weight": 1.0,
+        "target_name": "terminal_system_load"
+      },
+      "target": "ingolstadt1"
+    },
+    {
+      "city_group": "atlanta",
+      "evaluation_group_count": 609,
+      "family": "cfcmt_boosted_direct_rollout_value_rigid_residual",
+      "holdout": {
+        "heldout_city_scenarios": [
+          "atlanta_1x5"
+        ],
+        "source_domains": [
+          "cologne",
+          "hangzhou",
+          "ingolstadt",
+          "new_york",
+          "resco_synthetic"
+        ],
+        "source_scenario_count": 15,
+        "target_adaptation_groups": 0
+      },
+      "mean_normalized_action_regret": 0.22642525043884015,
+      "optimal_action_rate": 0.6995073891625616,
+      "result_path": "cf_h2o/results/cluster/tsc_v30r26_boosted_rollout_value_20260809/stage_a/atlanta_1x5/cfcmt_boosted_direct_rollout_value_rigid_residual/result.json",
+      "result_sha256": "146fe50df0b4c726667b378cd61dc3b2e1c6b1ec07130200c3c9ba79cf0cb694",
+      "rollout_value_fit": {
+        "estimator": "HistGradientBoostingRegressor",
+        "mechanism_enabled": true,
+        "mechanism_estimator_protocol": "causal_boosted_v1",
+        "mechanism_name": "terminal_clearance",
+        "pair_excluded_core_fit_count": 10,
+        "pair_excluded_mechanism_fit_count": 10,
+        "parent_names": [
+          "total_q",
+          "network_active_per_tls",
+          "delta_green_q",
+          "delta_switch_indicator"
+        ],
+        "parent_variant": "minimal",
+        "selected_alpha": 50.0,
+        "source_domain_count": 5,
+        "stack_enabled": true,
+        "stack_weight": 1.0,
+        "target_name": "terminal_system_load"
+      },
+      "target": "atlanta_1x5"
+    },
+    {
+      "city_group": "hangzhou",
+      "evaluation_group_count": 631,
+      "family": "cfcmt_boosted_direct_rollout_value_rigid_residual",
+      "holdout": {
+        "heldout_city_scenarios": [
+          "hangzhou_4x4",
+          "hangzhou_4x4_hetero",
+          "hangzhou_bc_tyc",
+          "hangzhou_kn_hz",
+          "hangzhou_qc_yn",
+          "hangzhou_sb_sx"
+        ],
+        "source_domains": [
+          "atlanta",
+          "cologne",
+          "ingolstadt",
+          "new_york",
+          "resco_synthetic"
+        ],
+        "source_scenario_count": 10,
+        "target_adaptation_groups": 0
+      },
+      "mean_normalized_action_regret": 0.3677332528714541,
+      "optimal_action_rate": 0.508716323296355,
+      "result_path": "cf_h2o/results/cluster/tsc_v30r26_boosted_rollout_value_20260809/stage_a/hangzhou_4x4/cfcmt_boosted_direct_rollout_value_rigid_residual/result.json",
+      "result_sha256": "bbcb6860b634a3d79283a9cf01b0d36c9700c73f8dd00438f6466e2b92ef91fb",
+      "rollout_value_fit": {
+        "estimator": "HistGradientBoostingRegressor",
+        "mechanism_enabled": true,
+        "mechanism_estimator_protocol": "causal_boosted_v1",
+        "mechanism_name": "terminal_clearance",
+        "pair_excluded_core_fit_count": 10,
+        "pair_excluded_mechanism_fit_count": 10,
+        "parent_names": [
+          "total_q",
+          "network_active_per_tls",
+          "delta_green_q",
+          "delta_switch_indicator"
+        ],
+        "parent_variant": "minimal",
+        "selected_alpha": 0.1,
+        "source_domain_count": 5,
+        "stack_enabled": false,
+        "stack_weight": 0.0,
+        "target_name": "terminal_system_load"
+      },
+      "target": "hangzhou_4x4"
+    },
+    {
+      "city_group": "new_york",
+      "evaluation_group_count": 572,
+      "family": "cfcmt_boosted_direct_rollout_value_rigid_residual",
+      "holdout": {
+        "heldout_city_scenarios": [
+          "manhattan_28x7"
+        ],
+        "source_domains": [
+          "atlanta",
+          "cologne",
+          "hangzhou",
+          "ingolstadt",
+          "resco_synthetic"
+        ],
+        "source_scenario_count": 15,
+        "target_adaptation_groups": 0
+      },
+      "mean_normalized_action_regret": 0.33014440513545756,
+      "optimal_action_rate": 0.5594405594405595,
+      "result_path": "cf_h2o/results/cluster/tsc_v30r26_boosted_rollout_value_20260809/stage_a/manhattan_28x7/cfcmt_boosted_direct_rollout_value_rigid_residual/result.json",
+      "result_sha256": "3fc7b7d9f9c8445548b59a882d6f3c1b300875c94db87b6c949ddcf51ac317c3",
+      "rollout_value_fit": {
+        "estimator": "HistGradientBoostingRegressor",
+        "mechanism_enabled": true,
+        "mechanism_estimator_protocol": "causal_boosted_v1",
+        "mechanism_name": "terminal_clearance",
+        "pair_excluded_core_fit_count": 10,
+        "pair_excluded_mechanism_fit_count": 10,
+        "parent_names": [
+          "total_q",
+          "network_active_per_tls",
+          "delta_green_q",
+          "delta_switch_indicator"
+        ],
+        "parent_variant": "minimal",
+        "selected_alpha": 0.1,
+        "source_domain_count": 5,
+        "stack_enabled": true,
+        "stack_weight": 1.0,
+        "target_name": "terminal_system_load"
+      },
+      "target": "manhattan_28x7"
+    }
+  ],
+  "manifest": {
+    "path": "cf_h2o/config/traffic_signal_cross_city_v1.json",
+    "sha256": "b5372c7036b5a8926f0fbf671a416b4dbcf4207db79f7c9c14a67a654f2bfffa"
+  },
+  "protocol": "tsc-v30r26-boosted-rollout-value-stage-audit-v1",
+  "results_checked": 6,
+  "selected_family": null,
+  "selection": {
+    "candidate_summary": {
+      "cities_improved": 2,
+      "city_macro_mean_normalized_action_regret": 0.2845816753824943,
+      "family": "cfcmt_boosted_direct_rollout_value_rigid_residual",
+      "label": "Rigid + parent-restricted nonlinear rollout value",
+      "max_absolute_regression": 0.010853215024122398,
+      "relative_improvement_vs_rigid_pct": 2.2517147388356458,
+      "stage_gate": {
+        "at_least_four_cities_improved": false,
+        "macro_improvement_at_least_10_pct": false,
+        "max_regression_at_most_0_05": true,
+        "passed": false
+      },
+      "target_improvements_vs_rigid": {
+        "atlanta_1x5": -0.010853215024122398,
+        "cologne1": 0.0,
+        "grid4x4": 0.0,
+        "hangzhou_4x4": 0.0,
+        "ingolstadt1": 0.04717699063227995,
+        "manhattan_28x7": 0.003009707397660044
+      },
+      "targets": {
+        "atlanta_1x5": 0.22642525043884015,
+        "cologne1": 0.2853987446620108,
+        "grid4x4": 0.3452862811921732,
+        "hangzhou_4x4": 0.3677332528714541,
+        "ingolstadt1": 0.15250211799502988,
+        "manhattan_28x7": 0.33014440513545756
+      }
+    },
+    "decision": "boosted_rollout_value_residual_failed_no_promotion",
+    "passed": false,
+    "protocol": "frozen-six-city-boosted-rollout-value-selector-v1",
+    "rigid": {
+      "city_macro_mean_normalized_action_regret": 0.2911372558834639,
+      "family": "causal_rigid_advantage",
+      "targets": {
+        "atlanta_1x5": 0.21557203541471776,
+        "cologne1": 0.2853987446620108,
+        "grid4x4": 0.3452862811921732,
+        "hangzhou_4x4": 0.3677332528714541,
+        "ingolstadt1": 0.19967910862730984,
+        "manhattan_28x7": 0.3331541125331176
+      }
+    },
+    "selected_family": null,
+    "thresholds": {
+      "macro_improvement_pct": 10.0,
+      "maximum_absolute_regression": 0.05,
+      "minimum_improved_targets": 4,
+      "numerical_tolerance": 1e-12
+    }
+  },
+  "shards_checked": 6,
+  "snapshot": {
+    "created_at_utc": "2026-08-08T20:26:45.230768+00:00",
+    "data_root": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads",
+    "git_commit": "71ca735a118524e582249c6db5b250c845d3f986",
+    "manifest_path": "cf_h2o/results/cluster/tsc_v30r26_boosted_rollout_value_snapshot_20260809.json",
+    "manifest_sha256": "0c9e5e566e1c7ccd18f912a80586e1cbf2ff8dc5ef1496cf341a283c5e28e2c5",
+    "snapshot_root": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/62615b380ff3ffa9bef8",
+    "snapshot_sha256": "62615b380ff3ffa9bef8745cd53db2f841ea3064bbd64b420721042b59528878",
+    "source_tree_sha256": "3780d9cf9d8bbdc0da85d66ce5d905b7611dc7c0565a94cd28a5f5f6a53203e6"
+  },
+  "source_rule_baseline": {
+    "aggregate_sha256": "5d5ce0f8a609216b6525009feb5076d195912818075bcc33417cb160a0018ca5",
+    "cache_file_count": 992,
+    "launch_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v25r21_policy_consistent_20260809/source_rule_baseline/baseline.json",
+    "path": "cf_h2o/results/cluster/tsc_v25r21_policy_consistent_20260809/source_rule_baseline/baseline.json",
+    "policy_count": 31,
+    "row_count": 992,
+    "scenario_count": 16,
+    "sha256": "25e6291ba9ff7348642baf09498c9c7bea36ef3fd77a7ee6680b289a03201acb",
+    "source_tree_sha256": "997f072412977fb40420c3ecceeba48016b098142e71ded1bb32d265df625ffa",
+    "verified_path": "cf_h2o/results/cluster/tsc_v25r21_policy_consistent_20260809/source_rule_baseline/baseline.json"
+  },
+  "stage_passed": false,
+  "targets": [
+    "grid4x4",
+    "cologne1",
+    "ingolstadt1",
+    "atlanta_1x5",
+    "hangzhou_4x4",
+    "manhattan_28x7"
+  ],
+  "v26_reference": {
+    "integrity_passed": true,
+    "path": "cf_h2o/results/cluster/tsc_v26r22_rigid_residual_20260809/stage_a_audit/audit.json",
+    "protocol": "tsc-v26r22-rigid-anchored-residual-stage-audit-v1",
+    "sha256": "05fc6e94757b74221b781878fa6bdae3b4142ee4d866aceea13332b5e4932154",
+    "snapshot_sha256": "6d44e1f6d22eea229628a8c521be5b1bf10da75c35eea722ecdaaaddc60b8fa9"
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "complete": true,
+  "protocol": "cfcmt-bus-iql-backup-diagnostic-v1",
+  "seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "rows_per_stage": 12288,
+  "actor_draws_per_state": 8,
+  "updates": 0,
+  "evaluation_rows_read": 0,
+  "stage_rows": [
+    {
+      "seed": 75101,
+      "stage": "adapted",
+      "alpha": 1.0,
+      "abs_td_on": 1.5205014944076538,
+      "abs_td_off": 0.14886564016342163,
+      "relative_residual_reduction": 0.9020943808927885,
+      "weight_cap_fraction": 0.0,
+      "weight_near_zero_fraction": 0.0,
+      "weight_effective_sample_fraction": 0.6488453062853448
+    },
+    {
+      "seed": 75101,
+      "stage": "td0",
+      "alpha": 322.9617919921875,
+      "abs_td_on": 546.093994140625,
+      "abs_td_off": 156.1141815185547,
+      "relative_residual_reduction": 0.7141258039941863,
+      "weight_cap_fraction": 0.5492350260416666,
+      "weight_near_zero_fraction": 0.19254557291666666,
+      "weight_effective_sample_fraction": 0.5793348986261424
+    },
+    {
+      "seed": 75101,
+      "stage": "td025",
+      "alpha": 328.4930419921875,
+      "abs_td_on": 524.8777465820312,
+      "abs_td_off": 139.7176055908203,
+      "relative_residual_reduction": 0.7338092412935164,
+      "weight_cap_fraction": 0.29052734375,
+      "weight_near_zero_fraction": 0.3231608072916667,
+      "weight_effective_sample_fraction": 0.3214023870631478
+    },
+    {
+      "seed": 75102,
+      "stage": "adapted",
+      "alpha": 1.0,
+      "abs_td_on": 1.8326457738876343,
+      "abs_td_off": 0.16942907869815826,
+      "relative_residual_reduction": 0.907549466944316,
+      "weight_cap_fraction": 0.0009765625,
+      "weight_near_zero_fraction": 0.0,
+      "weight_effective_sample_fraction": 0.1283631103179782
+    },
+    {
+      "seed": 75102,
+      "stage": "td0",
+      "alpha": 307.7109375,
+      "abs_td_on": 515.6475219726562,
+      "abs_td_off": 112.13105010986328,
+      "relative_residual_reduction": 0.7825432192888355,
+      "weight_cap_fraction": 0.3915201822916667,
+      "weight_near_zero_fraction": 0.16829427083333334,
+      "weight_effective_sample_fraction": 0.43611196492071813
+    },
+    {
+      "seed": 75102,
+      "stage": "td025",
+      "alpha": 320.92724609375,
+      "abs_td_on": 418.7688903808594,
+      "abs_td_off": 94.44479370117188,
+      "relative_residual_reduction": 0.7744703680942565,
+      "weight_cap_fraction": 0.09920247395833333,
+      "weight_near_zero_fraction": 0.3570149739583333,
+      "weight_effective_sample_fraction": 0.11242509264546947
+    },
+    {
+      "seed": 75103,
+      "stage": "adapted",
+      "alpha": 1.0,
+      "abs_td_on": 1.7704330682754517,
+      "abs_td_off": 0.18917471170425415,
+      "relative_residual_reduction": 0.8931477754826812,
+      "weight_cap_fraction": 0.000244140625,
+      "weight_near_zero_fraction": 0.0,
+      "weight_effective_sample_fraction": 0.15248137581799406
+    },
+    {
+      "seed": 75103,
+      "stage": "td0",
+      "alpha": 310.71136474609375,
+      "abs_td_on": 500.2575378417969,
+      "abs_td_off": 113.9594955444336,
+      "relative_residual_reduction": 0.7721983440048183,
+      "weight_cap_fraction": 0.335693359375,
+      "weight_near_zero_fraction": 0.11271158854166667,
+      "weight_effective_sample_fraction": 0.4059420325141021
+    },
+    {
+      "seed": 75103,
+      "stage": "td025",
+      "alpha": 329.189697265625,
+      "abs_td_on": 598.3422241210938,
+      "abs_td_off": 149.66009521484375,
+      "relative_residual_reduction": 0.7498754238267576,
+      "weight_cap_fraction": 0.195068359375,
+      "weight_near_zero_fraction": 0.23429361979166666,
+      "weight_effective_sample_fraction": 0.23672147487102543
+    }
+  ],
+  "conclusion": "Entropy dominates the current latent-entropy TD backup error. Removing it in fixed checkpoints reduces residuals but does not repair networks or IQL weights.",
+  "next_step": "Actual paired admission t126828 PASS. Six OFF20k continuations t126837-t126842 submitted; ON/adapted/rule references t126843-t126852 submitted. Frozen fresh48-evaluation protocol; no current performance conclusion.",
+  "evidence": "iql_backup_diagnostic_summary.json",
+  "next_forced60_rows": [
+    {
+      "seed": 75101,
+      "stage": "td0",
+      "rows": 1648,
+      "entropy_target_delta": -3018.3310546875,
+      "abs_td_on": 3023.9033203125,
+      "abs_td_off": 612.6350708007812
+    },
+    {
+      "seed": 75101,
+      "stage": "td025",
+      "rows": 1648,
+      "entropy_target_delta": -2720.06787109375,
+      "abs_td_on": 2737.024658203125,
+      "abs_td_off": 530.8292236328125
+    },
+    {
+      "seed": 75102,
+      "stage": "td0",
+      "rows": 1648,
+      "entropy_target_delta": -2975.224853515625,
+      "abs_td_on": 2921.203857421875,
+      "abs_td_off": 429.8954162597656
+    },
+    {
+      "seed": 75102,
+      "stage": "td025",
+      "rows": 1648,
+      "entropy_target_delta": -2238.912841796875,
+      "abs_td_on": 2339.319091796875,
+      "abs_td_off": 369.7058410644531
+    },
+    {
+      "seed": 75103,
+      "stage": "td0",
+      "rows": 1648,
+      "entropy_target_delta": -2381.285400390625,
+      "abs_td_on": 2465.067138671875,
+      "abs_td_off": 409.7768249511719
+    },
+    {
+      "seed": 75103,
+      "stage": "td025",
+      "rows": 1648,
+      "entropy_target_delta": -3347.621337890625,
+      "abs_td_on": 3258.326171875,
+      "abs_td_off": 557.296630859375
+    }
+  ]
+}

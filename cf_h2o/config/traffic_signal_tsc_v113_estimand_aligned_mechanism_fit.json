@@ -1,0 +1,30 @@
+{
+  "protocol": "tsc-v113-estimand-aligned-mechanism-fit-v1",
+  "scientific_status": "post-v112_source-label-estimand-rebuild",
+  "target_name": "prefix_mean_cost_450s",
+  "training_target_name": "interval_cost",
+  "required_target_equivalence_tolerance": 1e-12,
+  "prior_policy": "phase_pressure",
+  "target_budgets": [0, 100],
+  "source_component_families": [
+    "causal_rigid_advantage",
+    "cfcmt_physical_mechanism"
+  ],
+  "frozen_blend_candidate_by_city": {
+    "los_angeles": "local_cap_1_z_0p25",
+    "jinan": "constant_alpha_0p9"
+  },
+  "target_adaptation": {
+    "seeds": [5057, 6067],
+    "budget_per_city": 100,
+    "selection": "city-scenario-and-seed-balanced-coverage-first-b100-v1",
+    "same_group_ids_for_target_only_and_source_augmented_models": true
+  },
+  "source_training": {
+    "seeds": [2027, 3037, 4047],
+    "collection_shards": 16,
+    "admitted_scenario_count": 17,
+    "source_city_group_count": 7
+  },
+  "claim_boundary": "B0 is target-label-free transfer with target static context. B100 is target offline adaptation and is never described as zero-shot. Both are development models until a disjoint waiting-aligned selector and fresh closed-loop confirmation pass."
+}

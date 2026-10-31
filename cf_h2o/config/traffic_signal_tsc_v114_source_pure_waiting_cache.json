@@ -1,0 +1,103 @@
+{
+  "protocol": "tsc-v114-source-pure-waiting-cache-v1",
+  "scientific_status": "disclosed_post-v113_estimand-implementation-invalidation",
+  "manifest": "cf_h2o/config/traffic_signal_cross_city_v2_saltlake18.json",
+  "source_city_groups": [
+    "atlanta",
+    "cologne",
+    "hangzhou",
+    "ingolstadt",
+    "new_york",
+    "resco_synthetic",
+    "salt_lake_city"
+  ],
+  "collection": {
+    "seeds": [2027, 3037, 4047],
+    "duration_sec": 3600,
+    "control_interval_sec": 10,
+    "warmup_sec": 60,
+    "max_focal_tls": 4,
+    "counterfactual_horizon_intervals": 45,
+    "rollout_prefix_horizons_sec": [450],
+    "collection_shards_per_seed": 16,
+    "workers_per_node": 20,
+    "behavior_policy": "phase_pressure",
+    "counterfactual_cost_mode": "halted_queue",
+    "counterfactual_cost_contract": {
+      "mode": "halted_queue",
+      "estimand_protocol": "one-control-interval-local-mechanisms-plus-pure-halted-queue-rollout-value-v2",
+      "scope": "global_halted_vehicles_per_controlled_lane",
+      "population": "sumo_last_step_halting_number_on_controlled_lanes",
+      "normalization": "controlled_lane_count"
+    },
+    "allowed_zero_retained_scenarios": ["ingolstadt21"],
+    "minimum_tls_coverage": 1.0,
+    "sumo_version": "1.22.0"
+  },
+  "node_jobs": {
+    "node001": {
+      "scenarios": ["manhattan_28x7"],
+      "seeds": [2027]
+    },
+    "node002": {
+      "scenarios": ["manhattan_28x7"],
+      "seeds": [3037]
+    },
+    "node003": {
+      "scenarios": ["manhattan_28x7"],
+      "seeds": [4047]
+    },
+    "node004": {
+      "scenarios": [
+        "hangzhou_bc_tyc",
+        "hangzhou_kn_hz",
+        "hangzhou_qc_yn",
+        "hangzhou_sb_sx",
+        "hangzhou_4x4",
+        "hangzhou_4x4_hetero"
+      ],
+      "seeds": [2027, 3037, 4047]
+    },
+    "node005": {
+      "scenarios": [
+        "grid4x4",
+        "arterial4x4",
+        "atlanta_1x5",
+        "cologne1",
+        "cologne3",
+        "cologne8"
+      ],
+      "seeds": [2027, 3037, 4047]
+    },
+    "node006": {
+      "scenarios": [
+        "ingolstadt1",
+        "ingolstadt7",
+        "ingolstadt21",
+        "saltlake_400s_200w_q1_weekday_peak",
+        "saltlake_state_university_q1_weekday_peak"
+      ],
+      "seeds": [2027, 3037, 4047]
+    }
+  },
+  "expected_scenario_count": 18,
+  "expected_scenario_seed_count": 54,
+  "expected_cache_file_count": 864,
+  "estimand_contract": {
+    "action": "candidate_phase_for_first_10_seconds",
+    "continuation_policy": "phase_pressure_after_first_control_interval",
+    "target": "prefix_mean_cost_450s",
+    "aggregation": "mean_global_pure_halted_vehicles_per_controlled_lane"
+  },
+  "post_collection_gate": {
+    "all_18_scenarios_present": true,
+    "all_seed_shard_sets_complete": true,
+    "full_tls_coverage_within_each_scenario_seed": true,
+    "behavior_trace_consistent_within_each_scenario_seed": true,
+    "replay_and_safety_pass": true,
+    "finite_nonnegative_450s_targets": true,
+    "full_horizon_equivalence_pass": true,
+    "pure_halted_queue_cost_contract_matches_cache_identity": true
+  },
+  "claim_boundary": "This replacement cache repairs the invalid V112 composite queue label. It may train source mechanisms only after the complete pure-cost audit passes and cannot serve as confirmation evidence."
+}

@@ -1,0 +1,55 @@
+\section{Evaluation Design}
+\subsection{Networks and simulator}
+Experiments use SUMO 1.22.0 through \texttt{libsumo} \cite{lopez2018microscopic}. The source collection contains 18 networks, 317 controlled signals, and 6,076 non-internal lanes, grouped as in Table~\ref{tab:networks}. There are six geographical groups and one synthetic group. Holding out a geographical group removes all of its subnetworks from source fitting. The collection draws on public signal-control benchmarks, including Reinforced Signal Control (RESCO) and LibSignal \cite{ault2021reinforcement,mei2022libsignal}.
+
+The external targets are a four-signal Los Angeles corridor from LibSignal and a 12-signal Jinan network from the CoLight benchmark \cite{wei2019colight}. Jinan has three demand files on the same geometry. These inputs were distributed in CityFlow format \cite{zhang2019cityflow} and converted to SUMO, preserving demand, route continuity, phase identities, and protected versus permissive movements. A pre-evaluation execution check was used to detect conversion defects. These are benchmark representations of parts of cities, not calibrated city-wide digital twins.
+
+\begin{table}[!t]
+\caption{Network Inventory}
+\label{tab:networks}
+\centering
+\begin{tabular}{lrrr}
+\toprule
+Group & Networks & Signals & Lanes\\
+\midrule
+Atlanta & 1 & 5 & 55\\
+Cologne & 3 & 12 & 252\\
+Hangzhou & 6 & 36 & 532\\
+Ingolstadt & 3 & 32 & 2,227\\
+New York & 1 & 196 & 2,562\\
+Synthetic & 2 & 32 & 360\\
+Salt Lake City & 2 & 4 & 88\\
+\midrule
+Source total & 18 & 317 & 6,076\\
+\midrule
+Los Angeles (target) & 1 & 4 & 157\\
+Jinan (target) & 1 & 12 & 186\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Separating development, adaptation, and tests}
+Development uses source seeds 2027 and 3037 for fitting and seed 4047 for held-out evaluation. The leave-one-group-out exercises allow up to 100 adaptation groups from the held-out network group; they are tests of adaptation rather than pure zero-shot transfer. For the final external models, the source bank includes all three source seeds. Thus, 4047 is held out for development assessment but is not withheld from the later source-bank refit.
+
+Target adaptation seeds 5057 and 6067 yield 165 complete action groups in Los Angeles and 911 in Jinan. Each group contains multiple alternative-action outcomes and should not be interpreted as one passive observation. For the earlier development tests in Appendix~\ref{app:development-results}, seed 8171 supplies 79 Los Angeles and 457 Jinan offline test groups, and the initial closed-loop comparison uses seeds 8081 and 9091. An earlier diagnostic seed, 7079, influenced method development and is excluded from the reported tests. Final evaluation outcomes are not used to tune the predictors, source weights, or guard.
+
+Each closed-loop run lasts 3,600~s in total, including a 60-s warm-up. The final comparison uses four target scenarios and 56 paired seeds. The two cities receive equal weight; Jinan's three demands are first averaged within that city. The original seven-controller, two-seed comparison and its separate confirmation tests are reported in Appendix~\ref{app:development-results}.
+
+For the final source selector in Section~\ref{sec:source-selector}, static network context is repaired by tracing controlled movements through intermediate links to the nearest downstream signals, and context-dependent analytic priors are recomputed. The recorded action features and outcome labels remain unchanged. Models use all 165 Los Angeles or 911 Jinan adaptation groups. Eight separate target development seeds select the source group, source weight, and guard. Selection returns the legacy target anchor without a guard for Los Angeles and the Atlanta component at weight one for Jinan, with constant blend weight 0.9 and guard multiplier 0.5. The target-anchor and equal-source comparators receive the same city-specific guard and sparse coordination as the selected controller. The latter averages predictions of the seven source-group components with equal weights. All choices are frozen before 56 paired evaluation seeds. The original five-controller matrix gives 1,120 one-hour runs. MaxPressure is subsequently added as a fixed baseline on the same 56 seeds and four scenarios, giving 224 further runs and 1,344 in total. It uses the existing MaxPressure implementation, with no model refitting or parameter selection. All six methods share network files, phase executor, and decision timing. This protocol uses target closed-loop development outcomes in addition to the two adaptation seeds.
+
+\subsection{Comparators and common execution}
+The final comparison includes the frozen \method\ selector, the legacy target anchor, an equal-weight mixture of the seven source components, a frozen dense linear residual model, PhasePressure, and MaxPressure. The implemented MaxPressure subtracts the downstream-queue proxy from the served-queue proxy. PhasePressure uses the served-queue proxy alone. The development comparisons additionally include fixed-time control, an uncorrected analytic scoring rule, and the restricted reference predictor alone (Appendix~\ref{app:development-results}).
+
+The dense linear model fits a correction to the analytic prior using the full local-feature and context vector. It uses domain-balanced robust ridge regression, with $L_2$ penalty 3, Huber parameter 1.5, and three robust-fitting iterations. It originally receives the same matched action groups and target refit data as the pooled-source controller and remains frozen for the final comparison. The source-selection components instead use individual source groups and the same target adaptation data. The methods also differ in function class, normalization, and weighting. The comparison therefore tests complete estimator configurations; it does not isolate the effect of feature restrictions at matched model capacity.
+
+All controllers share network and demand files. Learned and pressure controllers use the same candidate phase identities and phase executor; fixed-time control retains its native SUMO program. The executor reads the original program's positive minimum-green duration; otherwise it uses up to 5~s, bounded by the phase duration and at least 1~s. Yellow and all-red durations use the corresponding program medians, with defaults of 3~s and 1~s. All-red is extended in one-second increments while the junction interior is occupied. These constraints are implementation safeguards, not a proof of collision-free control.
+
+Published reinforcement learning methods were also run under their original RESCO or LibSignal interfaces. Their observations, rewards, timing, and training procedures differ from this comparison. We therefore do not insert their scores into the matched six-controller table or claim superiority over those methods.
+
+\subsection{Outcomes and uncertainty}
+The primary outcome is average waiting time over all vehicles that depart during a run, including waiting accrued by unfinished trips up to the fixed endpoint. Waiting records and cumulative departure and arrival counts include the warm-up period. The measure avoids reporting only completed trips, but remains finite-horizon and excludes vehicles that never depart. System vehicle-hours sum one-second active-plus-pending vehicle counts from the warm-up endpoint through the simulation endpoint and divide by 3,600; the 60--3,600~s endpoints give 3,541 samples. Demand completion is $C_{\mathrm{arr}}/(C_{\mathrm{dep}}+N_{\mathrm{pending}}(T))$, where $C_{\mathrm{arr}}$ and $C_{\mathrm{dep}}$ are cumulative arrivals and departures at the simulation endpoint $T=3{,}600$~s. Completed-trip waiting and simulator incidents are also reported. Together, these measures expose changes in insertion, network loading, and unfinished traffic.
+
+Offline regret follows \eqref{eq:regret}; its development intervals use 10,000 paired group-bootstrap replicates. Additional statistical procedures for the development comparisons are given in Appendix~\ref{app:development-results}.
+
+For the 56-seed source-selection comparison, waiting is first averaged across scenarios within each city and seed. Relative change is then calculated against the comparator within each city, followed by equal averaging across cities and seeds. This registered mean of city-wise ratios differs from both the ratio of pooled waiting means and \eqref{eq:relative}. The 95\% intervals use 20,000 paired seed-block bootstrap replicates. The original four-comparator audit uses Holm correction over 12 two-sided Wilcoxon tests. With MaxPressure added, the expanded report applies Holm correction over all 15 city or equal-city comparisons against five comparators. The original intervals are retained; the three supplemental MaxPressure intervals use NumPy's permuted congruential generator (PCG64) with seeds 20261030, 20261031, and 20261032 for Los Angeles, Jinan, and the equal-city effect, respectively, fixed before the new runs. All 56 seeds are retained.
+

@@ -1,0 +1,119 @@
+{
+  "protocol": "tsc-v150l-state-conditioned-source-closed-loop-development-v3",
+  "amended_after": "tsc-v150l-state-conditioned-source-closed-loop-development-v2",
+  "amendment_scope": "Replace the inconsistent all-arm zero-collision requirement with the repository's pre-existing paired baseline collision-incident noninferiority contract; preserve zero-teleport admission and all performance thresholds.",
+  "redeveloped_after": "tsc-v150k-state-conditioned-source-utility-aggregate-v1",
+  "scientific_status": "frozen-seven-city-closed-loop-development-protocol",
+  "source_method": "nested-state-conditioned-source-mechanism-utility-v1",
+  "target_budget_action_groups": 100,
+  "information_regime": "target-offline-adaptation-with-source-mechanism-priors",
+  "online_target_outcomes_used": false,
+  "manifest": "cf_h2o/config/traffic_signal_cross_city_v2_saltlake18.json",
+  "city_scenarios": {
+    "atlanta": [
+      "atlanta_1x5"
+    ],
+    "cologne": [
+      "cologne1",
+      "cologne3",
+      "cologne8"
+    ],
+    "hangzhou": [
+      "hangzhou_bc_tyc",
+      "hangzhou_kn_hz",
+      "hangzhou_qc_yn",
+      "hangzhou_sb_sx",
+      "hangzhou_4x4",
+      "hangzhou_4x4_hetero"
+    ],
+    "ingolstadt": [
+      "ingolstadt1",
+      "ingolstadt7",
+      "ingolstadt21"
+    ],
+    "new_york": [
+      "manhattan_28x7"
+    ],
+    "resco_synthetic": [
+      "grid4x4",
+      "arterial4x4"
+    ],
+    "salt_lake_city": [
+      "saltlake_400s_200w_q1_weekday_peak",
+      "saltlake_state_university_q1_weekday_peak"
+    ]
+  },
+  "offline_admitted_source_cities": [
+    "cologne",
+    "new_york",
+    "resco_synthetic"
+  ],
+  "smoke": {
+    "seeds": [
+      41242
+    ],
+    "city_scenarios": {
+      "atlanta": [
+        "atlanta_1x5"
+      ],
+      "cologne": [
+        "cologne1"
+      ],
+      "new_york": [
+        "manhattan_28x7"
+      ],
+      "resco_synthetic": [
+        "grid4x4"
+      ]
+    },
+    "matrix_size": 16
+  },
+  "full": {
+    "seeds": [
+      52282,
+      41242,
+      63792
+    ],
+    "matrix_size": 216
+  },
+  "arms": [
+    "phase_pressure",
+    "rigid_target_only",
+    "selected_source_corrected_rigid",
+    "same_capacity_placebo_corrected_rigid"
+  ],
+  "runtime": {
+    "backend": "libsumo",
+    "sumo_version": "1.22.0",
+    "duration_sec": 3600,
+    "warmup_sec": 60,
+    "control_interval_sec": 10,
+    "prediction_horizon_sec": 450,
+    "coordination_mode": "direct",
+    "residual_cooldown_intervals": 0,
+    "collision_handling": "record_raw_events_then_apply_paired_incident_noninferiority",
+    "tripinfo_retention": "remote_temporary_delete_after_metric_parse"
+  },
+  "primary_metric": "mean_tripinfo_waiting_time",
+  "aggregation": {
+    "scenario_weighting_within_city": "equal",
+    "seed_weighting_within_scenario": "equal",
+    "city_weighting": "equal",
+    "primary_source_contrast": "selected_source_corrected_rigid_minus_rigid_target_only",
+    "identity_contrast": "selected_source_corrected_rigid_minus_same_capacity_placebo_corrected_rigid",
+    "phase_pressure_contrast_is_diagnostic": true
+  },
+  "development_gate": {
+    "require_all_rollouts_complete": true,
+    "require_zero_teleports_all_arms": true,
+    "collision_metric": "collision_incidents",
+    "collision_admission": "selected_source_noninferior_to_paired_rigid_and_phase_pressure_per_scenario_seed",
+    "require_exact_rigid_fallback_for_offline_rejected_cities": true,
+    "minimum_admitted_cities_with_nondegrading_source": 2,
+    "maximum_admitted_city_relative_regression": 0.01,
+    "require_mean_source_gain_vs_rigid": true,
+    "require_mean_source_gain_vs_matched_placebo": true,
+    "require_nonzero_source_action_changes": true
+  },
+  "claim_boundary": "V150L is a seven-city development experiment translating the V150K offline gate into closed-loop control. It is not an untouched-city confirmation and does not claim universal superiority to PhasePressure."
+}

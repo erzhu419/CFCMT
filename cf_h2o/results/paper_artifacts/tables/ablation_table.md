@@ -1,0 +1,9 @@
+| family                          | wins_vs_h2oplus | mean_ratio_vs_h2oplus |
+| ------------------------------- | --------------- | --------------------- |
+| cfcmt_shared_sparse             | 4               | 0.7502                |
+| cfcmt_no_action_interaction     | 4               | 0.7583                |
+| cfcmt_full                      | 4               | 0.7587                |
+| dense_matched_sparse            | 3               | 0.7716                |
+| dense_all_parents_no_pairwise   | 3               | 0.9332                |
+| cfcmt_action_time_only          | 1               | 7.3401                |
+| cfcmt_random_mechanism_grouping | 1               | 7.5744                |

@@ -1,0 +1,95 @@
+{
+  "protocol": "tsc-v54r50-external-v9-full-budget-seed-blocked-refit-confirmation-v1",
+  "frozen_at_utc": "2026-08-10T01:18:00Z",
+  "claim_boundary": "Rebuild the external-city causal and same-information baseline models from the repaired v9 counterfactual cache. No v9 closed-loop efficacy result is available at freeze time.",
+  "parent_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v40_external_v9_network_repair_confirmation.json",
+    "sha256": "9d35605ea736c5b3938190bd9ce456ac741b26c76e0ede343ea39d65eb26419c"
+  },
+  "v42_diagnostic_failure": {
+    "result": "cf_h2o/results/cluster/tsc_v42r38_external_la_jinan_20260809/heldout_seed7079_evaluation_v1/result.json",
+    "sha256": "c4682c900f20c75060bc71e3b148fbfb894ac4f1de555dd0119c1f5fbac8c6ce",
+    "decision": "retain_offline_failure_and_prohibit_closed_loop_claim",
+    "seed": 7079,
+    "permanently_excluded_from_v43_selection_and_confirmation": true,
+    "permitted_use": "historical v8 protocol-diagnostic evidence only",
+    "not_evidence_about_v9_efficacy": true
+  },
+  "methodological_correction": {
+    "uses_all_available_adaptation_groups": true,
+    "removes_arbitrary_b100_cap": true,
+    "cross_validation_unit": "entire adaptation simulator seed",
+    "cross_validation_protocol": "two-fold leave-one-adaptation-seed-out",
+    "deployment_refit": "fit once on the union of every valid adaptation group after selector freeze",
+    "oof_models_must_not_be_used_as_deployment_models": true,
+    "method_and_baselines_share_exact_group_ids_and_refit_model_call": true,
+    "seed_7079_metrics_must_not_change_any_v43_choice": true,
+    "v9_network_repair_must_not_change_model_family_or_selector": true,
+    "v9_efficacy_unobserved_at_model_freeze": true
+  },
+  "target_protocol": {
+    "external_city_scenarios": {
+      "los_angeles": ["la_1x4"],
+      "jinan": ["jinan_3x4_real", "jinan_3x4_real_2000", "jinan_3x4_real_2500"]
+    },
+    "city_is_the_transfer_and_reporting_unit": true,
+    "equal_scenario_weight_within_city": true,
+    "adaptation_seeds": [5057, 6067],
+    "diagnostic_only_seeds": [7079],
+    "evaluation_seeds": [9277],
+    "closed_loop_development_seeds": [5057, 6067, 52282, 41242, 63792, 80722, 75638, 61337, 73385, 81189],
+    "closed_loop_validation_seeds": [73412, 61481, 50744, 34310, 84579, 46535, 84751, 61994, 47023, 31657, 51400, 22208, 52367, 74744, 74374, 50079],
+    "closed_loop_prospective_seeds": [10091, 11003, 12007],
+    "counterfactual_collection_shards_per_scenario_seed": 16,
+    "target_group_budget_per_city": "all_available",
+    "target_group_selection": "all_valid_groups_no_subsampling",
+    "cross_fit_folds": 2,
+    "cross_fit_strategy": "leave_one_adaptation_seed_out",
+    "deployment_refit_uses_all_adaptation_groups": true,
+    "deployment_model_ensemble_size": 1,
+    "selection_seed": 20260803,
+    "base_families": [
+      "causal_group_normalized_rigid_advantage",
+      "causal_antisymmetric_pairwise_advantage"
+    ],
+    "same_information_baseline_families": [
+      "simulator",
+      "dense",
+      "dense_advantage",
+      "causal_rigid_advantage",
+      "cfcmt_mechanism",
+      "causal_target_only"
+    ],
+    "same_information_baselines_frozen_before_evaluation_cache": true,
+    "evaluation_cache_must_be_collected_after_joint_freeze": true,
+    "validation_must_not_run_before_development_selection_hash_freeze": true,
+    "prospective_must_not_run_before_validation_pass_and_analysis_hash_freeze": true
+  },
+  "offline_confirmation_gate": {
+    "minimum_macro_relative_improvement": 0.02,
+    "minimum_improved_external_cities": 2,
+    "maximum_absolute_city_regression": 0.01,
+    "minimum_non_anchor_targets": 1
+  },
+  "closed_loop": {
+    "development_replay_algorithm": "v52 global-cooldown estimand-aligned CFCMT",
+    "algorithm_and_candidate_grid_frozen_before_v9_rollout": true,
+    "horizon_sec": 3600,
+    "primary_metric": "mean_waiting_time_sec",
+    "secondary_metrics": [
+      "mean_travel_time_sec",
+      "mean_queue_vehicles",
+      "throughput",
+      "teleports",
+      "collisions"
+    ],
+    "baselines": [
+      "fixed_time",
+      "phase_pressure",
+      "max_pressure",
+      "rigid_anchor_mpc",
+      "simulator_only_mpc",
+      "h2oplus_style_dense_residual_mpc"
+    ]
+  }
+}

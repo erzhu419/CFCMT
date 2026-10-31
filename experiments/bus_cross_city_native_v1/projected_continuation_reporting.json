@@ -1,0 +1,263 @@
+{
+  "complete": true,
+  "status": "All ten tasks DONE; all30 full-horizon evaluations matched",
+  "protocol": "cfcmt-bus-projected-continuation-v1",
+  "formal_tasks": [
+    "t125009",
+    "t125010",
+    "t125011",
+    "t125012",
+    "t125013",
+    "t125014",
+    "t125015",
+    "t125016",
+    "t125017",
+    "t125018"
+  ],
+  "actual_evaluations": 30,
+  "rule_evaluations": 3,
+  "horizon_seconds": 24000,
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "cases": [
+    {
+      "case": 0,
+      "demand_seed": 72521,
+      "sumo_seed": 73521
+    },
+    {
+      "case": 1,
+      "demand_seed": 72522,
+      "sumo_seed": 73522
+    },
+    {
+      "case": 2,
+      "demand_seed": 72523,
+      "sumo_seed": 73523
+    }
+  ],
+  "continuation_updates_per_policy": 20000,
+  "total_policy_updates_per_continued_policy": 75000,
+  "all_seed_case_means": {
+    "td0": {
+      "cost": 2315.2064918303436,
+      "wait_seconds": 820.1158592826281,
+      "ride_seconds": 674.9747732650875,
+      "completion": 0.9848395844776763,
+      "mean_executed_hold_seconds": 12.251857682529577,
+      "positive_hold_fraction": 0.6958391573614802
+    },
+    "td025": {
+      "cost": 2329.217610772785,
+      "wait_seconds": 823.1861299489782,
+      "ride_seconds": 682.8453508748285,
+      "completion": 0.9848386561468025,
+      "mean_executed_hold_seconds": 14.618247267496757,
+      "positive_hold_fraction": 0.9941175017008549
+    },
+    "adapted": {
+      "cost": 2293.6116935380587,
+      "wait_seconds": 819.3565892719554,
+      "ride_seconds": 654.8985149941483,
+      "completion": 0.9846487629120634,
+      "mean_executed_hold_seconds": 8.329749833119074,
+      "positive_hold_fraction": 0.18170639302314961
+    },
+    "strong_rule": {
+      "cost": 2296.2962600680394,
+      "wait_seconds": 819.6071733786104,
+      "ride_seconds": 657.0819133108184,
+      "completion": 0.9847772150636368,
+      "mean_executed_hold_seconds": 9.05597831734034,
+      "positive_hold_fraction": 0.49000173882802994
+    }
+  },
+  "comparisons": {
+    "model_vs_real": {
+      "differences": {
+        "cost": 14.011118942441499,
+        "wait_seconds": 3.0702706663500976,
+        "ride_seconds": 7.8705776097409625,
+        "completion": -9.283308737284557e-07,
+        "mean_executed_hold_seconds": 2.3663895849671803,
+        "positive_hold_fraction": 0.2982783443393747
+      },
+      "cost_percent_of_right": 0.6051779395005351,
+      "better_pairs": 1,
+      "compared_pairs": 9,
+      "better_training_seed_means": 0,
+      "by_seed_cost_difference": {
+        "75101": 22.728138320359903,
+        "75102": 14.36591635997047,
+        "75103": 4.939302146993214
+      },
+      "by_case_cost_difference": {
+        "0": 12.662363177098086,
+        "1": 15.219644902634172,
+        "2": 14.151348747591328
+      }
+    },
+    "model_vs_adapted": {
+      "differences": {
+        "cost": 35.60591723472635,
+        "wait_seconds": 3.8295406770228055,
+        "ride_seconds": 27.94683588068017,
+        "completion": 0.00018989323473916908,
+        "mean_executed_hold_seconds": 6.288497434377684,
+        "positive_hold_fraction": 0.8124111086777053
+      },
+      "cost_percent_of_right": 1.5523951737358688,
+      "better_pairs": 0,
+      "compared_pairs": 9,
+      "better_training_seed_means": 0,
+      "by_seed_cost_difference": {
+        "75101": 31.150572045952686,
+        "75102": 39.49326068630262,
+        "75103": 36.17391897192283
+      },
+      "by_case_cost_difference": {
+        "0": 40.36953877818314,
+        "1": 37.172394043527675,
+        "2": 29.27581888246641
+      }
+    },
+    "real_vs_adapted": {
+      "differences": {
+        "cost": 21.59479829228485,
+        "wait_seconds": 0.7592700106727079,
+        "ride_seconds": 20.076258270939206,
+        "completion": 0.00019082156561289754,
+        "mean_executed_hold_seconds": 3.9221078494105033,
+        "positive_hold_fraction": 0.5141327643383306
+      },
+      "cost_percent_of_right": 0.941519366731748,
+      "better_pairs": 1,
+      "compared_pairs": 9,
+      "better_training_seed_means": 0,
+      "by_seed_cost_difference": {
+        "75101": 8.422433725592782,
+        "75102": 25.12734432633215,
+        "75103": 31.234616824929617
+      },
+      "by_case_cost_difference": {
+        "0": 27.707175601085055,
+        "1": 21.952749140893502,
+        "2": 15.124470134875082
+      }
+    },
+    "model_vs_rule": {
+      "differences": {
+        "cost": 32.92135070474569,
+        "wait_seconds": 3.5789565703678363,
+        "ride_seconds": 25.76343756401002,
+        "completion": 6.144108316574748e-05,
+        "mean_executed_hold_seconds": 5.562268950156417,
+        "positive_hold_fraction": 0.504115762872825
+      },
+      "cost_percent_of_right": 1.4336717468577087,
+      "better_pairs": 0,
+      "compared_pairs": 9,
+      "better_training_seed_means": 0,
+      "by_seed_cost_difference": {
+        "75101": 32.01143709322923,
+        "75102": 31.637123961581437,
+        "75103": 35.115491059426404
+      },
+      "by_case_cost_difference": {
+        "0": 36.99897090466857,
+        "1": 34.431844215348974,
+        "2": 27.333236994219533
+      }
+    },
+    "real_vs_rule": {
+      "differences": {
+        "cost": 18.910231762304193,
+        "wait_seconds": 0.5086859040177387,
+        "ride_seconds": 17.892859954269056,
+        "completion": 6.236941403947593e-05,
+        "mean_executed_hold_seconds": 3.1958793651892368,
+        "positive_hold_fraction": 0.20583741853345022
+      },
+      "cost_percent_of_right": 0.8235101058669094,
+      "better_pairs": 1,
+      "compared_pairs": 9,
+      "better_training_seed_means": 0,
+      "by_seed_cost_difference": {
+        "75101": 9.28329877286933,
+        "75102": 17.271207601610968,
+        "75103": 30.17618891243319
+      },
+      "by_case_cost_difference": {
+        "0": 24.33660772757048,
+        "1": 19.2121993127148,
+        "2": 13.181888246628205
+      }
+    },
+    "adapted_vs_rule": {
+      "differences": {
+        "cost": -2.684566529980657,
+        "wait_seconds": -0.2505841066549692,
+        "ride_seconds": -2.18339831667015,
+        "completion": -0.0001284521515734216,
+        "mean_executed_hold_seconds": -0.7262284842212665,
+        "positive_hold_fraction": -0.3082953458048803
+      },
+      "cost_percent_of_right": -0.11690854427908676,
+      "better_pairs": 5,
+      "compared_pairs": 9,
+      "better_training_seed_means": 2,
+      "by_seed_cost_difference": {
+        "75101": 0.8608650472765476,
+        "75102": -7.856136724721182,
+        "75103": -1.0584279124964269
+      },
+      "by_case_cost_difference": {
+        "0": -3.370567873514574,
+        "1": -2.7405498281787004,
+        "2": -1.9425818882468775
+      }
+    }
+  },
+  "conclusions": [
+    "Execution alignment passes, but adding modelTD0.25 still increases cost compared withTD0 on all three seed means and eight of nine pairs.",
+    "Both20k offline-SAC continuation arms degrade their seed-matched adapted55k actor on all three seed means; the main cost increase is in-vehicle time.",
+    "Holding increases markedly, especially with modelTD. The mean normalized trust weight alone does not establish whether weights discriminate erroneous actions.",
+    "Adapted55k has a small mean advantage over the rule in this cohort; two of three seed means and five of nine pairs improve. This is not robust rule superiority."
+  ],
+  "next_step": {
+    "kind": "Fixed-fit actor/Q ranking and objective decomposition",
+    "status": "planned; no new training or evaluation submitted",
+    "states": "All original12288 fit states only, all three seeds; recorded execution, adapted55k and finalTD0/TD0.25 actions projected by the current fixed interface.",
+    "diagnosis": "Compare those actions under the initial and final critics; separately decompose the existing SAC actor objective into expected Q and latent entropy contributions. Test whether longer holding follows changed Q ordering or entropy pressure.",
+    "boundary": "Q/model predictions alone are not realized counterfactual cost, and the diagnostic must not select a new deployment policy from this evaluation cohort."
+  },
+  "limits": [
+    "One target city and the same fixed service date, timetable and generated OD intensities; new passenger realizations are not real new days or cities.",
+    "Canonical headway ratios are capped at5. Current fit has no present-headway clipping; synthetic projection uses the decoder representation.",
+    "Execution projection preserves latent entropy rather than estimating executed-action entropy.",
+    "The adapted55k reference has fewer updates; confidence efficacy cannot be isolated by the0/0.25 comparison.",
+    "No threshold, floor, city, model, seed or checkpoint selection after these new outcomes."
+  ],
+  "provenance": {
+    "summary": "projected_continuation_summary.json",
+    "final_metrics": "projected_continuation_final_metrics.json",
+    "local_summary_bytes": 123126,
+    "remote_pulls": "Small JSON summaries only",
+    "mutable_thesis_accessed": false,
+    "large_remote_files_downloaded": false,
+    "independent_review": "All30 identities, costs and pairings and all six training budgets/configs confirmed from original result rows"
+  },
+  "final_log_ranges": {
+    "alpha": [
+      0.0029980035033077,
+      0.0032387208193540573
+    ],
+    "mean_trust_weight": [
+      0.49261224269866943,
+      0.49627867341041565
+    ]
+  }
+}

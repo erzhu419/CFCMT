@@ -1,0 +1,71 @@
+{
+  "protocol": "tsc-v157c-jinan-native-one-action-branches-v1",
+  "scientific_status": "prepared_not_run",
+  "authorized_by": {
+    "artifact": "cf_h2o/results/paper_artifacts/tsc_v157a_feature_aligned_target_budget_source_value_curve.json",
+    "sha256": "b9dc22dc1af12e0618ec27aaf4c1f2013dfaaf0d14654b79a7bde730614660b7",
+    "required_decision": "authorize_freezing_separate_same_state_450_second_branch_protocol"
+  },
+  "city": "jinan",
+  "scenario": "jinan_3x4_real",
+  "seeds": [80314, 88625, 27178],
+  "seed_selection": "first_three_seeds_in_the_preexisting_v157a_selector_order",
+  "checkpoints_sec": [300, 480, 660],
+  "checkpoint_selection": "fixed_before_native_outcomes",
+  "control_interval_sec": 10,
+  "horizon_sec": 450,
+  "cost": {
+    "name": "prefix_mean_cost_450s",
+    "population": "sumo_last_step_halting_number_on_all_controlled_lanes",
+    "normalization": "controlled_lane_count",
+    "samples": "checkpoint_plus_1_through_checkpoint_plus_450_inclusive"
+  },
+  "arms": [
+    "target_only",
+    "uniform_source",
+    "source_label_placebo",
+    "phase_pressure"
+  ],
+  "learned_arm_bundle_protocol": "cfcmt-v157b-feature-aligned-b100-runtime-arms-v2",
+  "learned_arm_manifest_protocol": "tsc-v157b-feature-aligned-b100-arm-manifest-v2",
+  "runtime_arm_semantics": {
+    "target_only_training_domain_handling": "relabel_all_b100_rows_to_jinan",
+    "v157a_exact_target_refit_used_at_runtime": false,
+    "uniform_source_training_path": "exact_v157a_source_component_refits"
+  },
+  "reference_policy": "phase_pressure",
+  "branch_estimand": "one_focal_tls_action_for_10_seconds_then_phase_pressure_for_440_seconds",
+  "focal_tls_rule": "among_action_eligible_tls_where_uniform_source_and_target_only_select_different_states_choose_largest_maximum_of_their_predicted_pp_advantages_then_lexicographically_first_tls;_if_none_choose_the_same_way_over_all_action_eligible_tls_and_record_an_exact_zero_source_vs_target_action_contrast",
+  "same_state_contract": {
+    "construction": "fresh_native_t0_phase_pressure_prefix_for_every_branch",
+    "snapshot_restore_used": false,
+    "comparison": "exact_vehicle_lane_route_position_speed_pending_ids_and_safe_executor_state_at_checkpoint",
+    "action_eligibility": "executor_feasible_states_now_count_greater_than_1_at_checkpoint",
+    "action_roster": "all_three_learned_arms_are_scored_on_each_action_eligible_tls_on_the_shared_phase_pressure_trajectory_before_any_450_second_outcome_is_observed",
+    "zero_action_eligible_checkpoint": "invalid_without_checkpoint_shift_or_drop"
+  },
+  "network_manifest": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v39_external_la_jinan_v9_manifest.json",
+    "sha256": "636e09d8e2f47d5fefaa26b33b0552373b01f185e77e18896c97751c267c356c"
+  },
+  "execution": {
+    "seed_shards": 3,
+    "native_runs_per_seed": 10,
+    "total_native_runs": 30,
+    "phase_pressure_trajectories_per_seed": 1,
+    "model_branch_runs_per_seed": 9,
+    "sumo_version": "1.22.0",
+    "evaluate_policy": "evaluate_policy_v3",
+    "residual_coordination_mode": "direct",
+    "residual_cooldown_intervals": 0
+  },
+  "analysis": {
+    "primary": "uniform_source_minus_target_only_mean_halted_vehicles_per_controlled_lane",
+    "placebo": "uniform_source_minus_source_label_placebo_mean_halted_vehicles_per_controlled_lane",
+    "reference": "each_learned_arm_minus_phase_pressure",
+    "unit": "seed_mean_over_three_fixed_checkpoints",
+    "identical_selected_actions": "retain_as_exact_zero_paired_contrasts",
+    "collision_handling": "report_diagnostic_counts_without_using_them_as_the_primary_gate"
+  },
+  "claim_boundary": "Development validation of the V157B v2 domain-aligned target versus fixed uniform-source B100 action ranking on reused Jinan selector seeds; not fresh-seed, unseen-city, full closed-loop, or simultaneous-network-control evidence."
+}

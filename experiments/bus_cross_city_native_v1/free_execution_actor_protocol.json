@@ -1,0 +1,167 @@
+{
+  "name": "cfcmt-bus-free-execution-actor-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "branches": {
+    "td0": {
+      "method": "cross_city",
+      "artifact_folder": "free_execution_actor/td0",
+      "model_td_coefficient": 0.0,
+      "actor_objective": "recorded_iql",
+      "backup_entropy": false,
+      "free_execution_actor_mask": true
+    },
+    "td025": {
+      "method": "cross_city",
+      "artifact_folder": "free_execution_actor/td025",
+      "model_td_coefficient": 0.25,
+      "actor_objective": "recorded_iql",
+      "backup_entropy": false,
+      "free_execution_actor_mask": true
+    },
+    "adapted": {
+      "method": "cross_city",
+      "artifact_folder": "source_dense_adapted_eval"
+    },
+    "off0": {
+      "method": "cross_city",
+      "artifact_folder": "entropy_free_continuation/td0",
+      "model_td_coefficient": 0.0,
+      "actor_objective": "recorded_iql",
+      "backup_entropy": false,
+      "free_execution_actor_mask": false
+    },
+    "off025": {
+      "method": "cross_city",
+      "artifact_folder": "entropy_free_continuation/td025",
+      "model_td_coefficient": 0.25,
+      "actor_objective": "recorded_iql",
+      "backup_entropy": false,
+      "free_execution_actor_mask": false
+    }
+  },
+  "evaluation": {
+    "episode_seconds": 24000,
+    "demand_scale": 1.0,
+    "rule": "forward_proportional",
+    "rule_gain": 0.6,
+    "cases": [
+      {
+        "case": 0,
+        "demand_seed": 72551,
+        "sumo_seed": 73551
+      },
+      {
+        "case": 1,
+        "demand_seed": 72552,
+        "sumo_seed": 73552
+      },
+      {
+        "case": 2,
+        "demand_seed": 72553,
+        "sumo_seed": 73553
+      }
+    ],
+    "test_separation": "Predefined before new training or evaluation; disjoint from fit/stop/calibration, smoke and all previous evaluation cohorts. Same pinned services and generated OD intensities.",
+    "comparison": "48 prospective evaluations: free-state actor mask18, prior entropyOFF unmasked18, adapted55k9, rule3.",
+    "primary_cost": "(2*wait_passenger_seconds+in_vehicle_passenger_seconds)/departed_passengers",
+    "completion": "Report completion rate and departed/completed counts alongside cost.",
+    "interpretation": "Bounded pilot on one target city; no population-level CI or city removal."
+  },
+  "asset_selection": {
+    "start_hour": 7,
+    "service_hours": 4,
+    "max_directional_services": 12,
+    "minimum_departures_in_window": 2,
+    "ordering": "Original route, direction, pattern and service id, before any control outcomes",
+    "require_positive_apc": true,
+    "required_tables": [
+      "stop_news.xlsx",
+      "route_news.xlsx",
+      "time_table.xlsx",
+      "passenger_OD.xlsx"
+    ],
+    "network": "GTFS-derived route corridors; APC-apportioned demand, generated destinations; not a measured city road network",
+    "scheduled_service_date": "2026-05-19",
+    "calendar_rule": "Earliest weekday in the pinned GTFS feed with active weekday service and without a holiday exception; keep the original 12-service subset",
+    "calendar_provenance": "Actual trip_id/service_id and full stop signatures from GTFS; never merge mutually exclusive calendar services or clamp zero scheduled headways"
+  },
+  "asset_folder": "free_execution_actor",
+  "actor_action_space": "executed",
+  "rule_action_space": "proposal",
+  "initialization_updates": 50000,
+  "adaptation_updates": 5000,
+  "world_model_refit_updates": 0,
+  "checkpoint_rule": "All six new policies use fixed final20k from original55k plus loaded optimizers; prior unmasked entropyOFF uses its fixed final20k, adapted55k remains a fewer-update stage reference. No outcome-based model selection.",
+  "intervention": "Only mask actor IQL weights to zero where canonical execution bounds collapse. The same raw labels/weights and all replay rows remain for critic, V, model generation/trust. Original full batch N denominator; no free-row renormalization or replacement replay draws. Entropy backup remains OFF.",
+  "rule": {
+    "method": "forward_proportional",
+    "gain": 0.6,
+    "actor_action_space": "proposal",
+    "checkpoint": null,
+    "training_seed": null
+  },
+  "primary_comparisons": [
+    "mask0_vs_off0",
+    "mask025_vs_off025"
+  ],
+  "boundary": "Remove actor gradient from the physically constant forced60 action. Fixed-checkpoint gradient norms motivated a single necessary correction, but do not establish that it causes performance loss.",
+  "limits": [
+    "Only this fixed Halifax service and generated OD; no cross-city generality.",
+    "Current OFF forced gradients are smaller than free gradients, so no promised cost improvement or causal dominance.",
+    "Three free fit labels at the upper bound still use raw continuous density rather than tail mass in both arms; the experiment changes only collapsed-state actor gradients.",
+    "Adapted55k is a fewer-update stage reference; source and normalized confidence contribution remain unisolated.",
+    "No temperature, threshold, batch denominator, model, seed, city or checkpoint selection after outcomes."
+  ],
+  "code_boundary": "CFCMT-owned frozen runtime and inputs only; no mutable Thesis access; no H5/CSV/checkpoint downloads.",
+  "continuation_updates": 20000,
+  "target_fit_rows": 12288,
+  "target_union_rows": 16384,
+  "source_rows": 3284718,
+  "new_training_updates_per_policy": 20000,
+  "paired_comparisons": {
+    "mask0_vs_off0": [
+      "td0",
+      "off0"
+    ],
+    "mask025_vs_off025": [
+      "td025",
+      "off025"
+    ],
+    "mask025_vs_mask0": [
+      "td025",
+      "td0"
+    ],
+    "mask0_vs_adapted": [
+      "td0",
+      "adapted"
+    ],
+    "mask025_vs_adapted": [
+      "td025",
+      "adapted"
+    ],
+    "mask0_vs_rule": [
+      "td0",
+      "strong_rule"
+    ],
+    "mask025_vs_rule": [
+      "td025",
+      "strong_rule"
+    ],
+    "adapted_vs_rule": [
+      "adapted",
+      "strong_rule"
+    ]
+  },
+  "fixed_training": "Six20k continuations from original seed-matched adapted55k; existing optimizer/RNG replay/WM/trust and model0/.25 unchanged. Only actor weights for collapsed execution states become zero; TD backup remains entropyOFF, temperature algorithm retained.",
+  "entropy_interpretation": "SAC latent-temperature sampling/update is retained only as the frozen algorithm path. Actor uses recorded likelihood, and alpha is excluded from real/model TD targets. No estimate of execution-action entropy is added.",
+  "admission": "Actual seed75101 TD0/.25 paired four-step unmasked/masked entropyOFF; original replay/RNG and first critic/V/alpha/TD/model update equality; exact masked native IQL loss and zero collapsed actor weights; all four optimizers step four times, no simulation/checkpoint writes.",
+  "reporting_interpretation": "48 actual fresh evaluations demand72551-72553/SUMO73551-73553; mask18/unmaskedOFF18/adapted9/rule3. Equal case/seed weights; preserve all final artifacts, no old-case pooling or population CI.",
+  "new_training_simulator_events": 0,
+  "actor_objective": "Negative mean raw recorded log likelihood times existing detached IQL weights times free-execution indicator; same original batchN. Critic/V use original unmasked records/weights. No extra coefficient, replay draw, V update or free-row normalization.",
+  "temperature_interpretation": "The SAC latent-temperature sample retains its original pre-actor-step position and random draws; alpha optimizer updates remain after the actor step. Alpha trajectories may diverge as actors diverge; no freeze, clamp or retuning.",
+  "backup_entropy": false
+}

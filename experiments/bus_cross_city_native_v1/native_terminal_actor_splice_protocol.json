@@ -1,0 +1,46 @@
+{
+  "name": "cfcmt-bus-native-terminal-actor-splice-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "variant": "gate75_amount55",
+  "gate_actor": "native_terminal_actor_unmasked/real_v_unmasked/seed{seed}/policy.pt",
+  "positive_amount_actor": "native_terminal_adaptation/seed{seed}/policy.pt",
+  "intervention": "Retain the native75k deterministic gate function and substitute only the same-seed55k native deterministic positive-action function. Each function uses its own frozen encoder. Select the positive action when75k hold probability is at least0.5, otherwise exact zero action−1; apply the existing canonical execution projection once.",
+  "reference_protocol": "native_terminal_actor_unmasked_confirmation_protocol.json",
+  "reference_summary": "native_terminal_actor_unmasked_confirmation_summary.json",
+  "asset_folder": "native_terminal_actor_unmasked_confirmation",
+  "evaluation": {
+    "episode_seconds": 24000,
+    "cases": [
+      {
+        "case": 0,
+        "demand_seed": 72581,
+        "sumo_seed": 73581
+      },
+      {
+        "case": 1,
+        "demand_seed": 72582,
+        "sumo_seed": 73582
+      },
+      {
+        "case": 2,
+        "demand_seed": 72583,
+        "sumo_seed": 73583
+      }
+    ],
+    "primary_cost": "(2*wait_passenger_seconds+in_vehicle_passenger_seconds)/departed_passengers"
+  },
+  "new_training_updates": 0,
+  "world_model_refit_updates": 0,
+  "new_evaluations": 9,
+  "reference_evaluations_reused": 21,
+  "actual_evaluations_planned": 30,
+  "primary_comparison": "Compare the composed gate75/amount55 action function with the existing75k function for every seed/case; retain55k and fixed-rule references. Equal case/seed means and all individual pairs retained.",
+  "reporting": "Cost, wait, ride, completion rate/count, requested/executed holding, and protocol/model identity for every seed/case; compare against75k,55k and rule with the original reference identities preserved.",
+  "interpretation": "Retrospective deployment-function component intervention on previously analyzed generated demand. It tests the positive-amount function's closed-loop contribution while retaining the75k gate function; it does not identify the cause of training-weight drift or validate source/confidence/generalization effects.",
+  "code_boundary": "CFCMT-owned frozen actors/runtime/assets only; no mutable Thesis access or heavy downloads.",
+  "submitted": true
+}

@@ -1,0 +1,42 @@
+{
+  "protocol": "tsc-v124-conservative-source-intervention-gate-v1",
+  "scientific_status": "cross-fitted-development-not-confirmation",
+  "predecessor": "tsc-v123-target-budget-source-value-curve-v1",
+  "reference_policy": "phase_pressure",
+  "target_city": "jinan",
+  "target_budgets": [0, 25, 50, 100, 250, 500, 1000],
+  "fixed_inputs": {
+    "prediction_artifact_sha256": "3f199276f08ab67e855d9598900d4023ec1f7c4c3529b4361e92b0e851bf983a",
+    "selector_cache_audit_sha256": "ab8b85009c8f80e48ce2f8a4ca0e415c6c4a8742dfab7a9ca83ab76388565d42",
+    "selector_scenario": "jinan_3x4_real",
+    "selector_seed_count": 22
+  },
+  "cross_fitting": {
+    "outer_split": "leave_one_selector_seed_out",
+    "heldout_seed_may_select_source_or_guard": false,
+    "same_guard_family_for_target_and_source": true
+  },
+  "guard_grid": {
+    "risk_multipliers": [0.0, 0.5, 1.0],
+    "retention_fractions": [0.01, 0.025, 0.05, 0.1, 0.2],
+    "trust_quantiles": [0.0, 0.5],
+    "pressure_loss_quantiles": [0.5, 1.0],
+    "source_target_action_agreement": [false, true],
+    "minimum_training_interventions": 20,
+    "minimum_training_active_seed_fraction": 0.5
+  },
+  "source_authorization": {
+    "source_guard_must_beat_phase_pressure_on_training_folds": true,
+    "source_guard_must_beat_architecture_matched_target_guard": true,
+    "minimum_mean_source_contribution": 0.0005,
+    "one_sided_upper_95_must_be_negative": true,
+    "fallback": "target_guard_then_phase_pressure"
+  },
+  "development_gate": {
+    "best_budget_source_policy_mean_must_be_at_most": -0.0005,
+    "best_budget_source_policy_upper_95_must_be_negative": true,
+    "best_budget_source_minus_target_mean_must_be_at_most": -0.0005,
+    "best_budget_source_minus_target_upper_95_must_be_negative": true
+  },
+  "claim_boundary": "V124 may authorize one frozen fresh-city confirmation. It is not itself confirmation evidence, and budget choice remains development-only."
+}

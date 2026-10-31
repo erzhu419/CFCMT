@@ -1,0 +1,357 @@
+\section{Supplementary Methods and Results}
+
+\subsection{Network inventory}
+\label{sec:supp-network-inventory}
+
+\begin{table}[htbp]
+\caption{Source and external target network inventory parsed from the SUMO
+\texttt{net.xml} files.  Jinan uses one geometry and three demand files.}
+\label{tab:network-scope}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{tables/traffic_signal_transfer_networks.tex}}
+\end{table}
+
+The external CityFlow files were converted to SUMO and revised through a
+semantic admission audit.  Phase identities use final SUMO connection indices,
+permissive links remain distinct from protected movements, all routes are
+contiguous and demand is conserved.  A 3,600-s admission run had no teleports
+or collisions.  The admitted conversion tree has SHA-256
+\texttt{4a2e17618c2ac584fc767562f3a7096c95d8f904f03ef6baa9cd5d34d282eadd}.
+
+\subsection{Sequential development and confirmation}
+\label{sec:supp-development-history}
+
+\begin{table}[htbp]
+\caption{Sequential development and confirmation of the pairwise method.  Positive
+percentages denote lower normalized action regret than the rigid anchor.  Seed
+7079 is diagnostic evidence that informed V43 and is not reused as V43
+confirmation.}
+\label{tab:development-history}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{tables/development_history.tex}}
+\end{table}
+
+V42 improved the city-macro mean but failed the predeclared requirement that
+both external cities improve.  Los Angeles regressed by 0.00072 normalized
+regret.  V43 then
+removed the arbitrary 100-group cap, used every valid adaptation group and
+cross-fitted by complete adaptation seed.  The later seed 8171, rather than
+7079, is the formal external confirmation.
+
+\subsection{City-resolved closed-loop outcomes}
+\label{sec:supp-city-outcomes}
+
+\begin{table}[htbp]
+\caption{External closed-loop outcomes before equal-city aggregation.  Waiting
+is the all-departed 3,600-s metric in seconds.  Incident entries are means over
+the two closed-loop seeds within that city and policy.}
+\label{tab:external-city-results}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{tables/external_closed_loop_city.tex}}
+\end{table}
+
+The CFCMT-versus-dense residual waiting improvements are 8.46 s in Los Angeles and
+11.50 s in Jinan.  CFCMT-versus-MaxPressure differences are $-12.53$ and
+$-2.33$ s, where negative values indicate that MaxPressure is better.  The
+gains over the dense residual therefore do not imply gains over MaxPressure.
+
+\subsection{Ten-new-seed frozen dense-baseline confirmation}
+\label{sec:supp-v43-dense-fresh10}
+
+The ten simulator seeds, in their registered order, were
+57326714, 87750540, 47977622, 33159112, 16511678,
+42424444, 40930102, 41482084, 10392689 and 83389073.
+Each seed supplied eight paired records: CFCMT and dense on one Los Angeles
+and three Jinan scenarios.  All 80 records were new runs; none reused an
+original result or omitted a failed identity.  Model identities, execution
+settings and complete vehicle ledgers were independently checked.  Every
+rollout recorded zero teleports.
+
+The overall waiting difference was $-7.826876$ s, with the preregistered
+whole-seed-block 95\% interval $[-11.851786,-4.108126]$ s
+(\Cref{sec:methods-v43-dense-fresh10}).  The relative reduction was
+4.932804\%, with interval 2.635285--7.312375\%.
+Each of the three Jinan demand means favoured CFCMT: waiting decreased by
+8.91, 10.58 and 11.17 s for the nominal, 2,000 and 2,500 demand files,
+respectively.  Los Angeles had four unfavourable seed contrasts, all retained
+in its mean and in \Cref{fig:v43-dense-fresh10}.  The source-data tables retain
+all per-rollout and paired seed outcomes alongside the city and scenario
+aggregates.  No new pressure-policy comparison or source-row ablation was
+performed in this confirmation.
+
+\subsection{Fresh source-contribution diagnostics}
+\label{sec:supp-source-diagnostics}
+
+The comparator artifacts were created in the V43 baseline freeze, before the
+original closed-loop outcomes.  Their deployed score assigns zero coefficient
+to source-labelled samples, and their selected target weights were within
+numerical precision of one in both cities.  However, a retained source-trained
+prior can resolve exact prediction ties.  We therefore call this the legacy
+near-target-only comparator rather than a strict zero-source-row arm.  V90
+added these artifacts to the eight original scenario--seed cells only after
+the main comparison and is therefore not a confirmation.  V91 froze 64 unique
+seeds before execution and required 512 exact policy identities.  All rollouts
+completed without seed exclusion.
+
+The largest V91 failure occurred at seed 7417817 in Los Angeles.  CFCMT waiting
+was 975.27 s with completion 0.270, compared with 194.74 s and completion 0.919
+for the legacy near-target-only comparator; neither policy teleported or
+recorded a collision in that cell.  This record is retained in the primary
+estimate.  Across the 64 Los
+Angeles cells, the median relative difference was $+2.75\%$, only 22 favoured
+CFCMT and 21 regressed by more than 5\%.  Across 192 Jinan scenario--seed cells,
+179 favoured CFCMT, and all 64 Jinan seed-level city contrasts favoured CFCMT.
+The city-mean waiting effects were $-3.045\%$ in Jinan and $+7.865\%$ in Los
+Angeles, where negative values favour CFCMT.  These diagnostics describe the
+opposite city outcomes; the preregistered seed-level analysis remains unchanged.
+
+\subsection{Post-V91 V98 controller-pair confirmation}
+\label{sec:supp-v98-confirmation}
+
+V98 follows a separate post-V91 protocol and is reported independently of V91.
+Its target-offline selector returned exact target-only control for Los Angeles
+and selected a Hangzhou source component at mass one for Jinan before any fresh
+V98 rollout was opened.  Los Angeles was therefore an ex ante abstention, not
+a city removed after observing the confirmation outcomes.  The Jinan matrix
+used 56 further seeds, three demand files per seed and two controller arms, for
+336 rollouts in total.  Relative to the strict zero-source-row target model,
+the admitted controller reduced waiting by 4.527\% (paired 95\% interval,
+4.279--4.787\%); all 56 seed-level contrasts were favourable (two-sided
+Wilcoxon signed-rank probability value $7.5475\times10^{-11}$).  The two frozen protocols
+are reported separately in
+\Cref{tab:jinan-conditional-source-transfer}.
+
+The preselected controller outperformed its declared strict zero-source-row
+target comparator in Jinan, although that comparator has lower capacity.
+V98 therefore does not isolate source-row contribution at fixed architecture.
+Both arms also share the
+risk multiplier of 0.5 inherited from earlier Jinan closed-loop development.
+The result therefore does not establish a general multicity selector or
+superiority over PhasePressure.
+
+\subsection{Seven-city source-gate development}
+\label{sec:supp-source-gate}
+
+Three later source gates were frozen and evaluated on the seven development
+city groups.  The robust-history gate selected a source for six targets, and
+the action-agreement gate selected a source for all seven; both improved the
+equal-city mean but failed the target-only safety comparison because their
+one-sided upper bounds were positive and their largest city regressions
+exceeded 0.02 normalized regret.  A stricter mechanism-compatibility gate
+divided 25 target adaptation action groups into five folds.  Each fit used 20
+groups (B20), and the disjoint evaluation fold used five groups (B5), to score
+queue propagation, served movement, red accumulation, spillback and mobility.
+It admitted no source and returned exact target only in all seven cities
+(\Cref{tab:source-gate-development}).
+
+\begin{table}[htbp]
+\caption{Frozen seven-city source-gate development.  Negative effects favour
+the selected gate.  ``Upper'' is the one-sided 95\% upper bound versus the
+architecture-matched target-only causal arm.  Dense denotes the pooled
+H2O$^+$-style residual.  These are development results, not external
+confirmation.}
+\label{tab:source-gate-development}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{tables/source_gate_development.tex}}
+\end{table}
+
+The progression shows a trade-off between safety and usefulness.  V145 and
+V146 retained source signal but allowed harmful city
+tails.  V148 removed those tails only by abstaining everywhere.  Its 7/7
+advantage over the dense residual is therefore inherited from the rigid
+target-only causal model and cannot be attributed to source-city labels or to a
+full mechanism world model.  No external confirmation of these V145--V148
+seven-city gate rules was authorized after their failures.
+
+\subsection{Post-V148 source-remedy diagnostics}
+\label{sec:supp-source-remedy}
+
+We subsequently tested alternative explanations for this result
+without weakening the frozen safety or source-identity criteria
+(\Cref{tab:source-remedy-ladder}).  Leave-one-seed diagnostics confirmed that
+beneficial source headroom exists after the fact.  Mechanism-block priors,
+budget-aware shrinkage, local right-of-way context, state-conditioned utility,
+leave-city-out meta-utility and hierarchical priors nevertheless failed to
+turn that headroom into a stable deployment rule.  Most conservative variants
+returned exact rigid fallback.  The one state-conditioned gate that passed its
+offline development screen caused a 37.9\% Cologne regression in the
+pre-expansion closed-loop smoke, so its full matrix was not launched.
+The later V123/V157A budget contrasts were also retained only as historical
+model-path comparisons after a Jinan domain-handling difference was found.
+V157B corrected B100 alone and passed its relative source-versus-target gate on
+the reused selector, while remaining worse than PhasePressure.  The authorized
+V157C native one-action diagnostic completed seeds 80314 and 88625, but retained
+seed 27178 as invalid because the fixed 480-s checkpoint contained no eligible,
+scorable traffic light.  Its two-valid-seed descriptive means were $+0.00236$
+for source minus target, $-0.00232$ for source minus matched placebo, $+0.00125$
+for target minus PhasePressure and $+0.00362$ for source minus PhasePressure.
+Only one of two seeds improved versus target and neither improved versus the
+PhasePressure heuristic; all recorded collision counts were zero.  The fixed
+three-seed protocol is incomplete and supports no three-seed inference.
+V158 then froze the V157B predictors and collected 100 native-prefix groups
+(800 candidate rows and 700 non-reference branches) from ten fixed Jinan
+development seeds, with no simulator-state restoration.  Five whole-seed folds
+gave source-minus-target $-0.00113$ (paired 95\% interval
+$[-0.00240,+0.00019]$; 6/10 seeds improved), source-minus-placebo $-0.00072$
+($[-0.00219,+0.00091]$; 7/10) and source-minus-PhasePressure $+0.00014$
+($[-0.00239,+0.00261]$; 5/10).  Every preregistered OOF
+comparison failed;
+the reserve was therefore neither authorized nor run.  The failure closes this
+Jinan native-prefix ranking-remediation route and supports no controller
+adoption, unseen-city claim or post-hoc retuning.
+
+V159 reused the exact V158 B100 bank and whole-seed folds, adding direct
+physical action endpoints without collecting another simulator trajectory.
+Endpoint target minus delta target was $-0.00060648$ (paired 95\% interval,
+$[-0.00223628,+0.00081223]$), with 5/10 seeds improving.  The corresponding
+differences in the base, \texttt{\_2000} and \texttt{\_2500} demand settings
+were $-0.00201119$, $+0.00157150$ and $-0.00091152$, respectively.  Endpoint
+target remained $+0.00065478$ above PhasePressure, with only 3/10 seeds
+improving.  The frozen gate failed; the direct-endpoint hypothesis is therefore
+closed without further retuning or a reserve run.
+
+\begin{table}[htbp]
+\caption{Post-V148 source-remedy ladder.  Effects are normalized action-regret
+differences unless seconds or percentages are shown; negative values favour
+the source-aware arm.  The
+V157C row reports descriptive means over two valid seeds because the fixed
+three-seed protocol was incomplete.  The V158 row reports the preregistered
+ten-seed OOF estimates; its gate failed and the reserve was withheld.  The V159
+row reports the target-only direct-endpoint ablation; its OOF gate also failed.
+The versioned evidence identifiers are retained in the machine-readable source
+data, not in the displayed table.}
+\label{tab:source-remedy-ladder}
+\centering
+\scriptsize
+\input{tables/source_remedy_ladder.tex}
+\end{table}
+
+\subsection{Metric population and safety accounting}
+\label{sec:supp-metric-safety}
+
+SUMO \texttt{tripinfo} was written with unfinished records at the fixed
+3,600-s horizon.  The primary waiting-time population includes all departed
+vehicles, with unfinished waiting accrued to the horizon.  Completed-only
+waiting and completion ratios are secondary outcomes.  System vehicle-hours
+integrate active plus pending vehicles and therefore include demand not yet
+inserted.  Across the complete matrix, 171 raw collision events collapsed to
+13 unique participant--lane--time incidents in six rollouts; CFCMT had zero.
+All starting and ending teleport counters were zero.
+
+\subsection{Discarded pressure-guard development track}
+\label{sec:supp-discarded-guard}
+
+Before the anchored pairwise method was developed, an exploratory controller
+placed a learned mechanism residual behind a MaxPressure fallback.  On eight
+RESCO scenarios and 600-s rollouts its mean queue was 12.918, close to
+MaxPressure at 12.907.  At 3,600 s, PhasePressure was materially stronger
+(32.234 versus 43.511).  These experiments motivated treating pressure as a
+hard performance ceiling, but they use a different controller, target set and
+metric from V43 and are excluded from the main confirmation.
+
+\begin{table}[htbp]
+\caption{Exploratory 600-s pressure-guard stress test retained for development
+transparency.  This is not the final anchored CFCMT controller.}
+\label{tab:discarded-guard-600}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/traffic_signal_resco_extended_summary.tex}}
+\end{table}
+
+\begin{table}[htbp]
+\caption{Exploratory 3,600-s pressure-guard boundary check.  PhasePressure is
+the strongest policy in this discarded protocol.}
+\label{tab:discarded-guard-3600}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/traffic_signal_resco_extended_3600s_summary.tex}}
+\end{table}
+
+\subsection{Post-freeze fresh-seed execution-layer stress test}
+\label{sec:supp-postfreeze-stress}
+
+The V86--V89 successor track uses a target-state-conditioned 120-s action
+originator and global execution cooldown rather than the V43 anchored all-pair
+controller.  Negative deltas favour the learned executor relative to
+PhasePressure.  The first three rows reuse the same 54 disclosed adaptive seeds
+and are not independent replications.  Only V89 uses 64 newly generated seeds; its
+joint gate was frozen before those rollouts and failed.  The eight V85
+prospective seeds were not opened.
+
+\begin{table}[htbp]
+\caption{Post-freeze Jinan execution-layer stress test.  Intervals are paired
+simulator-seed bootstrap intervals.  Development rows are shown to expose the
+adaptive-to-confirmatory shrinkage and are not pooled with V89.}
+\label{tab:postfreeze-stress}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{tables/postfreeze_execution_stress_test.tex}}
+\end{table}
+
+\subsection{Native-protocol RL checks}
+\label{sec:supp-native-rl}
+
+\begin{table}[htbp]
+\caption{Official RESCO full-budget RL results under the upstream native
+protocol.  Unsupported upstream scenario--algorithm pairs are not silently
+patched into new methods.  These rows are not same-protocol comparisons with
+CFCMT.}
+\label{tab:official-resco-rl}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/official_resco_rl_full_budget_table.tex}}
+\end{table}
+
+\begin{table}[htbp]
+\caption{Patched LibSignal full-budget execution audit under native LibSignal
+states, rewards, timing and metrics.}
+\label{tab:libsignal-rl}
+\centering
+\scriptsize
+\resizebox{\textwidth}{!}{\input{../cf_h2o/results/paper_artifacts/tables/libsignal_rl_full_budget_table.tex}}
+\end{table}
+
+\subsection{Frozen artifact chain}
+\label{sec:supp-artifact-chain}
+
+\begin{table}[htbp]
+\caption{SHA-256 chain for the final external result.  The paper artifact
+builder verifies all result gates before regenerating this table.}
+\label{tab:artifact-chain}
+\centering
+\tiny
+\resizebox{\textwidth}{!}{\input{tables/external_confirmation_provenance.tex}}
+\end{table}
+
+The publication artifacts are regenerated with
+\begin{verbatim}
+python3 paper_tsc/figures/build_tsc_external_confirmation.py
+python3 paper_tsc/figures/build_tsc_causal_transfer_schematic.py
+python3 paper_tsc/figures/build_tsc_postfreeze_stress_test.py
+python3 paper_tsc/figures/build_tsc_source_gate_development.py
+python3 paper_tsc/figures/build_tsc_source_remedy_ladder.py
+python3 paper_tsc/figures/build_v43_dense_fresh10_confirmation.py
+\end{verbatim}
+These commands generate the submission figures and source tables.  The
+unreferenced V16-era builder and its outputs remain development history;
+they are not used for the submission figures in
+\Cref{fig:method-schematic,fig:network-plate,fig:external-confirmation,fig:v43-dense-fresh10,fig:source-contribution-diagnostic}.
+The first command refuses to write figures or tables if the development,
+external offline, joint-freeze or closed-loop validity gate is not satisfied.
+The third command checks all V86--V89 evidence-integrity audits and preserves
+the preregistered V89 rejection.  The fourth command preserves the V145, V146
+and V148 development rejections.  The fifth command checks that the canonical
+post-V148 remedy artifacts retain
+their recorded cohorts and adjudications, including the failed closed-loop
+smoke, exact rigid fallbacks, the superseded V123/V157A comparison, the bounded
+V157B B100 branch authorization and the incomplete V157C three-seed native
+one-action diagnostic.  It also requires the V158 native-prefix OOF gate and
+the V159 direct-endpoint OOF gate to remain failed, with both reserve
+authorizations false.
+The sixth command independently regenerates the frozen-model ten-new-seed
+figure and its source tables from the registered protocol and complete
+80-rollout report, without changing the original confirmation artifacts.

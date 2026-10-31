@@ -1,0 +1,35 @@
+{
+  "protocol": "tsc-v150h-source-identifiability-budget-curve-v1",
+  "redeveloped_after": "tsc-v150g-crossfitted-source-selector-aggregate-v1",
+  "authorization_protocol": "tsc-v150c-mechanism-parameter-prior-aggregate-v1",
+  "target_city_groups": [
+    "atlanta",
+    "cologne",
+    "hangzhou",
+    "ingolstadt",
+    "new_york",
+    "resco_synthetic",
+    "salt_lake_city"
+  ],
+  "target_budgets": [25, 50, 100],
+  "primary_budget": 100,
+  "common_evaluation_reserve_budget": 100,
+  "adaptation_fold_count": 5,
+  "candidate_count_per_target": 36,
+  "selector": "crossfit_complete_source_mechanism_selection",
+  "minimum_target_oof_gain": 0.0005,
+  "minimum_identity_oof_gain": 0.0005,
+  "minimum_nondegrading_heldout_folds": 4,
+  "source_null_fallback": "bitwise_exact_rigid_cfcmt",
+  "matched_placebo_follows_source_admission": true,
+  "inference_unit": "city",
+  "development_gate": {
+    "primary_budget": 100,
+    "minimum_identity_verified_source_cities": 2,
+    "require_no_city_regression": true,
+    "require_every_admitted_city_improve_rigid": true,
+    "require_every_admitted_city_beat_matched_placebo": true,
+    "require_exact_fallback_for_rejected_cities": true
+  },
+  "claim_boundary": "Nested B25/B50/B100 target-offline development diagnostic with one common evaluation set; not zero-shot, closed-loop, or fresh-city confirmation."
+}

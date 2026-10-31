@@ -1,0 +1,164 @@
+{
+  "protocol": "tsc-v117-pure-waiting-selector-heldout-city-confirmation-v2",
+  "scientific_status": "pre-outcome_amendment_before_v116_selector_or_any_v117_rollout",
+  "protocol_amendment": {
+    "reason": "replace_the_lower_capacity_strict_target_only_primary_comparator_with_an_architecture_matched_source_free_B100_comparator",
+    "timing": "before_any_v115_fit_v116_selector_or_v117_rollout_outcome",
+    "fresh_seed_list_changed": false,
+    "efficacy_thresholds_changed": false,
+    "simulator_or_metric_changed": false
+  },
+  "claim_scope": "Los Angeles is held out from Jinan selector development, but is not claimed to be untouched by all earlier project development.",
+  "selector": {
+    "development_city": "jinan",
+    "required_protocol": "tsc-v116-pure-waiting-causal-multisource-selector-v2",
+    "source_profiles_are_deployed_only_when_the_nested_source_transfer_gate_passes": true,
+    "rejected_or_absent_profiles_deploy_phase_pressure": true
+  },
+  "deployment": {
+    "city": "los_angeles",
+    "scenario": "la_1x4",
+    "manifest": "cf_h2o/config/traffic_signal_tsc_v39_external_la_jinan_v9_manifest.json",
+    "manifest_sha256": "636e09d8e2f47d5fefaa26b33b0552373b01f185e77e18896c97751c267c356c",
+    "conversion_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9",
+    "conversion_manifest": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9/conversion_manifest.json",
+    "conversion_manifest_sha256": "b140f2deea63653efd225c53ad306bf910ecf1ee149fb894c202227d7d454f56",
+    "conversion_tree_sha256": "9aa639a6fde43c4008bc6b4c24e2171ae3135858a437e10bfc65440a002015de",
+    "sumo_version": "1.22.0",
+    "duration_sec": 3600,
+    "warmup_sec": 60,
+    "control_interval_sec": 10,
+    "prediction_horizon_sec": 450,
+    "residual_coordination_mode": "sparse",
+    "require_zero_starting_and_ending_teleports": true
+  },
+  "information_arms": {
+    "phase_pressure": {
+      "target_transition_label_budget": 0,
+      "role": "strong_rule_safety_reference",
+      "activation": "always"
+    },
+    "target_only_b100": {
+      "target_transition_label_budget": 100,
+      "role": "same_anchor_same_correction_same_source_loco_blend_and_same_B100_groups_without_source_rows",
+      "activation": "matched_target_profile_exists_in_v116"
+    },
+    "source_selected_b100": {
+      "target_transition_label_budget": 100,
+      "role": "primary_cfcmt_target_offline_adaptation",
+      "activation": "v116_nested_source_transfer_gate_passes"
+    },
+    "source_selected_b0": {
+      "target_transition_label_budget": 0,
+      "role": "cfcmt_target_label_free_transfer",
+      "activation": "v116_zero_shot_source_gate_passes"
+    },
+    "h2oplus_dense_b100": {
+      "target_transition_label_budget": 100,
+      "role": "same_estimand_same_budget_dense_residual_comparator",
+      "activation": "always"
+    },
+    "h2oplus_dense_b0": {
+      "target_transition_label_budget": 0,
+      "role": "same_estimand_target_label_free_dense_residual_comparator",
+      "activation": "always"
+    }
+  },
+  "fresh_seed_generation": {
+    "algorithm": "python_random_mt19937_unique_randrange_1000000_10000000",
+    "generator_seed": 20260901,
+    "generated_before_v116_selection_and_any_v117_rollout": true,
+    "known_config_seed_count_excluded": 421,
+    "seed_count": 64
+  },
+  "fresh_seeds": [
+    5211240,
+    2368418,
+    4205667,
+    6004797,
+    5784607,
+    9150150,
+    1956047,
+    9737178,
+    6459568,
+    7459197,
+    5847394,
+    4969554,
+    3649635,
+    6172063,
+    7428119,
+    5362514,
+    4135836,
+    8951596,
+    7734817,
+    6057264,
+    9768828,
+    7461500,
+    4969108,
+    1948022,
+    4913760,
+    2454288,
+    6659667,
+    9150707,
+    2877634,
+    8948527,
+    5852481,
+    2751488,
+    9744995,
+    2619691,
+    8930687,
+    8498850,
+    7406405,
+    5505865,
+    7427263,
+    5030282,
+    3865792,
+    8363711,
+    8703930,
+    9137662,
+    8731014,
+    1387540,
+    7486908,
+    3205640,
+    1797010,
+    7067954,
+    2399924,
+    3306468,
+    1368627,
+    4699647,
+    5294297,
+    8888720,
+    9341813,
+    5602707,
+    5215399,
+    4401307,
+    5218648,
+    7808912,
+    3706899,
+    6403965
+  ],
+  "primary_comparisons": [
+    "source_selected_b100_vs_h2oplus_dense_b100",
+    "source_selected_b100_vs_target_only_b100",
+    "source_selected_b100_vs_phase_pressure"
+  ],
+  "secondary_comparisons": [
+    "source_selected_b0_vs_h2oplus_dense_b0",
+    "source_selected_b100_vs_source_selected_b0",
+    "h2oplus_dense_b100_vs_h2oplus_dense_b0"
+  ],
+  "confirmation_gate": {
+    "joint_rule": "all_applicable_primary_gates_must_pass",
+    "paired_unit": "same_la_scenario_same_fresh_seed",
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "bootstrap_replicates": 20000,
+    "bootstrap_seed": 20260901,
+    "maximum_95pct_upper_relative_delta_source_b100_vs_h2oplus_b100": 0.0,
+    "maximum_95pct_upper_relative_delta_source_b100_vs_target_only_b100": 0.0,
+    "maximum_95pct_upper_relative_delta_source_b100_vs_phase_pressure": 0.01,
+    "minimum_active_source_seed_fraction": 0.5,
+    "candidate_collision_incidents_must_not_exceed_phase_in_aggregate": true,
+    "candidate_teleports_must_not_exceed_phase_in_aggregate": true,
+    "no_failed_seed_exclusion": true
+  }
+}

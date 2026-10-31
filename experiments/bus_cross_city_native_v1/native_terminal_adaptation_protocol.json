@@ -1,0 +1,59 @@
+{
+  "name": "cfcmt-bus-native-terminal-adaptation-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "source_initialization_updates": 50000,
+  "adaptation_updates": 5000,
+  "target_fit_rows": 12288,
+  "target_union_rows": 16384,
+  "target_pool": "native_terminal_repair/target_pool.h5",
+  "artifact_folder": "native_terminal_adaptation",
+  "evaluation": {
+    "episode_seconds": 24000,
+    "demand_scale": 1.0,
+    "rule": "forward_proportional",
+    "rule_gain": 0.6,
+    "cases": [
+      {
+        "case": 0,
+        "demand_seed": 72551,
+        "sumo_seed": 73551
+      },
+      {
+        "case": 1,
+        "demand_seed": 72552,
+        "sumo_seed": 73552
+      },
+      {
+        "case": 2,
+        "demand_seed": 72553,
+        "sumo_seed": 73553
+      }
+    ],
+    "test_separation": "Same already analyzed fixed72551-72553/73551-73553 cases; disjoint from target training but not a new prospective cohort",
+    "comparison": "Nine repaired-label adapted evaluations; reuse all nine old adapted and three actual rule runs",
+    "primary_cost": "(2*wait_passenger_seconds+in_vehicle_passenger_seconds)/departed_passengers",
+    "completion": "Report completion rate and departed/completed counts alongside cost.",
+    "interpretation": "Bounded pilot on one target city; no population-level CI or city removal."
+  },
+  "asset_folder": "free_execution_actor",
+  "actor_action_space": "executed",
+  "rule_action_space": "proposal",
+  "world_model_updates": 0,
+  "continuation_updates": 0,
+  "fixed_settings": "Exact source_dense_adaptation settings and original fresh optimizer/network transfer/RNG path; only target terminal labels change.",
+  "checkpoint_rule": "Fixed final5000 target updates from existing seed-matched dense source50000 initializer; retain all three seeds.",
+  "admission": "Fresh seed75101 learner: verify real six terminal IQL targets equal corrected rewards*1e-4, then three actual normal offline updates. Formal learners restart from the original initializer.",
+  "references": {
+    "protocol": "free_execution_actor_protocol.json",
+    "summary": "free_execution_actor_summary.json",
+    "old_adapted": "free_execution_actor/adapted/seedN/caseXX/summary.json",
+    "strong_rule": "free_execution_actor/strong_rule/caseXX/summary.json"
+  },
+  "reporting": "Nine new full24000 evaluations, paired with existing old-adapted nine and three actual heuristic cases; equal seed/case weights, no removal or checkpoint selection.",
+  "interpretation": "Previously analyzed evaluation cases: paired repair diagnostic, not prospective confirmation, source-contribution isolation or physical sim-to-real evidence.",
+  "code_boundary": "CFCMT-owned corrected pool/runtime/source checkpoints/assets only; no mutable Thesis access and no heavy data downloads."
+}

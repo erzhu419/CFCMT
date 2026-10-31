@@ -1,0 +1,36 @@
+{
+  "protocol": "tsc-v150d-rigid-mechanism-prior-integration-v1",
+  "scientific_role": "rigid-cfcmt-source-mechanism-integration-development-not-confirmation",
+  "authorization_protocol": "tsc-v150c-mechanism-parameter-prior-aggregate-v1",
+  "target_city_groups": [
+    "atlanta",
+    "cologne",
+    "hangzhou",
+    "ingolstadt",
+    "new_york",
+    "resco_synthetic",
+    "salt_lake_city"
+  ],
+  "target_budget": 25,
+  "adaptation_fold_count": 5,
+  "reference_policy": "phase_pressure",
+  "integration": "rigid_score_plus_source_mechanism_score_minus_target_mechanism_score",
+  "ridge_l2": 0.05,
+  "source_prior_strength": 0.1,
+  "minimum_oof_gain": 0.0005,
+  "source_null_contract": "zero_prior_strength_bitwise_recovers_rigid_target_only",
+  "matched_placebo": "same_source_and_block_with_complete_action_groups_permuted_and_reference_recentered",
+  "inference_unit": "city",
+  "development_gate": {
+    "mean_selected_effect_vs_rigid": "less_than_zero",
+    "city_bootstrap_95_upper_vs_rigid": "less_than_zero",
+    "minimum_improving_cities_vs_rigid": 5,
+    "mean_selected_effect_vs_selected_placebo": "less_than_zero",
+    "mean_selected_effect_vs_same_candidate_placebo": "less_than_zero",
+    "city_bootstrap_95_upper_vs_same_candidate_placebo": "less_than_zero",
+    "minimum_cities_beating_same_candidate_placebo": 4,
+    "maximum_city_regression": 0.01,
+    "minimum_source_admitting_cities": 5
+  },
+  "successor_boundary": "Only a pass authorizes closed-loop mechanism-prior development. Fresh cities remain mandatory for confirmation."
+}

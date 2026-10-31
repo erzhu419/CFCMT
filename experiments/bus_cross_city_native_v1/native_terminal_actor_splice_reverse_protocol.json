@@ -1,0 +1,50 @@
+{
+  "name": "cfcmt-bus-native-terminal-actor-splice-reverse-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "variant": "gate55_amount75",
+  "gate_actor": "native_terminal_adaptation/seed{seed}/policy.pt",
+  "positive_amount_actor": "native_terminal_actor_unmasked/real_v_unmasked/seed{seed}/policy.pt",
+  "intervention": "Retain the native55k deterministic gate function and substitute only the same-seed75k native deterministic positive-action function. Each function uses its own frozen encoder. Select the positive action when55k hold probability is at least0.5, otherwise exact zero action-1; apply the existing canonical execution projection once.",
+  "reference_protocol": "native_terminal_actor_splice_protocol.json",
+  "reference_summary": "native_terminal_actor_splice_reporting.json",
+  "original_reference_protocol": "native_terminal_actor_unmasked_confirmation_protocol.json",
+  "original_reference_summary": "native_terminal_actor_unmasked_confirmation_summary.json",
+  "asset_folder": "native_terminal_actor_unmasked_confirmation",
+  "evaluation": {
+    "episode_seconds": 24000,
+    "cases": [
+      {
+        "case": 0,
+        "demand_seed": 72581,
+        "sumo_seed": 73581
+      },
+      {
+        "case": 1,
+        "demand_seed": 72582,
+        "sumo_seed": 73582
+      },
+      {
+        "case": 2,
+        "demand_seed": 72583,
+        "sumo_seed": 73583
+      }
+    ],
+    "primary_cost": "(2*wait_passenger_seconds+in_vehicle_passenger_seconds)/departed_passengers"
+  },
+  "new_training_updates": 0,
+  "world_model_refit_updates": 0,
+  "new_evaluations": 9,
+  "reference_evaluations_reused": 30,
+  "actual_evaluations_planned": 39,
+  "primary_comparison": "Compare gate55/amount75 against the unchanged full55k function for every seed/case. Retain full75k, gate75/amount55 and three actual rule references with their original identities. Equal case/seed means; all individual pairs retained.",
+  "interaction": "For each paired seed/case, compute (C_gate75_amount75-C_gate75_amount55)-(C_gate55_amount75-C_gate55_amount55). Report both conditional gate effects and both conditional positive-amount effects; no threshold or seed selection.",
+  "admission": "Before evaluation, reconstruct both native55k and native75k deterministic actions on the fixed12288 fit states, verify native55k gate plus native75k positive action uses the separate original encoders, exact-1 closed action, and one canonical execution projection. No training, simulation or checkpoint writes during admission.",
+  "reporting": "Cost, wait, ride, completion rate/count, requested/executed holding, original model/protocol identities and all nine comparisons for each reference. Three actual rule runs are reused across model-seed pairs; no population CI.",
+  "interpretation": "Retrospective deployment-function component intervention completing the frozen55k/75k gate-by-positive-amount2x2 on previously analyzed generated demand. It does not identify training-drift causes or validate source/confidence/generalization effects.",
+  "code_boundary": "CFCMT-owned frozen actors/runtime/assets only; no mutable Thesis access or heavy downloads.",
+  "submitted": true
+}

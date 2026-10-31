@@ -1,0 +1,24 @@
+stage: 5
+
+trust:
+  mode: geometric_mean
+  w_min: 0.05
+  w_max: 5.0
+  residual_scale: 1.0
+  uncertainty_scale: 1.0
+  graph_uncertainty_scale: 1.0
+  alignment_scale: 1.0
+  target_error_scale: 1.0
+  horizon_decay: 0.95
+  trust_warmup_steps: 5000
+  joint_train_trust: false
+  use_qdelta: false
+
+composer:
+  mode: geometric_mean
+  reward_path_weights:
+    demand: 1.0
+    speed: 1.0
+    dwell: 1.0
+    headway: 1.2
+    reward: 1.5

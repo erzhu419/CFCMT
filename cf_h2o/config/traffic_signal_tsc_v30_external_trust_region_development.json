@@ -1,0 +1,50 @@
+{
+  "protocol": "tsc-v44r40-external-conformal-trust-region-development-v1",
+  "frozen_at_utc": "2026-08-09T10:10:00Z",
+  "claim_boundary": "method-redesign development on previously inspected closed-loop seeds; not confirmatory evidence",
+  "parent_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v29_external_full_budget_confirmation.json",
+    "sha256": "ea06fa3020450fe04be29cbcf35d1e8c758c53fd02a2a52f9d6d065d85077258"
+  },
+  "trust_region_joint_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v44r40_trust_region_20260809/trust_region_joint_audit_v1.json",
+    "sha256": "45699250f40c5390e66134280e84acd5793bc593eff908766b30f4b19312613f"
+  },
+  "city_certificates": {
+    "los_angeles": {
+      "path": "cf_h2o/results/cluster/tsc_v44r40_trust_region_20260809/freeze_v1/los_angeles/trust_region_freeze.json",
+      "sha256": "4d7c941eb7c25ea32f7de21ac6092b3321cbb532903ecb4efd292225bd0b2972"
+    },
+    "jinan": {
+      "path": "cf_h2o/results/cluster/tsc_v44r40_trust_region_20260809/freeze_v1/jinan/trust_region_freeze.json",
+      "sha256": "32ee08819687ca3922e3634071d2e892606238ed4bd4b20ee81205719b2eb662"
+    }
+  },
+  "development": {
+    "closed_loop_seeds": [8081, 9091],
+    "status": "contaminated_by_prior_method_diagnostics",
+    "permitted_use": "redesign_falsification_only",
+    "old_diagnostic_aggregate": {
+      "path": "cf_h2o/results/cluster/tsc_v43r39_external_full_budget_20260809/closed_loop_deployment_diagnostic_aggregate_v1.json",
+      "sha256": "cb9d0d1846b680d48138a7cd718a55ceaf93638db5e5dc3587ee5136b5549506"
+    }
+  },
+  "prospective_confirmation_reservation": {
+    "closed_loop_seeds": [10091, 11003, 12007],
+    "must_not_be_run_or_inspected_before_method_and_analysis_freeze": true,
+    "city_scenarios": {
+      "los_angeles": ["la_1x4"],
+      "jinan": ["jinan_3x4_real", "jinan_3x4_real_2000", "jinan_3x4_real_2500"]
+    },
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "paired_unit": "scenario_seed",
+    "city_is_reporting_unit": true
+  },
+  "deployment": {
+    "policy": "cfcmt_trust_region_mpc",
+    "coordination_mode": "sparse",
+    "cooldown": "prediction_horizon_minus_one_control_interval",
+    "guard_selection_uses_only_seed_blocked_target_adaptation_oof_predictions": true,
+    "failed_city_gate_falls_back_exactly_to_selected_source_pressure_prior": true
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "version": 2,
+  "description": "Full-route open-transit city bundles for H2O+ and CFCMT single-city/cross-city validation.",
+  "generated_envs": {
+    "singapore_lta_all": {
+      "city": "Singapore",
+      "env_path": "H2Oplus/downloads/lta_datamall/202604/h2o_city_envs/SINGAPORE_LTA_weekday_all_services",
+      "line_count": 789,
+      "stations": 26695,
+      "segments": 25906,
+      "timetables": 56545,
+      "demand_source": "LTA DataMall PV/ODBus 202604, WEEKDAY monthly totals divided to typical weekday",
+      "traffic_source": "LTA TrafficSpeedBands snapshot nearest-matched to stop segments",
+      "validation_smoke": "validation_smoke.json"
+    },
+    "austin_capmetro_all": {
+      "city": "Austin / CapMetro",
+      "env_path": "H2Oplus/downloads/open_transit/austin_capmetro/h2o_city_envs/AUSTINCAPMETRO_weekday_all_routes",
+      "line_count": 234,
+      "stations": 6698,
+      "segments": 6464,
+      "timetables": 28329,
+      "demand_source": "GTFS schedule headway proxy OD; no public no-key stop-level ridership found",
+      "traffic_source": "GTFS schedule-derived segment speed",
+      "validation_smoke": "validation_smoke.json"
+    },
+    "halifax_transit_all": {
+      "city": "Halifax Transit",
+      "env_path": "H2Oplus/downloads/open_transit/halifax_transit/h2o_city_envs/HALIFAXTRANSIT_weekday_all_routes",
+      "line_count": 176,
+      "stations": 5727,
+      "segments": 5551,
+      "timetables": 8710,
+      "demand_source": "Halifax route-level half-hour APC apportioned across GTFS route-direction-patterns",
+      "traffic_source": "GTFS schedule-derived segment speed",
+      "validation_smoke": "validation_smoke.json"
+    },
+    "mbta_all": {
+      "city": "MBTA",
+      "env_path": "H2Oplus/downloads/open_transit/mbta/h2o_city_envs/MBTA_weekday_all_routes_v2",
+      "line_count": 940,
+      "stations": 21135,
+      "segments": 20195,
+      "timetables": 67091,
+      "demand_source": "MBTA Fall 2025 stop-level boardings/alightings apportioned across GTFS route-direction-patterns",
+      "traffic_source": "GTFS schedule-derived segment speed",
+      "validation_smoke": "validation_smoke.json"
+    }
+  },
+  "single_city_validation": {
+    "methods": ["h2oplus", "cfcmt"],
+    "cities": ["singapore_lta_all", "austin_capmetro_all", "halifax_transit_all", "mbta_all"],
+    "protocol": "Use full city bundles. Dynamic smoke may sample line-envs for very large bundles, but training/evaluation inputs remain full-route manifests."
+  },
+  "cross_city_splits": [
+    {
+      "name": "source_open_na_to_singapore",
+      "source_envs": ["austin_capmetro_all", "halifax_transit_all", "mbta_all"],
+      "target_env": "singapore_lta_all"
+    },
+    {
+      "name": "source_singapore_austin_halifax_to_mbta",
+      "source_envs": ["singapore_lta_all", "austin_capmetro_all", "halifax_transit_all"],
+      "target_env": "mbta_all"
+    },
+    {
+      "name": "leave_one_city_out_all",
+      "source_envs": "all_except_target",
+      "target_envs": ["singapore_lta_all", "austin_capmetro_all", "halifax_transit_all", "mbta_all"]
+    }
+  ],
+  "paper_hypotheses": {
+    "h1": "Single-city validation should be competitive for both H2O+ and CFCMT when the simulator is calibrated or data-derived.",
+    "h2": "Under cross-city transfer and uncalibrated simulation, CFCMT should outperform H2O+ because mechanism-level residual/trust adaptation reduces city-specific calibration dependence.",
+    "h3": "CFCMT with uncalibrated simulation should approach or exceed H2O+ using stronger manual calibration."
+  }
+}

@@ -1,0 +1,360 @@
+{
+  "protocol": "tsc-v56r52-external-v9-oof-pressure-regularized-development-v1",
+  "frozen_at_utc": "2026-08-10T02:25:00Z",
+  "claim_boundary": "Pressure artifacts and the numeric v52 deployment grid are frozen before any repaired-network closed-loop efficacy outcome. The two adaptation seeds cannot enter the v9 controller selector.",
+  "parent_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v42_external_v9_estimand_aligned_development.json",
+    "sha256": "206f574c0401c00fac9af88f0f72c331e51c39a5be242cc77476869590097b27"
+  },
+  "pressure_regularized_joint_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v56r52_external_v9_pressure_regularized_20260810/joint_freeze_audit_v2.json",
+    "sha256": "babb988b59e3bd2814b54c33bdcbaede1b1a92ecd43dbe4263f1209bafea12e1",
+    "decision": "authorize_v9_pressure_regularized_frozen_development_replay"
+  },
+  "city_artifacts": {
+    "los_angeles": {
+      "certificate": {
+        "path": "cf_h2o/results/cluster/tsc_v56r52_external_v9_pressure_regularized_20260810/freeze_v2/los_angeles/freeze.json",
+        "sha256": "013d44d95e989863e5b6033558ccf78acd6cd625f5bb815c12a2b20e36a793cd"
+      },
+      "model": {
+        "path": "cf_h2o/results/cluster/tsc_v56r52_external_v9_pressure_regularized_20260810/freeze_v2/los_angeles/model.pkl",
+        "sha256": "f5558a1dd4000d2ec5d60f33160dba445b4803befac14e655dbd7eab28489fad"
+      },
+      "regularizer": {
+        "blend_weight": 2.0,
+        "enabled": true,
+        "min_context_trust": 0.5,
+        "risk_multiplier": 0.0
+      },
+      "selected_candidate": "constant_alpha_0p8",
+      "deployment_policy": "cfcmt_oof_pressure_regularized_direct_mpc"
+    },
+    "jinan": {
+      "certificate": {
+        "path": "cf_h2o/results/cluster/tsc_v56r52_external_v9_pressure_regularized_20260810/freeze_v2/jinan/freeze.json",
+        "sha256": "79f1a98715c809de94199609f4c2cc77b723c32911764d98a288e419b233ed47"
+      },
+      "model": {
+        "path": "cf_h2o/results/cluster/tsc_v56r52_external_v9_pressure_regularized_20260810/freeze_v2/jinan/model.pkl",
+        "sha256": "e4d21d56ffe44d9c6824d41c346a6896ad77d16dde33a48f01f15171e0fe9d62"
+      },
+      "regularizer": {
+        "blend_weight": 8.0,
+        "enabled": true,
+        "min_context_trust": 0.5,
+        "risk_multiplier": 0.5
+      },
+      "selected_candidate": "constant_alpha_0p8",
+      "deployment_policy": "cfcmt_oof_pressure_regularized_direct_mpc"
+    }
+  },
+  "city_scenarios": {
+    "los_angeles": [
+      "la_1x4"
+    ],
+    "jinan": [
+      "jinan_3x4_real",
+      "jinan_3x4_real_2000",
+      "jinan_3x4_real_2500"
+    ]
+  },
+  "model_artifacts": {
+    "pressure_joint_audit_sha256": "babb988b59e3bd2814b54c33bdcbaede1b1a92ecd43dbe4263f1209bafea12e1",
+    "freeze_root": "cf_h2o/results/cluster/tsc_v56r52_external_v9_pressure_regularized_20260810/freeze_v2",
+    "reuse_contract": "reuse v56 models and label-free support without refitting from offline seed 9277 or closed-loop outcomes"
+  },
+  "inherited_candidate_grid": {
+    "policy_horizon_protocol": {
+      "path": "cf_h2o/config/traffic_signal_tsc_v34_external_policy_horizon_adaptation.json",
+      "sha256": "7f6c8d65083bcad3d50d60015dea7ec218c926123f30d0e01f449ea62b383eb3"
+    },
+    "global_cooldown_protocol": {
+      "path": "cf_h2o/config/traffic_signal_tsc_v38_external_estimand_aligned_global_cooldown_development.json",
+      "sha256": "f85ba0b9aceb8da82c40fd9eebc2796ba3e9fe6bcb8e8a7b0ec2eec150ac9be3"
+    },
+    "base_candidates": [
+      "cfcmt_pr_b2_cd3",
+      "cfcmt_pr_b0p25_cd6"
+    ],
+    "execution_trust_regions": [
+      {
+        "key": "h60_q0",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 0.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 5
+      },
+      {
+        "key": "h60_q1",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 1.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 5
+      },
+      {
+        "key": "h60_q5",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 5.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 5
+      },
+      {
+        "key": "h60_q10",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 10.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 5
+      },
+      {
+        "key": "h90_q0",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 0.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 8
+      },
+      {
+        "key": "h90_q1",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 1.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 8
+      },
+      {
+        "key": "h90_q5",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 5.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 8
+      },
+      {
+        "key": "h90_q10",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 10.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 8
+      },
+      {
+        "key": "h120_q0",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 0.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 11
+      },
+      {
+        "key": "h120_q1",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 1.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 11
+      },
+      {
+        "key": "h120_q5",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 5.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 11
+      },
+      {
+        "key": "h120_q10",
+        "enabled": true,
+        "min_priority": 0.0,
+        "min_total_queue": 10.0,
+        "min_total_vehicles": 1.0,
+        "max_mean_speed": null,
+        "max_simultaneous_overrides": 1,
+        "global_cooldown_intervals": 11
+      }
+    ],
+    "candidate_count": 24,
+    "numeric_grid_must_not_change_after_v9_closed_loop_starts": true
+  },
+  "policy_horizon_adaptation": {
+    "seeds": [
+      5057,
+      6067
+    ],
+    "horizon_sec": 3600,
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "reporting_unit": "city",
+    "scenario_weighting_within_city": "equal",
+    "seed_weighting": "equal",
+    "candidate_families": [
+      "phase_pressure",
+      "cfcmt_raw_direct",
+      "cfcmt_pressure_regularized_direct"
+    ],
+    "blend_weights": [
+      0.1,
+      0.25,
+      0.5,
+      1.0,
+      2.0,
+      4.0,
+      6.0,
+      8.0
+    ],
+    "cooldown_intervals": [
+      0,
+      3,
+      6
+    ],
+    "city_fixed_oof_parameters": {
+      "los_angeles": {
+        "risk_multiplier": 0.0,
+        "min_context_trust": 0.25
+      },
+      "jinan": {
+        "risk_multiplier": 0.5,
+        "min_context_trust": 0.5
+      }
+    },
+    "candidate_count_per_city": 28,
+    "matrix_size": 224,
+    "selection_rule": {
+      "minimum_city_mean_relative_improvement": 0.005,
+      "maximum_seed_level_city_mean_relative_regression": 0.01,
+      "method_teleports_must_not_exceed_paired_phase_pressure": true,
+      "method_collision_incidents_must_not_exceed_paired_phase_pressure": true,
+      "minimum_executed_interventions_per_scenario_seed": 1,
+      "robust_score": "city_mean_relative_delta + 0.5 * seed_delta_std + max(worst_seed_delta, 0)",
+      "tie_break": "lower robust score, lower mean delta, fewer interventions, lower blend weight, longer cooldown",
+      "fallback": "phase_pressure when no active candidate is feasible"
+    },
+    "selection_role": "candidate definitions only; v9 selection cannot use adaptation-coupled seeds"
+  },
+  "development": {
+    "closed_loop_seeds": [
+      5057,
+      6067,
+      52282,
+      41242,
+      63792,
+      80722,
+      75638,
+      61337,
+      73385,
+      81189
+    ],
+    "adaptation_coupled_diagnostic_seeds": [
+      5057,
+      6067
+    ],
+    "generalization_selection_seeds": [
+      52282,
+      41242,
+      63792,
+      80722,
+      75638,
+      61337,
+      73385,
+      81189
+    ],
+    "status": "repaired_network_frozen_development_replay",
+    "permitted_use": "candidate selection on generalization_selection_seeds only; adaptation-coupled seeds are descriptive diagnostics",
+    "policies": [
+      "cfcmt_oof_validated_mpc",
+      "phase_pressure"
+    ],
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "paired_unit": "scenario_seed"
+  },
+  "validation_reservation": {
+    "closed_loop_seeds": [
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ],
+    "must_not_run_until_development_selector_and_analysis_hash_are_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    }
+  },
+  "prospective_confirmation_reservation": {
+    "closed_loop_seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "must_not_run_until_validation_passes_and_prospective_analysis_is_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "candidate_policies_for_later_freeze": [
+      "cfcmt_oof_validated_mpc",
+      "phase_pressure",
+      "max_pressure",
+      "fixed_time",
+      "rigid_anchor_mpc",
+      "simulator_only_mpc",
+      "h2oplus_style_dense_residual_mpc"
+    ]
+  },
+  "deployment_contract": {
+    "fallback_policy": "phase_pressure",
+    "coordination_mode": "sparse",
+    "one_executed_residual_then_network_prior_only": true,
+    "per_city_selection": true,
+    "equal_scenario_weight_within_city": true
+  }
+}

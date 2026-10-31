@@ -1,0 +1,175 @@
+{
+  "status": "complete; all seven tasks DONE and all21 fresh evaluations paired",
+  "formal_tasks": [
+    "t124988",
+    "t124989",
+    "t124990",
+    "t124991",
+    "t124992",
+    "t124993",
+    "t124994"
+  ],
+  "expected_evaluations": 21,
+  "generated_demand_cases": 3,
+  "rule_evaluations": 3,
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "cases": [
+    {
+      "case": 0,
+      "demand_seed": 72511,
+      "sumo_seed": 73511
+    },
+    {
+      "case": 1,
+      "demand_seed": 72512,
+      "sumo_seed": 73512
+    },
+    {
+      "case": 2,
+      "demand_seed": 72513,
+      "sumo_seed": 73513
+    }
+  ],
+  "actor_checkpoints": 6,
+  "horizon_seconds": 24000,
+  "training_updates": 0,
+  "assets": {
+    "static_assets_equal": true,
+    "line_and_trip_metadata_equal": true,
+    "person_counts": [
+      3464,
+      3572,
+      3622
+    ]
+  },
+  "purpose": "Confirm source-initialization benefit versus matched local route and rule on fresh demand realizations, separately. Do not pool old cases or select models based on the fresh outcomes.",
+  "limits": [
+    "Only one corridor city, the same pinned2026-05-19 timetable and generated OD intensities. New random realizations are not three measured real days or new cities.",
+    "Three reused baseline trajectories support nine paired comparisons per learned route, not nine independent baseline runs.",
+    "No checkpoint, seed, floor, threshold, hyperparameter, city or model selection after seeing fresh outcomes.",
+    "This is not a physical sim-to-real or normalized-confidence efficacy test."
+  ],
+  "next_step": {
+    "kind": "Align actor actions in SAC/world-model continuation before testing the core method again",
+    "audit": "Use original target fit states only to inspect actor actions passed to Q, world model and target backups, and compare their physical execution semantics with the fixed deployment projection.",
+    "experiment_after_audit": "After alignment and interface admission, freeze an equal-budget model-TD0 versus0.25 continuation comparison. Retain the original replay, all seeds, guards and normalized-confidence settings; define the protocol before seeing outcomes.",
+    "reason": "The fixed IQL actors tested here did not use model TD or confidence continuation. Older continuation comparisons still used raw actor queries, so they do not resolve this interface mismatch.",
+    "status": "planned; no continuation run submitted in this turn"
+  },
+  "provenance": {
+    "protocol": "fresh_confirmation_protocol.json",
+    "assets_summary": "fresh_confirmation_assets_summary.json",
+    "summary": "fresh_confirmation_summary.json",
+    "mutable_thesis_accessed": false,
+    "large_remote_files_downloaded": false,
+    "downloaded_summary_bytes": 61980,
+    "independent_recalculation": "All21 original result rows independently recomputed, including seed/case wins, and matched the collector."
+  },
+  "complete": true,
+  "all_seed_case_means": {
+    "source_adapted": {
+      "cost": 2366.7887334617276,
+      "wait_seconds": 856.7529555162931,
+      "ride_seconds": 653.2828224291416,
+      "completion": 0.9820408750489477,
+      "mean_executed_hold_seconds": 8.414805852612236,
+      "positive_hold_fraction": 0.178349094639693
+    },
+    "target_adapted": {
+      "cost": 2369.536304941948,
+      "wait_seconds": 859.0805781507497,
+      "ride_seconds": 651.375148640448,
+      "completion": 0.9818838341403276,
+      "mean_executed_hold_seconds": 8.207557209540322,
+      "positive_hold_fraction": 0.20668835025586638
+    },
+    "strong_rule": {
+      "cost": 2368.7267658996216,
+      "wait_seconds": 856.1095902490524,
+      "ride_seconds": 656.5075854015165,
+      "completion": 0.9821696082778976,
+      "mean_executed_hold_seconds": 9.117914284940099,
+      "positive_hold_fraction": 0.4873934967831681
+    }
+  },
+  "comparisons": {
+    "source_vs_rule": {
+      "differences": {
+        "cost": -1.9380324378939804,
+        "wait_seconds": 0.6433652672407106,
+        "ride_seconds": -3.224762972374947,
+        "completion": -0.00012873322894990658,
+        "mean_executed_hold_seconds": -0.7031084323278627,
+        "positive_hold_fraction": -0.3090444021434751
+      },
+      "cost_percent_of_right": -0.08181747535401926,
+      "better_pairs": 7,
+      "compared_pairs": 9,
+      "better_training_seed_means": 1,
+      "by_seed_cost_difference": {
+        "75101": 0.7098511641456753,
+        "75102": -7.79885052259533,
+        "75103": 1.274902044767714
+      },
+      "by_case_cost_difference": {
+        "0": 7.767705927636598,
+        "1": -3.832493467711629,
+        "2": -9.749309773605546
+      }
+    },
+    "source_vs_local": {
+      "differences": {
+        "cost": -2.7475714802203584,
+        "wait_seconds": -2.3276226344565885,
+        "ride_seconds": 1.9076737886936144,
+        "completion": 0.00015704090862000974,
+        "mean_executed_hold_seconds": 0.20724864307191382,
+        "positive_hold_fraction": -0.02833925561617337
+      },
+      "cost_percent_of_right": -0.11595397270301254,
+      "better_pairs": 7,
+      "compared_pairs": 9,
+      "better_training_seed_means": 3,
+      "by_seed_cost_difference": {
+        "75101": -0.08558988043751015,
+        "75102": -7.741871406024984,
+        "75103": -0.41525315419721665
+      },
+      "by_case_cost_difference": {
+        "0": -7.7825250192454405,
+        "1": 0.010544979470068938,
+        "2": -0.470734400882975
+      }
+    },
+    "local_vs_rule": {
+      "differences": {
+        "cost": 0.809539042326378,
+        "wait_seconds": 2.970987901697299,
+        "ride_seconds": -5.132436761068561,
+        "completion": -0.0002857741375699163,
+        "mean_executed_hold_seconds": -0.9103570753997765,
+        "positive_hold_fraction": -0.2807051465273017
+      },
+      "cost_percent_of_right": 0.03417612592471898,
+      "better_pairs": 6,
+      "compared_pairs": 9,
+      "better_training_seed_means": 1,
+      "by_seed_cost_difference": {
+        "75101": 0.7954410445831854,
+        "75102": -0.05697911657034638,
+        "75103": 1.6901551989649306
+      },
+      "by_case_cost_difference": {
+        "0": 15.550230946882039,
+        "1": -3.843038447181698,
+        "2": -9.278575372722571
+      }
+    }
+  },
+  "source_gain_share_from_seed75102": 0.9392380946543332,
+  "conclusion": "With all models and projection fixed, the source-initialization route mean benefit versus local adaptation reappears on fresh demand:2.7476seconds, all three seed means and seven of nine pairs improve. Source also averages1.9380seconds below the rule, but only one seed mean wins. The gain is small and mainly driven by seed75102; stable rule superiority is not established."
+}

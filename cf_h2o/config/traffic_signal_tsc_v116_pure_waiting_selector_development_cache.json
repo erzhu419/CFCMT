@@ -1,0 +1,82 @@
+{
+  "protocol": "tsc-v116-pure-waiting-selector-development-cache-v1",
+  "scientific_status": "development-only-never-confirmatory",
+  "manifest": "cf_h2o/config/traffic_signal_tsc_v39_external_la_jinan_v9_manifest.json",
+  "collection": {
+    "scenario": "jinan_3x4_real",
+    "seeds": [
+      80314,
+      88625,
+      27178,
+      77524,
+      63775,
+      50945,
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ],
+    "duration_sec": 3600,
+    "control_interval_sec": 10,
+    "warmup_sec": 60,
+    "max_focal_tls": 4,
+    "counterfactual_horizon_intervals": 45,
+    "rollout_prefix_horizons_sec": [450],
+    "collection_shards_per_seed": 32,
+    "workers_per_node": 20,
+    "behavior_policy": "phase_pressure",
+    "counterfactual_cost_mode": "halted_queue",
+    "counterfactual_cost_contract": {
+      "mode": "halted_queue",
+      "estimand_protocol": "one-control-interval-local-mechanisms-plus-pure-halted-queue-rollout-value-v2",
+      "scope": "global_halted_vehicles_per_controlled_lane",
+      "population": "sumo_last_step_halting_number_on_controlled_lanes",
+      "normalization": "controlled_lane_count"
+    },
+    "minimum_tls_coverage": 1.0,
+    "sumo_version": "1.22.0"
+  },
+  "node_seed_assignments": {
+    "node001": [80314, 88625, 27178, 77524],
+    "node002": [63775, 50945, 73412, 61481],
+    "node003": [50744, 34310, 84579, 46535],
+    "node004": [84751, 61994, 47023, 31657],
+    "node005": [51400, 22208, 52367],
+    "node006": [74744, 74374, 50079]
+  },
+  "expected_seed_count": 22,
+  "expected_cache_file_count": 704,
+  "conversion_input": {
+    "root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9",
+    "manifest_sha256": "b140f2deea63653efd225c53ad306bf910ecf1ee149fb894c202227d7d454f56",
+    "tree_sha256": "9aa639a6fde43c4008bc6b4c24e2171ae3135858a437e10bfc65440a002015de"
+  },
+  "estimand_contract": {
+    "action": "candidate_phase_for_first_10_seconds",
+    "continuation_policy": "phase_pressure_after_first_control_interval",
+    "target": "prefix_mean_cost_450s",
+    "aggregation": "mean_global_pure_halted_vehicles_per_controlled_lane"
+  },
+  "post_collection_gate": {
+    "all_22_seed_shard_sets_complete": true,
+    "full_tls_coverage_within_each_seed": true,
+    "behavior_trace_consistent_within_each_seed": true,
+    "replay_and_safety_pass": true,
+    "finite_nonnegative_450s_targets": true,
+    "full_horizon_equivalence_pass": true,
+    "pure_halted_queue_cost_contract_matches_cache_identity": true
+  },
+  "claim_boundary": "These 22 simulator seeds are disclosed source-selector development evidence. They cannot be used as target adaptation data or reclassified as confirmatory evidence."
+}

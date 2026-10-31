@@ -1,0 +1,384 @@
+{
+  "protocol": "tsc-v154v-cologne-no-stay-switch-counterfactual-v1",
+  "status": "PASS",
+  "seed": 63792,
+  "target_time_sec": 27360,
+  "end_time_sec": 27810,
+  "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+  "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+  "frozen_threshold": {
+    "protocol": "tsc-v154l-cologne-rigid-oof-threshold-v1",
+    "calibration_protocol": "tsc-v154t-cologne-no-stay-oof-threshold-v1",
+    "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+    "fit_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/result.json",
+    "calibration_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154t_cologne_no_stay_oof_threshold_20260909/calibration_v1/result.json",
+    "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+    "ablation_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154s_cologne_no_stay_closed_loop_20260909/tooling_v1/no_stay_fraction_rigid.py",
+    "threshold": 0.20790450432178334,
+    "mode": "minimum_advantage",
+    "comparison": "predicted_advantage > threshold + 1e-12",
+    "selection_data": "Original 100 native B100 seed-OOF records with fixed post-selection stay veto",
+    "calibration_mean_cost": 0.7990718459100812
+  },
+  "selected_trace": {
+    "time_sec": 27360.0,
+    "tls_id": "cluster_357187_359543",
+    "prior_phase_state": "GGGGGrrrrrsrrrrrrrrr",
+    "selected_phase_state": "rrrrrGGGggrrrrrGGGgg",
+    "priority": 0.8757098725229305,
+    "selection_layer": "state_conditioned_source_utility",
+    "target_veto": null,
+    "target_originator": {
+      "reference_index": 1,
+      "proposed_index": 6,
+      "selected_index": 6,
+      "rigid_selected_index": 6,
+      "learned_differs": true,
+      "eligible": true,
+      "priority": 0.8757098725229305,
+      "rejection": null,
+      "arm": "rigid_target_only",
+      "source_city_admitted": false,
+      "utility_gate_selected": false,
+      "selected_candidate_key": null,
+      "source_changed_rigid_action": false,
+      "predicted_score": -0.8757098725229305,
+      "reference_score": 0.0,
+      "rigid_predicted_score": -0.8757098725229305,
+      "candidate_score_constraint": null,
+      "candidate_changed_rigid_group_count": 0,
+      "candidate_pressure_aligned_change_group_count": 0,
+      "candidate_off_reference_rejected_group_count": 0,
+      "source_changed_to_reference_action": false,
+      "source_changed_off_reference_action": false
+    },
+    "request_accepted": true,
+    "execution_effective": true,
+    "override_kind": "switch",
+    "executor_mode_before": "green",
+    "current_green_state_before": "rrrrrsrrrrrrrrrGGGGG",
+    "global_cooldown_active_before": false,
+    "stay_bypass_remaining_before": 0,
+    "green_elapsed_sec_before": 6.0,
+    "total_queue": 0.3528804393302239,
+    "total_vehicles": 1.0,
+    "mean_speed": 16.6586158258847,
+    "mean_occupancy": 0.014402196651119647
+  },
+  "checks": {
+    "both_target_captured": true,
+    "physical_start_exact": true,
+    "pending_start_exact": true,
+    "prefix_decisions_exact": true
+  },
+  "physical_start_comparisons": {
+    "model_once_vs_pp": {
+      "passed": true,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "max_position_or_speed_difference": 0.0
+    }
+  },
+  "runs": {
+    "model_once_then_pp": {
+      "status": "PASS",
+      "checks": {
+        "evaluator_complete": true,
+        "native_reference_trace_exact": true,
+        "full_horizon": true,
+        "target_captured": true,
+        "selected_action_exact": true,
+        "requested_action_exact": true,
+        "pp_reference_exact": true,
+        "predicted_advantage_exact": true,
+        "single_tls_eight_lanes": true,
+        "active_population_accounting": true
+      },
+      "prefix_safety": {
+        "raw_collision_events": 0,
+        "collision_event_steps": 0,
+        "unique_collision_incidents": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0,
+        "collision_samples": [],
+        "no_teleport_passed": true
+      },
+      "safety": {
+        "raw_collision_events": 0,
+        "collision_event_steps": 0,
+        "unique_collision_incidents": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0,
+        "collision_samples": [],
+        "no_teleport_passed": true
+      },
+      "sample_count": 450,
+      "first_interval_costs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.125,
+        0.0,
+        0.0,
+        0.125,
+        0.0,
+        0.0
+      ],
+      "mean_halted_per_lane": 0.9108333333333334,
+      "accepted_trace_count": 26,
+      "prefix_decision_count": 173,
+      "runtime_error": null,
+      "start_population": {
+        "active": 8,
+        "pending": 0
+      },
+      "first_decision": {
+        "time_sec": 27360.0,
+        "selected_phase": "rrrrrGGGggrrrrrGGGgg",
+        "reference_phase": "GGGGGrrrrrsrrrrrrrrr",
+        "selected_index": 6,
+        "reference_index": 1,
+        "priority": 0.8757098725229305,
+        "predicted_advantage": 0.8757098725229305,
+        "originator_decision": {
+          "reference_index": 1,
+          "proposed_index": 6,
+          "selected_index": 6,
+          "rigid_selected_index": 6,
+          "learned_differs": true,
+          "eligible": true,
+          "priority": 0.8757098725229305,
+          "rejection": null,
+          "arm": "rigid_target_only",
+          "source_city_admitted": false,
+          "utility_gate_selected": false,
+          "selected_candidate_key": null,
+          "source_changed_rigid_action": false,
+          "predicted_score": -0.8757098725229305,
+          "reference_score": 0.0,
+          "rigid_predicted_score": -0.8757098725229305,
+          "candidate_score_constraint": null,
+          "candidate_changed_rigid_group_count": 0,
+          "candidate_pressure_aligned_change_group_count": 0,
+          "candidate_off_reference_rejected_group_count": 0,
+          "source_changed_to_reference_action": false,
+          "source_changed_off_reference_action": false
+        },
+        "requested_phase": "rrrrrGGGggrrrrrGGGgg",
+        "forced_pp": false
+      },
+      "end_population": {
+        "active": 34,
+        "pending": 8
+      },
+      "window_arrived": 206,
+      "window_departed": 232,
+      "window_active_vehicle_hours": 3.0722222222222224,
+      "window_pending_vehicle_hours": 0.19833333333333333,
+      "window_system_vehicle_hours": 3.2705555555555557,
+      "end_green_elapsed_sec": 6.0,
+      "per_150_seconds": [
+        {
+          "start_sec": 27360,
+          "end_sec": 27510,
+          "mean_halted_per_lane": 0.08916666666666667
+        },
+        {
+          "start_sec": 27510,
+          "end_sec": 27660,
+          "mean_halted_per_lane": 0.9491666666666667
+        },
+        {
+          "start_sec": 27660,
+          "end_sec": 27810,
+          "mean_halted_per_lane": 1.6941666666666666
+        }
+      ]
+    },
+    "pp_only": {
+      "status": "PASS",
+      "checks": {
+        "evaluator_complete": true,
+        "native_reference_trace_exact": true,
+        "full_horizon": true,
+        "target_captured": true,
+        "selected_action_exact": true,
+        "requested_action_exact": true,
+        "pp_reference_exact": true,
+        "predicted_advantage_exact": true,
+        "single_tls_eight_lanes": true,
+        "active_population_accounting": true
+      },
+      "prefix_safety": {
+        "raw_collision_events": 0,
+        "collision_event_steps": 0,
+        "unique_collision_incidents": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0,
+        "collision_samples": [],
+        "no_teleport_passed": true
+      },
+      "safety": {
+        "raw_collision_events": 0,
+        "collision_event_steps": 0,
+        "unique_collision_incidents": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0,
+        "collision_samples": [],
+        "no_teleport_passed": true
+      },
+      "sample_count": 450,
+      "first_interval_costs": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.125,
+        0.0,
+        0.0,
+        0.125,
+        0.125,
+        0.125
+      ],
+      "mean_halted_per_lane": 1.2744444444444445,
+      "accepted_trace_count": 25,
+      "prefix_decision_count": 173,
+      "runtime_error": null,
+      "start_population": {
+        "active": 8,
+        "pending": 0
+      },
+      "first_decision": {
+        "time_sec": 27360.0,
+        "selected_phase": "rrrrrGGGggrrrrrGGGgg",
+        "reference_phase": "GGGGGrrrrrsrrrrrrrrr",
+        "selected_index": 6,
+        "reference_index": 1,
+        "priority": 0.8757098725229305,
+        "predicted_advantage": 0.8757098725229305,
+        "originator_decision": {
+          "reference_index": 1,
+          "proposed_index": 6,
+          "selected_index": 6,
+          "rigid_selected_index": 6,
+          "learned_differs": true,
+          "eligible": true,
+          "priority": 0.8757098725229305,
+          "rejection": null,
+          "arm": "rigid_target_only",
+          "source_city_admitted": false,
+          "utility_gate_selected": false,
+          "selected_candidate_key": null,
+          "source_changed_rigid_action": false,
+          "predicted_score": -0.8757098725229305,
+          "reference_score": 0.0,
+          "rigid_predicted_score": -0.8757098725229305,
+          "candidate_score_constraint": null,
+          "candidate_changed_rigid_group_count": 0,
+          "candidate_pressure_aligned_change_group_count": 0,
+          "candidate_off_reference_rejected_group_count": 0,
+          "source_changed_to_reference_action": false,
+          "source_changed_off_reference_action": false
+        },
+        "requested_phase": "GGGGGrrrrrsrrrrrrrrr",
+        "forced_pp": true
+      },
+      "end_population": {
+        "active": 43,
+        "pending": 9
+      },
+      "window_arrived": 196,
+      "window_departed": 231,
+      "window_active_vehicle_hours": 3.4833333333333334,
+      "window_pending_vehicle_hours": 0.27694444444444444,
+      "window_system_vehicle_hours": 3.7602777777777776,
+      "end_green_elapsed_sec": 55.0,
+      "per_150_seconds": [
+        {
+          "start_sec": 27360,
+          "end_sec": 27510,
+          "mean_halted_per_lane": 0.1075
+        },
+        {
+          "start_sec": 27510,
+          "end_sec": 27660,
+          "mean_halted_per_lane": 1.23
+        },
+        {
+          "start_sec": 27660,
+          "end_sec": 27810,
+          "mean_halted_per_lane": 2.4858333333333333
+        }
+      ]
+    }
+  },
+  "label_contract": {
+    "horizon_sec": 450,
+    "first_action_sec": 10,
+    "cost": "halted_queue",
+    "controlled_lane_count": 8,
+    "cost_samples": "After executor advance,27361 through27810 inclusive; mean of native lane halted counts divided by8.",
+    "pp_continuation": "Same PhasePressure reference as the original collector and deployment."
+  },
+  "new_simulation_count": 2,
+  "new_model_fits": 0,
+  "threshold_retuning": false,
+  "full_traces_server_only": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154v_cologne_no_stay_switch_counterfactual_20260910/replay/seed_63792/t27360/full_traces_server_only.json",
+  "comparison": {
+    "model_once_then_pp_cost": 0.9108333333333334,
+    "pp_only_cost": 1.2744444444444445,
+    "one_action_minus_pp": -0.3636111111111111,
+    "one_action_relative_to_pp_percent": -28.530950305143854,
+    "predicted_advantage": 0.8757098725229305,
+    "actual_advantage": 0.3636111111111111,
+    "one_action_ranking": "beneficial"
+  },
+  "elapsed_sec": 5.950105937896296,
+  "task_id": "t91928",
+  "refs": {
+    "protocol": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154v_cologne_no_stay_switch_counterfactual_20260910/protocol_v1.json",
+    "launch": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154v_cologne_no_stay_switch_counterfactual_20260910/launch_v1.json",
+    "result": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154v_cologne_no_stay_switch_counterfactual_20260910/replay/seed_63792/t27360/result.json",
+    "closed_loop_reference": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154u_cologne_recalibrated_no_stay_20260910/evaluation/seed_63792/rigid_thresholded/result.json"
+  },
+  "baseline_definition": {
+    "PP": "PhasePressure rule baseline; it selects the feasible phase with highest green_q and uses no trained model.",
+    "previous_comparison_columns": "The PP column reused valid same-network baseline runs. Threshold-zero and recalibrated-threshold columns are the learned controller variants.",
+    "branch_semantics": "Both branches share the U prefix. PP-only here starts using PP at27360; it is not a fresh all-PP episode from25200."
+  },
+  "validation": {
+    "focused_tests_passed": 5,
+    "retrieved_result_files": 1,
+    "retrieved_bytes": 8955
+  },
+  "conclusion": "This preselected switch is beneficial relative to PP under the native one-action/PP-continuation 450-second label. It does not demonstrate a ranking failure at this state or explain the full U service gap.",
+  "next_step": {
+    "status": "PROPOSED_NOT_EXECUTED",
+    "seed": 63792,
+    "target_time_sec": 27360,
+    "end_time_sec": 27810,
+    "new_simulation_count": 1,
+    "new_arm": "model_repeated",
+    "reuse_arms": [
+      "model_once_then_pp",
+      "pp_only"
+    ],
+    "reuse_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154v_cologne_no_stay_switch_counterfactual_20260910/replay/seed_63792/t27360/result.json",
+    "reuse_full_traces_server_only": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154v_cologne_no_stay_switch_counterfactual_20260910/replay/seed_63792/t27360/full_traces_server_only.json",
+    "policy": "Replay the unchanged U native prefix and retain its same P model, T threshold and S stay veto throughout the450-second window.",
+    "checks": [
+      "Native physical/executor/pending state and pre-target decisions match the retained V model-once branch.",
+      "Accepted intervention trace matches U through27810; first10 costs match the retained V model-once branch exactly.",
+      "450 samples, population accounting, and prefix/window collision/teleport checks remain valid."
+    ],
+    "contrasts": [
+      "model_repeated minus model_once_then_pp isolates subsequent model versus PP continuation in this window.",
+      "model_repeated minus pp_only compares the complete model window with the same-state PP reference."
+    ]
+  },
+  "limitations": [
+    "This action was selected after observing development outcomes; it is a bounded diagnosis, not an estimate of all accepted actions or independent confirmation.",
+    "Common PP continuation measures the one-action native B100 estimand, not the result of continued model deployment."
+  ]
+}

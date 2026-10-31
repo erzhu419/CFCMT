@@ -1,0 +1,35 @@
+\appendices
+\section{Proofs of the Score Properties}
+\label{app:score-proofs}
+
+\emph{Common-offset cancellation.}
+Subtracting $Y_g(r_g)$ from $Y_g(a)$ cancels $b_g$ and gives
+\eqref{eq:cancellation}. Adding a common constant leaves every contrast and
+the group range unchanged. Multiplying all outcomes by a positive constant
+multiplies both by that constant, so normalized labels are unchanged when
+the numerical floor is inactive. Action ordering is preserved in either case.
+
+\emph{Pairwise ranking recovery.}
+Swapping $i$ and $j$ in \eqref{eq:antisym} negates the prediction. For exact
+pair predictions,
+\begin{equation*}
+ \sum_{j\ne i}\{z_g(a_i)-z_g(a_j)\}
+ =K_gz_g(a_i)-\sum_{j=1}^{K_g}z_g(a_j).
+\end{equation*}
+Dividing by $K_g-1$ and subtracting the reference score gives
+\eqref{eq:recovery}. The common subtraction and positive factor preserve
+the minimizers, and $P_g(r_g)=0$.
+
+\emph{Ranking error.}
+For the ranking bound, let $a_g^\star$ minimize $z_g$. By the definition of
+$\widehat a_g$ in \eqref{eq:blend},
+\begin{align*}
+ z_g(\widehat a_g)-z_g(a_g^\star)
+ &=z_g(\widehat a_g)-S_g(\widehat a_g)\\
+ &\quad+S_g(\widehat a_g)-S_g(a_g^\star)\\
+ &\quad+S_g(a_g^\star)-z_g(a_g^\star)\\
+ &\leq2\|S_g-z_g\|_\infty.
+\end{align*}
+Here $\|S_g-z_g\|_\infty$ is the largest absolute score error over the feasible
+actions. This is an algebraic bound; it assumes no error guarantee for an
+unseen network.

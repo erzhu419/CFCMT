@@ -1,0 +1,176 @@
+{
+  "aggregate": {
+    "fixed_program": {
+      "mean_queue": 9.858470493075341,
+      "p90_queue": 18.10212797693159,
+      "throughput_ratio": 0.4219544187571733
+    },
+    "phase_pressure": {
+      "mean_queue": 4.824960370430366,
+      "p90_queue": 7.567823141080881,
+      "throughput_ratio": 0.5648565903963906
+    },
+    "phase_spillback_pressure": {
+      "mean_queue": 4.970801128844812,
+      "p90_queue": 8.093383907972505,
+      "throughput_ratio": 0.5609087979374798
+    }
+  },
+  "experiment": "traffic_signal_resco_phase_benchmark",
+  "setting": {
+    "control_interval_sec": 10,
+    "duration_sec": 120.0,
+    "env_root": "H2Oplus/downloads/traffic_signal_resco/environments",
+    "policies": [
+      "fixed_program",
+      "phase_pressure",
+      "phase_spillback_pressure"
+    ],
+    "scenarios": [
+      "cologne1",
+      "cologne3"
+    ],
+    "seed": 101,
+    "warmup_sec": 20.0
+  },
+  "targets": [
+    {
+      "controlled_lane_count": 8,
+      "phase_candidate_count": {
+        "cluster_357187_359543": 8
+      },
+      "policy_metrics": {
+        "fixed_program": {
+          "action_counts": {
+            "cluster_357187_359543": 0
+          },
+          "arrived": 22,
+          "begin_time": 25200.0,
+          "controlled_lane_count": 8,
+          "departed": 57,
+          "end_time": 25320.0,
+          "intervals": 12,
+          "mean_queue": 8.76139014738643,
+          "ok": true,
+          "p90_queue": 18.1733228228055,
+          "policy": "fixed_program",
+          "remaining": 35,
+          "throughput_ratio": 0.38596491228070173,
+          "tls_count": 1
+        },
+        "phase_pressure": {
+          "action_counts": {
+            "cluster_357187_359543": 12
+          },
+          "arrived": 33,
+          "begin_time": 25200.0,
+          "controlled_lane_count": 8,
+          "departed": 58,
+          "end_time": 25320.0,
+          "intervals": 12,
+          "mean_queue": 5.439332494958193,
+          "ok": true,
+          "p90_queue": 8.966343356776427,
+          "policy": "phase_pressure",
+          "remaining": 25,
+          "throughput_ratio": 0.5689655172413793,
+          "tls_count": 1
+        },
+        "phase_spillback_pressure": {
+          "action_counts": {
+            "cluster_357187_359543": 12
+          },
+          "arrived": 32,
+          "begin_time": 25200.0,
+          "controlled_lane_count": 8,
+          "departed": 58,
+          "end_time": 25320.0,
+          "intervals": 12,
+          "mean_queue": 5.61063218485378,
+          "ok": true,
+          "p90_queue": 9.963905007793194,
+          "policy": "phase_spillback_pressure",
+          "remaining": 26,
+          "throughput_ratio": 0.5517241379310345,
+          "tls_count": 1
+        }
+      },
+      "scenario": "cologne1",
+      "sumocfg": "H2Oplus/downloads/traffic_signal_resco/environments/cologne1/cologne1.sumocfg",
+      "tls_count": 1
+    },
+    {
+      "controlled_lane_count": 19,
+      "phase_candidate_count": {
+        "360082": 3,
+        "360086": 4,
+        "cluster_2415878664_254486231_359566_359576": 4
+      },
+      "policy_metrics": {
+        "fixed_program": {
+          "action_counts": {
+            "360082": 0,
+            "360086": 0,
+            "cluster_2415878664_254486231_359566_359576": 0
+          },
+          "arrived": 49,
+          "begin_time": 25200.0,
+          "controlled_lane_count": 19,
+          "departed": 107,
+          "end_time": 25320.0,
+          "intervals": 12,
+          "mean_queue": 10.955550838764253,
+          "ok": true,
+          "p90_queue": 18.03093313105768,
+          "policy": "fixed_program",
+          "remaining": 58,
+          "throughput_ratio": 0.45794392523364486,
+          "tls_count": 3
+        },
+        "phase_pressure": {
+          "action_counts": {
+            "360082": 12,
+            "360086": 12,
+            "cluster_2415878664_254486231_359566_359576": 12
+          },
+          "arrived": 60,
+          "begin_time": 25200.0,
+          "controlled_lane_count": 19,
+          "departed": 107,
+          "end_time": 25320.0,
+          "intervals": 12,
+          "mean_queue": 4.210588245902539,
+          "ok": true,
+          "p90_queue": 6.169302925385335,
+          "policy": "phase_pressure",
+          "remaining": 47,
+          "throughput_ratio": 0.5607476635514018,
+          "tls_count": 3
+        },
+        "phase_spillback_pressure": {
+          "action_counts": {
+            "360082": 12,
+            "360086": 12,
+            "cluster_2415878664_254486231_359566_359576": 12
+          },
+          "arrived": 61,
+          "begin_time": 25200.0,
+          "controlled_lane_count": 19,
+          "departed": 107,
+          "end_time": 25320.0,
+          "intervals": 12,
+          "mean_queue": 4.330970072835845,
+          "ok": true,
+          "p90_queue": 6.2228628081518185,
+          "policy": "phase_spillback_pressure",
+          "remaining": 46,
+          "throughput_ratio": 0.5700934579439252,
+          "tls_count": 3
+        }
+      },
+      "scenario": "cologne3",
+      "sumocfg": "H2Oplus/downloads/traffic_signal_resco/environments/cologne3/cologne3.sumocfg",
+      "tls_count": 3
+    }
+  ]
+}

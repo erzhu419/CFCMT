@@ -1,0 +1,142 @@
+{
+  "claim_boundary": "Only six disclosed adaptation seeds are used. The old and successor validation/prospective outputs remain absent until this diagnostic passes and a full-fit runtime artifact is frozen.",
+  "diagnostic": {
+    "advancement_rule": {
+      "maximum_bootstrap_95pct_upper_relative_delta": 0.01,
+      "maximum_mean_relative_delta": 0.0,
+      "maximum_seed_mean_relative_regression": 0.01,
+      "maximum_selection_rate": 0.9,
+      "minimum_improved_seed_fraction": 0.5,
+      "minimum_mean_correction_vs_always_cfcmt": 0.002,
+      "minimum_selection_rate": 0.1,
+      "negative_mechanistic_slope_required_in_every_fold": true
+    },
+    "bootstrap": {
+      "replicates": 10000,
+      "seed": 20260830
+    },
+    "city": "jinan",
+    "features": [
+      "historical_phase_mean_queue_per_lane"
+    ],
+    "fold": "leave_one_simulator_seed_out",
+    "forbidden_model_features": [
+      "scenario_id",
+      "seed",
+      "candidate_intervention_trace",
+      "heldout_day_full_horizon_metrics",
+      "future_vehicle_arrivals"
+    ],
+    "heldout_feature": "mean training-seed PhasePressure queue per lane for the heldout configuration; no metric from the heldout seed",
+    "history_source": "full-horizon passive PhasePressure logs from training seeds in the same target demand configuration",
+    "matrix_size": 18,
+    "ridge_l2": 1.0,
+    "scenarios": [
+      "jinan_3x4_real",
+      "jinan_3x4_real_2000",
+      "jinan_3x4_real_2500"
+    ],
+    "seeds": [
+      80314,
+      88625,
+      27178,
+      77524,
+      63775,
+      50945
+    ],
+    "target": "paired_full_horizon_waiting_time_relative_delta_vs_phase_pressure",
+    "trust_rule": "predicted_relative_delta_strictly_less_than_zero"
+  },
+  "feature_selection_disclosure": "The sole queue-regime feature was selected after inspecting the failed v78 six-seed development outcomes. Therefore v79 remains adaptive method development and cannot provide confirmatory efficacy evidence.",
+  "frozen_at_utc": "2026-08-30T01:38:20.890380+00:00",
+  "future_file_counts_at_freeze": {
+    "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v79r75_external_v9_topology_veto_validation_20260830": 0,
+    "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v80r76_external_v9_topology_veto_prospective_20260830": 0,
+    "cf_h2o/results/cluster/tsc_v79r75_external_v9_target_regime_trust_diagnostic_20260830/diagnostic_v1.json": 0,
+    "cf_h2o/results/cluster/tsc_v80r76_external_v9_target_regime_trust_freeze_20260830": 0,
+    "cf_h2o/results/cluster/tsc_v81r77_external_v9_target_regime_trust_validation_20260830": 0,
+    "cf_h2o/results/cluster/tsc_v82r78_external_v9_target_regime_trust_prospective_20260830": 0
+  },
+  "outputs": {
+    "artifact_root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v80r76_external_v9_target_regime_trust_freeze_20260830",
+    "diagnostic": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v79r75_external_v9_target_regime_trust_diagnostic_20260830/diagnostic_v1.json",
+    "prospective_root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v82r78_external_v9_target_regime_trust_prospective_20260830",
+    "validation_root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v81r77_external_v9_target_regime_trust_validation_20260830"
+  },
+  "parent": {
+    "audit_path": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v78r74_external_v9_topology_veto_closed_loop_development_20260830/audit_v2.json",
+    "audit_sha256": "a8966b1e57dc4c8474da9e004e000e30814ff6df1a66c5a602bbdac47192bbc4",
+    "protocol_path": "cf_h2o/config/traffic_signal_tsc_v62_external_v9_topology_veto_closed_loop_development.json",
+    "protocol_sha256": "1c707e5b3c6317aabc0ddcce23d57414a7b7bdca2ac0b26f0aa16fd1ce459506",
+    "results_root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v78r74_external_v9_topology_veto_closed_loop_development_20260830/development_v1",
+    "results_tree_sha256": "309ac472cc47c3b7482d477458cba671fac66d07358cc914aa4d5a6860cbdd53"
+  },
+  "prospective_confirmation": {
+    "candidate_policies_for_later_freeze": [
+      "cfcmt_oof_validated_mpc",
+      "phase_pressure",
+      "max_pressure",
+      "fixed_time",
+      "rigid_anchor_mpc",
+      "simulator_only_mpc",
+      "h2oplus_style_dense_residual_mpc"
+    ],
+    "city_scenarios": {
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ],
+      "los_angeles": [
+        "la_1x4"
+      ]
+    },
+    "closed_loop_seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "must_not_run_until_validation_passes_and_prospective_analysis_is_frozen": true,
+    "release_condition": "validation_gate_passed_and_analysis_hash_frozen"
+  },
+  "protocol": "tsc-v79r75-external-v9-target-regime-trust-diagnostic-v1",
+  "runtime_executable_sources": {
+    "cf_h2o/eval/traffic_signal_target_regime_trust_diagnostic.py": "9ac8ce6da8ccce779d7a3596e922e4c82ea800adcd231907ed7b83c829c01207",
+    "cf_h2o/traffic_signal/target_regime_trust.py": "6e573ed74c508749166a146d5210c616f54f6ef22cf14142ea0e48b977d3f22d",
+    "scripts/cluster/freeze_tsc_external_v9_target_regime_trust_diagnostic.py": "aee86a2251c1a6e2a2e50f58328d3842523e5efb0e74ef77117d0b3bcf0c5cd8",
+    "scripts/cluster/run_tsc_external_target_regime_trust_diagnostic.py": "db04c8d16a13f60b13ae894c9f561486a33a4516e6812e525df70b8d7b2372b3"
+  },
+  "stage": "post_v78_failure_disclosed_development_pre_formal_cross_fit",
+  "validation": {
+    "city_scenarios": {
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ],
+      "los_angeles": [
+        "la_1x4"
+      ]
+    },
+    "closed_loop_seeds": [
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ],
+    "method_and_execution_candidate_must_be_hash_frozen_before_launch": true,
+    "must_not_run_until_development_selector_and_analysis_hash_are_frozen": true
+  }
+}

@@ -1,0 +1,40 @@
+stage: 6
+
+batch_size: 256
+act_dim: 1
+z_dim: 1
+
+training:
+  pretrain_real_steps: 5000
+  train_sim_model_epochs: 100
+  train_residual_epochs: 50
+  main_train_steps: 200000
+  world_model_update_interval: 1000
+  factor_encoder_update_interval: 500
+  model_rollout_start_step: 20000
+  model_rollout_interval: 1
+  model_rollout_horizon: 1
+  max_model_rollout_horizon: 5
+  rollout_horizon_schedule: linear
+
+policy_input:
+  use_raw_obs: true
+  use_local_graph_embedding: true
+  use_theta: true
+  forbidden_fields:
+    - city_id
+    - domain_id
+    - real_sim_label
+    - source
+    - snapshot_t1
+    - reward_t1
+
+trust:
+  mode: geometric_mean
+  w_min: 0.05
+  w_max: 5.0
+  trust_warmup_steps: 5000
+  joint_train_trust: false
+
+composer:
+  mode: geometric_mean

@@ -1,0 +1,39 @@
+{
+  "protocol": "tsc-v113-waiting-aligned-estimand-invalidation-v1",
+  "created_at_utc": "2026-08-31T10:20:45Z",
+  "status": "INVALIDATED_BEFORE_FIT",
+  "finding": {
+    "declared_population": "sumo_last_step_halting_number_on_controlled_lanes",
+    "implemented_population": "halting_number_plus_0.35_vehicle_number_plus_0.025_occupancy",
+    "affected_function": "cf_h2o.eval.traffic_signal_resco_cfcmt_v3._advance_with_actions",
+    "scientific_consequence": "The generated labels are not the pure halted-vehicle integral used as the waiting-time proxy. They cannot authorize waiting-aligned model fitting, source selection, or confirmation."
+  },
+  "affected_collections": {
+    "source": {
+      "protocol_path": "cf_h2o/config/traffic_signal_tsc_v112_source_waiting_aligned_cache.json",
+      "protocol_sha256": "0dc0aebd5189b813bac128306962e07a7f5e65c3eeedcd5f6dbd4a7ed7b0b3ed",
+      "remote_cache_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v112_waiting_aligned_source_rebuild_20260831/source_waiting_cache_v1",
+      "files_present_at_stop": 816,
+      "expected_files": 864,
+      "cancelled_running_tasks": ["t86867"]
+    },
+    "target_adaptation": {
+      "protocol_path": "cf_h2o/config/traffic_signal_tsc_v113_target_waiting_aligned_adaptation_cache.json",
+      "protocol_sha256": "83cf3b41828bfb4fe223a0de382ef650ff45550c01af1356f4ef32eaecf70817",
+      "remote_cache_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v113_estimand_aligned_target_adaptation_20260831/target_adaptation_cache_v1",
+      "files_present_at_stop": 118,
+      "expected_files": 128,
+      "cancelled_running_tasks": ["t86911"]
+    }
+  },
+  "corrective_change": {
+    "estimand_protocol": "one-control-interval-local-mechanisms-plus-pure-halted-queue-rollout-value-v2",
+    "cost_expression": "sum(lane.getLastStepHaltingNumber(lane) for lane in controlled_lanes)",
+    "cache_identity_includes_cost_contract": true,
+    "core_source_sha256": "254683fccbeed879360b6b4514e631742ac84c17377e663cb3fc6dbb3227bdc4",
+    "cache_source_sha256": "b952d213041adf0eb5cbe2a77332a28d908b78831a6ff68a50f91dfd83f3eae8",
+    "regression_test_sha256": "0e9506060a57ad33a75626a2935513d9ad9d1724aec5ced0c434d313e48dd0c6",
+    "regression_test_result": "93 passed"
+  },
+  "decision": "retain_old_files_as_rejected_diagnostic_and_recollect_from_empty_v114_roots"
+}

@@ -1,0 +1,54 @@
+% Based on the user-supplied bare_jrnl_new_sample4.tex.
+% IEEEtran's normal journal typography and page geometry are retained.
+\documentclass[letterpaper,journal]{IEEEtran}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{array,booktabs,multirow}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{stfloats}
+\usepackage[hidelinks]{hyperref}
+\graphicspath{{figures/}}
+\hyphenation{net-work net-works coun-ter-fac-tual}
+\newcommand{\method}{CFCMT}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\ind}{\mathbf{1}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator{\range}{range}
+\DeclareMathOperator{\median}{median}
+\newcommand{\sourcecommit}{61e8a81e10c058cf07125efe86f2a8c8e2dd1c18}
+\hypersetup{pdftitle={CFCMT: Structured Action-Cost Transfer for Traffic Signal Control},pdfsubject={IEEE T-ITS manuscript; author information pending},pdfauthor={}}
+\begin{document}
+\title{CFCMT: Structured Action-Cost Transfer\\for Traffic Signal Control}
+% T-ITS uses single-anonymous review. Supply the real author list here;
+% do not use 'authors withheld for review' for a submission to this journal.
+\author{Author information to be completed before submission}
+\markboth{Manuscript prepared for IEEE Transactions on Intelligent Transportation Systems}%
+{CFCMT: Structured Action-Cost Transfer for Traffic Signal Control}
+\maketitle
+\input{sections/abstract}
+\begin{IEEEkeywords}
+Modelling and simulation, optimization and control, road transportation, traffic networks, traffic signal control, transfer learning.
+\end{IEEEkeywords}
+\input{sections/introduction}
+\input{sections/related_work}
+\input{sections/problem}
+\input{sections/method}
+\input{sections/experiments}
+\input{sections/results}
+\input{sections/discussion}
+\input{sections/conclusion}
+\section*{Data and Code Availability}
+\begingroup\raggedright
+The source-component fitting and deployment code are available in the CFCMT repository at commit \texttt{61e8a81}.\footnote{\url{https://github.com/erzhu419/CFCMT}, commit \texttt{61e8a81}.}
+The accompanying source-data files contain all 1,344 runs of the six-controller comparison and their paired summaries. The fixed-baseline MaxPressure execution and analysis scripts are in \path{experiments/tsc_v93_max_pressure_20261030}.
+The exports support the numerical summaries reported here. Full simulation logs, trained models, and some aggregated evaluation records remain in the execution archive and are not all included in this repository snapshot. The release therefore does not yet provide an end-to-end reproduction package. The benchmark inputs retain their upstream licences.
+\par\endgroup
+\section*{Acknowledgment}
+OpenAI ChatGPT assisted with the organization and English drafting of the abstract and Sections I--VIII, and with preparation of the figures and tables. Codex assisted with the supplemental evaluation and analysis scripts. Simulation outcomes were produced by SUMO using the frozen controllers.
+\input{sections/appendix_proofs}
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}

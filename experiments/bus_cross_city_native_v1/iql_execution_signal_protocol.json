@@ -1,0 +1,84 @@
+{
+  "name": "cfcmt-bus-iql-execution-signal-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "fit_role": 0,
+  "target_fit_rows": 12288,
+  "state_batch_size": 256,
+  "admission_rows": 64,
+  "action_equality_tolerance": 1e-05,
+  "near_zero_weight_threshold": 1e-06,
+  "admission_atol": 1e-05,
+  "admission_rtol": 1e-05,
+  "stages": {
+    "adapted": {
+      "folder": "source_dense_adaptation",
+      "filename": "adapted.pt",
+      "stored_updates": 5000
+    },
+    "on0": {
+      "folder": "iql_actor_continuation/td0",
+      "filename": "final_learner.pt",
+      "stored_updates": 25000
+    },
+    "on025": {
+      "folder": "iql_actor_continuation/td025",
+      "filename": "final_learner.pt",
+      "stored_updates": 25000
+    },
+    "off0": {
+      "folder": "entropy_free_continuation/td0",
+      "filename": "final_learner.pt",
+      "stored_updates": 25000
+    },
+    "off025": {
+      "folder": "entropy_free_continuation/td025",
+      "filename": "final_learner.pt",
+      "stored_updates": 25000
+    }
+  },
+  "pairs": {
+    "off0_vs_on0": [
+      "off0",
+      "on0"
+    ],
+    "off025_vs_on025": [
+      "off025",
+      "on025"
+    ],
+    "off0_vs_adapted": [
+      "off0",
+      "adapted"
+    ],
+    "off025_vs_adapted": [
+      "off025",
+      "adapted"
+    ]
+  },
+  "groups": [
+    "all",
+    "free",
+    "forced60"
+  ],
+  "gradient_definition": "At fixed checkpoints: negative recorded-action log likelihood times actual detached IQL weights. Each group contribution sums per-record gradients divided by overall selected N, so free plus forced contributions equal full-data gradient. No optimizer steps; gradient norms do not imply independent causal contributions.",
+  "diagnostics": [
+    "Execution-projected deterministic actions and gate decisions before/after entropy-OFF; current-state free and forced groups.",
+    "Actual IQL advantages, cap/near-zero weights, ESS/N and five-actor cross weighted NLL within each fixed weight row.",
+    "Raw recorded-likelihood actor gradients in free and forced60 states; forced execution has constant action60 regardless of desired distribution.",
+    "Recorded, projected-zero and five deterministic actor actions under each learned min-Q critic; changed free-action rankings are estimates, not true outcomes."
+  ],
+  "admission": "Actual seed75101/64 evenly spaced fit rows through native critic/weights/log likelihood and projection. Check finite outputs, group gradient/loss addition and deterministic forced invariance. No simulated control or parameter update.",
+  "limits": [
+    "Original fit states only; no new data, interaction, threshold, hyperparameter or checkpoint selection.",
+    "Frozen learned Q scores and NLL are not real counterfactual action costs.",
+    "Current checkpoint gradients are not integrated historical update attribution; gradient norm ratios are not additive percentages.",
+    "Collapsed-state latent gradient can be irrelevant to executed policy without proving it caused the cost gap."
+  ],
+  "new_training_updates": 0,
+  "new_simulator_events": 0,
+  "evaluation_rows_read": 0,
+  "code_boundary": "Only CFCMT-owned frozen runtime; no mutable Thesis import or access. Code/JSON/log only; no H5/CSV/checkpoint downloads."
+}

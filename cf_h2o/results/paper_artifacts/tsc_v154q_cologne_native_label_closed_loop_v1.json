@@ -1,0 +1,1501 @@
+{
+  "protocol": "tsc-v154q-cologne-native-label-closed-loop-v1",
+  "matrix_status": "COMPLETE",
+  "seeds": [
+    52282,
+    41242,
+    63792
+  ],
+  "geometry_development_seed": 41242,
+  "additional_seeds": [
+    52282,
+    63792
+  ],
+  "repaired_sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+  "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+  "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+  "frozen_threshold": {
+    "protocol": "tsc-v154l-cologne-rigid-oof-threshold-v1",
+    "calibration_protocol": "tsc-v154p-cologne-native-b100-v1",
+    "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+    "fit_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/result.json",
+    "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+    "threshold": 0.0,
+    "mode": "minimum_advantage",
+    "comparison": "predicted_advantage > threshold + 1e-12",
+    "selection_data": "Exactly 100 training-seed OOF predictions using native B100 labels",
+    "calibration_mean_cost": 0.7772940186175482
+  },
+  "original_model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/fit_v2/model.pkl",
+  "original_frozen_threshold": {
+    "protocol": "tsc-v154l-cologne-rigid-oof-threshold-v1",
+    "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+    "fit_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/fit_v2/result.json",
+    "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/fit_v2/model.pkl",
+    "threshold": 0.3580414874633295,
+    "mode": "minimum_advantage",
+    "comparison": "predicted_advantage > threshold + 1e-12",
+    "selection_data": "Only 100 seed-held-out predictions from the original B100 training roster",
+    "calibration_mean_cost": 0.7573541790453554
+  },
+  "baseline_source_bindings": {
+    "cf_h2o.eval.traffic_signal_cologne_collision_replay": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/85b2b43cd12832c5a1dd/cf_h2o/eval/traffic_signal_cologne_collision_replay.py",
+    "cf_h2o.eval.traffic_signal_resco_cfcmt_v3": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/85b2b43cd12832c5a1dd/cf_h2o/eval/traffic_signal_resco_cfcmt_v3.py",
+    "cf_h2o.eval.traffic_signal_state_conditioned_source_closed_loop": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/85b2b43cd12832c5a1dd/cf_h2o/eval/traffic_signal_state_conditioned_source_closed_loop.py",
+    "cf_h2o.traffic_signal.action_ranker": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/85b2b43cd12832c5a1dd/cf_h2o/traffic_signal/action_ranker.py"
+  },
+  "baseline_executor_source": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154i_cologne_priority_yellow_comparison_20260909/tooling_v1/safe_phase_controller.py",
+  "threshold_originator_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154m_cologne_threshold_closed_loop_20260909/tooling_v1/thresholded_fraction_rigid.py",
+  "cells": [
+    {
+      "seed": 52282,
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154q_cologne_native_label_closed_loop_20260909/evaluation/seed_52282/rigid_thresholded/result.json",
+      "task_id": "t91851",
+      "elapsed_sec": 5.276207135990262,
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+      "occupancy_equation_protocol": "sumo-lane-occupancy-fraction-equations-v1",
+      "validity_checks": {
+        "runner_completed": true,
+        "full_3600_one_second_steps": true,
+        "uncapped_events_match_native_total": true,
+        "uncapped_incidents_match_native_total": true,
+        "collision_event_steps_match_native_total": true,
+        "no_teleports": true,
+        "fixed_due_demand_population": true,
+        "departed_equals_arrived_plus_active": true,
+        "due_equals_departed_plus_pending": true,
+        "tripinfo_covers_all_departed": true,
+        "tripinfo_completed_matches_arrivals": true,
+        "tripinfo_unfinished_matches_active": true,
+        "complete_3541_post_warmup_samples": true
+      },
+      "arm": "new_native_rigid",
+      "source_arm": "rigid_thresholded",
+      "source_protocol": "tsc-v154q-cologne-native-label-closed-loop-v1",
+      "reused": false,
+      "metrics": {
+        "mean_tripinfo_waiting_time": 254.92851469420174,
+        "system_vehicle_hours": 273.62833333333333,
+        "active_vehicle_hours": 101.05888888888889,
+        "pending_vehicle_hours": 172.56944444444446,
+        "mean_tripinfo_depart_delay": 8.120730738681493,
+        "mean_queue": 82.42869245975713,
+        "departed": 1259,
+        "arrived": 1053,
+        "active_vehicles_at_horizon": 206,
+        "pending_vehicles_at_horizon": 756,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": []
+    },
+    {
+      "seed": 52282,
+      "arm": "original_thresholded_rigid",
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154m_cologne_threshold_closed_loop_20260909/evaluation/seed_52282/rigid_thresholded/result.json",
+      "task_id": "t91746",
+      "elapsed_sec": 4.380896952934563,
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/fit_v2/model.pkl",
+      "occupancy_equation_protocol": "sumo-lane-occupancy-fraction-equations-v1",
+      "reused": true,
+      "source_protocol": "tsc-v154m-cologne-threshold-closed-loop-v1",
+      "metrics": {
+        "mean_tripinfo_waiting_time": 16.573697270471463,
+        "system_vehicle_hours": 34.72027777777778,
+        "active_vehicle_hours": 30.7925,
+        "pending_vehicle_hours": 3.9277777777777776,
+        "mean_tripinfo_depart_delay": 7.03424317617866,
+        "mean_queue": 8.273933916972606,
+        "departed": 2015,
+        "arrived": 1999,
+        "active_vehicles_at_horizon": 16,
+        "pending_vehicles_at_horizon": 0,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": [],
+      "source_arm": "rigid_thresholded"
+    },
+    {
+      "seed": 52282,
+      "arm": "phase_pressure",
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154i_cologne_priority_yellow_comparison_20260909/seed_52282/phase_pressure/result.json",
+      "task_id": "t91636",
+      "elapsed_sec": 3.9953158411663026,
+      "reused": true,
+      "source_protocol": "tsc-v154i-cologne-priority-yellow-comparison-v1",
+      "metrics": {
+        "mean_tripinfo_waiting_time": 12.634739454094293,
+        "system_vehicle_hours": 31.953611111111112,
+        "active_vehicle_hours": 28.04277777777778,
+        "pending_vehicle_hours": 3.910833333333333,
+        "mean_tripinfo_depart_delay": 7.003970223325062,
+        "mean_queue": 6.538266026546173,
+        "departed": 2015,
+        "arrived": 1997,
+        "active_vehicles_at_horizon": 18,
+        "pending_vehicles_at_horizon": 0,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": [],
+      "source_arm": "phase_pressure"
+    },
+    {
+      "seed": 41242,
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154q_cologne_native_label_closed_loop_20260909/evaluation/seed_41242/rigid_thresholded/result.json",
+      "task_id": "t91852",
+      "elapsed_sec": 5.684806072153151,
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+      "occupancy_equation_protocol": "sumo-lane-occupancy-fraction-equations-v1",
+      "validity_checks": {
+        "runner_completed": true,
+        "full_3600_one_second_steps": true,
+        "uncapped_events_match_native_total": true,
+        "uncapped_incidents_match_native_total": true,
+        "collision_event_steps_match_native_total": true,
+        "no_teleports": true,
+        "fixed_due_demand_population": true,
+        "departed_equals_arrived_plus_active": true,
+        "due_equals_departed_plus_pending": true,
+        "tripinfo_covers_all_departed": true,
+        "tripinfo_completed_matches_arrivals": true,
+        "tripinfo_unfinished_matches_active": true,
+        "complete_3541_post_warmup_samples": true
+      },
+      "arm": "new_native_rigid",
+      "source_arm": "rigid_thresholded",
+      "source_protocol": "tsc-v154q-cologne-native-label-closed-loop-v1",
+      "reused": false,
+      "metrics": {
+        "mean_tripinfo_waiting_time": 318.006902502157,
+        "system_vehicle_hours": 323.15472222222223,
+        "active_vehicle_hours": 113.02305555555556,
+        "pending_vehicle_hours": 210.13166666666666,
+        "mean_tripinfo_depart_delay": 7.983606557377049,
+        "mean_queue": 93.9110420785089,
+        "departed": 1159,
+        "arrived": 959,
+        "active_vehicles_at_horizon": 200,
+        "pending_vehicles_at_horizon": 856,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": []
+    },
+    {
+      "seed": 41242,
+      "arm": "original_thresholded_rigid",
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154m_cologne_threshold_closed_loop_20260909/evaluation/seed_41242/rigid_thresholded/result.json",
+      "task_id": "t91747",
+      "elapsed_sec": 4.472223124001175,
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/fit_v2/model.pkl",
+      "occupancy_equation_protocol": "sumo-lane-occupancy-fraction-equations-v1",
+      "reused": true,
+      "source_protocol": "tsc-v154m-cologne-threshold-closed-loop-v1",
+      "metrics": {
+        "mean_tripinfo_waiting_time": 15.522580645161291,
+        "system_vehicle_hours": 33.75138888888889,
+        "active_vehicle_hours": 30.065555555555555,
+        "pending_vehicle_hours": 3.6858333333333335,
+        "mean_tripinfo_depart_delay": 6.6024813895781636,
+        "mean_queue": 7.841852584015815,
+        "departed": 2015,
+        "arrived": 1999,
+        "active_vehicles_at_horizon": 16,
+        "pending_vehicles_at_horizon": 0,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": [],
+      "source_arm": "rigid_thresholded"
+    },
+    {
+      "seed": 41242,
+      "arm": "phase_pressure",
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154i_cologne_priority_yellow_comparison_20260909/seed_41242/phase_pressure/result.json",
+      "task_id": "t91638",
+      "elapsed_sec": 4.088408139999956,
+      "reused": true,
+      "source_protocol": "tsc-v154i-cologne-priority-yellow-comparison-v1",
+      "metrics": {
+        "mean_tripinfo_waiting_time": 14.831761786600497,
+        "system_vehicle_hours": 33.528055555555554,
+        "active_vehicle_hours": 29.704444444444444,
+        "pending_vehicle_hours": 3.823611111111111,
+        "mean_tripinfo_depart_delay": 6.84863523573201,
+        "mean_queue": 7.571025134142897,
+        "departed": 2015,
+        "arrived": 1998,
+        "active_vehicles_at_horizon": 17,
+        "pending_vehicles_at_horizon": 0,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": [],
+      "source_arm": "phase_pressure"
+    },
+    {
+      "seed": 63792,
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154q_cologne_native_label_closed_loop_20260909/evaluation/seed_63792/rigid_thresholded/result.json",
+      "task_id": "t91853",
+      "elapsed_sec": 5.06139789102599,
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+      "occupancy_equation_protocol": "sumo-lane-occupancy-fraction-equations-v1",
+      "validity_checks": {
+        "runner_completed": true,
+        "full_3600_one_second_steps": true,
+        "uncapped_events_match_native_total": true,
+        "uncapped_incidents_match_native_total": true,
+        "collision_event_steps_match_native_total": true,
+        "no_teleports": true,
+        "fixed_due_demand_population": true,
+        "departed_equals_arrived_plus_active": true,
+        "due_equals_departed_plus_pending": true,
+        "tripinfo_covers_all_departed": true,
+        "tripinfo_completed_matches_arrivals": true,
+        "tripinfo_unfinished_matches_active": true,
+        "complete_3541_post_warmup_samples": true
+      },
+      "arm": "new_native_rigid",
+      "source_arm": "rigid_thresholded",
+      "source_protocol": "tsc-v154q-cologne-native-label-closed-loop-v1",
+      "reused": false,
+      "metrics": {
+        "mean_tripinfo_waiting_time": 251.16789516789518,
+        "system_vehicle_hours": 290.88444444444445,
+        "active_vehicle_hours": 97.04583333333333,
+        "pending_vehicle_hours": 193.8386111111111,
+        "mean_tripinfo_depart_delay": 13.682227682227682,
+        "mean_queue": 78.68031629483197,
+        "departed": 1221,
+        "arrived": 1024,
+        "active_vehicles_at_horizon": 197,
+        "pending_vehicles_at_horizon": 794,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": []
+    },
+    {
+      "seed": 63792,
+      "arm": "original_thresholded_rigid",
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154m_cologne_threshold_closed_loop_20260909/evaluation/seed_63792/rigid_thresholded/result.json",
+      "task_id": "t91748",
+      "elapsed_sec": 4.304138910956681,
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/fit_v2/model.pkl",
+      "occupancy_equation_protocol": "sumo-lane-occupancy-fraction-equations-v1",
+      "reused": true,
+      "source_protocol": "tsc-v154m-cologne-threshold-closed-loop-v1",
+      "metrics": {
+        "mean_tripinfo_waiting_time": 15.008436724565756,
+        "system_vehicle_hours": 33.131388888888885,
+        "active_vehicle_hours": 29.551666666666666,
+        "pending_vehicle_hours": 3.5797222222222222,
+        "mean_tripinfo_depart_delay": 6.41439205955335,
+        "mean_queue": 7.944365998305563,
+        "departed": 2015,
+        "arrived": 1997,
+        "active_vehicles_at_horizon": 18,
+        "pending_vehicles_at_horizon": 0,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": [],
+      "source_arm": "rigid_thresholded"
+    },
+    {
+      "seed": 63792,
+      "arm": "phase_pressure",
+      "run_valid": true,
+      "status": "PASS",
+      "zero_incident_status": "PASS",
+      "source_result": "cf_h2o/results/cluster/tsc_v154i_cologne_priority_yellow_comparison_20260909/seed_63792/phase_pressure/result.json",
+      "task_id": "t91640",
+      "elapsed_sec": 4.05875718803145,
+      "reused": true,
+      "source_protocol": "tsc-v154i-cologne-priority-yellow-comparison-v1",
+      "metrics": {
+        "mean_tripinfo_waiting_time": 14.645657568238214,
+        "system_vehicle_hours": 34.18555555555555,
+        "active_vehicle_hours": 29.68777777777778,
+        "pending_vehicle_hours": 4.497777777777777,
+        "mean_tripinfo_depart_delay": 8.054590570719602,
+        "mean_queue": 7.591640779440836,
+        "departed": 2015,
+        "arrived": 1998,
+        "active_vehicles_at_horizon": 17,
+        "pending_vehicles_at_horizon": 0,
+        "collision_incidents": 0,
+        "collision_events": 0,
+        "starting_teleports": 0,
+        "ending_teleports": 0
+      },
+      "collision_lane_pairs": [],
+      "source_arm": "phase_pressure"
+    }
+  ],
+  "safety_by_arm": {
+    "new_native_rigid": {
+      "all_seed_runs_valid": true,
+      "zero_incident_seed_count": 3,
+      "zero_incident_status": "PASS",
+      "collision_incidents_total": 0,
+      "collision_events_total": 0,
+      "starting_teleports_total": 0,
+      "ending_teleports_total": 0
+    },
+    "original_thresholded_rigid": {
+      "all_seed_runs_valid": true,
+      "zero_incident_seed_count": 3,
+      "zero_incident_status": "PASS",
+      "collision_incidents_total": 0,
+      "collision_events_total": 0,
+      "starting_teleports_total": 0,
+      "ending_teleports_total": 0
+    },
+    "phase_pressure": {
+      "all_seed_runs_valid": true,
+      "zero_incident_seed_count": 3,
+      "zero_incident_status": "PASS",
+      "collision_incidents_total": 0,
+      "collision_events_total": 0,
+      "starting_teleports_total": 0,
+      "ending_teleports_total": 0
+    }
+  },
+  "all_seed_service": {
+    "seeds": [
+      52282,
+      41242,
+      63792
+    ],
+    "weighting": "equal_seed",
+    "means_by_arm": {
+      "new_native_rigid": {
+        "mean_tripinfo_waiting_time": 274.701104121418,
+        "system_vehicle_hours": 295.88916666666665,
+        "active_vehicle_hours": 103.70925925925926,
+        "pending_vehicle_hours": 192.1799074074074,
+        "mean_tripinfo_depart_delay": 9.928854992762075,
+        "mean_queue": 85.00668361103267,
+        "departed": 1213,
+        "arrived": 1012,
+        "active_vehicles_at_horizon": 201,
+        "pending_vehicles_at_horizon": 802
+      },
+      "original_thresholded_rigid": {
+        "mean_tripinfo_waiting_time": 15.701571546732836,
+        "system_vehicle_hours": 33.86768518518519,
+        "active_vehicle_hours": 30.136574074074073,
+        "pending_vehicle_hours": 3.7311111111111113,
+        "mean_tripinfo_depart_delay": 6.683705541770058,
+        "mean_queue": 8.020050833097994,
+        "departed": 2015,
+        "arrived": 1998.3333333333333,
+        "active_vehicles_at_horizon": 16.666666666666668,
+        "pending_vehicles_at_horizon": 0
+      },
+      "phase_pressure": {
+        "mean_tripinfo_waiting_time": 14.037386269644335,
+        "system_vehicle_hours": 33.2224074074074,
+        "active_vehicle_hours": 29.145,
+        "pending_vehicle_hours": 4.077407407407407,
+        "mean_tripinfo_depart_delay": 7.302398676592225,
+        "mean_queue": 7.233643980043302,
+        "departed": 2015,
+        "arrived": 1997.6666666666667,
+        "active_vehicles_at_horizon": 17.333333333333332,
+        "pending_vehicles_at_horizon": 0
+      }
+    },
+    "new_vs_original_thresholded": {
+      "mean_tripinfo_waiting_time": {
+        "difference_mean": 258.99953257468513,
+        "relative_difference_of_means_percent": 1649.513437580568,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 238.35481742373028
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 302.48432185699573
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 236.1594584433294
+          }
+        ]
+      },
+      "system_vehicle_hours": {
+        "difference_mean": 262.0214814814815,
+        "relative_difference_of_means_percent": 773.6622094151805,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 238.90805555555556
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 289.40333333333336
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 257.7530555555556
+          }
+        ]
+      },
+      "active_vehicle_hours": {
+        "difference_mean": 73.57268518518518,
+        "relative_difference_of_means_percent": 244.13088562869652,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 70.26638888888888
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 82.95750000000001
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 67.49416666666667
+          }
+        ]
+      },
+      "pending_vehicle_hours": {
+        "difference_mean": 188.44879629629628,
+        "relative_difference_of_means_percent": 5050.74200913242,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 168.64166666666668
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 206.44583333333333
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 190.2588888888889
+          }
+        ]
+      },
+      "mean_tripinfo_depart_delay": {
+        "difference_mean": 3.2451494509920167,
+        "relative_difference_of_means_percent": 48.55314811089955,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 1.0864875625028327
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 1.3811251677988858
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 7.2678356226743315
+          }
+        ]
+      },
+      "mean_queue": {
+        "difference_mean": 76.98663277793467,
+        "relative_difference_of_means_percent": 959.9269927344861,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 74.15475854278452
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 86.06918949449309
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 70.73595029652641
+          }
+        ]
+      },
+      "departed": {
+        "difference_mean": -802,
+        "relative_difference_of_means_percent": -39.8014888337469,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": -756
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": -856
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": -794
+          }
+        ]
+      },
+      "arrived": {
+        "difference_mean": -986.3333333333333,
+        "relative_difference_of_means_percent": -49.35779816513761,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": -946
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": -1040
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": -973
+          }
+        ]
+      },
+      "active_vehicles_at_horizon": {
+        "difference_mean": 184.33333333333334,
+        "relative_difference_of_means_percent": 1105.9999999999998,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 190
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 184
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 179
+          }
+        ]
+      },
+      "pending_vehicles_at_horizon": {
+        "difference_mean": 802,
+        "relative_difference_of_means_percent": null,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 756
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 856
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 794
+          }
+        ]
+      }
+    },
+    "new_vs_phase_pressure": {
+      "mean_tripinfo_waiting_time": {
+        "difference_mean": 260.66371785177364,
+        "relative_difference_of_means_percent": 1856.9248779272787,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 242.29377524010744
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 303.1751407155565
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 236.52223759965696
+          }
+        ]
+      },
+      "system_vehicle_hours": {
+        "difference_mean": 262.66675925925927,
+        "relative_difference_of_means_percent": 790.6313231252893,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 241.67472222222221
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 289.62666666666667
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 256.6988888888889
+          }
+        ]
+      },
+      "active_vehicle_hours": {
+        "difference_mean": 74.56425925925926,
+        "relative_difference_of_means_percent": 255.83894067338912,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 73.01611111111112
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 83.31861111111111
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 67.35805555555555
+          }
+        ]
+      },
+      "pending_vehicle_hours": {
+        "difference_mean": 188.1025,
+        "relative_difference_of_means_percent": 4613.286856208556,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 168.65861111111113
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 206.30805555555554
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 189.34083333333334
+          }
+        ]
+      },
+      "mean_tripinfo_depart_delay": {
+        "difference_mean": 2.6264563161698495,
+        "relative_difference_of_means_percent": 35.96703538782307,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 1.1167605153564306
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 1.1349713216450397
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 5.627637111508079
+          }
+        ]
+      },
+      "mean_queue": {
+        "difference_mean": 77.77303963098937,
+        "relative_difference_of_means_percent": 1075.157138581263,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 75.89042643321096
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 86.340016944366
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 71.08867551539113
+          }
+        ]
+      },
+      "departed": {
+        "difference_mean": -802,
+        "relative_difference_of_means_percent": -39.8014888337469,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": -756
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": -856
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": -794
+          }
+        ]
+      },
+      "arrived": {
+        "difference_mean": -985.6666666666667,
+        "relative_difference_of_means_percent": -49.34089771399967,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": -944
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": -1039
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": -974
+          }
+        ]
+      },
+      "active_vehicles_at_horizon": {
+        "difference_mean": 183.66666666666666,
+        "relative_difference_of_means_percent": 1059.6153846153848,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 188
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 183
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 180
+          }
+        ]
+      },
+      "pending_vehicles_at_horizon": {
+        "difference_mean": 802,
+        "relative_difference_of_means_percent": null,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 756
+          },
+          {
+            "seed": 41242,
+            "new_minus_reference": 856
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 794
+          }
+        ]
+      }
+    }
+  },
+  "additional_seed_service": {
+    "seeds": [
+      52282,
+      63792
+    ],
+    "weighting": "equal_seed",
+    "means_by_arm": {
+      "new_native_rigid": {
+        "mean_tripinfo_waiting_time": 253.04820493104847,
+        "system_vehicle_hours": 282.25638888888886,
+        "active_vehicle_hours": 99.05236111111111,
+        "pending_vehicle_hours": 183.20402777777778,
+        "mean_tripinfo_depart_delay": 10.901479210454587,
+        "mean_queue": 80.55450437729455,
+        "departed": 1240,
+        "arrived": 1038.5,
+        "active_vehicles_at_horizon": 201.5,
+        "pending_vehicles_at_horizon": 775
+      },
+      "original_thresholded_rigid": {
+        "mean_tripinfo_waiting_time": 15.791066997518609,
+        "system_vehicle_hours": 33.92583333333333,
+        "active_vehicle_hours": 30.172083333333333,
+        "pending_vehicle_hours": 3.75375,
+        "mean_tripinfo_depart_delay": 6.724317617866005,
+        "mean_queue": 8.109149957639085,
+        "departed": 2015,
+        "arrived": 1998,
+        "active_vehicles_at_horizon": 17,
+        "pending_vehicles_at_horizon": 0
+      },
+      "phase_pressure": {
+        "mean_tripinfo_waiting_time": 13.640198511166254,
+        "system_vehicle_hours": 33.069583333333334,
+        "active_vehicle_hours": 28.865277777777777,
+        "pending_vehicle_hours": 4.204305555555555,
+        "mean_tripinfo_depart_delay": 7.529280397022332,
+        "mean_queue": 7.064953402993504,
+        "departed": 2015,
+        "arrived": 1997.5,
+        "active_vehicles_at_horizon": 17.5,
+        "pending_vehicles_at_horizon": 0
+      }
+    },
+    "new_vs_original_thresholded": {
+      "mean_tripinfo_waiting_time": {
+        "difference_mean": 237.25713793352986,
+        "relative_difference_of_means_percent": 1502.4769255352548,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 238.35481742373028
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 236.1594584433294
+          }
+        ]
+      },
+      "system_vehicle_hours": {
+        "difference_mean": 248.33055555555552,
+        "relative_difference_of_means_percent": 731.9807095543384,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 238.90805555555556
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 257.7530555555556
+          }
+        ]
+      },
+      "active_vehicle_hours": {
+        "difference_mean": 68.88027777777778,
+        "relative_difference_of_means_percent": 228.29142096953126,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 70.26638888888888
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 67.49416666666667
+          }
+        ]
+      },
+      "pending_vehicle_hours": {
+        "difference_mean": 179.45027777777779,
+        "relative_difference_of_means_percent": 4780.56018056018,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 168.64166666666668
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 190.2588888888889
+          }
+        ]
+      },
+      "mean_tripinfo_depart_delay": {
+        "difference_mean": 4.1771615925885826,
+        "relative_difference_of_means_percent": 62.12023033370968,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 1.0864875625028327
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 7.2678356226743315
+          }
+        ]
+      },
+      "mean_queue": {
+        "difference_mean": 72.44535441965546,
+        "relative_difference_of_means_percent": 893.3779101150985,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 74.15475854278452
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 70.73595029652641
+          }
+        ]
+      },
+      "departed": {
+        "difference_mean": -775,
+        "relative_difference_of_means_percent": -38.46153846153846,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": -756
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": -794
+          }
+        ]
+      },
+      "arrived": {
+        "difference_mean": -959.5,
+        "relative_difference_of_means_percent": -48.02302302302303,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": -946
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": -973
+          }
+        ]
+      },
+      "active_vehicles_at_horizon": {
+        "difference_mean": 184.5,
+        "relative_difference_of_means_percent": 1085.2941176470588,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 190
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 179
+          }
+        ]
+      },
+      "pending_vehicles_at_horizon": {
+        "difference_mean": 775,
+        "relative_difference_of_means_percent": null,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 756
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 794
+          }
+        ]
+      }
+    },
+    "new_vs_phase_pressure": {
+      "mean_tripinfo_waiting_time": {
+        "difference_mean": 239.4080064198822,
+        "relative_difference_of_means_percent": 1755.1651189232769,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 242.29377524010744
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 236.52223759965696
+          }
+        ]
+      },
+      "system_vehicle_hours": {
+        "difference_mean": 249.18680555555554,
+        "relative_difference_of_means_percent": 753.5226647515129,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 241.67472222222221
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 256.6988888888889
+          }
+        ]
+      },
+      "active_vehicle_hours": {
+        "difference_mean": 70.18708333333333,
+        "relative_difference_of_means_percent": 243.15402011259204,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 73.01611111111112
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 67.35805555555555
+          }
+        ]
+      },
+      "pending_vehicle_hours": {
+        "difference_mean": 178.99972222222223,
+        "relative_difference_of_means_percent": 4257.5336130289725,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 168.65861111111113
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 189.34083333333334
+          }
+        ]
+      },
+      "mean_tripinfo_depart_delay": {
+        "difference_mean": 3.372198813432255,
+        "relative_difference_of_means_percent": 44.78779691570374,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 1.1167605153564306
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 5.627637111508079
+          }
+        ]
+      },
+      "mean_queue": {
+        "difference_mean": 73.48955097430104,
+        "relative_difference_of_means_percent": 1040.1986649078626,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 75.89042643321096
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 71.08867551539113
+          }
+        ]
+      },
+      "departed": {
+        "difference_mean": -775,
+        "relative_difference_of_means_percent": -38.46153846153846,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": -756
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": -794
+          }
+        ]
+      },
+      "arrived": {
+        "difference_mean": -959.0,
+        "relative_difference_of_means_percent": -48.010012515644554,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": -944
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": -974
+          }
+        ]
+      },
+      "active_vehicles_at_horizon": {
+        "difference_mean": 184.0,
+        "relative_difference_of_means_percent": 1051.4285714285713,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 188
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 180
+          }
+        ]
+      },
+      "pending_vehicles_at_horizon": {
+        "difference_mean": 775,
+        "relative_difference_of_means_percent": null,
+        "paired_differences": [
+          {
+            "seed": 52282,
+            "new_minus_reference": 756
+          },
+          {
+            "seed": 63792,
+            "new_minus_reference": 794
+          }
+        ]
+      }
+    }
+  },
+  "threshold_application": {
+    "per_seed": [
+      {
+        "seed": 52282,
+        "decisions": 344,
+        "ungated_rigid_proposals_on_gated_trajectory": 300,
+        "accepted_overrides": 300,
+        "threshold_rejected_proposals": 0
+      },
+      {
+        "seed": 41242,
+        "decisions": 344,
+        "ungated_rigid_proposals_on_gated_trajectory": 297,
+        "accepted_overrides": 297,
+        "threshold_rejected_proposals": 0
+      },
+      {
+        "seed": 63792,
+        "decisions": 337,
+        "ungated_rigid_proposals_on_gated_trajectory": 291,
+        "accepted_overrides": 291,
+        "threshold_rejected_proposals": 0
+      }
+    ],
+    "totals": {
+      "decisions": 1025,
+      "ungated_rigid_proposals_on_gated_trajectory": 888,
+      "accepted_overrides": 888,
+      "threshold_rejected_proposals": 0
+    },
+    "threshold": 0.0,
+    "comparison": "predicted_advantage > threshold + 1e-12",
+    "accepted_fraction_of_decisions": 0.8663414634146341,
+    "description": "Counts refer to the new native-label controller trajectories; accepted model proposals are distinct from executed phase switches."
+  },
+  "new_task_ids": [
+    "t91851",
+    "t91852",
+    "t91853"
+  ],
+  "reused_task_ids": {
+    "original_thresholded_rigid": [
+      "t91746",
+      "t91747",
+      "t91748"
+    ],
+    "phase_pressure": [
+      "t91636",
+      "t91638",
+      "t91640"
+    ]
+  },
+  "new_simulation_count": 3,
+  "reused_cell_count": 6,
+  "new_model_fit_count": 0,
+  "threshold_retuned": false,
+  "new_simulation_elapsed_seconds_sum": 16.022411099169403,
+  "interpretation": "Complete colliding runs remain in service means. Three original seeds include geometry-development seed41242; the additional-two-seed summary is prespecified. This is a comparison of the complete recalibrated native-label controller with the previous controller, not an isolated effect of labels with threshold held constant.",
+  "retrieved_result_bytes": 1142139,
+  "refs": {
+    "baseline_summary": "cf_h2o/results/paper_artifacts/tsc_v154m_cologne_threshold_closed_loop_v1.json",
+    "launch_record": "cf_h2o/results/cluster/tsc_v154q_cologne_native_label_closed_loop_20260909/launch_v1.json",
+    "protocol": "cf_h2o/results/cluster/tsc_v154q_cologne_native_label_closed_loop_20260909/protocol_v1.json"
+  },
+  "trajectory_diagnosis": {
+    "executed_stay_overrides_total": 808,
+    "executed_stay_fraction_of_accepted_overrides": 0.9099099099099099,
+    "phase_switches_total": 208,
+    "original_thresholded_phase_switches_total": 756,
+    "per_seed": [
+      {
+        "seed": 52282,
+        "phase_switches": 62,
+        "executed_stay_overrides": 281,
+        "recorded_interventions": 256,
+        "recorded_trace_end_sec": 28350.0,
+        "persistent_phase_entry": {
+          "time_sec": 26920.0,
+          "tls_id": "cluster_357187_359543",
+          "prior_phase_state": "GGGggrrrrrGGGggrrrrr",
+          "selected_phase_state": "rrrGGrrrrrrrrGGrrrrr",
+          "priority": 0.23931151709496082,
+          "selection_layer": "state_conditioned_source_utility",
+          "target_veto": null,
+          "target_originator": {
+            "reference_index": 2,
+            "proposed_index": 3,
+            "selected_index": 3,
+            "rigid_selected_index": 3,
+            "learned_differs": true,
+            "eligible": true,
+            "priority": 0.23931151709496082,
+            "rejection": null,
+            "arm": "rigid_target_only",
+            "source_city_admitted": false,
+            "utility_gate_selected": false,
+            "selected_candidate_key": null,
+            "source_changed_rigid_action": false,
+            "predicted_score": -0.23931151709496082,
+            "reference_score": 0.0,
+            "rigid_predicted_score": -0.23931151709496082,
+            "candidate_score_constraint": null,
+            "candidate_changed_rigid_group_count": 0,
+            "candidate_pressure_aligned_change_group_count": 0,
+            "candidate_off_reference_rejected_group_count": 0,
+            "source_changed_to_reference_action": false,
+            "source_changed_off_reference_action": false
+          },
+          "request_accepted": true,
+          "execution_effective": true,
+          "override_kind": "switch",
+          "executor_mode_before": "green",
+          "current_green_state_before": "rrrrrGGGggrrrrrGGGgg",
+          "global_cooldown_active_before": false,
+          "stay_bypass_remaining_before": 0,
+          "green_elapsed_sec_before": 36.0,
+          "total_queue": 21.072465154639268,
+          "total_vehicles": 23.0,
+          "mean_speed": 6.830337085139458,
+          "mean_occupancy": 0.11232577319634172
+        },
+        "recorded_consecutive_terminal_stays": 143,
+        "first_recorded_terminal_stay_sec": 26930.0,
+        "last_recorded_green_elapsed_sec": 1425.0,
+        "last_recorded_queue_proxy": 241.78855594777846,
+        "source_result": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154q_cologne_native_label_closed_loop_20260909/evaluation/seed_52282/rigid_thresholded/result.json"
+      },
+      {
+        "seed": 41242,
+        "phase_switches": 69,
+        "executed_stay_overrides": 271,
+        "recorded_interventions": 256,
+        "recorded_trace_end_sec": 28380.0,
+        "persistent_phase_entry": {
+          "time_sec": 26840.0,
+          "tls_id": "cluster_357187_359543",
+          "prior_phase_state": "GGGggrrrrrGGGggrrrrr",
+          "selected_phase_state": "rrrGGrrrrrrrrGGrrrrr",
+          "priority": 0.055480780722523756,
+          "selection_layer": "state_conditioned_source_utility",
+          "target_veto": null,
+          "target_originator": {
+            "reference_index": 2,
+            "proposed_index": 3,
+            "selected_index": 3,
+            "rigid_selected_index": 3,
+            "learned_differs": true,
+            "eligible": true,
+            "priority": 0.055480780722523756,
+            "rejection": null,
+            "arm": "rigid_target_only",
+            "source_city_admitted": false,
+            "utility_gate_selected": false,
+            "selected_candidate_key": null,
+            "source_changed_rigid_action": false,
+            "predicted_score": -0.055480780722523756,
+            "reference_score": 0.0,
+            "rigid_predicted_score": -0.055480780722523756,
+            "candidate_score_constraint": null,
+            "candidate_changed_rigid_group_count": 0,
+            "candidate_pressure_aligned_change_group_count": 0,
+            "candidate_off_reference_rejected_group_count": 0,
+            "source_changed_to_reference_action": false,
+            "source_changed_off_reference_action": false
+          },
+          "request_accepted": true,
+          "execution_effective": true,
+          "override_kind": "switch",
+          "executor_mode_before": "green",
+          "current_green_state_before": "rrrrrGGGggrrrrrGGGgg",
+          "global_cooldown_active_before": false,
+          "stay_bypass_remaining_before": 0,
+          "green_elapsed_sec_before": 63.0,
+          "total_queue": 94.53086649944908,
+          "total_vehicles": 70.0,
+          "mean_speed": 9.720001496066217,
+          "mean_occupancy": 0.15433249724544823
+        },
+        "recorded_consecutive_terminal_stays": 154,
+        "first_recorded_terminal_stay_sec": 26850.0,
+        "last_recorded_green_elapsed_sec": 1536.0,
+        "last_recorded_queue_proxy": 228.27285303997118,
+        "source_result": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154q_cologne_native_label_closed_loop_20260909/evaluation/seed_41242/rigid_thresholded/result.json"
+      },
+      {
+        "seed": 63792,
+        "phase_switches": 77,
+        "executed_stay_overrides": 256,
+        "recorded_interventions": 256,
+        "recorded_trace_end_sec": 28440.0,
+        "persistent_phase_entry": {
+          "time_sec": 26940.0,
+          "tls_id": "cluster_357187_359543",
+          "prior_phase_state": "GGGggrrrrrGGGggrrrrr",
+          "selected_phase_state": "rrrGGrrrrrrrrGGrrrrr",
+          "priority": 0.20893938353294117,
+          "selection_layer": "state_conditioned_source_utility",
+          "target_veto": null,
+          "target_originator": {
+            "reference_index": 2,
+            "proposed_index": 3,
+            "selected_index": 3,
+            "rigid_selected_index": 3,
+            "learned_differs": true,
+            "eligible": true,
+            "priority": 0.20893938353294117,
+            "rejection": null,
+            "arm": "rigid_target_only",
+            "source_city_admitted": false,
+            "utility_gate_selected": false,
+            "selected_candidate_key": null,
+            "source_changed_rigid_action": false,
+            "predicted_score": -0.20893938353294117,
+            "reference_score": 0.0,
+            "rigid_predicted_score": -0.20893938353294117,
+            "candidate_score_constraint": null,
+            "candidate_changed_rigid_group_count": 0,
+            "candidate_pressure_aligned_change_group_count": 0,
+            "candidate_off_reference_rejected_group_count": 0,
+            "source_changed_to_reference_action": false,
+            "source_changed_off_reference_action": false
+          },
+          "request_accepted": true,
+          "execution_effective": true,
+          "override_kind": "switch",
+          "executor_mode_before": "green",
+          "current_green_state_before": "rrrrrGGGggrrrrrGGGgg",
+          "global_cooldown_active_before": false,
+          "stay_bypass_remaining_before": 0,
+          "green_elapsed_sec_before": 56.0,
+          "total_queue": 30.232734871126155,
+          "total_vehicles": 32.0,
+          "mean_speed": 9.63245213462871,
+          "mean_occupancy": 0.1636743556307763
+        },
+        "recorded_consecutive_terminal_stays": 150,
+        "first_recorded_terminal_stay_sec": 26950.0,
+        "last_recorded_green_elapsed_sec": 1496.0,
+        "last_recorded_queue_proxy": 230.97965049059715,
+        "source_result": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v154q_cologne_native_label_closed_loop_20260909/evaluation/seed_63792/rigid_thresholded/result.json"
+      }
+    ],
+    "finding": "All three retained trajectories show extended same-phase holds while PhasePressure requests another phase.",
+    "trace_limit": "Each new accepted-intervention trace is capped at256 records; full-run stay/switch totals come from the uncapped execution audits."
+  },
+  "service_verdict": "FAIL: waiting and system vehicle hours worsen, and arrivals fall in every seed against both fixed comparators.",
+  "validation": {
+    "focused_tests_passed": 21,
+    "threshold_tests_passed": 13,
+    "comparison_summary_tests_passed": 8
+  },
+  "accounting": {
+    "new_model_fits": 0,
+    "new_simulations": 3,
+    "reused_baseline_cells": 6,
+    "threshold_retuned": false,
+    "new_runner_seconds": 16.022411099169403,
+    "retrieved_result_json_count": 3,
+    "retrieved_bytes": 1142139,
+    "banks_models_and_full_simulation_files_downloaded": false
+  },
+  "limitations": [
+    "This compares a new native-label model and newly calibrated threshold0 with the old model and old threshold; their separate effects are not identified.",
+    "Mean tripinfo waiting covers departed vehicles including unfinished trips;802 mean pending insertions are excluded, so system vehicle hours including pending vehicles are essential.",
+    "The action traces identify prolonged holds but do not establish whether the first action is misranked or repeated interventions change the outcome relative to the PP continuation used by labels.",
+    "One city/demand and three previously inspected seeds are development evidence, including geometry-development seed41242."
+  ],
+  "next_step": {
+    "purpose": "Separate online one-action ranking error from the effect of repeatedly applying the model instead of the label PP continuation.",
+    "selection_rule": "First seed in the already fixed evaluation order (52282), and the switch immediately before the terminal uninterrupted same-phase stay sequence in its retained trace. Selected after observing V154Q failure; diagnostic only.",
+    "seed": 52282,
+    "decision_time_sec": 26920,
+    "end_time_sec": 27370,
+    "selection_trace": {
+      "time_sec": 26920.0,
+      "tls_id": "cluster_357187_359543",
+      "prior_phase_state": "GGGggrrrrrGGGggrrrrr",
+      "selected_phase_state": "rrrGGrrrrrrrrGGrrrrr",
+      "priority": 0.23931151709496082,
+      "selection_layer": "state_conditioned_source_utility",
+      "target_veto": null,
+      "target_originator": {
+        "reference_index": 2,
+        "proposed_index": 3,
+        "selected_index": 3,
+        "rigid_selected_index": 3,
+        "learned_differs": true,
+        "eligible": true,
+        "priority": 0.23931151709496082,
+        "rejection": null,
+        "arm": "rigid_target_only",
+        "source_city_admitted": false,
+        "utility_gate_selected": false,
+        "selected_candidate_key": null,
+        "source_changed_rigid_action": false,
+        "predicted_score": -0.23931151709496082,
+        "reference_score": 0.0,
+        "rigid_predicted_score": -0.23931151709496082,
+        "candidate_score_constraint": null,
+        "candidate_changed_rigid_group_count": 0,
+        "candidate_pressure_aligned_change_group_count": 0,
+        "candidate_off_reference_rejected_group_count": 0,
+        "source_changed_to_reference_action": false,
+        "source_changed_off_reference_action": false
+      },
+      "request_accepted": true,
+      "execution_effective": true,
+      "override_kind": "switch",
+      "executor_mode_before": "green",
+      "current_green_state_before": "rrrrrGGGggrrrrrGGGgg",
+      "global_cooldown_active_before": false,
+      "stay_bypass_remaining_before": 0,
+      "green_elapsed_sec_before": 36.0,
+      "total_queue": 21.072465154639268,
+      "total_vehicles": 23.0,
+      "mean_speed": 6.830337085139458,
+      "mean_occupancy": 0.11232577319634172
+    },
+    "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+    "frozen_threshold": {
+      "protocol": "tsc-v154l-cologne-rigid-oof-threshold-v1",
+      "calibration_protocol": "tsc-v154p-cologne-native-b100-v1",
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+      "fit_result": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/result.json",
+      "model_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/model.pkl",
+      "threshold": 0.0,
+      "mode": "minimum_advantage",
+      "comparison": "predicted_advantage > threshold + 1e-12",
+      "selection_data": "Exactly 100 training-seed OOF predictions using native B100 labels",
+      "calibration_mean_cost": 0.7772940186175482
+    },
+    "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+    "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/source_v2",
+    "prefix": "Replay the unchanged V154Q native model/threshold0 prefix from25200 to26920 without save/load restoration; bind prefix decisions and common native state before branching.",
+    "branches": {
+      "model_once_then_pp": "Model action for10 seconds, then PhasePressure for440 seconds.",
+      "pp_only": "PhasePressure for450 seconds.",
+      "model_repeated": "The same frozen native-label model and threshold0 for450 seconds."
+    },
+    "primary_cost": "Mean native halted vehicles per controlled lane over450 seconds, unchanged training objective.",
+    "readouts": [
+      "model_once_then_pp minus pp_only tests the first action ranking",
+      "model_repeated minus model_once_then_pp tests repeated-model versus PP continuation",
+      "collisions, teleports, arrivals, active and pending vehicle counts"
+    ],
+    "new_fitting": false,
+    "threshold_retuning": false,
+    "executed": false
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "protocol": "tsc-v126-source-ranker-feasibility-v1",
+  "scientific_status": "abundant-target-counterfactual-development-diagnostic",
+  "predecessor": "tsc-v125-source-intervention-feasibility-v1",
+  "reference_policy": "phase_pressure",
+  "target_city": "jinan",
+  "target_budget": 500,
+  "fixed_inputs": {
+    "prediction_artifact_sha256": "3f199276f08ab67e855d9598900d4023ec1f7c4c3529b4361e92b0e851bf983a",
+    "selector_cache_audit_sha256": "ab8b85009c8f80e48ce2f8a4ca0e415c6c4a8742dfab7a9ca83ab76388565d42",
+    "selector_scenario": "jinan_3x4_real",
+    "selector_seed_count": 22
+  },
+  "arms": [
+    "target_only",
+    "source_aligned",
+    "source_placebo"
+  ],
+  "cross_fitting": {
+    "outer_split": "leave_one_selector_seed_out",
+    "inner_seed_folds": 3,
+    "ridge_alphas": [1.0, 10.0, 100.0, 1000.0, 10000.0],
+    "alpha_selection_metric": "heldout_policy_value",
+    "heldout_seed_labels_used_for_fit_or_selection": false
+  },
+  "action_constraint": "nondecreasing_instantaneous_service_pressure",
+  "development_gate": {
+    "source_aligned_mean_vs_phase_pressure_must_be_at_most": -0.0005,
+    "source_aligned_minus_target_only_mean_must_be_at_most": -0.0005,
+    "source_aligned_minus_source_placebo_mean_must_be_at_most": -0.0005,
+    "all_paired_upper_95_bounds_must_be_negative": true
+  },
+  "claim_boundary": "V126 uses abundant target counterfactual labels to test whether source-conditioned action ranking is learnable. It is neither few-shot target adaptation nor fresh-city confirmation."
+}

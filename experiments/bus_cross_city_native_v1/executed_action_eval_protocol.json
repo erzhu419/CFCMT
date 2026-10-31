@@ -1,0 +1,72 @@
+{
+  "name": "cfcmt-bus-executed-action-eval-v1",
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "branches": {
+    "source_adapted": {
+      "method": "cross_city",
+      "reference": "source_dense_adapted_eval",
+      "artifact_folder": "source_dense_adapted_eval"
+    },
+    "target_adapted": {
+      "method": "target_only",
+      "reference": "target_adapted_eval",
+      "artifact_folder": "target_adapted_eval"
+    }
+  },
+  "evaluation": {
+    "episode_seconds": 24000,
+    "demand_scale": 1.0,
+    "rule": "forward_proportional",
+    "rule_gain": 0.6,
+    "cases": [
+      {
+        "case": 0,
+        "demand_seed": 72501,
+        "sumo_seed": 73501
+      },
+      {
+        "case": 1,
+        "demand_seed": 72502,
+        "sumo_seed": 73502
+      },
+      {
+        "case": 2,
+        "demand_seed": 72503,
+        "sumo_seed": 73503
+      }
+    ],
+    "test_separation": "New fixed demand/SUMO seed realizations, disjoint from fit/stop/calibrate; same pinned timetable and generated route corridors.",
+    "comparison": "Three training seeds, three paired generated demand days; retain every branch/day/seed and compare all-seed means.",
+    "primary_cost": "(2*wait_passenger_seconds+in_vehicle_passenger_seconds)/departed_passengers",
+    "completion": "Report completion rate and departed/completed counts alongside cost.",
+    "interpretation": "Bounded pilot on one target city; no population-level CI or city removal."
+  },
+  "actor_action_space": "executed",
+  "initialization_updates": 50000,
+  "adaptation_updates": 5000,
+  "new_training_updates": 0,
+  "new_training_simulator_events": 0,
+  "world_model_refit_updates": 0,
+  "checkpoint_rule": "Reuse all six existing exported adapted policy.pt artifacts without changes; previously verified equal to the original final adapted actors. No checkpoint/seed selection.",
+  "intervention": "Only learned-policy deployment mapping changes. Interpret output as desired physical execution, project normalized action onto [g_s(-1),g_s(+1)]. Preserve the original guard reachable range and floors. Do not apply the proposal transform a second time.",
+  "baseline_rule": "Reuse original rule, zero-proposal and original source/local adapted results, with their original proposal mapping.",
+  "admission": "All12288 target fit executed labels must be unchanged by the projection, including2010 labels shrunk by the old repeated guard; repeated projection must be identical.",
+  "data_boundary": "No new data, H5 edits or replay loading in evaluation. Keep CFCMT-owned source physical execution labels; do not access mutable Thesis.",
+  "comparisons": [
+    "same-checkpoint original deployment",
+    "original strong rule",
+    "zero autonomous proposals",
+    "source versus local adapted routes"
+  ],
+  "decision": "Retain all18 cases and every seed; report mean, per-seed and paired costs, wait/ride, completion and actual holding. No parameter, floor, threshold, data or model changes after seeing results.",
+  "limitations": [
+    "These are three previously analyzed generated demand cases in one corridor city, not prospective confirmation.",
+    "The learned mapping changes inside the same reachable action range; the executor is not byte-for-byte identical.",
+    "This evaluates already fitted55k IQL actors only. SAC/model continuation would also need aligned actor actions in Q/WM queries and backups before reuse.",
+    "Source and target retain different dynamics and target update exposure; this does not isolate normalized confidence or prove general cross-city superiority."
+  ]
+}

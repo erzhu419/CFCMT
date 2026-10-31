@@ -1,0 +1,45 @@
+{
+  "protocol": "tsc-v135-context-gated-mechanism-oracle-v1",
+  "scientific_status": "nested-context-gated-local-mechanism-oracle-screen",
+  "predecessor": "tsc-v134-local-mechanism-surrogate-oracle-v1",
+  "reference_policy": "phase_pressure",
+  "target_city": "jinan",
+  "source_predictions_used": false,
+  "oracle_proposal": {
+    "surrogate": "balanced_physical",
+    "retention_fractions": [0.05, 0.1],
+    "action_constraint": "nondecreasing_instantaneous_service_pressure"
+  },
+  "outer_protocol": {
+    "heldout_seeds": 1,
+    "context_gate_training_seeds": 16,
+    "calibration_seeds": 5,
+    "context_gate_cross_fit_unit": "selector_seed",
+    "heldout_450s_labels_used_for_fit_or_calibration": false
+  },
+  "context_gate": {
+    "feature_family": "causal_core_pre_action_state_and_action_parents",
+    "estimator": "HistGradientBoostingRegressor",
+    "learning_rate": 0.05,
+    "max_iter": 80,
+    "max_leaf_nodes": 7,
+    "min_samples_leaf": 12,
+    "l2_regularization": 20.0,
+    "oof_absolute_error_quantile": 0.9,
+    "risk_multipliers": [0.0, 0.5, 1.0]
+  },
+  "calibration_gate": {
+    "minimum_interventions": 20,
+    "minimum_mean_effect": 0.0005,
+    "minimum_improving_seed_fraction": 0.8,
+    "upper_95_one_sided_must_be_negative": true
+  },
+  "development_gate": {
+    "minimum_final_interventions": 40,
+    "mean_vs_phase_pressure_must_be_at_most": -0.0005,
+    "upper_95_must_be_negative": true,
+    "minimum_improving_seed_fraction": 0.8,
+    "successor": "learn_the_balanced_one_step_mechanism_proposal"
+  },
+  "claim_boundary": "V135 still uses each evaluated branch's realized one-step outcomes to propose its action. Only the context gate is outer-label-held-out. This is an oracle identifiability test, not a deployable or transfer policy."
+}

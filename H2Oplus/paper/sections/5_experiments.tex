@@ -1,0 +1,529 @@
+\section{Experiments}
+\label{sec:experiments}
+
+We evaluate H2O+ on a SUMO microsimulation of a real-topology 12-line bus corridor with five questions in mind.
+\textbf{Q1: Headline performance.}
+At the default operating point, how does H2O+ compare against pure offline RL, pure online RL, and the RE-SAC SUMO expert checkpoint (ep39) on cumulative cost?
+\textbf{Q2: Component recipe.}
+Among the H2O+ component choices (which discriminator, whether to add the offline-Q floor, KL anchor, warmup), which combinations help in the transit MDP and which do not---and does the answer depend on whether Stage~2 trains in the same simulator used for evaluation (oracle) or in a lower-fidelity simulator (deployment-relevant)?
+\textbf{Q3: Multi-scenario robustness and operational metrics.}
+Does the headline ranking hold across SUMO seeds and OD-scale perturbations under common random numbers, and how do the methods compare on passenger-side metrics (waiting time, headway CV, Jain fairness)?
+\textbf{Q4: Assumption 1 data-level check.}
+Does the action-conditional domain invariance assumption hold empirically on the benchmark, verified \emph{from data} rather than from the learned discriminator's own output?
+\textbf{Q5: Sensitivity and generality.}
+Are the main results stable to offline-data composition, ensemble size, KL anchor, and offline-data scale?
+
+\subsection{Benchmark setup}
+\label{sec:exp:setup}
+
+\paragraph{Evaluation environment}
+We use SUMO 1.15 \citep{lopez2018microscopic} with \texttt{LIBSUMO\_\allowbreak AS\_\allowbreak TRACI=1} to simulate a real 12-line corridor with 389 vehicles and a fixed passenger OD profile over an 18\,000-second operating period.
+The network includes 7X-series routes with their actual station sequences, headway-scheduled dispatch, and calibrated dwell dynamics.
+Numbers in \Cref{tab:main} (default operating point) use a single SUMO seed and the default OD profile for reproducibility; \Cref{tab:multiseed} (\Cref{sec:exp:multiseed}) reports the same methods averaged across $3$ SUMO seeds $\times$ $3$ OD-scale multipliers under common random numbers.
+
+\paragraph{Low-fidelity simulator}
+The sim-core environment runs an LSTM travel-time model with analytic boarding/alighting; at the same step length, it runs approximately $40\times$ faster than SUMO per event.
+As reported in \Cref{sec:problem:h2o}, its reward magnitude is systematically smaller than SUMO's: $\lvert\E_{\Msim}[r]\rvert / \lvert\E_{\Mreal}[r]\rvert \approx 0.2$ under matched initial conditions.
+
+\paragraph{Offline dataset}
+$\Doff$ contains $675{,}000$ transitions from four behaviour policies:
+SAC-trained (180K), headway-threshold heuristic (160K), $\epsilon$-random (180K), and the best RE-SAC checkpoint from a prior SUMO-environment run, which we refer to as \emph{ep39} (155K).
+We note explicitly that ep39 transitions are part of $\Doff$, so the offline-RL and H2O+ methods we report below have observed ep39 behaviour at training time; this means that improvements over ep39 should be read as policy improvement after distilling a strong RE-SAC expert together with other behaviour data, not as discovering a strategy independent of that expert.
+The composition is intentionally heterogeneous to allow Q-floor anchoring and Cal-QL pessimism to interact with multi-policy support.
+
+\paragraph{Metrics}
+Beyond cumulative episode reward, the evaluation harness \texttt{eval\_\allowbreak with\_\allowbreak metrics.py} produces a fuller set of operational indicators we report selectively:
+per-decision cost (reward divided by number of decisions),
+per-leg passenger waiting time (boarding minus stop-arrival, excluding transfer),
+per-line headway coefficient of variation (HW CV),
+\emph{bunching rate} (fraction of station departures with $h_{\text{prev}} < 180$\,s),
+\emph{severe bunching rate} ($h_{\text{prev}} < 90$\,s),
+\emph{large-gap rate} (fraction of headways exceeding $1.5\times$ scheduled),
+and Jain's fairness index over per-line HW CV.
+Tab.~\ref{tab:main} reports cumulative reward and per-decision cost (single-scenario summary).
+\Cref{tab:multiseed} reports cumulative reward, passenger waiting, HW CV, large-gap rate, and Jain (multi-scenario operational comparison); bunching/severe-bunching rates are dominated by the same headway-CV signal and are reported for the SUMO-online ablation only (\Cref{tab:ablation}).
+
+\paragraph{Training protocol}
+Each configuration trains for 200 epochs with 100 SAC updates and 100 online rollout events per epoch.
+An $\Ecnt{=}5$ ensemble is used throughout unless otherwise specified; pessimism coefficient $\beta_{\text{LCB}}{=}1.0$; IS-weight clipping $[0.1, 10]$; Q-floor weight $\alpha_{\text{cal}}{=}5.0$; SAC learning rates $3\mathrm{e}{-4}$.
+Every configuration is run with five random seeds ($\{42, 123, 456, 789, 2024\}$) and we report mean $\pm$ standard error, with pairwise Wilcoxon signed-rank tests for method comparison.
+Complete hyperparameters appear in \Cref{app:impl}.
+
+\subsection{Baselines}
+\label{sec:exp:baselines}
+
+The methods reported in \Cref{tab:main} fall into four categories:
+(i) \emph{rule-based / no-learning and expert reference}: zero-hold (no intervention) and the RE-SAC SUMO expert checkpoint ep39 (a learned policy, but included as a fixed deterministic checkpoint without further training; its transitions are also part of $\Doff$).
+(ii) \emph{pure online RL}: SAC trained from scratch in the cheap simulator $\Msim$ for 200 epochs with no offline data and no pretrained checkpoint.
+(iii) \emph{pure offline RL}: Cal-QL on the full $\Doff$ buffer.
+(iv) \emph{H2O+ family}: hybrid offline-pretrain plus Stage~2 online interaction, parameterised by which discriminator and which optional anchors are used.
+Within (iv) we report two settings of the Stage~2 online environment (SIM-online for the deployment-relevant case; SUMO-online as a same-fidelity oracle); the discriminator and anchor ablation is detailed in \Cref{sec:exp:ablations}.
+
+Behaviour cloning on the full $\Doff$, behaviour cloning on the ep39-only subset of $\Doff$ ($3$ seeds), the deterministic RE-SAC SUMO expert ep39 checkpoint, and Daganzo cooperative holding at $\alpha \in \{0.3, 0.4, 0.6\}$ \citep{daganzo2009headway, xuan2011dynamic} are included in \Cref{tab:multiseed} (\Cref{sec:exp:multiseed}).
+We additionally train and evaluate five standard offline-to-online RL baselines on the same $\Doff$ buffer with three training seeds each: IQL \citep{kostrikov2021offline}, AWAC \citep{nair2020awac}, TD3+BC \citep{fujimoto2021minimalist} (pure-offline), and RLPD \citep{ball2023efficient}, WSRL \citep{zhou2024wsrl} (offline+online hybrid). The implementations and results are reported in \Cref{tab:multiseed,tab:deployment_paired,tab:passenger_full} and discussed in \Cref{sec:exp:multiseed}; collectively, they directly address the question of whether H2O+'s dynamics-correction is necessary or whether simpler hybrids suffice.
+
+\subsection{Main results}
+\label{sec:exp:main}
+
+\Cref{tab:main} compares H2O+ against four reference classes on the high-fidelity SUMO target (18\,000 s episode).
+The deployment-relevant H2O+ setting is \emph{SIM-online}: Stage~2 trains in the cheap LSTM sim-core $\Msim$ (matching the assumption that the operator cannot put a learning agent on the live fleet or in a high-fidelity simulator continuously); evaluation is in $\Mreal$.
+A second \emph{SUMO-online} group is reported as an upper-bound oracle in which the policy is trained directly in the same high-fidelity environment used for evaluation, indicating what could be reached if compute were unconstrained.
+
+The key empirical claims:
+(i) \emph{pure online RL}---SAC trained from scratch in $\Msim$ with no offline data---fails on this benchmark, $-1{,}654$K mean across 5 seeds, with one seed diverging to $-2{,}309$K (worse than zero-hold).
+(ii) \emph{pure offline RL} (Cal-QL on the full $675$K-transition buffer) reaches $-749 \pm 26$K mean over 5 seeds: $\approx 2.2\times$ better than pure online, but still below the RE-SAC SUMO expert ep39 ($-666$K, single deterministic episode).
+(iii) Under the deployment-relevant SIM-online setting, the best H2O+ configuration (Contrastive InfoNCE discriminator without Q-floor) reaches $-658$K mean over 5 seeds, slightly exceeding the RE-SAC expert in this default-scenario protocol and improving over pure offline by $\approx 12\%$; this single-scenario ordering does not generalise to the multi-scenario stress grid (\Cref{tab:multiseed}), where ep39 leads under low/moderate demand and H2O+ leads under high demand.
+(iv) Under the SUMO-online oracle setting, H2O+ with the simple TransitionDiscriminator reaches $-646 \pm 16$K mean over 4 seeds, an additional $\approx 2\%$ improvement that quantifies the gap due to using the cheap simulator instead of the target.
+
+\begin{table*}[t]
+\centering
+\small
+\caption{Main results on $\Mreal$ (high-fidelity SUMO target, 18\,000 s episode, single SUMO seed = $42$, default OD profile). Cumulative reward, higher is better. Boldface marks the best deployment-relevant (SIM-online) and oracle (SUMO-online) results respectively. The reported $\pm$ ranges reflect training-seed variance only (4--5 training seeds depending on row; the discrepancy reflects which configurations completed all 5 seeds vs lost one to early job termination, not a different evaluation protocol).}
+\label{tab:main}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrr}
+\toprule
+Method & Cum.\ reward (K) & Per-step & Seeds \\
+\midrule
+\multicolumn{4}{l}{\emph{Reference}} \\
+Zero-hold (deterministic)                            & $-1{,}682$            & $-136$         & --- \\
+RE-SAC SUMO expert ep39 (single deterministic run)   & $-666$                & $-54$          & --- \\
+\midrule
+\multicolumn{4}{l}{\emph{Pure offline / pure online}} \\
+Pure online RL (SAC scratch in $\Msim$)              & $-1{,}654 \pm 329$    & $-138$         & 5 \\
+Pure offline RL (Cal-QL on $\Doff$, $675$K)           & $-749 \pm 26$         & $-61$          & 5 \\
+\midrule
+\multicolumn{4}{l}{\emph{H2O+ (SIM-online: deployment-relevant)}} \\
+Contrastive only                                     & $\mathbf{-658 \pm 23}$ & $\mathbf{-54}$ & 5 \\
+DynamicsDisc (temp $0.5$)                            & $-669 \pm 25$          & $-55$          & 5 \\
+TransitionDisc only                                  & $-674 \pm 28$          & $-55$          & 4 \\
+Contrastive + Q-floor + KL (full)                    & $-705 \pm 38$          & $-58$          & 5 \\
+\midrule
+\multicolumn{4}{l}{\emph{H2O+ (SUMO-online: same-fidelity oracle, not deployable)}} \\
+TransitionDisc only (oracle best)                    & $\mathbf{-646 \pm 16}$ & $\mathbf{-53}$ & 4 \\
+Contrastive + Q-floor + KL (full)                    & $-663 \pm 16$          & $-54$          & 4 \\
+TransitionDisc + Q-floor                             & $-676 \pm 60$          & $-55$          & 4 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+\subsection{Ablation study}
+\label{sec:exp:ablations}
+
+We run an ablation sweep of approximately 30 distinct configurations across five groups (3 baselines, 9 SUMO-online, 9 SIM-online, 3 source-removal, 4--6 data-size points), each with 4--5 seeds, totalling on the order of 150 training runs, to test each component, the simulator-fidelity transfer claim, and the data-efficiency story.
+Group A (offline-only) establishes the offline ceiling under three offline-RL baselines.
+Groups B and C vary the online environment (SUMO vs SIM) while toggling the discriminator choice (none / TransitionDisc / DynamicsDisc / Contrastive), the offline-Q floor, the KL anchor, and (Group B only) sim-reward rescaling.
+Group D removes one offline-data \emph{source} at a time (SAC-only, heuristic-only, weak-only) to probe dataset composition robustness.
+Group E varies the offline-data \emph{size} at four levels (100K, 200K, 400K, full $\approx$ 675K transitions) under both pure offline (Cal-QL) and the full H2O+ pipeline, to test whether the online phase compensates for offline-data scarcity.
+
+\Cref{tab:ablation} reports the nine SUMO-online configurations averaged across 4 seeds.
+Three observations stand out.
+First, the simplest H2O+ variant---TransitionDiscriminator IS reweighting with no Q-floor---is the strongest single configuration ($-646$K), narrowly beating all combinations that add Q-floor or replace the discriminator.
+Second, the offline-Q floor's contribution is configuration-dependent: it improves \texttt{sumo\_baseline} ($-710 \to -678$K, $+32$K) and \texttt{sumo\_is} ($-694 \to -676$K, $+18$K) but \emph{harms} \texttt{sumo\_darc} ($-646 \to -676$K, $-30$K), so adding Q-floor has no consistent positive effect across IS-weight regimes.
+Third, the factored DARC variant (DynamicsDiscriminator) is the worst configuration ($-720$K), indicating that the explicit action-conditional factorisation underperforms the simpler binary classifier in this domain.
+
+\begin{table*}[t]
+\centering
+\small
+\caption{Ablation on SUMO online (Group B), mean cumulative reward over 4 seeds (42, 123, 456, 789). Bold: best configuration. Rows sorted by mean reward.}
+\label{tab:ablation}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llr}
+\toprule
+Config & Components & Cum.\ reward (K) \\
+\midrule
+\texttt{sumo\_darc}         & TransDisc IS                       & $\mathbf{-646}$ \\
+\texttt{sumo\_full}         & Contrastive + Q-floor + KL + warmup & $-663$ \\
+\texttt{sumo\_darc\_calql}  & TransDisc + Q-floor                & $-676$ \\
+\texttt{sumo\_is\_calql}    & Contrastive + Q-floor              & $-676$ \\
+\texttt{sumo\_calql}        & no IS, Q-floor only                & $-678$ \\
+\texttt{sumo\_is}           & Contrastive only                   & $-694$ \\
+\texttt{sumo\_rescale}      & TransDisc + sim-reward rescale     & $-702$ \\
+\texttt{sumo\_baseline}     & no IS, no Q-floor                  & $-710$ \\
+\texttt{sumo\_dyn}          & DynamicsDisc (factored DARC)       & $-720$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\small
+\caption{Ablation on SIM online (Group C), mean cumulative reward over 4--5 seeds. SIM-trained policies evaluated on the SUMO target environment. Bold: best.}
+\label{tab:ablation_sim}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llr}
+\toprule
+Config & Components & Cum.\ reward (K) \\
+\midrule
+\texttt{sim\_is}            & Contrastive only                   & $\mathbf{-658}$ \\
+\texttt{sim\_dyn\_t05}      & DynamicsDisc, temp$=0.5$           & $-669$ \\
+\texttt{sim\_darc}          & TransDisc only                     & $-674$ \\
+\texttt{sim\_is\_calql}     & Contrastive + Q-floor              & $-680$ \\
+\texttt{sim\_dyn}           & DynamicsDisc, temp$=1.0$           & $-682$ \\
+\texttt{sim\_baseline}      & no IS, no Q-floor                  & $-684$ \\
+\texttt{sim\_calql}         & no IS, Q-floor only                & $-692$ \\
+\texttt{sim\_darc\_calql}   & TransDisc + Q-floor                & $-694$ \\
+\texttt{sim\_dyn\_t20}      & DynamicsDisc, temp$=2.0$           & $-699$ \\
+\texttt{sim\_full}          & Contrastive + Q-floor + KL + warmup & $-705$ \\
+\texttt{sim\_rescale}       & TransDisc + sim-reward rescale     & $-726$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+\paragraph{SUMO-online vs SIM-online: training-environment matters}
+The discriminator preference flips between training environments: TransitionDisc is best in SUMO-online (\Cref{tab:ablation}), Contrastive is best in SIM-online (\Cref{tab:ablation_sim}).
+This is consistent with the H2O+ premise that the discriminator must distinguish the online (training) environment from the offline-data distribution; when the online environment differs more from offline (as in SIM-online, where the LSTM sim has different dynamics than the SUMO-collected offline data), a more flexible action-marginalised discriminator (Contrastive) helps; when online is closer to offline (SUMO-online uses the same simulator the offline data was collected from), the simpler TransitionDisc suffices and adding the more flexible variant slightly hurts.
+
+\subsection{Analysis}
+\label{sec:exp:analysis}
+
+\Cref{fig:analysis} reports three diagnostic curves derived from the SUMO-online training logs (smoothed across seeds).
+
+\paragraph{IS weight evolution (panel a)}
+The realised IS weight $\wis = (\sqrt{w_{\text{IS}}})^2$ tracks the discriminator's binary-classifier ratio averaged across each minibatch, on a logarithmic scale.
+TransitionDiscriminator stabilises around $0.2$--$0.3$ (heavily suppressing online samples), DynamicsDiscriminator around $0.4$--$0.6$, and the Contrastive InfoNCE variant around $0.7$--$0.9$.
+This separation is consistent with the discriminator-choice ordering observed in \Cref{tab:ablation,tab:ablation_sim}: low IS weight (TransDisc) is appropriate when online and offline distributions are close (SUMO-online setting), while higher IS weight (Contrastive) is needed when they differ (SIM-online).
+
+\paragraph{Discriminator convergence (panel b)}
+All three discriminator variants converge in classification loss within the first $2{-}3$K gradient steps, but at different plateau values: TransDisc settles lowest (best classification), DynamicsDisc highest (worst classification, consistent with its weakest performance in \Cref{tab:ablation,tab:ablation_sim}), and Contrastive intermediate.
+The Contrastive InfoNCE plateau, with bounded sensitivity to action via construction, is a stable training signal even when classification accuracy is moderate.
+
+\paragraph{Training stability across H2O+ variants (panel c)}
+The mean real-batch reward (rolling-averaged) tracks the policy's value during training across four representative variants.
+Configurations including the Q-floor anchor ($\texttt{sumo\_calql}$, $\texttt{sumo\_full}$) maintain a more stable trajectory through the full $200$ epochs, while configurations without it ($\texttt{sumo\_baseline}$, $\texttt{sumo\_darc}$) exhibit small late-training drifts.
+The drift magnitude is small relative to the cross-config gap reported in the SUMO-eval ablation (\Cref{tab:ablation}), explaining why the Q-floor's effect on final SUMO eval is configuration-dependent rather than uniformly positive.
+
+\paragraph{Action invariance: learned-model diagnostic and data-level check}
+We measure the dependence of the discriminator's output on the action via the ratio $f_\psi(s, a, s') / f_\psi(s, a_{\text{perm}}, s')$ with random action permutation $a_{\text{perm}}$ across the batch.
+Contrastive achieves $0.96$ (action-invariant by construction; the score function does not see $a$); TransitionDiscriminator achieves $0.79$ (action-conditioned but with weak signal under transit's exogenous-dominated transitions).
+This is a property of the \emph{learned model}; we additionally report a direct data-level test of \Cref{ass:action_invariance} that does not depend on a trained discriminator.
+We discretise actions into $K_a = 3$ bins (no-hold, short-hold, long-hold), project $(s, s')$ to a $5 \times 5$ PCA grid, and within each $(s, s')$ cell that contains samples in multiple action bins compute the action-dependence ratio
+$\hat{r} = \mathrm{mean}_{(s_{\text{in}}, s_{\text{out}})}\bigl[\,\mathrm{std}_a \log \hat\rho\,\bigr] / \mathrm{mean}_a\bigl[\,\mathrm{std}_{(s_{\text{in}}, s_{\text{out}})} \log \hat\rho\,\bigr]$
+where $\hat\rho = \hat P_{\text{real}}(s' \mid s, a) / \hat P_{\text{sim}}(s' \mid s, a)$.
+A small ratio indicates that variation across $a$ is small relative to variation across $(s, s')$, supporting \Cref{ass:action_invariance}.
+On $50{,}000$ offline-side transitions paired with sim-core rollouts under matching initial-state seeds, we measure $\hat{r} = 0.156$ at the $5 \times 5$ grid (and $\hat{r} = 0.169$ at $6 \times 6$); we adopt $0.30$ as a working threshold (small ratio = action-variation dominated by $(s, s')$-variation), and treat the result as supportive evidence rather than conclusive verification.
+Supporting heatmaps and per-cell ratios accompany the artefact release; the script \texttt{SimpleSAC/verify\_assumption1.py} reproduces the analysis end-to-end.
+This data-level result is consistent with the contrastive variant's strong empirical performance under SIM-online but is not a guarantee on regions of state space underrepresented in $\Doff$.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/analysis.pdf}
+\caption{Training-time diagnostics, computed from \emph{SUMO-online} training logs (the same-fidelity oracle setting; corresponding SIM-online curves are qualitatively similar in IS-weight ordering and discriminator-loss plateau but quantitatively differ since the SIM-vs-offline distribution gap is larger). (a)~Effective IS weight $\wis$ over training steps for the three discriminator variants (mean $\pm$ std across SUMO-online seeds; log scale). TransDisc converges to a low weight ($\approx 0.25$), DynDisc to a moderate weight, and Contrastive InfoNCE to a higher weight ($\approx 0.7$). (b)~Discriminator classification loss; lower is better classification of the offline/online split. (c)~Real-batch reward over training across four H2O+ variants; configurations with Q-floor anchor maintain greater late-training stability.}
+\label{fig:analysis}
+\end{figure*}
+
+
+\subsection{Sensitivity}
+\label{sec:exp:sensitivity}
+
+\paragraph{Ensemble size}
+Varying $\Ecnt \in \{3, 5, 8\}$ leaves the final reward essentially unchanged ($< 1\%$ range), though $\Ecnt{=}3$ shows higher per-seed variance.
+Training time scales sub-linearly in $\Ecnt$ (independent target computation amortises across heads).
+
+\paragraph{Data composition}
+Group D of the ablation removes one offline source at a time.
+Removing the SAC-trained source most hurts online performance (loss of optimal-action coverage); removing the weak-random source least hurts (coverage is redundant with heuristic); removing the RE-SAC expert ep39 source removes the Q-floor anchor's most-calibrated samples.
+All three individual-source drops remain above the H2O+ baseline.
+
+\paragraph{Data-efficiency curve}
+\Cref{fig:data_efficiency_fig} visualises the relationship.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.85\linewidth]{figures/data_efficiency.pdf}
+\caption{Data efficiency: H2O+ vs pure offline RL on SUMO eval, varying offline buffer size from 100K to 675K. Bars are mean$\pm$std over 5 seeds. H2O+ at 200K matches pure offline at 675K on the \emph{single default scenario} used here (SUMO seed $42$, default OD), implying a $3.4\times$ data-efficiency benefit from the online phase under this protocol; this ratio is computed on the default-scenario protocol and is not measured on the $3 \times 3$ scenario grid of \Cref{tab:multiseed}. Pure online RL (red dashed) is included for reference.}
+\label{fig:data_efficiency_fig}
+\end{figure}
+
+\Cref{tab:data_size} reports Group E: cumulative reward as a function of offline buffer size for both pure offline (Cal-QL) and the H2O+ SIM-online pipeline.
+Two patterns emerge.
+First, both curves plateau at $\approx 200$K offline transitions; quadrupling data to 400K--675K yields essentially no improvement under either method, suggesting the offline buffer's bus-trajectory diversity rather than its raw size is the bottleneck.
+Second, H2O+ consistently improves over pure offline across all sizes by $45$--$92$K cumulative reward, and reaches with $200$K transitions a level ($-686$K) that pure offline cannot match even with $675$K transitions ($-750$K).
+The online SIM phase therefore substitutes for offline-data volume in a quantitative sense (a $3.4\times$ data-efficiency gain at the 200K vs 675K comparison point).
+
+\begin{table*}[t]
+\centering
+\small
+\caption{Group E: Data-efficiency. Cumulative SUMO reward (K) vs offline buffer size, 5 seeds each. H2O+ reaches with 200K what pure offline never reaches with 675K. The H2O+ column uses the \texttt{sim\_is\_calql} configuration (Contrastive + Q-floor) for historical reasons --- this sweep predates the SIM-online ablation that identified the Contrastive-only variant as the deployment-best (\Cref{tab:ablation_sim}). The data-efficiency \emph{ratio} (H2O+ at 200K matching pure offline at 675K) is robust to recipe choice within the H2O+ family.}
+\label{tab:data_size}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrr}
+\toprule
+Offline size & Pure offline (Cal-QL) & H2O+ (Contrastive + Q-floor) & Gap \\
+\midrule
+100K & $-789 \pm 42$ & $-697 \pm 61$ & $+92$ \\
+200K & $-750 \pm 14$ & $-686 \pm 48$ & $+64$ \\
+400K & $-749 \pm 24$ & $-689 \pm 32$ & $+60$ \\
+Full ($\approx$ 675K) & $-750 \pm 28$ & $-705 \pm 38$ & $+45$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+\paragraph{KL anchor and warmup}
+Enabling the KL anchor to a 50-epoch policy snapshot \citep{zhou2024wsrl} stabilises early training but has small final impact; disabling it yields faster but slightly noisier convergence.
+
+\subsection{Multi-scenario robustness and operational metrics}
+\label{sec:exp:multiseed}
+
+The single-seed/single-OD numbers reported in \Cref{tab:main} are reproducible but narrow.
+To address generalisation across passenger-demand days and SUMO seeds we additionally
+evaluate each method across a $3 \times 3$ scenario grid: SUMO seeds
+1001, 1002, and 1003 crossed with OD-scale multipliers 0.6, 0.8, and 1.0
+(applied uniformly to both vehicle and passenger demand via SUMO's
+\texttt{--scale} flag).
+Seventeen method rows are compared on the same scenario set under common random numbers (\Cref{tab:multiseed}):
+ep39 (the RE-SAC SUMO expert checkpoint included in $\Doff$);
+two SUMO-online H2O+ checkpoints from \Cref{tab:ablation} (TransDisc-only and TransDisc + Q-floor; same-fidelity oracle);
+the deployment-relevant SIM-online H2O+ Contrastive-only variant ($3$ training seeds);
+five standard offline-to-online RL baselines trained with three seeds each (RLPD, WSRL, TD3+BC, IQL, AWAC);
+two pure-online SAC checkpoints (a legacy $200$-epoch single-seed run, and a fresh $1{,}000$-epoch retrain across $3$ training seeds);
+two behaviour-cloning variants (the full $\Doff$ at one training seed, and the ep39-only subset at three training seeds);
+zero-hold (no intervention);
+and Daganzo cooperative holding at three $\alpha$ values ($0.3$, $0.4$, $0.6$).
+Each row reports a single underlying checkpoint (or code-based controller) evaluated on the same $9$ scenarios, except the seven multi-seed rows (SIM-online H2O+ Contrastive, $1{,}000$-epoch pure-online SAC, RLPD, WSRL, TD3+BC, IQL, AWAC, and BC ep39-only), each of which uses $3$ training-seed checkpoints $\times$ $9$ scenarios $= 27$ evaluations.
+The total evaluation count is $9 \times 9 + 8 \times 27 = 297$.
+The reported $\pm$ in \Cref{tab:multiseed} is the standard error \emph{across the $n$ paired evaluations of that row}; for the $n=27$ rows this includes both training-seed and scenario variation, while for the $n=9$ rows it includes only scenario variation (the underlying checkpoint or controller is fixed). We do not perform a hierarchical bootstrap that separates the two sources of variance; readers should treat the $\pm$ as a descriptive within-row spread, not as a uniformly inferential quantity, when comparing rows of different $n$.
+
+\begin{table*}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption{Multi-scenario evaluation: $3$ SUMO seeds $\{1001, 1002, 1003\} \times 3$ OD-scale multipliers $\{0.6, 0.8, 1.0\}$ $= 9$ scenarios per method (paired under common random numbers). Cumulative reward in K (mean $\pm$ standard error across the $n$ paired scenarios; $n = 9$ unless noted). Gain vs zero-hold is the paired mean improvement in cumulative reward over the zero-hold controller on the same scenario grid, also in K; this column makes the stress-grid reward scale comparable across methods. Passenger waiting is mean per-leg station waiting time; HW CV is the cross-route mean of per-line headway coefficient of variation; large-gap rate is the fraction of headways exceeding $1.5\times$ scheduled; Jain's index is computed over per-line headway-CV values (higher = more equitable across lines). Bold = best per column.}
+\label{tab:multiseed}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrr}
+\toprule
+Method & Cum.\ reward (K) & Gain vs zero (K) & Pax wait (s) & HW CV & Large-gap & Jain \\
+\midrule
+\multicolumn{7}{l}{\emph{Expert reference policy (transitions in $\Doff$)}} \\
+RE-SAC SUMO expert ep39 (ckpt in $\Doff$)                         & $\mathbf{-1{,}634 \pm 253}$ & $\mathbf{+593}$ & $475.0$ & $\mathbf{0.627}$ & $\mathbf{0.000}$ & $0.913$ \\
+\midrule
+\multicolumn{7}{l}{\emph{Deployment-relevant learned policy (Stage 2 in cheap simulator)}} \\
+\textbf{H2O+ Contrastive only (SIM-online, $3$ seeds, $n{=}27$)}  & $-1{,}725 \pm 150$ & $+502$ & $499.8$ & $0.646$ & $0.001$ & $0.912$ \\
+\midrule
+\multicolumn{7}{l}{\emph{Same-fidelity oracle (Stage 2 in target simulator; not deployable)}} \\
+H2O+ TransDisc only (SUMO-online oracle)                          & $-1{,}682 \pm 269$ & $+546$ & $494.8$ & $0.644$ & $\mathbf{0.000}$ & $0.907$ \\
+H2O+ TransDisc + Q-floor (SUMO-online ablation)                   & $-1{,}697 \pm 272$ & $+530$ & $491.1$ & $0.640$ & $0.001$ & $0.912$ \\
+\midrule
+\multicolumn{7}{l}{\emph{Standard offline-to-online RL baselines ($3$ seeds each, $n{=}27$; snapshot-reset off, matching H2O+ Contrastive)}} \\
+RLPD \citep{ball2023efficient} (offline+online $50/50$ mix)        & $-1{,}726 \pm 145$ & $+501$ & $506.9$ & $0.644$ & $0.001$ & $0.917$ \\
+WSRL \citep{zhou2024wsrl} ($20$-ep warmup-collect)                  & $-1{,}709 \pm 147$ & $+518$ & $503.7$ & $0.647$ & $0.001$ & $0.915$ \\
+TD3+BC \citep{fujimoto2021minimalist} (pure offline)               & $-1{,}746 \pm 153$ & $+481$ & $492.0$ & $0.656$ & $0.001$ & $0.913$ \\
+IQL \citep{kostrikov2021offline} (Q + V expectile + AWR)           & $-2{,}105 \pm 110$ & $+122$ & $483.0$ & $0.662$ & $0.009$ & $0.919$ \\
+AWAC \citep{nair2020awac} (Q + AWR with batch baseline)            & $-2{,}198 \pm 88$  & $+29$ & $482.3$ & $0.665$ & $0.012$ & $0.923$ \\
+\midrule
+\multicolumn{7}{l}{\emph{Other learned policies}} \\
+Pure-online SAC ($1{,}000$ ep retrain, $3$ seeds, $n{=}27$)       & $-1{,}739 \pm 152$ & $+488$ & $505.0$ & $0.650$ & $0.001$ & $0.912$ \\
+Pure-online SAC ($200$ ep, single seed, legacy)                   & $-2{,}019 \pm 166$ & $+208$ & $\mathbf{447.1}$ & $0.628$ & $0.016$ & $0.927$ \\
+BC (ep39-only, $3$ seeds, $n{=}27$)                                & $-1{,}659 \pm 142$ & $+568$ & $482.0$ & $0.634$ & $\mathbf{0.000}$ & $0.913$ \\
+BC (full $\Doff$, $1$ training seed)                              & $-2{,}244 \pm 174$ & $-16$ & $507.0$ & $0.693$ & $0.010$ & $0.921$ \\
+\midrule
+\multicolumn{7}{l}{\emph{Unlearned baselines}} \\
+Zero-hold                                                          & $-2{,}227 \pm 151$ & $0$ & $485.3$ & $0.673$ & $0.013$ & $0.926$ \\
+Daganzo cooperative ($\alpha = 0.3$, retuned)                     & $-2{,}436 \pm 175$ & $-209$ & $488.1$ & $0.766$ & $0.011$ & $0.936$ \\
+Daganzo cooperative ($\alpha = 0.4$, retuned)                     & $-2{,}469 \pm 179$ & $-242$ & $487.8$ & $0.774$ & $0.012$ & $0.936$ \\
+Daganzo cooperative ($\alpha = 0.6$, textbook)                    & $-2{,}511 \pm 167$ & $-284$ & $494.0$ & $0.781$ & $0.010$ & $\mathbf{0.938}$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+The cumulative-reward magnitudes in \Cref{tab:multiseed} are systematically more negative than the corresponding rows in \Cref{tab:main} ($\approx -1{,}700$K vs $\approx -650$K for H2O+).
+This is expected: \Cref{tab:main} reports a single SUMO seed under the default OD profile, while \Cref{tab:multiseed} averages $9$ scenarios that include lower OD scales ($0.6$, $0.8$) where headway penalties dominate the composite reward and seeds $\{1001, 1002, 1003\}$ that were not used during training.
+For this reason \Cref{tab:multiseed} also reports a paired gain over zero-hold: the H2O+ rows still improve by $+502$K to $+546$K on the stress grid, so the large negative raw-return values should not be read as ``no control'' behaviour.
+The bottom-of-table ranking is preserved (zero-hold, BC, and Daganzo always trail by a wide margin), but the top-of-table ranking changes between protocols: \Cref{tab:main} has H2O+ narrowly above ep39 (single scenario), while \Cref{tab:multiseed} has ep39 narrowly above H2O+ on the scenario-grid mean (with the H2O+ vs ep39 ordering depending on OD scale, see below).
+Four observations from \Cref{tab:multiseed} sharpen the headline claim:
+
+\paragraph{Cumulative reward: ep39, H2O+, and $1{,}000$-epoch pure-online SAC form a near-tie at the top.}
+Across the $9$ paired scenarios under common random numbers, the four strongest methods cluster within $\approx 100$K of one another:
+ep39 (the RE-SAC SUMO expert checkpoint included in $\Doff$) is nominally first at $-1{,}634 \pm 253$K, ahead of H2O+ TransDisc-only ($-1{,}682 \pm 269$K, paired $\Delta = -47$K vs ep39, $95\%$ bootstrap CI $[-77, -12]$ excludes zero, although the Wilcoxon signed-rank $p = 0.055$ is at the borderline of conventional significance under $n = 9$; we read the CI as the more informative summary here);
+H2O+ TransDisc + Q-floor sits between them ($-1{,}697 \pm 272$K, paired $\Delta = +16$K above H2O+ TransDisc-only, CI $[+5, +27]$, $p = 0.027$---a small but statistically significant gap);
+$1{,}000$-epoch pure-online SAC averaged over $3$ training seeds reaches $-1{,}739 \pm 152$K (paired $\Delta = +57$K vs SUMO-online H2O+ TransDisc-only, $p = 0.004$);
+the deployment-relevant SIM-online H2O+ Contrastive-only variant (averaged over $3$ training seeds, $n = 27$) reaches $-1{,}725 \pm 150$K, paired $\Delta = +43$K below the SUMO-online oracle ($95\%$ CI $[+29, +58]$, $p < 0.001$) --- this $43$K margin quantifies the cost of training in the cheap simulator instead of in the target.
+H2O+ does \emph{not} beat ep39 in this multi-scenario protocol; the headline ``slightly above ep39'' from the single-scenario \Cref{tab:main} ($-658$K vs $-666$K) does not extrapolate to the $3 \times 3$ stress grid.
+
+The headline gap H2O+ \emph{does} produce reliably is over the unlearned baselines:
+$25\%$ over zero-hold ($-2{,}227$K) and BC ($-2{,}244$K);
+$31$--$33\%$ over Daganzo at any of the three tested $\alpha$ values ($-2{,}436$K to $-2{,}511$K).
+Cross-method paired Wilcoxon tests (\Cref{tab:paired_stats}) confirm: H2O+ TransDisc-only is significantly better than every non-ep39 comparator (all $p \leq 0.027$); against ep39 the comparison is borderline-significant in the wrong direction.
+
+Because ep39's transitions are part of $\Doff$ (\Cref{sec:exp:setup}), this finding is best read as: \emph{H2O+ recovers most of the RE-SAC SUMO expert's performance and reliably beats the unlearned controllers, but does not consistently surpass that expert under multi-scenario evaluation}.
+H2O+'s value here is therefore that it transfers and fine-tunes a strong expert-derived offline buffer under a tunable optimisation target, not that it discovers strictly better holding behaviour than the RE-SAC expert across the scenario set we tested.
+
+\begin{table*}[t]
+\centering
+\small
+\caption{Paired-scenario statistics with the \emph{same-fidelity oracle} (SUMO-online H2O+ TransDisc-only) as base, on the $9$ paired scenarios of \Cref{tab:multiseed}. Mean difference reported with bootstrap $95\%$ CI ($2{,}000$ resamples) and Wilcoxon signed-rank $p$-value. Positive mean difference = the SUMO-online oracle H2O+ has higher (better) cumulative reward than the comparator. This table is informative for ranking H2O+ variants under matched-fidelity training but does not directly answer the deployment question; \Cref{tab:deployment_paired} reports the same comparisons with the deployment-relevant SIM-online H2O+ Contrastive variant as base.}
+\label{tab:paired_stats}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrr}
+\toprule
+Comparator & $\Delta$ mean (K) & 95\% CI & Wilcoxon $p$ \\
+\midrule
+Daganzo ($\alpha = 0.6$, textbook) & $+829$ & $[+656,\ +1{,}046]$ & $0.004$ \\
+BC (full $\Doff$)                  & $+562$ & $[+395,\ +754]$     & $0.004$ \\
+Zero-hold                          & $+546$ & $[+343,\ +786]$     & $0.004$ \\
+Pure-online SAC (legacy $200$ ep)  & $+337$ & $[+157,\ +541]$     & $0.004$ \\
+Pure-online SAC ($1{,}000$ ep retrain, $3$ training seeds) & $+57$ & $[+29,\ +88]$ & $0.004$ \\
+H2O+ Contrastive only (SIM-online, $3$ training seeds, $n{=}27$) & $+43$ & $[+29,\ +58]$ & $<0.001$ \\
+H2O+ TransDisc + Q-floor           & $+16$  & $[+5,\ +27]$        & $0.027$ \\
+RE-SAC SUMO expert ep39                 & $-47$ & $[-77,\ -12]$  & $0.055$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+\paragraph{Deployment-focused statistics: SIM-online H2O+ Contrastive as base}
+The comparison most relevant to a real deployment is not against the SUMO-online oracle (which assumes Stage~2 can train in the same high-fidelity simulator used for evaluation) but against the SIM-online H2O+ Contrastive variant, which is the only learned configuration in our matrix that an operator could realistically retrain inside the cheap LSTM sim-core $\Msim$ on a daily basis.
+\Cref{tab:deployment_paired} reports paired Wilcoxon comparisons with this deployment-relevant policy as the base, on the $9$ paired scenarios.
+Three patterns are worth separating.
+First, against the RE-SAC SUMO expert ep39, SIM-online H2O+ loses by a paired mean of $-90$K ($95\%$ CI $[-117, -65]$, $p < 0.001$): under realistic training-budget constraints H2O+ does not reach the high-fidelity expert checkpoint, and this gap is statistically robust.
+Second, against the same-fidelity SUMO-online oracle, SIM-online H2O+ pays a paired mean of $-43$K ($95\%$ CI $[-58, -29]$, $p < 0.001$): roughly half of the gap-to-ep39 is explainable as a fidelity penalty for training in $\Msim$ rather than $\Mreal$.
+Third, against the $1{,}000$-epoch pure-online SAC retrained from scratch in $\Msim$, SIM-online H2O+ has a small positive paired mean of $+14$K ($95\%$ CI $[+4, +25]$, $p = 0.021$); the CI excludes zero and the test rejects equality at the conventional threshold, so the offline-pretrained variant has a small but statistically significant edge over the from-scratch SAC trained for the same wall-clock budget.
+Fourth, against all unlearned baselines (zero-hold, BC, three Daganzo variants), SIM-online H2O+ wins by paired means of $+503$ to $+786$K, all at $p < 0.001$---the deployment-relevant H2O+ variant is reliably and substantially better than any controller that does not use both offline data and online interaction.
+
+\begin{table*}[t]
+\centering
+\small
+\caption{Deployment-focused paired-scenario statistics: SIM-online H2O+ Contrastive (the only learned configuration in our matrix that retrains inside the cheap LSTM sim-core, $3$ training seeds, $n=27$ paired evaluations) vs each comparator on the same-scenario subset where both methods have data. Bootstrap $95\%$ CI ($2{,}000$ resamples) and Wilcoxon signed-rank $p$-value. Positive mean difference = SIM-online H2O+ has higher (better) cumulative reward. The first three rows are the comparisons most relevant for a deployment decision; the bottom rows are sanity-check margins over unlearned controllers.}
+\label{tab:deployment_paired}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrr}
+\toprule
+Comparator & $\Delta$ mean (K) & 95\% CI & Wilcoxon $p$ \\
+\midrule
+\multicolumn{4}{l}{\emph{Vs.\ reference and oracle}} \\
+RE-SAC SUMO expert ep39                             & $-90$  & $[-117,\ -65]$ & $<0.001$ \\
+BC (ep39-only, $3$ seeds)                            & $-65$  & $[-90,\ -39]$  & $<0.001$ \\
+H2O+ TransDisc + Q-floor (SUMO-online ablation)       & $-27$  & $[-38,\ -16]$  & $<0.001$ \\
+H2O+ TransDisc-only (SUMO-online same-fidelity oracle) & $-43$  & $[-58,\ -29]$  & $<0.001$ \\
+\midrule
+\multicolumn{4}{l}{\emph{Vs.\ standard offline-to-online RL baselines (snapshot-reset off)}} \\
+WSRL \citep{zhou2024wsrl}                            & $-15$  & $[-27,\ -2]$    & $0.021$ \\
+RLPD \citep{ball2023efficient}                       & $+2$   & $[-13,\ +17]$   & $0.991$ \\
+TD3+BC \citep{fujimoto2021minimalist}                & $+21$  & $[+5,\ +38]$    & $0.036$ \\
+Pure-online SAC ($1{,}000$ ep retrain, $3$ seeds)    & $+14$  & $[+4,\ +25]$    & $0.021$ \\
+IQL \citep{kostrikov2021offline} (pure offline)      & $+380$ & $[+274,\ +488]$ & $<0.001$ \\
+AWAC \citep{nair2020awac} (pure offline)             & $+474$ & $[+349,\ +598]$ & $<0.001$ \\
+\midrule
+\multicolumn{4}{l}{\emph{Vs.\ unlearned baselines}} \\
+Zero-hold                                            & $+503$ & $[+380,\ +633]$ & $<0.001$ \\
+BC (full $\Doff$, $1$ seed)                           & $+519$ & $[+420,\ +623]$ & $<0.001$ \\
+Daganzo ($\alpha = 0.3$, retuned)                    & $+712$ & $[+607,\ +819]$ & $<0.001$ \\
+Daganzo ($\alpha = 0.4$, retuned)                    & $+745$ & $[+643,\ +854]$ & $<0.001$ \\
+Daganzo ($\alpha = 0.6$, textbook)                   & $+786$ & $[+672,\ +903]$ & $<0.001$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+The deployment-focused reading of these two tables is: an operator cannot choose the SUMO-online oracle (it requires training inside the high-fidelity simulator that is also the evaluation environment), so the relevant policy on offer from this work is SIM-online H2O+ Contrastive. To keep the comparison configuration-clean, RLPD and WSRL are evaluated with \texttt{snapshot\_reset} switched off (matching H2O+ Contrastive); the snapshot-reset choice itself perturbs RLPD/WSRL by only $\approx 1$--$2$K paired mean, well inside per-seed noise (see Robustness paragraph below).
+
+\paragraph{Standard offline-to-online RL baselines: H2O+ is competitive but not uniformly best}
+The standard offline-to-online RL comparison includes IQL, AWAC, TD3+BC (all offline-only), and RLPD, WSRL (offline+online hybrid). All run with three training seeds and the same $9$-scenario evaluation grid; each is implemented to operate on the same $675$K-transition $\Doff$ buffer. The picture for H2O+ Contrastive (SIM-online) on cumulative reward is:
+(i) it \emph{dominates} the pure-offline baselines IQL ($+380$K, $p < 0.001$), AWAC ($+474$K, $p < 0.001$), and BC on the full mixed buffer ($+519$K, $p < 0.001$), confirming that the online phase is essential for the bus environment regardless of which offline-to-online algorithm is used;
+(ii) it has a small statistically significant edge over TD3+BC ($+21$K, $p = 0.036$) and $1{,}000$-epoch pure-online SAC ($+14$K, $p = 0.021$);
+(iii) it is \emph{indistinguishable} from RLPD ($+2$K, $p = 0.99$) and is \emph{slightly outperformed} by WSRL ($-15$K, $p = 0.021$).
+The (iii) finding is the most informative: RLPD and WSRL are both H2O+ with the discriminator, IS reweighting, and offline-Q floor switched off. That neither falls behind H2O+ on this benchmark suggests the explicit dynamics correction does not provide a measurable additional benefit on top of a hybrid offline+online buffer with a $50/50$ mix and standard SAC updates --- the IS weights converge to near-uniform values and the discriminator signal is small relative to within-batch variance (\Cref{tab:ablation,fig:analysis}). H2O+ remains a sensible recipe (it never substantially underperforms), but the discriminator-driven correction is not the source of competitive advantage on this transit benchmark. We treat this as a useful negative result rather than a recipe contradiction; \Cref{sec:discussion} discusses what it implies for transferring H2O+ to other multi-fidelity domains.
+For these RLPD/WSRL numbers we ran an extra robustness experiment: we trained each baseline a second time with \texttt{snapshot\_reset} \emph{off}, matching the H2O+ Contrastive configuration (\texttt{snapshot\_reset} resets the cheap-simulator episode initial state from a SUMO snapshot with probability $0.5$). The paired-difference between the two configurations is $+2.3$K for RLPD ($p = 0.31$) and $+1.1$K for WSRL ($p = 0.56$), well inside per-seed noise, so the comparisons reported above are robust to the snapshot-reset choice.
+
+A second observation worth flagging is that BC on the ep39-only subset ($-1{,}659 \pm 142$K) reaches paired difference of only $-25$K against ep39 itself, much closer than BC on the full mixed buffer ($-2{,}244$K, $-610$K below ep39). This suggests that mixing ep39 transitions with $\epsilon$-random and weak-heuristic transitions in $\Doff$ \emph{degrades} BC --- the imitation target is averaged across heterogeneous behaviour qualities. None of the offline-to-online RL methods evaluated here (H2O+, RLPD, WSRL, TD3+BC) face this BC-style degradation because they reweight via Q values rather than imitate uniformly.
+
+\paragraph{Operational metrics: ep39 best on headway regularity, legacy $200$-epoch SAC best on passenger waiting}
+The cumulative-reward ranking does not transfer cleanly to the passenger-side columns.
+The legacy $200$-epoch single-seed pure-online SAC checkpoint has the lowest mean passenger waiting time across the $9$ scenarios ($447.1$s, vs $499.1$s for SIM-online H2O+ Contrastive and $475.0$s for ep39); ep39 has the lowest cross-route headway CV ($0.627$, vs $\approx 0.64$--$0.65$ for the H2O+ and $1{,}000$-epoch SAC variants); the $1{,}000$-epoch retrain of pure-online SAC sits at $505.0$s waiting and $0.650$ HW CV, slightly worse than its $200$-epoch predecessor on these passenger-side metrics despite being substantially stronger on the composite training reward.
+This non-monotonicity --- training longer on the shaped reward improves cumulative reward but does \emph{not} monotonically improve passenger waiting or headway CV --- is informative on its own: the composite reward used during training penalises holding aggressively (per-second hold cost dominates the bunching reduction the hold buys); when we examine the hold-time distributions across methods (means $37$--$45$s, $90$th percentiles $52$--$60$s), the four top RL methods are statistically similar in \emph{how long} they hold, so the passenger-wait differences are driven by \emph{when} and \emph{which buses} are held rather than gross holding intensity.
+The implication is a calibration gap, not a methodological failure: \emph{the optimisation objective the paper trains for is not strictly aligned with per-leg passenger waiting, and at $1{,}000$-epoch budgets pure-online SAC and H2O+ over-fit the shaped reward at modest cost on waiting}.
+A reward re-weighting that aligns with per-leg waiting cost would change the optimisation landscape across the entire ablation matrix; we flag this as a calibration step required before any operator pilot (\Cref{sec:disc:operational}) and visualise the trade-off in \Cref{fig:pareto}: ep39 sits at moderate waiting / high reward, the H2O+ rows cluster nearby, the legacy $200$-epoch pure-online SAC sits at low waiting / low reward, the $1{,}000$-epoch retrain at moderate waiting / mid reward, and Daganzo / BC / zero-hold occupy the high-waiting / low-reward corner.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/pareto.pdf}
+\caption{Reward vs operational utility: per-method means across $9$ scenarios (3 SUMO seeds $\times$ 3 OD scales). Lower passenger waiting and higher cumulative reward are both desirable; no single method dominates both axes. The RE-SAC SUMO expert ep39 has the best cumulative reward; the legacy $200$-epoch single-seed pure-online SAC has the lowest per-leg waiting ($447$s) but at substantially worse cumulative reward; the $1{,}000$-epoch retrain of pure-online SAC sits at moderate waiting ($505$s) and mid reward; H2O+ Contrastive (SIM-online) and the SUMO-online H2O+ variants cluster near ep39. The reward-vs-operational trade-off motivates the calibration discussion in \Cref{sec:disc:operational}.}
+\label{fig:pareto}
+\end{figure*}
+
+\paragraph{Diagnostic passenger-side breakdown: reward alignment caveat}
+The cumulative reward and the mean per-leg waiting time reported in \Cref{tab:multiseed} together cover only one slice of the passenger-side picture.
+\Cref{tab:passenger_full} reports four diagnostic metrics aggregated over the same $9$-scenario grid (and over $3$ training seeds for the rows where $n=27$): completed passenger trips per $18{,}000$\,s episode, $90$th-percentile per-leg waiting time, mean in-vehicle delay (time spent on a bus, including any delay attributable to holding), and mean total passenger travel time (waiting + in-vehicle).
+Three observations are immediate.
+First, completed-trips counts are essentially identical across all eleven methods ($\approx 312$ trips/episode); none of the controllers shed demand under any tested OD scale, so passenger-throughput is not a useful discriminator on this benchmark.
+Second, the RL methods that win on cumulative reward (ep39, H2O+ TransDisc-only, H2O+ TransDisc + Q-floor, $1{,}000$-epoch pure-online SAC, SIM-online H2O+ Contrastive) cluster between $1{,}180$ and $1{,}270$\,s of mean in-vehicle delay --- substantially higher than zero-hold ($847$\,s), BC ($865$\,s), and Daganzo ($896$--$904$\,s).
+The hold actions that the shaped reward rewards (suppressing bunching, smoothing inter-line headway variance) directly extend the time each rider spends on a moving bus.
+Third, when waiting and in-vehicle are summed, the RL methods incur \emph{larger} bridge-derived mean total passenger travel time ($\approx 1{,}700$\,s) than zero-hold ($1{,}333$\,s), BC ($1{,}372$\,s), and Daganzo ($1{,}384$--$1{,}398$\,s) --- a $\approx 25\%$ increase.
+We treat this as a reward-alignment warning rather than a passenger-benefit claim: under the current SUMO passenger bridge, no RL method trained on the shaped reward dominates the unlearned baselines on total passenger travel time.
+The result bounds the operational claim we make: H2O+'s value on this benchmark is in cumulative reward and headway regularity (Jain index, HW CV), not in directly minimising total passenger travel time, and a calibrated reward that internalises in-vehicle cost would be a prerequisite to any deployment recommendation that targets passenger travel time as the operational objective (\Cref{sec:disc:operational}).
+
+\begin{table*}[t]
+\centering
+\small
+\caption{Diagnostic passenger-side metrics on the $3\times 3$ scenario grid. \emph{Completed trips} is the number of passenger trips finished within the $18{,}000$\,s episode; \emph{wait p90} is the $90$th-percentile per-leg waiting time; \emph{in-vehicle} is mean time on bus (including delay attributable to holding); \emph{total travel time} is waiting + in-vehicle under the current SUMO passenger bridge. All times in seconds, mean across paired scenarios ($n$ as in \Cref{tab:multiseed}). Daganzo's excess-wait reference is undefined (the analytical rule does not consume a target headway in this implementation), so excess-wait is not reported. Bold = best per column among RL methods (top); separately bold among unlearned baselines (bottom) where it differs from the global best.}
+\label{tab:passenger_full}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrr}
+\toprule
+Method & $n$ & Completed trips & Wait p90 (s) & In-vehicle (s) & Total travel (s) \\
+\midrule
+\multicolumn{6}{l}{\emph{Reference / hybrid offline+online learned policies}} \\
+RE-SAC SUMO expert ep39                             & $9$  & $\mathbf{312}$ & $1{,}034.7$ & $1{,}224.5$ & $1{,}699$ \\
+H2O+ Contrastive (SIM-online, $3$ seeds)             & $27$ & $312$          & $1{,}094.3$ & $1{,}222.7$ & $1{,}723$ \\
+H2O+ TransDisc-only (SUMO-online oracle)             & $9$  & $312$          & $1{,}090.1$ & $1{,}222.4$ & $1{,}717$ \\
+H2O+ TransDisc + Q-floor (SUMO-online ablation)      & $9$  & $312$          & $1{,}068.0$ & $1{,}180.8$ & $1{,}672$ \\
+RLPD (3 seeds)                                       & $27$ & $312$          & $1{,}108.6$ & $1{,}234.0$ & $1{,}739$ \\
+WSRL (3 seeds)                                       & $27$ & $312$          & $1{,}092.6$ & $1{,}241.6$ & $1{,}741$ \\
+Pure-online SAC ($1{,}000$ ep, $3$ seeds)            & $27$ & $312$          & $1{,}115.0$ & $1{,}219.6$ & $1{,}725$ \\
+Pure-online SAC ($200$ ep, single seed, legacy)      & $9$  & $312$          & $\mathbf{969.9}$ & $1{,}270.5$ & $1{,}718$ \\
+\midrule
+\multicolumn{6}{l}{\emph{Pure-offline policies (low in-vehicle, low total travel---they hold less)}} \\
+TD3+BC (3 seeds)                                     & $27$ & $312$ & $1{,}089.4$ & $\mathbf{1{,}216.0}$ & $\mathbf{1{,}708}$ \\
+BC (ep39-only, $3$ seeds)                            & $27$ & $312$ & $1{,}076.5$ & $1{,}240.4$ & $1{,}722$ \\
+IQL (3 seeds)                                        & $27$ & $312$ & $1{,}018.8$ & $876.4$ & $1{,}359$ \\
+AWAC (3 seeds)                                       & $27$ & $312$ & $1{,}008.5$ & $839.2$ & $1{,}321$ \\
+\midrule
+\multicolumn{6}{l}{\emph{Unlearned baselines (lower in-vehicle, lower total travel)}} \\
+Zero-hold                                            & $9$  & $312$ & $958.6$ & $\mathbf{847.2}$ & $\mathbf{1{,}333}$ \\
+BC (full $\Doff$, $1$ seed)                           & $9$  & $312$ & $1{,}021.7$ & $865.4$ & $1{,}372$ \\
+Daganzo cooperative ($\alpha = 0.3$, retuned)        & $9$  & $312$ & $976.9$ & $896.4$ & $1{,}384$ \\
+Daganzo cooperative ($\alpha = 0.4$, retuned)        & $9$  & $312$ & $972.8$ & $900.4$ & $1{,}388$ \\
+Daganzo cooperative ($\alpha = 0.6$, textbook)       & $9$  & $312$ & $991.7$ & $904.0$ & $1{,}398$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+\paragraph{Daganzo over-holds at the textbook $\alpha$}
+Daganzo with the textbook $\alpha = 0.6$ achieves the highest Jain fairness ($0.938$, treating all lines symmetrically by design) but the worst cumulative reward, $\approx 250$K below zero-hold.
+A per-bus diagnostic confirmed the policy fires occasional $60$-second clip-level holds on buses sandwiched between close neighbours; these are textbook-correct but the per-second holding penalty in our reward dominates the future bunching reduction.
+Retuned $\alpha = 0.3$ on the same $9$-scenario grid reaches $-2{,}436 \pm 175$K and $\alpha = 0.4$ reaches $-2{,}469 \pm 179$K, supporting the interpretation as $\alpha$-tuning sensitivity rather than a structural failure of the analytical rule; the retuned variants remain below H2O+ but close most of the gap to zero-hold ($-2{,}227$K).
+
+\paragraph{Pure-online SAC: training-budget caveat}
+\Cref{tab:multiseed} reports both the legacy $200$-epoch pure-online SAC checkpoint used for parity comparison in \Cref{tab:main} ($-2{,}019$K, single training seed) and a fresh $1{,}000$-epoch retrain across $3$ training seeds ($-1{,}739$K, $n = 27$ scenario evaluations).
+The $5\times$ longer training closes most of the gap to H2O+: the paired mean difference shrinks from $+337$K (at $200$ epochs) to $+57$K (at $1{,}000$ epochs), and pure-online SAC at $1{,}000$ epochs ranks third overall, ahead of zero-hold, BC, and all Daganzo variants.
+The catastrophic-failure framing of \Cref{tab:main} therefore applies specifically to the $200$-epoch parity budget; ``pure-online SAC fails on this benchmark'' is a budget-conditioned statement, not a structural one.
+At the $1{,}000$-epoch budget, pure-online SAC is a credible RL baseline that H2O+ beats only by a small (but statistically significant) margin on the shaped composite reward.
+
+A per-scenario heatmap of cumulative reward (\Cref{fig:per_scenario_heatmap}) shows that the magnitude difference between \Cref{tab:main} ($\approx -650$K, default scenario) and \Cref{tab:multiseed} ($\approx -1{,}700$K, scenario-grid mean) is dominated by the OD $\in \{0.6, 0.8\}$ columns---under reduced demand the headway-deviation penalties remain in absolute units while fewer passengers ride per bus, so per-decision reward magnitudes inflate.
+Bottom-of-ranking (BC, zero-hold, Daganzo always last three) is preserved cell by cell, but the top of the ranking shifts with OD:
+\textbf{ep39 is best at OD $\in \{0.6, 0.8\}$ ($6/9$ cells)} and the two H2O+ variants share the top at OD $= 1.0$ ($3/9$ cells).
+Pure-online SAC ($1{,}000$ ep) is consistently $4$th among the top RL methods.
+The H2O+ vs ep39 ordering is therefore demand-dependent: H2O+ wins under high demand where active holding pays off, while ep39's lighter-touch policy is preferable under low-to-moderate demand where holding incurs net cost on the shaped reward.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/per_scenario_heatmap.pdf}
+\caption{Per-scenario cumulative reward (K) on the $3 \times 3$ scenario grid. The OD = $0.6$ column produces the most-negative magnitudes for all methods, explaining the inflation between \Cref{tab:main} and \Cref{tab:multiseed}. The bottom of the ranking (BC, zero-hold, Daganzo $\alpha = 0.6$) is preserved cell by cell, but the top of the ranking shifts with OD: ep39 leads at OD $\in \{0.6, 0.8\}$ while the H2O+ variants share the top at OD $= 1.0$.}
+\label{fig:per_scenario_heatmap}
+\end{figure}
+
+The scenario grid is a $3 \times 3$ stress test rather than an exhaustive multi-day simulation; remaining evaluation-scope gaps (weekend OD, incident days, train/calibration/test day splits) are discussed in \Cref{sec:disc:calibration}.
+
+\subsection{Computational cost}
+\label{sec:exp:compute}
+
+Training one SIM-online configuration takes roughly $15$ minutes on a 2-core CPU allocation; one SUMO-online configuration takes roughly $3$ hours due to SUMO's libsumo single-session constraint.
+The full sweep (approximately 30 distinct configurations $\times$ 4--5 seeds $\approx$ 150 runs) fits in approximately $120$ CPU-hours when parallelised across SIM/offline runs and serialised across SUMO runs, using the hardware-aware auto-parallel launcher (\Cref{app:impl}).
+Evaluation of a single checkpoint on a full SUMO episode takes $\sim 2$ minutes.

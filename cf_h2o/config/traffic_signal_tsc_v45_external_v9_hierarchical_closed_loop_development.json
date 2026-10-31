@@ -1,0 +1,556 @@
+{
+  "protocol": "tsc-v63r59-external-v9-hierarchical-closed-loop-development-v1",
+  "frozen_at_utc": "2026-08-10T03:52:41.881015+00:00",
+  "scientific_amendment": {
+    "status": "pre_closed_loop_outcome_independent_protocol_correction",
+    "closed_loop_result_file_count_at_freeze": 0,
+    "reason": "The inherited two base-candidate labels encoded alternative pressure blend weights. Replaying them would mutate the numeric gate confirmed by v62. They are removed before any closed-loop outcome is generated; the 12 already-declared observable-state execution regions are retained without numeric change.",
+    "removed_semantic_duplicates": [
+      "cfcmt_pr_b2_cd3",
+      "cfcmt_pr_b0p25_cd6"
+    ],
+    "model_gate_support_and_thresholds_immutable": true,
+    "no_development_validation_or_prospective_outcome_inspected": true
+  },
+  "parent_protocol": {
+    "path": "cf_h2o/config/traffic_signal_tsc_v44_external_v9_hierarchical_guard_confirmation.json",
+    "sha256": "8d0e848ac0b6dd0c8880ee9da4102e083a679ea83103f722f4cb10eac76c06ca"
+  },
+  "offline_authorization": {
+    "path": "cf_h2o/results/cluster/tsc_v61r57_external_v9_hierarchical_offline_20260810/offline_confirmation_v1.json",
+    "sha256": "f57d93b6b0b9cbf22d8e4bd160358233dbb37234d3e80476e5fed3066480109f",
+    "decision": "authorize_closed_loop_development_grid_replay_only"
+  },
+  "support_runtime_equivalence": {
+    "path": "cf_h2o/results/cluster/tsc_v61r57_external_v9_hierarchical_offline_20260810/target_support_equivalence_audit_v1.json",
+    "sha256": "d9ea0d08565504897dd70160be55126f52c42ebe2a3a7eb670a3163774ecf52f",
+    "decision": "authorize_exact_tree_hierarchical_closed_loop_runtime"
+  },
+  "hierarchical_freeze_audit": {
+    "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/joint_freeze_audit_v1.json",
+    "sha256": "b113215b8fba6cf322d367b7f007d40e3f6ebd9264fa4422da6a7e00fb549c2b"
+  },
+  "city_artifacts": {
+    "los_angeles": {
+      "certificate": {
+        "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/los_angeles/freeze.json",
+        "sha256": "264e4d6821efd305b0a91953fc7eb06730aede63d302700045afce1713ff61c1"
+      },
+      "model": {
+        "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/los_angeles/model.pkl",
+        "sha256": "dbeb80b1796dbe8b7910ba77bbe3ce587898da78cb7de3e47408806c878198df"
+      },
+      "selected_candidate": "constant_alpha_0p8",
+      "deployment": {
+        "conformal_guard": {
+          "enabled": true,
+          "margin": 0.0,
+          "max_relative_rule_gap": 0.0,
+          "min_context_trust": 0.5,
+          "risk_multiplier": 0.0
+        },
+        "coordination_mode_before_closed_loop_selection": "direct",
+        "fallback_policy": "phase_pressure",
+        "policy": "cfcmt_hierarchical_guard_mpc",
+        "regularizer": {
+          "blend_weight": 2.0,
+          "enabled": true,
+          "min_context_trust": 0.5,
+          "risk_multiplier": 0.0
+        },
+        "runtime_policy_suffix": "_hierarchical_guard",
+        "target_support": {
+          "combination": "minimum_component_support",
+          "conformal_guard_enabled": true,
+          "conformal_support": {
+            "distance": "nearest_standardized_rms",
+            "feature_count": 16,
+            "feature_names": [
+              "total_q",
+              "total_veh",
+              "mean_speed",
+              "mean_occ",
+              "green_q",
+              "red_q",
+              "green_down_q",
+              "green_down_occ",
+              "delta_green_q",
+              "delta_red_q",
+              "delta_green_down_q",
+              "delta_green_down_occ",
+              "delta_service_pressure",
+              "delta_switch_indicator",
+              "delta_clearance_fraction",
+              "delta_current_phase_overlap"
+            ],
+            "label_free": false,
+            "minimum_total_vehicles": 1.0,
+            "prototype_count": 4,
+            "support": "exp(-distance)",
+            "support_protocol": "oof-safe-action-nearest-prototype-v1"
+          },
+          "pressure_support": {
+            "distance": "nearest_standardized_rms",
+            "feature_count": 16,
+            "feature_names": [
+              "total_q",
+              "total_veh",
+              "mean_speed",
+              "mean_occ",
+              "green_q",
+              "red_q",
+              "green_down_q",
+              "green_down_occ",
+              "delta_green_q",
+              "delta_red_q",
+              "delta_green_down_q",
+              "delta_green_down_occ",
+              "delta_service_pressure",
+              "delta_switch_indicator",
+              "delta_clearance_fraction",
+              "delta_current_phase_overlap"
+            ],
+            "label_free": true,
+            "minimum_total_vehicles": 0.0,
+            "prototype_count": 746,
+            "support": "exp(-distance)",
+            "support_protocol": "target-action-coverage-nearest-prototype-v1"
+          },
+          "support_protocol": "pressure-and-oof-safe-intersection-v1"
+        }
+      }
+    },
+    "jinan": {
+      "certificate": {
+        "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/jinan/freeze.json",
+        "sha256": "a617c6312fa6e95877a44235b0caa5204cbe3053c1738baf839031255eb8dc2d"
+      },
+      "model": {
+        "path": "cf_h2o/results/cluster/tsc_v60r56_external_v9_hierarchical_freeze_20260810/freeze_v1/jinan/model.pkl",
+        "sha256": "f2685b558733fe7bd7f2170ebe7306fbbe799f4c28ce6bf91f5c5776b0afbb8a"
+      },
+      "selected_candidate": "constant_alpha_0p8",
+      "deployment": {
+        "conformal_guard": {
+          "enabled": false,
+          "margin": 0.0,
+          "max_relative_rule_gap": 1.0,
+          "min_context_trust": 0.0,
+          "risk_multiplier": 1.0
+        },
+        "coordination_mode_before_closed_loop_selection": "direct",
+        "fallback_policy": "phase_pressure",
+        "policy": "cfcmt_hierarchical_guard_mpc",
+        "regularizer": {
+          "blend_weight": 8.0,
+          "enabled": true,
+          "min_context_trust": 0.5,
+          "risk_multiplier": 0.5
+        },
+        "runtime_policy_suffix": "_hierarchical_guard",
+        "target_support": {
+          "combination": "pressure_support_only",
+          "conformal_guard_enabled": false,
+          "conformal_support": {
+            "distance": "nearest_standardized_rms",
+            "feature_count": 16,
+            "feature_names": [
+              "total_q",
+              "total_veh",
+              "mean_speed",
+              "mean_occ",
+              "green_q",
+              "red_q",
+              "green_down_q",
+              "green_down_occ",
+              "delta_green_q",
+              "delta_red_q",
+              "delta_green_down_q",
+              "delta_green_down_occ",
+              "delta_service_pressure",
+              "delta_switch_indicator",
+              "delta_clearance_fraction",
+              "delta_current_phase_overlap"
+            ],
+            "label_free": true,
+            "minimum_total_vehicles": 0.0,
+            "prototype_count": 7288,
+            "support": "exp(-distance)",
+            "support_protocol": "target-action-coverage-nearest-prototype-v1"
+          },
+          "pressure_support": {
+            "distance": "nearest_standardized_rms",
+            "feature_count": 16,
+            "feature_names": [
+              "total_q",
+              "total_veh",
+              "mean_speed",
+              "mean_occ",
+              "green_q",
+              "red_q",
+              "green_down_q",
+              "green_down_occ",
+              "delta_green_q",
+              "delta_red_q",
+              "delta_green_down_q",
+              "delta_green_down_occ",
+              "delta_service_pressure",
+              "delta_switch_indicator",
+              "delta_clearance_fraction",
+              "delta_current_phase_overlap"
+            ],
+            "label_free": true,
+            "minimum_total_vehicles": 0.0,
+            "prototype_count": 7288,
+            "support": "exp(-distance)",
+            "support_protocol": "target-action-coverage-nearest-prototype-v1"
+          },
+          "support_protocol": "pressure-and-oof-safe-intersection-v1"
+        }
+      }
+    }
+  },
+  "environment": {
+    "protocol": {
+      "path": "cf_h2o/config/traffic_signal_tsc_v41_external_v9_full_budget_refit.json",
+      "sha256": "472985aa515aab31849d2072c118b562183beaea9f6bf8f5920f69614ff35548"
+    },
+    "network_parent_protocol": {
+      "path": "cf_h2o/config/traffic_signal_tsc_v40_external_v9_network_repair_confirmation.json",
+      "sha256": "9d35605ea736c5b3938190bd9ce456ac741b26c76e0ede343ea39d65eb26419c"
+    },
+    "external_manifest": {
+      "path": "cf_h2o/config/traffic_signal_tsc_v39_external_la_jinan_v9_manifest.json",
+      "sha256": "636e09d8e2f47d5fefaa26b33b0552373b01f185e77e18896c97751c267c356c"
+    },
+    "conversion_root": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/cluster/tsc_v53r49_external_network_repair_20260810/conversion_v9_authoritative/full_networks_v9",
+    "conversion_manifest": {
+      "path": "cf_h2o/results/cluster/tsc_v53r49_external_network_repair_20260810/conversion_v9_authoritative/full_networks_v9/conversion_manifest.json",
+      "sha256": "b140f2deea63653efd225c53ad306bf910ecf1ee149fb894c202227d7d454f56"
+    },
+    "conversion_tree_sha256": "9aa639a6fde43c4008bc6b4c24e2171ae3135858a437e10bfc65440a002015de",
+    "sumo_version": "1.22.0",
+    "duration_sec": 3600,
+    "control_interval_sec": 10,
+    "warmup_sec": 60,
+    "prediction_horizon_sec": 60
+  },
+  "development": {
+    "seeds": [
+      52282,
+      41242,
+      63792,
+      80722,
+      75638,
+      61337,
+      73385,
+      81189
+    ],
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "policies": [
+      "phase_pressure",
+      "cfcmt_hierarchical_h60_q0",
+      "cfcmt_hierarchical_h60_q1",
+      "cfcmt_hierarchical_h60_q5",
+      "cfcmt_hierarchical_h60_q10",
+      "cfcmt_hierarchical_h90_q0",
+      "cfcmt_hierarchical_h90_q1",
+      "cfcmt_hierarchical_h90_q5",
+      "cfcmt_hierarchical_h90_q10",
+      "cfcmt_hierarchical_h120_q0",
+      "cfcmt_hierarchical_h120_q1",
+      "cfcmt_hierarchical_h120_q5",
+      "cfcmt_hierarchical_h120_q10"
+    ],
+    "phase_policy": "phase_pressure",
+    "method_candidates": [
+      {
+        "key": "cfcmt_hierarchical_h60_q0",
+        "runtime_policy": "causal_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 5,
+        "execution_trust_region": {
+          "key": "h60_q0",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 0.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 5
+        }
+      },
+      {
+        "key": "cfcmt_hierarchical_h60_q1",
+        "runtime_policy": "causal_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 5,
+        "execution_trust_region": {
+          "key": "h60_q1",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 1.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 5
+        }
+      },
+      {
+        "key": "cfcmt_hierarchical_h60_q5",
+        "runtime_policy": "causal_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 5,
+        "execution_trust_region": {
+          "key": "h60_q5",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 5.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 5
+        }
+      },
+      {
+        "key": "cfcmt_hierarchical_h60_q10",
+        "runtime_policy": "causal_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 5,
+        "execution_trust_region": {
+          "key": "h60_q10",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 10.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 5
+        }
+      },
+      {
+        "key": "cfcmt_hierarchical_h90_q0",
+        "runtime_policy": "causal_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 8,
+        "execution_trust_region": {
+          "key": "h90_q0",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 0.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 8
+        }
+      },
+      {
+        "key": "cfcmt_hierarchical_h90_q1",
+        "runtime_policy": "causal_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 8,
+        "execution_trust_region": {
+          "key": "h90_q1",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 1.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 8
+        }
+      },
+      {
+        "key": "cfcmt_hierarchical_h90_q5",
+        "runtime_policy": "causal_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 8,
+        "execution_trust_region": {
+          "key": "h90_q5",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 5.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 8
+        }
+      },
+      {
+        "key": "cfcmt_hierarchical_h90_q10",
+        "runtime_policy": "causal_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 8,
+        "execution_trust_region": {
+          "key": "h90_q10",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 10.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 8
+        }
+      },
+      {
+        "key": "cfcmt_hierarchical_h120_q0",
+        "runtime_policy": "causal_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 11,
+        "execution_trust_region": {
+          "key": "h120_q0",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 0.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 11
+        }
+      },
+      {
+        "key": "cfcmt_hierarchical_h120_q1",
+        "runtime_policy": "causal_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 11,
+        "execution_trust_region": {
+          "key": "h120_q1",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 1.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 11
+        }
+      },
+      {
+        "key": "cfcmt_hierarchical_h120_q5",
+        "runtime_policy": "causal_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 11,
+        "execution_trust_region": {
+          "key": "h120_q5",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 5.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 11
+        }
+      },
+      {
+        "key": "cfcmt_hierarchical_h120_q10",
+        "runtime_policy": "causal_rigid_advantage_contrast_hierarchical_guard",
+        "coordination_mode": "direct",
+        "cooldown_intervals": 11,
+        "execution_trust_region": {
+          "key": "h120_q10",
+          "enabled": true,
+          "min_priority": 0.0,
+          "min_total_queue": 10.0,
+          "min_total_vehicles": 1.0,
+          "max_mean_speed": null,
+          "max_simultaneous_overrides": 1,
+          "global_cooldown_intervals": 11
+        }
+      }
+    ],
+    "candidate_count": 12,
+    "policy_count": 13,
+    "matrix_size": 416,
+    "reporting_unit": "city",
+    "scenario_weighting_within_city": "equal",
+    "seed_weighting": "equal",
+    "common_execution_candidate_across_cities": true,
+    "selection_rule": {
+      "minimum_city_mean_relative_improvement": 0.005,
+      "maximum_bootstrap_95pct_upper_mean_relative_delta": 0.01,
+      "maximum_seed_level_city_mean_relative_regression": 0.01,
+      "minimum_improved_seed_fraction": 0.5,
+      "minimum_executed_interventions_per_scenario_seed": 1,
+      "method_teleports_must_not_exceed_paired_phase_pressure": true,
+      "method_collision_incidents_must_not_exceed_paired_phase_pressure": true,
+      "robust_score": "city_mean_relative_delta + 0.5 * seed_delta_std + max(worst_seed_delta, 0)",
+      "global_selector": "lowest_equal_city_mean_robust_score_among_all_city_feasible_candidates",
+      "tie_break": "lower global robust score, lower equal-city mean delta, fewer interventions, longer cooldown, lexical key",
+      "fallback": "phase_pressure_if_no_common_candidate_is_feasible"
+    },
+    "bootstrap": {
+      "replicates": 10000,
+      "seed": 20260816,
+      "unit": "paired simulator seed with equal scenario weighting within city"
+    }
+  },
+  "validation": {
+    "closed_loop_seeds": [
+      73412,
+      61481,
+      50744,
+      34310,
+      84579,
+      46535,
+      84751,
+      61994,
+      47023,
+      31657,
+      51400,
+      22208,
+      52367,
+      74744,
+      74374,
+      50079
+    ],
+    "must_not_run_until_development_selector_and_analysis_hash_are_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "method_and_execution_candidate_must_be_hash_frozen_before_launch": true
+  },
+  "prospective_confirmation": {
+    "closed_loop_seeds": [
+      10091,
+      11003,
+      12007
+    ],
+    "must_not_run_until_validation_passes_and_prospective_analysis_is_frozen": true,
+    "city_scenarios": {
+      "los_angeles": [
+        "la_1x4"
+      ],
+      "jinan": [
+        "jinan_3x4_real",
+        "jinan_3x4_real_2000",
+        "jinan_3x4_real_2500"
+      ]
+    },
+    "candidate_policies_for_later_freeze": [
+      "cfcmt_oof_validated_mpc",
+      "phase_pressure",
+      "max_pressure",
+      "fixed_time",
+      "rigid_anchor_mpc",
+      "simulator_only_mpc",
+      "h2oplus_style_dense_residual_mpc"
+    ],
+    "release_condition": "validation_gate_passed_and_analysis_hash_frozen"
+  },
+  "claim_boundary": "This protocol can select one execution-only trust region on disclosed development seeds. It cannot support validation, prospective, or general efficacy claims."
+}

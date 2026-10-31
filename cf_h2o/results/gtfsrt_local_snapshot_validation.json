@@ -1,0 +1,406 @@
+{
+  "ok": true,
+  "validation_level": "gtfsrt_local_snapshot_cross_city",
+  "definition": "Cross-city one-step occupancy ordinal prediction from public synchronized AVL/occupancy snapshots.",
+  "data_dir": "/home/erzhu419/mine_code/CFCMT/H2Oplus/downloads/open_transit/gtfsrt_occupancy_snapshots",
+  "datasets": {
+    "nyc_mta_bus": {
+      "label": "NYC MTA Bus",
+      "transitions": 52920,
+      "snapshots": 95,
+      "routes": 241,
+      "vehicles": 1894
+    },
+    "septa_bus": {
+      "label": "SEPTA Bus",
+      "transitions": 17040,
+      "snapshots": 94,
+      "routes": 96,
+      "vehicles": 515
+    },
+    "mbta_live": {
+      "label": "MBTA live",
+      "transitions": 1666,
+      "snapshots": 11,
+      "routes": 63,
+      "vehicles": 156
+    }
+  },
+  "feature_names": {
+    "no_local": [
+      "current_occupancy_ordinal",
+      "current_occupancy_percentage",
+      "has_occupancy_percentage",
+      "lat_city_norm",
+      "lon_city_norm",
+      "current_stop_sequence_norm",
+      "has_stop_sequence",
+      "speed_norm",
+      "has_speed",
+      "current_status_norm",
+      "direction_norm",
+      "hour_sin",
+      "hour_cos",
+      "gap_seconds_norm"
+    ],
+    "static_local": [
+      "current_occupancy_ordinal",
+      "current_occupancy_percentage",
+      "has_occupancy_percentage",
+      "lat_city_norm",
+      "lon_city_norm",
+      "current_stop_sequence_norm",
+      "has_stop_sequence",
+      "speed_norm",
+      "has_speed",
+      "current_status_norm",
+      "direction_norm",
+      "hour_sin",
+      "hour_cos",
+      "gap_seconds_norm",
+      "same_route_vehicle_count",
+      "same_route_occupancy_mean",
+      "same_route_occupancy_std",
+      "same_route_occupancy_max",
+      "same_route_pct_mean",
+      "same_route_pct_present_rate",
+      "same_route_speed_mean",
+      "nearest_distance_km",
+      "nearest_occupancy",
+      "nearest_speed",
+      "front_sequence_gap",
+      "front_occupancy",
+      "front_speed",
+      "back_sequence_gap",
+      "back_occupancy",
+      "back_speed",
+      "front_back_occupancy_delta",
+      "nearby_high_occupancy_rate"
+    ]
+  },
+  "cross_city": [
+    {
+      "target": "mbta_live",
+      "sources": [
+        "nyc_mta_bus",
+        "septa_bus"
+      ],
+      "no_local": {
+        "mse": 0.047122854490841935,
+        "mae": 0.15387749443030896,
+        "rounded_accuracy": 0.9849939975990396,
+        "n_train": 69960,
+        "n_eval": 1666
+      },
+      "static_local": {
+        "mse": 0.048437337271750154,
+        "mae": 0.14763664037442623,
+        "rounded_accuracy": 0.982593037214886,
+        "n_train": 69960,
+        "n_eval": 1666
+      },
+      "selector_gated_static_local": {
+        "mse": 0.047122854490841935,
+        "mae": 0.15387749443030896,
+        "rounded_accuracy": 0.9849939975990396,
+        "n_train": 69960,
+        "n_eval": 1666
+      },
+      "static_vs_no_local": 1.0278948038082811,
+      "selector_vs_no_local": 1.0,
+      "selector": {
+        "folds": [
+          {
+            "heldout": "nyc_mta_bus",
+            "train": [
+              "septa_bus"
+            ],
+            "no_local": {
+              "mse": 3.286430254421466,
+              "mae": 1.457519506506539,
+              "rounded_accuracy": 0.1116780045351474,
+              "n_train": 17040,
+              "n_eval": 52920
+            },
+            "static_local": {
+              "mse": 14.998320305977115,
+              "mae": 3.8528123698056924,
+              "rounded_accuracy": 0.0006802721088435374,
+              "n_train": 17040,
+              "n_eval": 52920
+            },
+            "static_vs_no_local": 4.5637117312314235
+          },
+          {
+            "heldout": "septa_bus",
+            "train": [
+              "nyc_mta_bus"
+            ],
+            "no_local": {
+              "mse": 0.6456879437026863,
+              "mae": 0.6422439528941951,
+              "rounded_accuracy": 0.44917840375586854,
+              "n_train": 52920,
+              "n_eval": 17040
+            },
+            "static_local": {
+              "mse": 0.6614609357912528,
+              "mae": 0.6490476776432321,
+              "rounded_accuracy": 0.44366197183098594,
+              "n_train": 52920,
+              "n_eval": 17040
+            },
+            "static_vs_no_local": 1.0244281966891258
+          }
+        ],
+        "mean_static_vs_no_local": 2.7940699639602746,
+        "static_win_rate": 0.0,
+        "min_win_rate": 1.0,
+        "min_improvement": 0.0,
+        "selected": "no_local"
+      }
+    },
+    {
+      "target": "nyc_mta_bus",
+      "sources": [
+        "mbta_live",
+        "septa_bus"
+      ],
+      "no_local": {
+        "mse": 0.15687612371919393,
+        "mae": 0.23535837036671448,
+        "rounded_accuracy": 0.8305177626606198,
+        "n_train": 18706,
+        "n_eval": 52920
+      },
+      "static_local": {
+        "mse": 0.15641108022305522,
+        "mae": 0.220994528306626,
+        "rounded_accuracy": 0.8311980347694633,
+        "n_train": 18706,
+        "n_eval": 52920
+      },
+      "selector_gated_static_local": {
+        "mse": 0.15687612371919393,
+        "mae": 0.23535837036671448,
+        "rounded_accuracy": 0.8305177626606198,
+        "n_train": 18706,
+        "n_eval": 52920
+      },
+      "static_vs_no_local": 0.997035600541921,
+      "selector_vs_no_local": 1.0,
+      "selector": {
+        "folds": [
+          {
+            "heldout": "mbta_live",
+            "train": [
+              "septa_bus"
+            ],
+            "no_local": {
+              "mse": 3.7982916049643887,
+              "mae": 1.5986982702816965,
+              "rounded_accuracy": 0.12064825930372149,
+              "n_train": 17040,
+              "n_eval": 1666
+            },
+            "static_local": {
+              "mse": 15.831332533013205,
+              "mae": 3.9645858343337337,
+              "rounded_accuracy": 0.006602641056422569,
+              "n_train": 17040,
+              "n_eval": 1666
+            },
+            "static_vs_no_local": 4.16801398616198
+          },
+          {
+            "heldout": "septa_bus",
+            "train": [
+              "mbta_live"
+            ],
+            "no_local": {
+              "mse": 1.985499279811335,
+              "mae": 1.0535811085801636,
+              "rounded_accuracy": 0.3137323943661972,
+              "n_train": 1666,
+              "n_eval": 17040
+            },
+            "static_local": {
+              "mse": 2.040482648499286,
+              "mae": 1.061938755194181,
+              "rounded_accuracy": 0.3136737089201878,
+              "n_train": 1666,
+              "n_eval": 17040
+            },
+            "static_vs_no_local": 1.0276924646848402
+          }
+        ],
+        "mean_static_vs_no_local": 2.59785322542341,
+        "static_win_rate": 0.0,
+        "min_win_rate": 1.0,
+        "min_improvement": 0.0,
+        "selected": "no_local"
+      }
+    },
+    {
+      "target": "septa_bus",
+      "sources": [
+        "mbta_live",
+        "nyc_mta_bus"
+      ],
+      "no_local": {
+        "mse": 0.639870879625638,
+        "mae": 0.6164069663105324,
+        "rounded_accuracy": 0.3968896713615023,
+        "n_train": 54586,
+        "n_eval": 17040
+      },
+      "static_local": {
+        "mse": 0.6457154150980134,
+        "mae": 0.6307539532190938,
+        "rounded_accuracy": 0.4232981220657277,
+        "n_train": 54586,
+        "n_eval": 17040
+      },
+      "selector_gated_static_local": {
+        "mse": 0.639870879625638,
+        "mae": 0.6164069663105324,
+        "rounded_accuracy": 0.3968896713615023,
+        "n_train": 54586,
+        "n_eval": 17040
+      },
+      "static_vs_no_local": 1.009133929451196,
+      "selector_vs_no_local": 1.0,
+      "selector": {
+        "folds": [
+          {
+            "heldout": "mbta_live",
+            "train": [
+              "nyc_mta_bus"
+            ],
+            "no_local": {
+              "mse": 0.045696524810936,
+              "mae": 0.07911445133497566,
+              "rounded_accuracy": 0.9843937575030012,
+              "n_train": 52920,
+              "n_eval": 1666
+            },
+            "static_local": {
+              "mse": 0.05019844819561638,
+              "mae": 0.07116916007110917,
+              "rounded_accuracy": 0.9843937575030012,
+              "n_train": 52920,
+              "n_eval": 1666
+            },
+            "static_vs_no_local": 1.0985178501714639
+          },
+          {
+            "heldout": "nyc_mta_bus",
+            "train": [
+              "mbta_live"
+            ],
+            "no_local": {
+              "mse": 1.4661249328051844,
+              "mae": 1.1460719063716722,
+              "rounded_accuracy": 0.00011337868480725624,
+              "n_train": 1666,
+              "n_eval": 52920
+            },
+            "static_local": {
+              "mse": 1.4663244577550818,
+              "mae": 1.1461199012927044,
+              "rounded_accuracy": 0.00011337868480725624,
+              "n_train": 1666,
+              "n_eval": 52920
+            },
+            "static_vs_no_local": 1.0001360900053147
+          }
+        ],
+        "mean_static_vs_no_local": 1.0493269700883894,
+        "static_win_rate": 0.0,
+        "min_win_rate": 1.0,
+        "min_improvement": 0.0,
+        "selected": "no_local"
+      }
+    }
+  ],
+  "temporal_single_city": [
+    {
+      "target": "mbta_live",
+      "no_local": {
+        "mse": 0.001973929264624904,
+        "mae": 0.007698108474573263,
+        "rounded_accuracy": 0.998,
+        "n_train": 1166,
+        "n_eval": 500
+      },
+      "static_local": {
+        "mse": 0.002011434814105679,
+        "mae": 0.008792649349814177,
+        "rounded_accuracy": 0.998,
+        "n_train": 1166,
+        "n_eval": 500
+      },
+      "static_vs_no_local": 1.019000452626605
+    },
+    {
+      "target": "nyc_mta_bus",
+      "no_local": {
+        "mse": 0.15482890925672244,
+        "mae": 0.2580929118358449,
+        "rounded_accuracy": 0.8167044595616024,
+        "n_train": 37044,
+        "n_eval": 15876
+      },
+      "static_local": {
+        "mse": 0.1522293097394185,
+        "mae": 0.25544637592504776,
+        "rounded_accuracy": 0.8258377425044092,
+        "n_train": 37044,
+        "n_eval": 15876
+      },
+      "static_vs_no_local": 0.9832098570623299
+    },
+    {
+      "target": "septa_bus",
+      "no_local": {
+        "mse": 0.5799398317040891,
+        "mae": 0.5848319056278085,
+        "rounded_accuracy": 0.5213223787167449,
+        "n_train": 11928,
+        "n_eval": 5112
+      },
+      "static_local": {
+        "mse": 0.5742529721488101,
+        "mae": 0.581110254733184,
+        "rounded_accuracy": 0.5267996870109546,
+        "n_train": 11928,
+        "n_eval": 5112
+      },
+      "static_vs_no_local": 0.990194052478567
+    }
+  ],
+  "summary": {
+    "cross_city": {
+      "no_local": {
+        "mean_mse": 0.2812899526118913,
+        "wins_vs_no_local": 0
+      },
+      "static_local": {
+        "mean_mse": 0.28352127753093964,
+        "wins_vs_no_local": 1
+      },
+      "selector_gated_static_local": {
+        "mean_mse": 0.2812899526118913,
+        "wins_vs_no_local": 0
+      },
+      "static_local_mean_vs_no_local": 1.0113547779337992,
+      "selector_mean_vs_no_local": 1.0
+    },
+    "temporal_static_mean_vs_no_local": 0.9974681207225006
+  },
+  "limitations": [
+    "GTFS-RT occupancy is crowding status/percentage, not exact APC board/alight counts.",
+    "No holding/control action is observed.",
+    "NYC and SEPTA archive samples are hourly-spaced snapshots; MBTA live samples are short-interval self-archive snapshots."
+  ]
+}

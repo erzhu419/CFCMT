@@ -1,0 +1,172 @@
+{
+  "analysis_contract": {
+    "city": "jinan",
+    "city_aggregation": "equal_scenario_within_seed",
+    "pairing_unit": "seed",
+    "primary_comparison": "source_guard_vs_pressure_rule",
+    "primary_metric": "mean_tripinfo_waiting_time",
+    "secondary_source_comparison": "source_guard_vs_target_only_guard",
+    "safety_metrics": [
+      "collision_incidents",
+      "starting_teleports",
+      "ending_teleports"
+    ],
+    "uncertainty": "paired_seed_bootstrap_and_wilcoxon"
+  },
+  "candidate_semantics": {
+    "pressure_rule": "exact phase_pressure runtime with no residual model",
+    "source_guard": "strict target-only anchor plus B100-selected Hangzhou source mass 1.0 under the B100-selected deployment guard",
+    "target_only_guard": "strict target-only anchor with zero source rows under the same B100-selected deployment guard"
+  },
+  "candidates": [
+    {
+      "baseline_policy": "phase_pressure",
+      "key": "pressure_rule",
+      "weights_by_city": {
+        "jinan": {},
+        "los_angeles": {}
+      }
+    },
+    {
+      "guard_by_city": {
+        "jinan": {
+          "enabled": true,
+          "margin": 0.0,
+          "max_relative_rule_gap": 1.0,
+          "min_context_trust": 0.1,
+          "risk_multiplier": 0.0
+        },
+        "los_angeles": null
+      },
+      "key": "target_only_guard",
+      "weights_by_city": {
+        "jinan": {},
+        "los_angeles": {}
+      }
+    },
+    {
+      "guard_by_city": {
+        "jinan": {
+          "enabled": true,
+          "margin": 0.0,
+          "max_relative_rule_gap": 1.0,
+          "min_context_trust": 0.1,
+          "risk_multiplier": 0.0
+        },
+        "los_angeles": null
+      },
+      "key": "source_guard",
+      "weights_by_city": {
+        "jinan": {
+          "hangzhou": 1.0
+        },
+        "los_angeles": {}
+      }
+    }
+  ],
+  "confirmation_seed_generation": {
+    "draw_protocol": "sorted_unique_uniform_integers_excluding_v93_development_confirmation_and_v98_confirmation_v1_v2",
+    "excluded_seed_count": 176,
+    "high_exclusive": 10000000,
+    "low_inclusive": 1000000,
+    "numpy_generator": "PCG64",
+    "seed": 1110032
+  },
+  "confirmation_seeds": [
+    1044014,
+    1226452,
+    1263852,
+    1366659,
+    1371709,
+    1669006,
+    1755591,
+    1756133,
+    1775686,
+    1789601,
+    2101297,
+    2135373,
+    2152635,
+    2193354,
+    2290151,
+    2593725,
+    2617666,
+    2619231,
+    2643051,
+    3053554,
+    3085859,
+    3256378,
+    3306048,
+    3406598,
+    3658522,
+    4148290,
+    4249888,
+    4307334,
+    4607242,
+    4993767,
+    4998993,
+    5010182,
+    5302672,
+    5545473,
+    5709453,
+    5875275,
+    6072407,
+    6167083,
+    6328514,
+    6532879,
+    7172710,
+    7392694,
+    7555088,
+    7609240,
+    7999002,
+    8049499,
+    8194067,
+    8451027,
+    8457095,
+    8694020,
+    8767991,
+    9451040,
+    9751459,
+    9758584,
+    9901104,
+    9950902
+  ],
+  "offline_source_guard_contract": {
+    "familywise_alpha_budget": {
+      "deployment_guard": 0.025,
+      "source_identity_and_weight": 0.025,
+      "total": 0.05
+    },
+    "jinan_result_sha256": "b675317b1056f861e2127dc89b58c70e9162dec808582dcb264a03e8c408b340",
+    "los_angeles_result_sha256": "00a9de25486806b0a054a1de201b6df45c5633425e4d9cd06300b11b2f50778e",
+    "selected_guard_config": {
+      "enabled": true,
+      "margin": 0.0,
+      "max_relative_rule_gap": 1.0,
+      "min_context_trust": 0.1,
+      "risk_multiplier": 0.0
+    },
+    "selected_guard_profile_key": "risk_0__gap_1",
+    "selected_source_city_group": "hangzhou",
+    "selected_source_weight": 1.0,
+    "target_closed_loop_rollouts_used_for_selection": false,
+    "target_group_budget": 100
+  },
+  "protocol": "tsc-v93-source-city-candidate-grid-v1",
+  "scientific_status": "frozen-before-v111-fresh-seed-closed-loop-confirmation",
+  "source_groups": [
+    "atlanta",
+    "cologne",
+    "hangzhou",
+    "ingolstadt",
+    "new_york",
+    "resco_synthetic",
+    "salt_lake_city"
+  ],
+  "strict_target_only_contract": {
+    "family": "causal_target_only_v2",
+    "jinan_model_sha256": "3424307a5399c4fbed63bc3158001adaf53eaa8ef04d53daf56c5eef744fdd13",
+    "los_angeles_model_sha256": "82aef6b8b95528f0ff6c63b4ed9b5f4f51fd8b36aa0773c0b6d75289a9300f73",
+    "model_protocol": "cfcmt-strict-target-only-action-model-v1",
+    "source_rows_consumed": 0
+  }
+}

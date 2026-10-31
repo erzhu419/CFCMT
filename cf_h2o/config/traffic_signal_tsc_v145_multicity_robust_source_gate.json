@@ -1,0 +1,36 @@
+{
+  "protocol": "tsc-v145-multicity-robust-source-gate-v1",
+  "scientific_role": "post-v144-seven-city-development-not-confirmation",
+  "target_city_groups": [
+    "atlanta",
+    "cologne",
+    "hangzhou",
+    "ingolstadt",
+    "new_york",
+    "resco_synthetic",
+    "salt_lake_city"
+  ],
+  "target_budget": 25,
+  "selector_information": "b25_adaptation_model_actions_and_phase_pressure_reference_only",
+  "outer_label_exclusion": "heldout_city_absent_as_source_and_target",
+  "selection_rule": {
+    "maximum_history_regression": 0.005,
+    "minimum_history_q75_improvement": 0.0005,
+    "maximum_adaptation_intervention_fraction": 0.9,
+    "robust_source_score": "mean_source_minus_target_only_over_meta_targets",
+    "fallback": "minimum_adaptation_intervention_source",
+    "high_intervention_fallback": "source_null"
+  },
+  "development_gate": {
+    "primary_comparators": [
+      "target_only_causal",
+      "pooled_h2oplus",
+      "matched_source_placebo"
+    ],
+    "minimum_mean_improvement": 0.0005,
+    "minimum_improving_cities": 5,
+    "maximum_city_regression": 0.01,
+    "one_sided_confidence": 0.95
+  },
+  "successor_boundary": "A pass authorizes only a separately frozen untouched-city protocol."
+}

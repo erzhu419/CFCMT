@@ -1,0 +1,64 @@
+{
+  "training_seeds": [
+    75101,
+    75102,
+    75103
+  ],
+  "initialization_updates": 50000,
+  "adaptation_updates": 5000,
+  "continuation_updates": 20000,
+  "target_fit_rows": 12288,
+  "target_union_rows": 16384,
+  "source_rows": 3284718,
+  "device": "cpu",
+  "evaluation": {
+    "episode_seconds": 24000,
+    "demand_scale": 1.0,
+    "rule": "forward_proportional",
+    "rule_gain": 0.6,
+    "cases": [
+      {
+        "case": 0,
+        "demand_seed": 72501,
+        "sumo_seed": 73501
+      },
+      {
+        "case": 1,
+        "demand_seed": 72502,
+        "sumo_seed": 73502
+      },
+      {
+        "case": 2,
+        "demand_seed": 72503,
+        "sumo_seed": 73503
+      }
+    ],
+    "test_separation": "New fixed demand/SUMO seed realizations, disjoint from fit/stop/calibrate; same pinned timetable and generated route corridors.",
+    "comparison": "Three training seeds, three paired generated demand days; retain every branch/day/seed and compare all-seed means.",
+    "primary_cost": "(2*wait_passenger_seconds+in_vehicle_passenger_seconds)/departed_passengers",
+    "completion": "Report completion rate and departed/completed counts alongside cost.",
+    "interpretation": "Bounded pilot on one target city; no population-level CI or city removal."
+  },
+  "code_boundary": "Existing CFCMT frozen runtime, executor and assets; no mutable Thesis imports or writes.",
+  "name": "cfcmt-bus-full-source-iql-continuation-v1",
+  "model_loss_coefficient": 0.0,
+  "world_model_refit_updates": 0,
+  "initializers": "Same three fixed source_dense_adaptation/seedN/adapted.pt; load optimizers and counter5000. Retain every seed; no new initializer, checkpoint selection or column reset.",
+  "fixed_training": "Existing offline IQL kernel: config offline_objective=iql, online_fraction0, ratio correction off; update online=False. V(next) critic backup, expectile value and advantage-weighted behavior-cloning actor. No SAC actor/temperature update or ModelContinuation construction. Same CPU, fit12288, batch/LRs/reward scale/config; global and learner RNG N+20000; exactly20000updates, total counter25000 and historical75000.",
+  "intervention": "Compare the offline IQL kernel with the completed real-SAC kernel as a whole, including backup/actor/update ordering. This does not isolate entropy or actor alone.",
+  "admission": "Separate seed75101 learner: four actual offline IQL updates and one full24000s evaluation. Check saved/reloaded actor, update counts, unchanged log_alpha, zero additional online critic updates, no synthetic TD, and paired evaluation identity. Interface-only; not a performance candidate.",
+  "comparisons": [
+    "full_source_real",
+    "full_source_model",
+    "full_source_adapted",
+    "strong_rule",
+    "target_model",
+    "cross_city",
+    "target_only"
+  ],
+  "checkpoint_rule": "Fixed final actor after20000updates; retain final_learner.pt for later numerical diagnosis. No checkpoint/seed selection.",
+  "reference_policy": "Primary equal-update reference: completed real-SAC modelTD0 at75000historical updates; model-SAC modelTD0.25 also75000. Adapted-only55000 is a phase reference, then rule/local/oldcross context. Use all nine exactseed/case pairs and require matching demand/SUMO/version/line_ids/horizon/passenger count and zero ledger error.",
+  "data_boundary": "Same source3284718 and target union16384/fit12288, no additional collection or model fitting. Both continued kernels use75000historical policy updates; adapted-only has55000.",
+  "interpretation": "Frozen kernel diagnostic on three training seeds and three previously analyzed generated demand days in one target corridor city; no prospective test, physical sim-to-real or cross-city population claim. No new training simulator events and no Thesis changes.",
+  "next_decision": "Compare all-seed mean and all per-seed/case costs with real-SAC and adapted-only; report wait/ride, completion and executed holding. Determine whether extra offline updates or switching kernels explains the observed degradation; no entropy/hold threshold retuning or seed removal."
+}

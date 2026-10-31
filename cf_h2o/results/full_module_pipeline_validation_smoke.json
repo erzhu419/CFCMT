@@ -1,0 +1,956 @@
+{
+  "ok": true,
+  "validation_level": "full_module_cross_city_pipeline",
+  "config": "/home/erzhu419/mine_code/CFCMT/cf_h2o/config/cross_city_open_transit.json",
+  "elapsed_sec": 3.3612842559814453,
+  "args": {
+    "config": "cf_h2o/config/cross_city_open_transit.json",
+    "out": "cf_h2o/results/full_module_pipeline_validation_smoke.json",
+    "graph_artifact_dir": "cf_h2o/results/full_module_graphs",
+    "device": "cpu",
+    "seed": 97,
+    "workers": 1,
+    "actions": [
+      0.0,
+      30.0
+    ],
+    "chunk_rows": 200000,
+    "ridge_chunk_rows": 100000,
+    "max_lines_per_city": 2,
+    "max_train_rows_per_city": 800,
+    "max_eval_rows_per_city": 800,
+    "max_graph_rows": 800,
+    "max_splits": 1,
+    "split_names": "",
+    "ridge": 1.0,
+    "hidden_dim": 24,
+    "neural_batch_size": 256,
+    "eval_batch_size": 512,
+    "sim_epochs": 1,
+    "residual_epochs": 2,
+    "lr": 0.002,
+    "residual_lr": 0.002,
+    "weight_decay": 1e-05,
+    "history_len": 2,
+    "local_embedding_dim": 16,
+    "dag_bootstrap_runs": 1,
+    "dag_ridge_l2": 0.001,
+    "dag_score_threshold": 0.04,
+    "dag_score_temperature": 0.04,
+    "dag_max_parents": 8,
+    "parent_threshold": 0.25,
+    "parent_top_k": 8,
+    "no_aux_features": false,
+    "allow_id_parents": false,
+    "trust_residual_scale": 0.0,
+    "trust_uncertainty_scale": 0.15,
+    "trust_graph_uncertainty_scale": 0.25
+  },
+  "city_rows": {
+    "austin_capmetro_all": 2544,
+    "halifax_transit_all": 2208,
+    "mbta_all": 1536,
+    "singapore_lta_all": 3264
+  },
+  "splits": [
+    {
+      "name": "source_open_na_to_singapore",
+      "source_envs": [
+        "austin_capmetro_all",
+        "halifax_transit_all",
+        "mbta_all"
+      ],
+      "target_env": "singapore_lta_all",
+      "train_rows": 2400,
+      "eval_rows": 800,
+      "graph_rows": 800,
+      "methods": {
+        "uncalibrated": {
+          "total_mse": 563.3036060662948,
+          "dynamic_mse": 633.7160693158519,
+          "reward_mse": 0.003900069837911918,
+          "per_output_mse": {
+            "next_forward_headway": 1060.0325590543753,
+            "next_backward_headway": 455.0025457584672,
+            "next_waiting_passengers": 627.4082180356854,
+            "next_base_stop_duration": 2.774276224398559,
+            "next_gap": 2866.0010891082266,
+            "next_co_line_forward_headway": 30.811546945032898,
+            "next_co_line_backward_headway": 11.038826211788692,
+            "next_segment_mean_speed": 16.65949318883968,
+            "reward": 0.003900069837911918
+          }
+        },
+        "h2oplus_dense_ridge": {
+          "total_mse": 581.0372045253122,
+          "dynamic_mse": 653.6665047188553,
+          "reward_mse": 0.0028029769677568434,
+          "per_output_mse": {
+            "next_forward_headway": 1146.213232774032,
+            "next_backward_headway": 404.37738583485486,
+            "next_waiting_passengers": 682.724609029237,
+            "next_base_stop_duration": 0.8862802385571801,
+            "next_gap": 2911.147795549452,
+            "next_co_line_forward_headway": 37.01525813365522,
+            "next_co_line_backward_headway": 13.195801251167374,
+            "next_segment_mean_speed": 33.77167493988705,
+            "reward": 0.0028029769677568434
+          }
+        },
+        "cfcmt_ridge_template": {
+          "total_mse": 558.858356101808,
+          "dynamic_mse": 628.715317065294,
+          "reward_mse": 0.0026683939191734373,
+          "per_output_mse": {
+            "next_forward_headway": 1089.0089312528046,
+            "next_backward_headway": 386.2225122966164,
+            "next_waiting_passengers": 713.475250433848,
+            "next_base_stop_duration": 1.0087763428882468,
+            "next_gap": 2771.7643491319986,
+            "next_co_line_forward_headway": 35.10961230134251,
+            "next_co_line_backward_headway": 12.536239659763153,
+            "next_segment_mean_speed": 20.596865103090686,
+            "reward": 0.0026683939191734373
+          }
+        },
+        "neural_template_graph": {
+          "total_mse": 630.2763399029328,
+          "dynamic_mse": 709.0605184781942,
+          "reward_mse": 0.0029113008410025397,
+          "per_output_mse": {
+            "next_forward_headway": 1585.8991592524922,
+            "next_backward_headway": 651.8526735827793,
+            "next_waiting_passengers": 641.2085446993624,
+            "next_base_stop_duration": 1.860664214053644,
+            "next_gap": 2720.922923282577,
+            "next_co_line_forward_headway": 36.25855635090382,
+            "next_co_line_backward_headway": 15.941525353826583,
+            "next_segment_mean_speed": 18.54010108955903,
+            "reward": 0.0029113008410025397
+          }
+        },
+        "neural_autodag": {
+          "total_mse": 609.389615957482,
+          "dynamic_mse": 685.5629695216081,
+          "reward_mse": 0.002787444473101185,
+          "per_output_mse": {
+            "next_forward_headway": 1358.785703735397,
+            "next_backward_headway": 576.6510844379733,
+            "next_waiting_passengers": 626.6748902004532,
+            "next_base_stop_duration": 2.0712475714402183,
+            "next_gap": 2857.3343434425624,
+            "next_co_line_forward_headway": 32.539527570913776,
+            "next_co_line_backward_headway": 11.677399163935334,
+            "next_segment_mean_speed": 18.769560050190158,
+            "reward": 0.002787444473101185
+          }
+        },
+        "neural_autodag_latent": {
+          "total_mse": 585.1956767558562,
+          "dynamic_mse": 658.3447783868589,
+          "reward_mse": 0.0028637078335786216,
+          "per_output_mse": {
+            "next_forward_headway": 1412.769910880297,
+            "next_backward_headway": 611.2663468249015,
+            "next_waiting_passengers": 622.8627036961287,
+            "next_base_stop_duration": 2.1315972619675825,
+            "next_gap": 2547.539143506636,
+            "next_co_line_forward_headway": 38.55863585970481,
+            "next_co_line_backward_headway": 13.781962909209541,
+            "next_segment_mean_speed": 17.847926156026634,
+            "reward": 0.0028637078335786216
+          }
+        },
+        "neural_autodag_latent_trust_gate": {
+          "total_mse": 580.6052578303027,
+          "dynamic_mse": 653.1805556052475,
+          "reward_mse": 0.00287563074413443,
+          "per_output_mse": {
+            "next_forward_headway": 1386.7357032297411,
+            "next_backward_headway": 593.7388832911092,
+            "next_waiting_passengers": 620.033486832262,
+            "next_base_stop_duration": 2.2134292861165066,
+            "next_gap": 2552.970176760474,
+            "next_co_line_forward_headway": 38.259712350239276,
+            "next_co_line_backward_headway": 13.650005388781429,
+            "next_segment_mean_speed": 17.84304770325735,
+            "reward": 0.00287563074413443
+          }
+        },
+        "neural_autodag_latent_cfcmt_fallback_trust": {
+          "total_mse": 582.6693309963355,
+          "dynamic_mse": 655.5026418691198,
+          "reward_mse": 0.0028440140609301613,
+          "per_output_mse": {
+            "next_forward_headway": 1403.005981121252,
+            "next_backward_headway": 604.3165052468382,
+            "next_waiting_passengers": 628.9296106580005,
+            "next_base_stop_duration": 1.8977659473957738,
+            "next_gap": 2535.795440609049,
+            "next_co_line_forward_headway": 38.47315669764037,
+            "next_co_line_backward_headway": 13.752176088001907,
+            "next_segment_mean_speed": 17.85049858478004,
+            "reward": 0.0028440140609301613
+          }
+        },
+        "neural_autodag_latent_local": {
+          "total_mse": 506.5347705304709,
+          "dynamic_mse": 569.8512585526685,
+          "reward_mse": 0.0028663528904241662,
+          "per_output_mse": {
+            "next_forward_headway": 1046.4499710602522,
+            "next_backward_headway": 404.69728122937727,
+            "next_waiting_passengers": 619.4577448952529,
+            "next_base_stop_duration": 2.1698539488309665,
+            "next_gap": 2415.9584030704336,
+            "next_co_line_forward_headway": 37.78976800219272,
+            "next_co_line_backward_headway": 13.905634514926932,
+            "next_segment_mean_speed": 18.38141170008131,
+            "reward": 0.0028663528904241662
+          }
+        },
+        "neural_autodag_latent_local_trust_gate": {
+          "total_mse": 505.9118551962005,
+          "dynamic_mse": 569.1504784650826,
+          "reward_mse": 0.0028690451432149787,
+          "per_output_mse": {
+            "next_forward_headway": 1038.8999134361022,
+            "next_backward_headway": 399.7856742885208,
+            "next_waiting_passengers": 618.9827599081646,
+            "next_base_stop_duration": 2.244019926859694,
+            "next_gap": 2423.734837629183,
+            "next_co_line_forward_headway": 37.45232753804535,
+            "next_co_line_backward_headway": 13.729753587739543,
+            "next_segment_mean_speed": 18.374541406046216,
+            "reward": 0.0028690451432149787
+          }
+        },
+        "neural_autodag_latent_local_cfcmt_fallback_trust": {
+          "total_mse": 505.7707382453964,
+          "dynamic_mse": 568.9917256922072,
+          "reward_mse": 0.00283867091016456,
+          "per_output_mse": {
+            "next_forward_headway": 1045.0462724830504,
+            "next_backward_headway": 402.64450134371873,
+            "next_waiting_passengers": 625.3365165632147,
+            "next_base_stop_duration": 1.9253216412684402,
+            "next_gap": 2407.0372935429864,
+            "next_co_line_forward_headway": 37.703134064644985,
+            "next_co_line_backward_headway": 13.85827636825476,
+            "next_segment_mean_speed": 18.382489530519855,
+            "reward": 0.00283867091016456
+          }
+        }
+      },
+      "ratios": {
+        "uncalibrated": {
+          "total_mse": 563.3036060662948,
+          "vs_h2oplus_dense_ridge": 0.969479409716104,
+          "vs_uncalibrated": 1.0
+        },
+        "h2oplus_dense_ridge": {
+          "total_mse": 581.0372045253122,
+          "vs_h2oplus_dense_ridge": 1.0,
+          "vs_uncalibrated": 1.0314814218621038
+        },
+        "cfcmt_ridge_template": {
+          "total_mse": 558.858356101808,
+          "vs_h2oplus_dense_ridge": 0.9618288669800008,
+          "vs_uncalibrated": 0.9921086073005475
+        },
+        "neural_template_graph": {
+          "total_mse": 630.2763399029328,
+          "vs_h2oplus_dense_ridge": 1.0847435155513792,
+          "vs_uncalibrated": 1.1188927837766336
+        },
+        "neural_autodag": {
+          "total_mse": 609.389615957482,
+          "vs_h2oplus_dense_ridge": 1.0487962065274852,
+          "vs_uncalibrated": 1.081813802352551
+        },
+        "neural_autodag_latent": {
+          "total_mse": 585.1956767558562,
+          "vs_h2oplus_dense_ridge": 1.007156980995634,
+          "vs_uncalibrated": 1.0388637147957205
+        },
+        "neural_autodag_latent_trust_gate": {
+          "total_mse": 580.6052578303027,
+          "vs_h2oplus_dense_ridge": 0.9992565937402195,
+          "vs_uncalibrated": 1.030714612116244
+        },
+        "neural_autodag_latent_cfcmt_fallback_trust": {
+          "total_mse": 582.6693309963355,
+          "vs_h2oplus_dense_ridge": 1.0028089878897801,
+          "vs_uncalibrated": 1.0343788406846477
+        },
+        "neural_autodag_latent_local": {
+          "total_mse": 506.5347705304709,
+          "vs_h2oplus_dense_ridge": 0.8717768270007645,
+          "vs_uncalibrated": 0.8992216010611819
+        },
+        "neural_autodag_latent_local_trust_gate": {
+          "total_mse": 505.9118551962005,
+          "vs_h2oplus_dense_ridge": 0.8707047522189452,
+          "vs_uncalibrated": 0.8981157758408883
+        },
+        "neural_autodag_latent_local_cfcmt_fallback_trust": {
+          "total_mse": 505.7707382453964,
+          "vs_h2oplus_dense_ridge": 0.8704618814531748,
+          "vs_uncalibrated": 0.8978652591580828
+        }
+      },
+      "module_diagnostics": {
+        "template": {
+          "metrics": {
+            "total_mse": 630.2763399029328,
+            "dynamic_mse": 709.0605184781942,
+            "reward_mse": 0.0029113008410025397,
+            "per_output_mse": {
+              "next_forward_headway": 1585.8991592524922,
+              "next_backward_headway": 651.8526735827793,
+              "next_waiting_passengers": 641.2085446993624,
+              "next_base_stop_duration": 1.860664214053644,
+              "next_gap": 2720.922923282577,
+              "next_co_line_forward_headway": 36.25855635090382,
+              "next_co_line_backward_headway": 15.941525353826583,
+              "next_segment_mean_speed": 18.54010108955903,
+              "reward": 0.0029113008410025397
+            }
+          },
+          "sim_training": {
+            "initial_loss": 0.9262828946113586,
+            "final_loss": 0.9262828946113586,
+            "epochs": 1.0
+          },
+          "residual_training": {
+            "initial_loss": 1.0426468908786775,
+            "final_loss": 0.8347597599029541,
+            "epochs": 2.0,
+            "residual_trained": 1.0,
+            "mode": "paired"
+          },
+          "num_parameters": 8082
+        },
+        "autodag_neural": {
+          "metrics": {
+            "total_mse": 609.389615957482,
+            "dynamic_mse": 685.5629695216081,
+            "reward_mse": 0.002787444473101185,
+            "per_output_mse": {
+              "next_forward_headway": 1358.785703735397,
+              "next_backward_headway": 576.6510844379733,
+              "next_waiting_passengers": 626.6748902004532,
+              "next_base_stop_duration": 2.0712475714402183,
+              "next_gap": 2857.3343434425624,
+              "next_co_line_forward_headway": 32.539527570913776,
+              "next_co_line_backward_headway": 11.677399163935334,
+              "next_segment_mean_speed": 18.769560050190158,
+              "reward": 0.002787444473101185
+            }
+          },
+          "sim_training": {
+            "initial_loss": 1.0648907840251922,
+            "final_loss": 1.0648907840251922,
+            "epochs": 1.0
+          },
+          "residual_training": {
+            "initial_loss": 1.0485288858413697,
+            "final_loss": 0.8356245040893555,
+            "epochs": 2.0,
+            "residual_trained": 1.0,
+            "mode": "paired"
+          },
+          "num_parameters": 8562
+        },
+        "latent": {
+          "metrics": {
+            "total_mse": 585.1956767558562,
+            "dynamic_mse": 658.3447783868589,
+            "reward_mse": 0.0028637078335786216,
+            "per_output_mse": {
+              "next_forward_headway": 1412.769910880297,
+              "next_backward_headway": 611.2663468249015,
+              "next_waiting_passengers": 622.8627036961287,
+              "next_base_stop_duration": 2.1315972619675825,
+              "next_gap": 2547.539143506636,
+              "next_co_line_forward_headway": 38.55863585970481,
+              "next_co_line_backward_headway": 13.781962909209541,
+              "next_segment_mean_speed": 17.847926156026634,
+              "reward": 0.0028637078335786216
+            }
+          },
+          "sim_training": {
+            "initial_loss": 0.9136416018009186,
+            "final_loss": 0.9136416018009186,
+            "epochs": 1.0
+          },
+          "residual_training": {
+            "residual_trained": 1.0,
+            "mode": "paired_joint_factor_encoder",
+            "initial_loss": 1.0603029489517213,
+            "final_loss": 0.8722210943698883,
+            "epochs": 2.0
+          },
+          "num_parameters": 11379,
+          "trust_gated_metrics": {
+            "total_mse": 580.6052578303027,
+            "dynamic_mse": 653.1805556052475,
+            "reward_mse": 0.00287563074413443,
+            "per_output_mse": {
+              "next_forward_headway": 1386.7357032297411,
+              "next_backward_headway": 593.7388832911092,
+              "next_waiting_passengers": 620.033486832262,
+              "next_base_stop_duration": 2.2134292861165066,
+              "next_gap": 2552.970176760474,
+              "next_co_line_forward_headway": 38.259712350239276,
+              "next_co_line_backward_headway": 13.650005388781429,
+              "next_segment_mean_speed": 17.84304770325735,
+              "reward": 0.00287563074413443
+            }
+          },
+          "cfcmt_fallback_trust_metrics": {
+            "total_mse": 582.6693309963355,
+            "dynamic_mse": 655.5026418691198,
+            "reward_mse": 0.0028440140609301613,
+            "per_output_mse": {
+              "next_forward_headway": 1403.005981121252,
+              "next_backward_headway": 604.3165052468382,
+              "next_waiting_passengers": 628.9296106580005,
+              "next_base_stop_duration": 1.8977659473957738,
+              "next_gap": 2535.795440609049,
+              "next_co_line_forward_headway": 38.47315669764037,
+              "next_co_line_backward_headway": 13.752176088001907,
+              "next_segment_mean_speed": 17.85049858478004,
+              "reward": 0.0028440140609301613
+            }
+          },
+          "bridge_diagnostics": {
+            "bridge_weight_mean": 0.9257820844650269,
+            "bridge_weight_min": 0.9257818460464478,
+            "bridge_weight_max": 0.9257818460464478,
+            "trainer_provider_weight_mean": 0.9257820844650269,
+            "trainer_graph_entropy": 0.15956655144691467,
+            "h2o_external_provider_installed": true
+          }
+        },
+        "latent_local": {
+          "metrics": {
+            "total_mse": 506.5347705304709,
+            "dynamic_mse": 569.8512585526685,
+            "reward_mse": 0.0028663528904241662,
+            "per_output_mse": {
+              "next_forward_headway": 1046.4499710602522,
+              "next_backward_headway": 404.69728122937727,
+              "next_waiting_passengers": 619.4577448952529,
+              "next_base_stop_duration": 2.1698539488309665,
+              "next_gap": 2415.9584030704336,
+              "next_co_line_forward_headway": 37.78976800219272,
+              "next_co_line_backward_headway": 13.905634514926932,
+              "next_segment_mean_speed": 18.38141170008131,
+              "reward": 0.0028663528904241662
+            }
+          },
+          "sim_training": {
+            "initial_loss": 1.0003907680511475,
+            "final_loss": 1.0003907680511475,
+            "epochs": 1.0
+          },
+          "residual_training": {
+            "residual_trained": 1.0,
+            "mode": "paired_joint_factor_encoder",
+            "initial_loss": 1.0602245092391969,
+            "final_loss": 0.8933582305908203,
+            "epochs": 2.0
+          },
+          "num_parameters": 13411,
+          "trust_gated_metrics": {
+            "total_mse": 505.9118551962005,
+            "dynamic_mse": 569.1504784650826,
+            "reward_mse": 0.0028690451432149787,
+            "per_output_mse": {
+              "next_forward_headway": 1038.8999134361022,
+              "next_backward_headway": 399.7856742885208,
+              "next_waiting_passengers": 618.9827599081646,
+              "next_base_stop_duration": 2.244019926859694,
+              "next_gap": 2423.734837629183,
+              "next_co_line_forward_headway": 37.45232753804535,
+              "next_co_line_backward_headway": 13.729753587739543,
+              "next_segment_mean_speed": 18.374541406046216,
+              "reward": 0.0028690451432149787
+            }
+          },
+          "cfcmt_fallback_trust_metrics": {
+            "total_mse": 505.7707382453964,
+            "dynamic_mse": 568.9917256922072,
+            "reward_mse": 0.00283867091016456,
+            "per_output_mse": {
+              "next_forward_headway": 1045.0462724830504,
+              "next_backward_headway": 402.64450134371873,
+              "next_waiting_passengers": 625.3365165632147,
+              "next_base_stop_duration": 1.9253216412684402,
+              "next_gap": 2407.0372935429864,
+              "next_co_line_forward_headway": 37.703134064644985,
+              "next_co_line_backward_headway": 13.85827636825476,
+              "next_segment_mean_speed": 18.382489530519855,
+              "reward": 0.00283867091016456
+            }
+          },
+          "bridge_diagnostics": {
+            "bridge_weight_mean": 0.9257820844650269,
+            "bridge_weight_min": 0.9257818460464478,
+            "bridge_weight_max": 0.9257818460464478,
+            "trainer_provider_weight_mean": 0.9257820844650269,
+            "trainer_graph_entropy": 0.15956655144691467,
+            "h2o_external_provider_installed": true
+          }
+        },
+        "autodag_graph": {
+          "graph_artifact_dir": "/home/erzhu419/mine_code/CFCMT/cf_h2o/results/full_module_graphs/source_open_na_to_singapore",
+          "graph_diagnostics": {
+            "node_names": [
+              "line_id@t",
+              "line_id@t1",
+              "bus_id@t",
+              "bus_id@t1",
+              "station_id@t",
+              "station_id@t1",
+              "time_period@t",
+              "time_period@t1",
+              "direction@t",
+              "direction@t1",
+              "forward_headway@t",
+              "forward_headway@t1",
+              "backward_headway@t",
+              "backward_headway@t1",
+              "waiting_passengers@t",
+              "waiting_passengers@t1",
+              "target_headway@t",
+              "target_headway@t1",
+              "base_stop_duration@t",
+              "base_stop_duration@t1",
+              "sim_time@t",
+              "sim_time@t1",
+              "gap@t",
+              "gap@t1",
+              "co_line_forward_headway@t",
+              "co_line_forward_headway@t1",
+              "co_line_backward_headway@t",
+              "co_line_backward_headway@t1",
+              "segment_mean_speed@t",
+              "segment_mean_speed@t1",
+              "hour_sin@t",
+              "hour_sin@t1",
+              "hour_cos@t",
+              "hour_cos@t1",
+              "forward_headway_deviation@t",
+              "forward_headway_deviation@t1",
+              "backward_headway_deviation@t",
+              "backward_headway_deviation@t1",
+              "abs_forward_headway_deviation@t",
+              "abs_forward_headway_deviation@t1",
+              "abs_backward_headway_deviation@t",
+              "abs_backward_headway_deviation@t1",
+              "action_x_gap@t",
+              "action_x_gap@t1",
+              "action_x_waiting_passengers@t",
+              "action_x_waiting_passengers@t1",
+              "holding@t",
+              "reward@t1"
+            ],
+            "node_groups": {
+              "unknown_state": [
+                "line_id@t",
+                "line_id@t1",
+                "bus_id@t",
+                "bus_id@t1",
+                "station_id@t",
+                "station_id@t1",
+                "time_period@t",
+                "time_period@t1",
+                "direction@t",
+                "direction@t1",
+                "base_stop_duration@t",
+                "base_stop_duration@t1",
+                "sim_time@t",
+                "sim_time@t1",
+                "hour_sin@t",
+                "hour_sin@t1",
+                "hour_cos@t",
+                "hour_cos@t1"
+              ],
+              "headway": [
+                "forward_headway@t",
+                "forward_headway@t1",
+                "backward_headway@t",
+                "backward_headway@t1",
+                "target_headway@t",
+                "target_headway@t1",
+                "gap@t",
+                "gap@t1",
+                "co_line_forward_headway@t",
+                "co_line_forward_headway@t1",
+                "co_line_backward_headway@t",
+                "co_line_backward_headway@t1",
+                "forward_headway_deviation@t",
+                "forward_headway_deviation@t1",
+                "backward_headway_deviation@t",
+                "backward_headway_deviation@t1",
+                "abs_forward_headway_deviation@t",
+                "abs_forward_headway_deviation@t1",
+                "abs_backward_headway_deviation@t",
+                "abs_backward_headway_deviation@t1",
+                "action_x_gap@t",
+                "action_x_gap@t1"
+              ],
+              "demand": [
+                "waiting_passengers@t",
+                "waiting_passengers@t1",
+                "action_x_waiting_passengers@t",
+                "action_x_waiting_passengers@t1"
+              ],
+              "speed": [
+                "segment_mean_speed@t",
+                "segment_mean_speed@t1"
+              ],
+              "action": [
+                "holding@t"
+              ],
+              "reward": [
+                "reward@t1"
+              ]
+            },
+            "bootstrap_runs": 1,
+            "mean_validation_mse": 0.03662118621288831,
+            "low_confidence_edges": [
+              {
+                "src": "bus_id@t",
+                "dst": "station_id@t1",
+                "probability": 0.33170610666275024
+              },
+              {
+                "src": "bus_id@t",
+                "dst": "abs_backward_headway_deviation@t1",
+                "probability": 0.7302669286727905
+              },
+              {
+                "src": "station_id@t",
+                "dst": "bus_id@t1",
+                "probability": 0.3317416310310364
+              },
+              {
+                "src": "station_id@t",
+                "dst": "time_period@t1",
+                "probability": 0.38439953327178955
+              },
+              {
+                "src": "station_id@t",
+                "dst": "sim_time@t1",
+                "probability": 0.3841893970966339
+              },
+              {
+                "src": "station_id@t",
+                "dst": "gap@t1",
+                "probability": 0.47684186697006226
+              },
+              {
+                "src": "station_id@t",
+                "dst": "forward_headway_deviation@t1",
+                "probability": 0.5139905214309692
+              },
+              {
+                "src": "station_id@t",
+                "dst": "backward_headway_deviation@t1",
+                "probability": 0.4315287470817566
+              },
+              {
+                "src": "station_id@t",
+                "dst": "action_x_gap@t1",
+                "probability": 0.41000697016716003
+              },
+              {
+                "src": "time_period@t",
+                "dst": "station_id@t1",
+                "probability": 0.3842865228652954
+              },
+              {
+                "src": "forward_headway@t",
+                "dst": "waiting_passengers@t1",
+                "probability": 0.3490365147590637
+              },
+              {
+                "src": "forward_headway@t",
+                "dst": "gap@t1",
+                "probability": 0.46513721346855164
+              },
+              {
+                "src": "forward_headway@t",
+                "dst": "forward_headway_deviation@t1",
+                "probability": 0.49049118161201477
+              },
+              {
+                "src": "forward_headway@t",
+                "dst": "backward_headway_deviation@t1",
+                "probability": 0.4342781901359558
+              },
+              {
+                "src": "backward_headway@t",
+                "dst": "waiting_passengers@t1",
+                "probability": 0.348544716835022
+              },
+              {
+                "src": "waiting_passengers@t",
+                "dst": "action_x_waiting_passengers@t1",
+                "probability": 0.49324339628219604
+              },
+              {
+                "src": "base_stop_duration@t",
+                "dst": "bus_id@t1",
+                "probability": 0.3017367124557495
+              },
+              {
+                "src": "base_stop_duration@t",
+                "dst": "station_id@t1",
+                "probability": 0.30361101031303406
+              },
+              {
+                "src": "base_stop_duration@t",
+                "dst": "abs_forward_headway_deviation@t1",
+                "probability": 0.7942973971366882
+              },
+              {
+                "src": "base_stop_duration@t",
+                "dst": "abs_backward_headway_deviation@t1",
+                "probability": 0.7216071486473083
+              },
+              {
+                "src": "base_stop_duration@t",
+                "dst": "action_x_waiting_passengers@t1",
+                "probability": 0.5686115026473999
+              },
+              {
+                "src": "sim_time@t",
+                "dst": "station_id@t1",
+                "probability": 0.3841952383518219
+              },
+              {
+                "src": "gap@t",
+                "dst": "forward_headway@t1",
+                "probability": 0.4144679605960846
+              },
+              {
+                "src": "gap@t",
+                "dst": "backward_headway@t1",
+                "probability": 0.3928958773612976
+              },
+              {
+                "src": "segment_mean_speed@t",
+                "dst": "action_x_gap@t1",
+                "probability": 0.3927929401397705
+              },
+              {
+                "src": "forward_headway_deviation@t",
+                "dst": "forward_headway@t1",
+                "probability": 0.51052325963974
+              },
+              {
+                "src": "forward_headway_deviation@t",
+                "dst": "backward_headway@t1",
+                "probability": 0.4243617355823517
+              },
+              {
+                "src": "forward_headway_deviation@t",
+                "dst": "waiting_passengers@t1",
+                "probability": 0.597773551940918
+              },
+              {
+                "src": "forward_headway_deviation@t",
+                "dst": "base_stop_duration@t1",
+                "probability": 0.46136674284935
+              },
+              {
+                "src": "forward_headway_deviation@t",
+                "dst": "co_line_backward_headway@t1",
+                "probability": 0.3060664236545563
+              },
+              {
+                "src": "forward_headway_deviation@t",
+                "dst": "action_x_gap@t1",
+                "probability": 0.6236380934715271
+              },
+              {
+                "src": "forward_headway_deviation@t",
+                "dst": "action_x_waiting_passengers@t1",
+                "probability": 0.3813804090023041
+              },
+              {
+                "src": "backward_headway_deviation@t",
+                "dst": "waiting_passengers@t1",
+                "probability": 0.6128334999084473
+              },
+              {
+                "src": "backward_headway_deviation@t",
+                "dst": "base_stop_duration@t1",
+                "probability": 0.4749850332736969
+              },
+              {
+                "src": "backward_headway_deviation@t",
+                "dst": "forward_headway_deviation@t1",
+                "probability": 0.7475202679634094
+              },
+              {
+                "src": "backward_headway_deviation@t",
+                "dst": "action_x_gap@t1",
+                "probability": 0.6051126718521118
+              },
+              {
+                "src": "backward_headway_deviation@t",
+                "dst": "action_x_waiting_passengers@t1",
+                "probability": 0.38819456100463867
+              },
+              {
+                "src": "abs_forward_headway_deviation@t",
+                "dst": "base_stop_duration@t1",
+                "probability": 0.6494635939598083
+              },
+              {
+                "src": "abs_forward_headway_deviation@t",
+                "dst": "action_x_gap@t1",
+                "probability": 0.599641740322113
+              },
+              {
+                "src": "abs_forward_headway_deviation@t",
+                "dst": "action_x_waiting_passengers@t1",
+                "probability": 0.5023285746574402
+              },
+              {
+                "src": "abs_backward_headway_deviation@t",
+                "dst": "base_stop_duration@t1",
+                "probability": 0.6197687983512878
+              },
+              {
+                "src": "abs_backward_headway_deviation@t",
+                "dst": "action_x_gap@t1",
+                "probability": 0.5853635668754578
+              },
+              {
+                "src": "abs_backward_headway_deviation@t",
+                "dst": "action_x_waiting_passengers@t1",
+                "probability": 0.46720901131629944
+              },
+              {
+                "src": "action_x_waiting_passengers@t",
+                "dst": "base_stop_duration@t1",
+                "probability": 0.38159286975860596
+              },
+              {
+                "src": "holding@t",
+                "dst": "forward_headway@t1",
+                "probability": 0.41949450969696045
+              },
+              {
+                "src": "holding@t",
+                "dst": "backward_headway@t1",
+                "probability": 0.37913063168525696
+              },
+              {
+                "src": "holding@t",
+                "dst": "waiting_passengers@t1",
+                "probability": 0.7260823249816895
+              },
+              {
+                "src": "holding@t",
+                "dst": "action_x_waiting_passengers@t1",
+                "probability": 0.6244129538536072
+              }
+            ],
+            "features_with_no_stable_parent": [],
+            "warnings": [
+              "llm_backend=none; using neutral priors"
+            ],
+            "config": {
+              "bootstrap_runs": 1,
+              "ridge_l2": 0.001,
+              "score_threshold": 0.04,
+              "score_temperature": 0.04,
+              "max_parents": 8,
+              "mechanism_parent_threshold": 0.25,
+              "seed": 97
+            },
+            "forbidden_id_parent_nodes": [
+              "bus_id@t",
+              "line_id@t"
+            ]
+          },
+          "mechanism_parent_counts": {
+            "headway": 8,
+            "demand": 8,
+            "dwell": 8,
+            "speed": 7,
+            "reward": 8
+          }
+        }
+      },
+      "elapsed_sec": 2.257707357406616
+    }
+  ],
+  "summary": {
+    "splits": 1,
+    "methods": {
+      "cfcmt_ridge_template": {
+        "mean_total_mse": 558.858356101808,
+        "mean_vs_h2oplus_dense_ridge": 0.9618288669800008,
+        "wins_vs_h2oplus_dense_ridge": 1
+      },
+      "h2oplus_dense_ridge": {
+        "mean_total_mse": 581.0372045253122,
+        "mean_vs_h2oplus_dense_ridge": 1.0,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "neural_autodag": {
+        "mean_total_mse": 609.389615957482,
+        "mean_vs_h2oplus_dense_ridge": 1.0487962065274852,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "neural_autodag_latent": {
+        "mean_total_mse": 585.1956767558562,
+        "mean_vs_h2oplus_dense_ridge": 1.007156980995634,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "neural_autodag_latent_cfcmt_fallback_trust": {
+        "mean_total_mse": 582.6693309963355,
+        "mean_vs_h2oplus_dense_ridge": 1.0028089878897801,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "neural_autodag_latent_local": {
+        "mean_total_mse": 506.5347705304709,
+        "mean_vs_h2oplus_dense_ridge": 0.8717768270007645,
+        "wins_vs_h2oplus_dense_ridge": 1
+      },
+      "neural_autodag_latent_local_cfcmt_fallback_trust": {
+        "mean_total_mse": 505.7707382453964,
+        "mean_vs_h2oplus_dense_ridge": 0.8704618814531748,
+        "wins_vs_h2oplus_dense_ridge": 1
+      },
+      "neural_autodag_latent_local_trust_gate": {
+        "mean_total_mse": 505.9118551962005,
+        "mean_vs_h2oplus_dense_ridge": 0.8707047522189452,
+        "wins_vs_h2oplus_dense_ridge": 1
+      },
+      "neural_autodag_latent_trust_gate": {
+        "mean_total_mse": 580.6052578303027,
+        "mean_vs_h2oplus_dense_ridge": 0.9992565937402195,
+        "wins_vs_h2oplus_dense_ridge": 1
+      },
+      "neural_template_graph": {
+        "mean_total_mse": 630.2763399029328,
+        "mean_vs_h2oplus_dense_ridge": 1.0847435155513792,
+        "wins_vs_h2oplus_dense_ridge": 0
+      },
+      "uncalibrated": {
+        "mean_total_mse": 563.3036060662948,
+        "mean_vs_h2oplus_dense_ridge": 0.969479409716104,
+        "wins_vs_h2oplus_dense_ridge": 1
+      }
+    }
+  }
+}

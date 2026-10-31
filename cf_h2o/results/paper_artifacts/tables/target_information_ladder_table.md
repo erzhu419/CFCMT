@@ -1,0 +1,9 @@
+| regime                         | source_cities     | target_labels       | target_side_info         | splits | wins | mean_ratio_vs_h2oplus | paper_role                     |
+| ------------------------------ | ----------------- | ------------------- | ------------------------ | ------ | ---- | --------------------- | ------------------------------ |
+| single-source zero-shot        | 1                 | 0                   | network/static summaries | 12     | 6    | 0.9272                | minimum-information diagnostic |
+| multi-source target-label-free | all except target | 0                   | network/static summaries | 4      | 4    | 0.5782                | primary cross-city result      |
+| target offline adaptation 0.01 | all except target | 0.01 route fraction | target passive labels    | 4      | 3    | 0.5801                | few-shot deployment curve      |
+| target offline adaptation 0.05 | all except target | 0.05 route fraction | target passive labels    | 4      | 3    | 0.5831                | few-shot deployment curve      |
+| target offline adaptation 0.1  | all except target | 0.1 route fraction  | target passive labels    | 4      | 3    | 0.6094                | few-shot deployment curve      |
+| target offline adaptation 0.25 | all except target | 0.25 route fraction | target passive labels    | 4      | 3    | 0.6596                | few-shot deployment curve      |
+| target-route oracle            | all except target | 1 route fraction    | all target route labels  | 4      | 3    | 0.7242                | upper-bound reference          |

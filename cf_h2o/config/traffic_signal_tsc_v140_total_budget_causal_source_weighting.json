@@ -1,0 +1,44 @@
+{
+  "protocol": "tsc-v140-total-budget-causal-source-weighting-v1",
+  "scientific_status": "total-target-label-budget-relative-transfer-development",
+  "predecessor": "tsc-v123-target-budget-source-value-curve-v1",
+  "target_city": "jinan",
+  "reference_policy": "phase_pressure",
+  "target_budgets": [25, 50, 100, 250, 500, 1000],
+  "primary_budget": 25,
+  "target_group_order": "v140_numeric_seed_partitioned_balanced_coverage_first_nested",
+  "adaptation_seed_partition": {
+    "protocol": "five_smallest_numeric_selector_seeds",
+    "adaptation_seeds": [22208, 27178, 31657, 34310, 46535],
+    "evaluation_seeds": [47023, 50079, 50744, 50945, 51400, 52367, 61481, 61994, 63775, 73412, 74374, 74744, 77524, 80314, 84579, 84751, 88625]
+  },
+  "adaptation_model_cross_fit_unit": "target_adaptation_seed",
+  "adaptation_seed_count": 5,
+  "evaluation_seed_count": 17,
+  "evaluation_seed_labels_used_for_fit_weighting_or_selection": false,
+  "source_weighting": {
+    "channels": "causal_source_score_minus_architecture_matched_target_score",
+    "constraints": "nonnegative_weights_sum_at_most_one",
+    "ridge_l2": 0.05,
+    "weight_cross_fit_unit": "target_adaptation_seed",
+    "weight_training_seed_count_per_fold": 4,
+    "explicit_source_null": true
+  },
+  "placebo": {
+    "method": "deterministic_whole_action_group_source_channel_permutation",
+    "preserve": ["scenario", "adaptation_seed", "action_count", "source_marginals"]
+  },
+  "adaptation_authorization_gate": {
+    "minimum_mean_gain_vs_target_only": 0.0005,
+    "minimum_mean_gain_vs_placebo": 0.0005,
+    "one_sided_upper_95_must_be_negative": true,
+    "minimum_improving_seed_fraction": 0.8
+  },
+  "selector_primary_gate": {
+    "budget": 25,
+    "minimum_mean_gain_vs_target_only": 0.0005,
+    "minimum_mean_gain_vs_placebo": 0.0005,
+    "upper_95_must_be_negative": true
+  },
+  "claim_boundary": "V140 tests relative source value under a corrected total target-label budget. It does not claim absolute superiority over PhasePressure unless the separately reported absolute column is negative with its own uncertainty bound."
+}
