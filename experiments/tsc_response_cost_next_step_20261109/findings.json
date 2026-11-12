@@ -1,0 +1,70 @@
+{
+  "status": "COMPLETE_ZERO_FIT_ANALYSIS_NEXT_STUDY_PROPOSED",
+  "new_native_starts": 0,
+  "new_model_fits": 0,
+  "source_dataset": "tsc_response_cost_readout_20261109 fixed224 native starts and92 fits; unchanged",
+  "reader_ranking": {
+    "reader_training": 0.6453869047619047,
+    "outer_held": 0.5025793650793651
+  },
+  "held_selected_predicted_delta": -0.010261167081764359,
+  "held_selected_actual_delta": 0.00802314814814815,
+  "training_semantics": "Dynamics inner OOF; cost-reader training scores are in-sample, not independent evidence.",
+  "horizon_spearman": {
+    "10": {
+      "states": 20,
+      "mean": 0.1888219366917972,
+      "positive": 14,
+      "negative": 6,
+      "constant_states": 0
+    },
+    "30": {
+      "states": 20,
+      "mean": 0.17573466448826094,
+      "positive": 12,
+      "negative": 8,
+      "constant_states": 0
+    },
+    "60": {
+      "states": 20,
+      "mean": 0.23040361832148384,
+      "positive": 13,
+      "negative": 7,
+      "constant_states": 0
+    }
+  },
+  "horizon_sign_reversals": {
+    "reversal10_450": {
+      "nonzero_pairs": 133,
+      "opposite_sign": 53
+    },
+    "reversal60_450": {
+      "nonzero_pairs": 139,
+      "opposite_sign": 63
+    }
+  },
+  "post10_pp_divergence": {
+    "mean_epochs_any_tls": 41.378571428571426,
+    "mean_epochs_focal": 30.728571428571428,
+    "mean_tls_epoch_count": 160.93571428571428
+  },
+  "frozen_reader_true_response": {
+    "original_mean_cost": 1.3368132716049383,
+    "measured_input_mean_cost": 1.3338395061728394,
+    "PP_mean_cost": 1.32879012345679,
+    "changed_actions": 13,
+    "improved_states": 6,
+    "worsened_states": 6
+  },
+  "true_response_substitution_limit": "Inputs differ from the predicted-response distribution used to train the frozen readers.",
+  "representation": {
+    "PP_hold_states": 0,
+    "PP_switch_states": 20,
+    "empirical_Phi_compression": {
+      "equal_Phi_but_different_lane_state_pairs": 0,
+      "examples": []
+    }
+  },
+  "alias_relevance": "Three(u,truePhi) alias pairs are all nonPP, both worse than PP and never the observed best; not sufficient to explain the main selection failure.",
+  "interpretation": "Cost-readout generalization is the immediate bottleneck. Horizon mismatch is observed; irreducible future noise and general insufficiency of local true state remain unproven."
+}

@@ -1,0 +1,43 @@
+{
+  "status": "LOCKED_BEFORE_NEW_MODEL_FIT",
+  "date": "2026-11-09",
+  "scope": "One fixed offline residual calibration candidate on existing PP records only. No simulations, action branches, new labels or independent confirmation.",
+  "cohort": "cohort.json copied from tsc_corridor_arrival_transfer_20261107; other-city donor 8h, each target adaptation block 2h, three disjoint blocks, two dev seeds per block; own donor cannot train own target.",
+  "development_is_reused": true,
+  "baseline": "Current remaining detector distance / observed past 10s same-straight-lane progress speed; exact original fallback to speed limit for unavailable/nonpositive history. Nonstraight physical indicator is zero.",
+  "training_unit": "Every moving flight at observable matched non-spillback decisions with full future10s; current and previous state only; snapshot weighting matches deployment risk-set evaluation.",
+  "features": [
+    "current straight lane",
+    "ceil(history ETA), capped at 11 for >10s",
+    "past 10s speed ratio: missing, <=0.5, (0.5,0.9], (0.9,1.1], >1.1",
+    "queued_at_entry"
+  ],
+  "excluded_features": [
+    "city or junction ID",
+    "future positions",
+    "future routes",
+    "actual outcome as feature",
+    "candidate-action future effects",
+    "future PP signal schedule"
+  ],
+  "labels": "11 categories: first observed straight detector arrival at relative seconds1..10, or category0=no straight detector arrival within10s; competing/terminal/end-of-hour censored retained when full10s is observed.",
+  "model": "Conditional 11-category histogram. F_head(h)=(20*B(h)+sum_k<=h count[k])/(20+n). B is continuous physical ETA indicator. Empirical part is stepwise at integer observed times, evaluated directly at real bounds.",
+  "physical_pseudocount": 20,
+  "source_weight": 0.5,
+  "arms": {
+    "T": "Target two-hour block only",
+    "S": "0.5 target head +0.5 true other-city donor head",
+    "P": "0.5 target head +0.5 physically stratified permuted other-city donor head"
+  },
+  "missing_cells": "Target missing ->physical baseline; source missing ->S=P=T. Source support never changes T.",
+  "placebo": "Within source edge x seed x physical ETA bin x current lane, shuffle complete future10s label category. Preserve baseline physical relation and marginal labels, break extra queue/history condition association.",
+  "permutation_seed": 11072026,
+  "decoder": "Unique primary decoder: F(h)>=0.5 means arrived. Fixed once, no threshold search or alternative soft decoder. Aligns per-vehicle absolute-loss indicator; does not guarantee aggregate count MAE optimum.",
+  "decision": "Original queue base plus threshold-decoded accumulated arrivals during legal protected seconds. Query each flight detector CDF at h-tail_s, preserving continuous physical ETA. Original round12/first feasible tie and GP fallback.",
+  "primary_scoring": "Original common-scored dev set (old ArrivalPolicy filter), next10s detector count MAE per edge epoch, then six-seed equal mean per city.",
+  "secondary_scoring": "All observable matched non-spillback moving risk-set epochs, reported separately, not substituted for primary.",
+  "reproduction_gate": "Every one of12 original common edge denominators, analytic MAE and historical-speed MAE must match expected_baselines.json within1e-12.",
+  "development_signal_gate": "Both cities: S equal-seed MAE below T, P and fixed history baseline, and executable request differences S/T and S/P each in>=2 of6devseeds. Report all seeds and blocks, no model/threshold/city/seed changes after results.",
+  "stopping": "Failure ->HOLD_RESIDUAL_DEVELOPMENT. Even if passed, no automatic branch/simulation launch; this phase measures prediction and request differences only.",
+  "execution": "jtl110gpu2, existing server-side records. Pull compact JSON only; no raw trajectories or checkpoints to local disk."
+}

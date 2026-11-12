@@ -1,0 +1,103 @@
+{
+  "status": "COMPLETE_FROZEN_MODEL_DIAGNOSTIC",
+  "previous_status": "HOLD_RESIDUAL_DEVELOPMENT",
+  "model_changed": false,
+  "new_simulations": 0,
+  "cities": {
+    "hangzhou": {
+      "decision_chain": {
+        "evaluated_decisions": 9309,
+        "raw_cdf_changed": 8527,
+        "decoded_flight_changed": 41,
+        "service_edge_curve_changed": 3,
+        "relative_scores_changed": 3,
+        "request_changed": 1
+      },
+      "individual_endpoint_changes": 70,
+      "individual_endpoint_changes_without_service_change": 70,
+      "individual_endpoint_improved": 61,
+      "individual_endpoint_worsened": 9,
+      "lock_loss": {
+        "unlocked": {
+          "edge_epochs": 22291,
+          "T_error": 628,
+          "S_error": 615,
+          "weighted_T_mae_contribution": 0.007812682425964957,
+          "weighted_S_mae_contribution": 0.007650824374524614,
+          "weighted_mae_delta_contribution": -0.00016185805144034354,
+          "improved_edge_epochs": 17,
+          "worsened_edge_epochs": 4
+        },
+        "locked": {
+          "edge_epochs": 58098,
+          "T_error": 1073,
+          "S_error": 1034,
+          "weighted_T_mae_contribution": 0.013347249639240713,
+          "weighted_S_mae_contribution": 0.012862091271382485,
+          "weighted_mae_delta_contribution": -0.0004851583678582385,
+          "improved_edge_epochs": 44,
+          "worsened_edge_epochs": 5
+        }
+      },
+      "count_mae_delta": -0.0006470164192985822
+    },
+    "jinan": {
+      "decision_chain": {
+        "evaluated_decisions": 3550,
+        "raw_cdf_changed": 3457,
+        "decoded_flight_changed": 154,
+        "service_edge_curve_changed": 128,
+        "relative_scores_changed": 26,
+        "request_changed": 0
+      },
+      "individual_endpoint_changes": 740,
+      "individual_endpoint_changes_without_service_change": 740,
+      "individual_endpoint_improved": 283,
+      "individual_endpoint_worsened": 457,
+      "lock_loss": {
+        "unlocked": {
+          "edge_epochs": 8595,
+          "T_error": 1748,
+          "S_error": 1705,
+          "weighted_T_mae_contribution": 0.0392349127221128,
+          "weighted_S_mae_contribution": 0.03826850198692766,
+          "weighted_mae_delta_contribution": -0.0009664107351851654,
+          "improved_edge_epochs": 24,
+          "worsened_edge_epochs": 0
+        },
+        "locked": {
+          "edge_epochs": 35891,
+          "T_error": 7400,
+          "S_error": 7499,
+          "weighted_T_mae_contribution": 0.1663920217259886,
+          "weighted_S_mae_contribution": 0.16863153711019008,
+          "weighted_mae_delta_contribution": 0.002239515384201403,
+          "improved_edge_epochs": 170,
+          "worsened_edge_epochs": 219
+        }
+      },
+      "count_mae_delta": 0.0012731046490162396
+    }
+  },
+  "dominant_jinan_bad_context": {
+    "current_lane": "straight",
+    "history_eta": ">10s",
+    "past10s_speed_ratio": "<=0.5",
+    "queued_at_entry": true,
+    "target_n_range": [
+      105,
+      176
+    ],
+    "source_n_range": [
+      3,
+      3
+    ],
+    "source_empirical_probability": 1.0,
+    "source_posterior_probability": 0.13043478260869537,
+    "target_posterior_probability": 0.6627113778705566,
+    "mixed_probability": 0.39657308023962595,
+    "observed_development_arrival_fraction": 0.6764091858037579,
+    "weighted_count_mae_delta": 0.0021170754750063896
+  },
+  "next_candidate": "Update local evidence with actual source arrival counts and one common physical prior; preserve original data budgets, threshold, horizon, all cities/seeds and original gate. Not implemented in this diagnostic."
+}

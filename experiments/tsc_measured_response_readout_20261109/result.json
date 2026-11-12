@@ -1,0 +1,1060 @@
+{
+  "status": "HOLD_MEASURED_RESPONSE_READOUT",
+  "protocol": {
+    "status": "FROZEN_AUTHORIZED",
+    "question": "Can the current211-dimensional fixed Ridge reader select lower450s native costs when both training and heldout inputs use measured10s responses?",
+    "purpose": "Diagnostic readability of the existing representation/model/data budget; not a deployable policy or source-transfer result.",
+    "dataset": "Existing Jinan20states,10seeds,160native branches; no new simulation; previous cohorts unchanged.",
+    "source_data_used": false,
+    "outer_folds": [
+      [
+        76115801,
+        76115802
+      ],
+      [
+        76115803,
+        76115804
+      ],
+      [
+        76115805,
+        76115806
+      ],
+      [
+        76115807,
+        76115808
+      ],
+      [
+        76115809,
+        76115810
+      ]
+    ],
+    "features": "Original211-dimensional PP differences unchanged. Replace predicted-state Phi by measured-state Phi for both reader-training and heldout inputs; retain t0/nominal fields.",
+    "model": "Ridge alpha1; training-only weighted RMS, no centering/intercept; PP exact0, round12 ties preferPP then canonical action.",
+    "weights": "Each training seed mass1;2states*7nonPP rows per seed. Each fold8training seeds,16states,112nonPP rows;2heldout seeds.",
+    "new_logical_fits": 5,
+    "new_dynamics_fits": 0,
+    "new_source_fits": 0,
+    "new_native_starts": 0,
+    "primary": "Actual450s selected stopped-vehicle-sec/(450*controlled_lane_count), equalstates then equalseeds; report oracle-reader minusPP paired95%t interval(df9).",
+    "decision_rule": "A negative paired95%t upper bound vsPP supports diagnostic readability only. Otherwise stop investment in this211D/alpha1/data-budget reader recipe, retaining uncertainty and all outcomes.",
+    "success_next_question": "Can decision-time predicted action contrasts recover the measured-response choice advantage on separate development data? Source contribution requires a separate real-source/target-only/placebo comparison.",
+    "limits": "Heldout true10s responses are unavailable at decision time. Data have already informed development. Failure does not rule out allshort-response methods; success does not establish deployment or source gains.",
+    "original_hold_unchanged": true,
+    "no_search": "No feature,alpha,seed,horizon or threshold search; no retry or enlargement based on these results.",
+    "protocol": "measured-response-readout-diagnostic-v1",
+    "authorized_at_utc": "2026-11-09T12:51:32.808039+00:00",
+    "original_proposal": "experiments/tsc_response_cost_next_step_20261109/next_protocol_proposed.json",
+    "target_city": "jinan",
+    "target_seeds": [
+      76115801,
+      76115802,
+      76115803,
+      76115804,
+      76115805,
+      76115806,
+      76115807,
+      76115808,
+      76115809,
+      76115810
+    ],
+    "anchors": [
+      600,
+      1800
+    ],
+    "reader_columns": 211
+  },
+  "logical_fits": 5,
+  "fit_ledger": [
+    {
+      "fit_index": 1,
+      "role": "measured_response_target_cost_reader",
+      "outer_fold": 0,
+      "training_seeds": [
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115801,
+        76115802
+      ],
+      "rows": 112,
+      "columns": 211,
+      "weight_mass": 7.999999999999997,
+      "alpha": 1,
+      "scaling": "training-only weighted RMS; no centering",
+      "intercept": false,
+      "measured_responses": true,
+      "status": "COMPLETE",
+      "model_file": "fit_001_server_only.npz"
+    },
+    {
+      "fit_index": 2,
+      "role": "measured_response_target_cost_reader",
+      "outer_fold": 1,
+      "training_seeds": [
+        76115801,
+        76115802,
+        76115805,
+        76115806,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115803,
+        76115804
+      ],
+      "rows": 112,
+      "columns": 211,
+      "weight_mass": 7.999999999999997,
+      "alpha": 1,
+      "scaling": "training-only weighted RMS; no centering",
+      "intercept": false,
+      "measured_responses": true,
+      "status": "COMPLETE",
+      "model_file": "fit_002_server_only.npz"
+    },
+    {
+      "fit_index": 3,
+      "role": "measured_response_target_cost_reader",
+      "outer_fold": 2,
+      "training_seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115805,
+        76115806
+      ],
+      "rows": 112,
+      "columns": 211,
+      "weight_mass": 7.999999999999997,
+      "alpha": 1,
+      "scaling": "training-only weighted RMS; no centering",
+      "intercept": false,
+      "measured_responses": true,
+      "status": "COMPLETE",
+      "model_file": "fit_003_server_only.npz"
+    },
+    {
+      "fit_index": 4,
+      "role": "measured_response_target_cost_reader",
+      "outer_fold": 3,
+      "training_seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115807,
+        76115808
+      ],
+      "rows": 112,
+      "columns": 211,
+      "weight_mass": 7.999999999999997,
+      "alpha": 1,
+      "scaling": "training-only weighted RMS; no centering",
+      "intercept": false,
+      "measured_responses": true,
+      "status": "COMPLETE",
+      "model_file": "fit_004_server_only.npz"
+    },
+    {
+      "fit_index": 5,
+      "role": "measured_response_target_cost_reader",
+      "outer_fold": 4,
+      "training_seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115807,
+        76115808
+      ],
+      "held_out_seeds": [
+        76115809,
+        76115810
+      ],
+      "rows": 112,
+      "columns": 211,
+      "weight_mass": 7.999999999999997,
+      "alpha": 1,
+      "scaling": "training-only weighted RMS; no centering",
+      "intercept": false,
+      "measured_responses": true,
+      "status": "COMPLETE",
+      "model_file": "fit_005_server_only.npz"
+    }
+  ],
+  "records": [
+    {
+      "group_id": "jinan/seed76115801/anchor600",
+      "seed": 76115801,
+      "anchor": 600,
+      "outer_fold": 0,
+      "selected_action": 2,
+      "pp_index": 1,
+      "predicted_delta_costs": [
+        0.015969959047431162,
+        0.0,
+        -0.012503522484611666,
+        -0.011748330215708536,
+        0.007129677169004909,
+        -0.005139696521567261,
+        0.0010005671402791877,
+        0.005214659093092203
+      ],
+      "selected_cost": 1.4137345679012345,
+      "phase_pressure_cost": 1.4169907407407407,
+      "cost_minus_pp": -0.0032561728395061884,
+      "observed_minimum_cost": 1.379645061728395,
+      "selected_cost_minus_observed_minimum": 0.03408950617283946,
+      "reader_training_seeds": [
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115801,
+        76115802
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115801/anchor1800",
+      "seed": 76115801,
+      "anchor": 1800,
+      "outer_fold": 0,
+      "selected_action": 3,
+      "pp_index": 7,
+      "predicted_delta_costs": [
+        0.004000888447754632,
+        0.005778484879564036,
+        -0.0029035666070462585,
+        -0.010965815556751463,
+        -0.002568712898044584,
+        0.0015148138843900432,
+        -0.004062922528798838,
+        0.0
+      ],
+      "selected_cost": 1.23054012345679,
+      "phase_pressure_cost": 1.2109876543209876,
+      "cost_minus_pp": 0.01955246913580244,
+      "observed_minimum_cost": 1.2109876543209876,
+      "selected_cost_minus_observed_minimum": 0.01955246913580244,
+      "reader_training_seeds": [
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115801,
+        76115802
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115802/anchor600",
+      "seed": 76115802,
+      "anchor": 600,
+      "outer_fold": 0,
+      "selected_action": 0,
+      "pp_index": 5,
+      "predicted_delta_costs": [
+        -0.0069250372433231015,
+        0.005815160831031136,
+        0.0018246935852470488,
+        0.009095538796680822,
+        -0.0049062617166832755,
+        0.0,
+        0.01003121976328127,
+        0.01983518575316734
+      ],
+      "selected_cost": 1.4081018518518518,
+      "phase_pressure_cost": 1.3724228395061728,
+      "cost_minus_pp": 0.03567901234567894,
+      "observed_minimum_cost": 1.3697530864197531,
+      "selected_cost_minus_observed_minimum": 0.03834876543209864,
+      "reader_training_seeds": [
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115801,
+        76115802
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115802/anchor1800",
+      "seed": 76115802,
+      "anchor": 1800,
+      "outer_fold": 0,
+      "selected_action": 7,
+      "pp_index": 1,
+      "predicted_delta_costs": [
+        0.0052872203174930445,
+        0.0,
+        0.007741247195858212,
+        -0.00010123209322339155,
+        0.0015633271192654944,
+        0.006347548107801501,
+        0.01004595533881567,
+        -0.005762836119007705
+      ],
+      "selected_cost": 1.332638888888889,
+      "phase_pressure_cost": 1.3167283950617283,
+      "cost_minus_pp": 0.015910493827160588,
+      "observed_minimum_cost": 1.2982716049382717,
+      "selected_cost_minus_observed_minimum": 0.03436728395061728,
+      "reader_training_seeds": [
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115801,
+        76115802
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115803/anchor600",
+      "seed": 76115803,
+      "anchor": 600,
+      "outer_fold": 1,
+      "selected_action": 1,
+      "pp_index": 0,
+      "predicted_delta_costs": [
+        0.0,
+        -0.016943864122753304,
+        0.0027471744906948574,
+        0.002655965522503639,
+        0.0063960828705107295,
+        -0.0008715062323055999,
+        0.0038912603228689075,
+        0.001596741412111358
+      ],
+      "selected_cost": 1.401358024691358,
+      "phase_pressure_cost": 1.3753858024691359,
+      "cost_minus_pp": 0.025972222222222063,
+      "observed_minimum_cost": 1.361466049382716,
+      "selected_cost_minus_observed_minimum": 0.03989197530864197,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115805,
+        76115806,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115803,
+        76115804
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115803/anchor1800",
+      "seed": 76115803,
+      "anchor": 1800,
+      "outer_fold": 1,
+      "selected_action": 1,
+      "pp_index": 1,
+      "predicted_delta_costs": [
+        0.020533027551057476,
+        0.0,
+        0.027423215285663657,
+        0.017414399262396206,
+        0.015895942302572547,
+        0.02773790048465146,
+        0.004010328225130558,
+        0.011904946328880006
+      ],
+      "selected_cost": 1.2698302469135803,
+      "phase_pressure_cost": 1.2698302469135803,
+      "cost_minus_pp": 0.0,
+      "observed_minimum_cost": 1.2479783950617285,
+      "selected_cost_minus_observed_minimum": 0.02185185185185179,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115805,
+        76115806,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115803,
+        76115804
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115804/anchor600",
+      "seed": 76115804,
+      "anchor": 600,
+      "outer_fold": 1,
+      "selected_action": 4,
+      "pp_index": 7,
+      "predicted_delta_costs": [
+        -0.0011113105771616261,
+        0.010460571867294578,
+        0.014529165684483175,
+        0.006753546798622366,
+        -0.008161182350228077,
+        0.020609315351724784,
+        0.003675403089328411,
+        0.0
+      ],
+      "selected_cost": 1.4065277777777778,
+      "phase_pressure_cost": 1.3856018518518518,
+      "cost_minus_pp": 0.020925925925926014,
+      "observed_minimum_cost": 1.361466049382716,
+      "selected_cost_minus_observed_minimum": 0.04506172839506184,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115805,
+        76115806,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115803,
+        76115804
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115804/anchor1800",
+      "seed": 76115804,
+      "anchor": 1800,
+      "outer_fold": 1,
+      "selected_action": 1,
+      "pp_index": 1,
+      "predicted_delta_costs": [
+        0.015223098050802509,
+        0.0,
+        0.0026607356412245643,
+        0.0013413612648800449,
+        0.003808686965637436,
+        0.008582916875493694,
+        0.0007905877388319409,
+        0.0002103054639404486
+      ],
+      "selected_cost": 1.3027160493827161,
+      "phase_pressure_cost": 1.3027160493827161,
+      "cost_minus_pp": 0.0,
+      "observed_minimum_cost": 1.261682098765432,
+      "selected_cost_minus_observed_minimum": 0.0410339506172841,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115805,
+        76115806,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115803,
+        76115804
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115805/anchor600",
+      "seed": 76115805,
+      "anchor": 600,
+      "outer_fold": 2,
+      "selected_action": 5,
+      "pp_index": 0,
+      "predicted_delta_costs": [
+        0.0,
+        0.010288975831931514,
+        0.017415329266462495,
+        0.015086744290789232,
+        0.005759794351987103,
+        -0.0022096217212149933,
+        0.01650345934866754,
+        0.012174496559006417
+      ],
+      "selected_cost": 1.3941975308641976,
+      "phase_pressure_cost": 1.409645061728395,
+      "cost_minus_pp": -0.015447530864197478,
+      "observed_minimum_cost": 1.3565123456790122,
+      "selected_cost_minus_observed_minimum": 0.03768518518518538,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115805,
+        76115806
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115805/anchor1800",
+      "seed": 76115805,
+      "anchor": 1800,
+      "outer_fold": 2,
+      "selected_action": 5,
+      "pp_index": 2,
+      "predicted_delta_costs": [
+        0.008723656359045828,
+        0.013523853206215894,
+        0.0,
+        -0.006680016725275823,
+        0.030576825899160387,
+        -0.00925847212364829,
+        0.0005365862177864975,
+        0.007652898478558014
+      ],
+      "selected_cost": 1.3057253086419753,
+      "phase_pressure_cost": 1.2751234567901235,
+      "cost_minus_pp": 0.030601851851851825,
+      "observed_minimum_cost": 1.2136728395061729,
+      "selected_cost_minus_observed_minimum": 0.09205246913580245,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115805,
+        76115806
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115806/anchor600",
+      "seed": 76115806,
+      "anchor": 600,
+      "outer_fold": 2,
+      "selected_action": 2,
+      "pp_index": 1,
+      "predicted_delta_costs": [
+        0.008795854061245372,
+        0.0,
+        -0.010090489756079825,
+        0.0024157719633988183,
+        0.0012498517828404441,
+        -0.010090489756079825,
+        0.00255132419124563,
+        -0.0015652581968767505
+      ],
+      "selected_cost": 1.3545524691358024,
+      "phase_pressure_cost": 1.3538734567901234,
+      "cost_minus_pp": 0.0006790123456790198,
+      "observed_minimum_cost": 1.3137191358024691,
+      "selected_cost_minus_observed_minimum": 0.04083333333333328,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115805,
+        76115806
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115806/anchor1800",
+      "seed": 76115806,
+      "anchor": 1800,
+      "outer_fold": 2,
+      "selected_action": 6,
+      "pp_index": 0,
+      "predicted_delta_costs": [
+        0.0,
+        -0.010434148637944049,
+        -0.010346367694807568,
+        -0.004412994859073592,
+        0.0009778095532380487,
+        -0.011952914661771492,
+        -0.01341980163084552,
+        -0.005202009415869361
+      ],
+      "selected_cost": 1.2134876543209876,
+      "phase_pressure_cost": 1.1968055555555555,
+      "cost_minus_pp": 0.01668209876543214,
+      "observed_minimum_cost": 1.1884722222222222,
+      "selected_cost_minus_observed_minimum": 0.025015432098765444,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115805,
+        76115806
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115807/anchor600",
+      "seed": 76115807,
+      "anchor": 600,
+      "outer_fold": 3,
+      "selected_action": 2,
+      "pp_index": 6,
+      "predicted_delta_costs": [
+        0.01659150964031353,
+        0.013909383819538362,
+        -0.004990142413565352,
+        0.006737002974635727,
+        0.0179097013931064,
+        0.004522093568213328,
+        0.0,
+        0.020373906040947177
+      ],
+      "selected_cost": 1.4110956790123457,
+      "phase_pressure_cost": 1.4191512345679012,
+      "cost_minus_pp": -0.008055555555555483,
+      "observed_minimum_cost": 1.3854012345679012,
+      "selected_cost_minus_observed_minimum": 0.025694444444444464,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115807,
+        76115808
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115807/anchor1800",
+      "seed": 76115807,
+      "anchor": 1800,
+      "outer_fold": 3,
+      "selected_action": 4,
+      "pp_index": 0,
+      "predicted_delta_costs": [
+        0.0,
+        0.005892345577720712,
+        -1.9818138653742573e-05,
+        0.007843013821823789,
+        -0.013475786852330933,
+        0.007603917038504875,
+        0.007843013821823789,
+        0.01298952952668598
+      ],
+      "selected_cost": 1.3484413580246914,
+      "phase_pressure_cost": 1.2882253086419753,
+      "cost_minus_pp": 0.060216049382716186,
+      "observed_minimum_cost": 1.2882253086419753,
+      "selected_cost_minus_observed_minimum": 0.060216049382716186,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115807,
+        76115808
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115808/anchor600",
+      "seed": 76115808,
+      "anchor": 600,
+      "outer_fold": 3,
+      "selected_action": 1,
+      "pp_index": 1,
+      "predicted_delta_costs": [
+        0.010280814749514026,
+        0.0,
+        0.0014031071462388542,
+        0.015057094345438756,
+        0.012766568248586163,
+        0.008819798313902892,
+        0.004832891183371668,
+        0.009841822348931642
+      ],
+      "selected_cost": 1.338780864197531,
+      "phase_pressure_cost": 1.338780864197531,
+      "cost_minus_pp": 0.0,
+      "observed_minimum_cost": 1.3383487654320987,
+      "selected_cost_minus_observed_minimum": 0.000432098765432265,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115807,
+        76115808
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115808/anchor1800",
+      "seed": 76115808,
+      "anchor": 1800,
+      "outer_fold": 3,
+      "selected_action": 0,
+      "pp_index": 4,
+      "predicted_delta_costs": [
+        -0.0005605858138332333,
+        0.0104760299139176,
+        0.00783033085607704,
+        0.006258948899809458,
+        0.0,
+        0.008224639739673054,
+        0.07166465881920156,
+        0.006002320997988357
+      ],
+      "selected_cost": 1.275787037037037,
+      "phase_pressure_cost": 1.275787037037037,
+      "cost_minus_pp": 0.0,
+      "observed_minimum_cost": 1.2427777777777778,
+      "selected_cost_minus_observed_minimum": 0.03300925925925924,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115809,
+        76115810
+      ],
+      "held_out_seeds": [
+        76115807,
+        76115808
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115809/anchor600",
+      "seed": 76115809,
+      "anchor": 600,
+      "outer_fold": 4,
+      "selected_action": 1,
+      "pp_index": 0,
+      "predicted_delta_costs": [
+        0.0,
+        -0.017442956063617194,
+        -0.004419403495502513,
+        -0.0034225324050087117,
+        -0.002092057026093601,
+        -0.0059000441263523,
+        -0.005170524480005588,
+        -0.005153514831745162
+      ],
+      "selected_cost": 1.4417592592592592,
+      "phase_pressure_cost": 1.4487962962962964,
+      "cost_minus_pp": -0.007037037037037175,
+      "observed_minimum_cost": 1.3941049382716049,
+      "selected_cost_minus_observed_minimum": 0.04765432098765432,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115807,
+        76115808
+      ],
+      "held_out_seeds": [
+        76115809,
+        76115810
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115809/anchor1800",
+      "seed": 76115809,
+      "anchor": 1800,
+      "outer_fold": 4,
+      "selected_action": 0,
+      "pp_index": 7,
+      "predicted_delta_costs": [
+        -0.015611862565697661,
+        0.0022589469498970846,
+        0.0004348027216051619,
+        0.0029476443023528616,
+        0.002808381358283828,
+        0.001259657778233088,
+        0.003626720161846921,
+        0.0
+      ],
+      "selected_cost": 1.3439351851851853,
+      "phase_pressure_cost": 1.2855092592592592,
+      "cost_minus_pp": 0.0584259259259261,
+      "observed_minimum_cost": 1.2647993827160493,
+      "selected_cost_minus_observed_minimum": 0.07913580246913599,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115807,
+        76115808
+      ],
+      "held_out_seeds": [
+        76115809,
+        76115810
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115810/anchor600",
+      "seed": 76115810,
+      "anchor": 600,
+      "outer_fold": 4,
+      "selected_action": 7,
+      "pp_index": 3,
+      "predicted_delta_costs": [
+        -0.3435072902950837,
+        -0.3823827959176472,
+        -0.3021128206332777,
+        0.0,
+        -0.3236834939247203,
+        -0.3021128206332777,
+        0.037071344714333355,
+        -0.385275800240907
+      ],
+      "selected_cost": 1.3738117283950617,
+      "phase_pressure_cost": 1.3691666666666666,
+      "cost_minus_pp": 0.004645061728395072,
+      "observed_minimum_cost": 1.3691666666666666,
+      "selected_cost_minus_observed_minimum": 0.004645061728395072,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115807,
+        76115808
+      ],
+      "held_out_seeds": [
+        76115809,
+        76115810
+      ]
+    },
+    {
+      "group_id": "jinan/seed76115810/anchor1800",
+      "seed": 76115810,
+      "anchor": 1800,
+      "outer_fold": 4,
+      "selected_action": 6,
+      "pp_index": 5,
+      "predicted_delta_costs": [
+        -0.014677095513887338,
+        -0.017480922743457746,
+        -0.013967503669348999,
+        -0.016325245089674433,
+        -0.020098444788006917,
+        0.0,
+        -0.023559896946286196,
+        -0.018254038213675237
+      ],
+      "selected_cost": 1.2860030864197531,
+      "phase_pressure_cost": 1.2642746913580247,
+      "cost_minus_pp": 0.02172839506172841,
+      "observed_minimum_cost": 1.2316358024691358,
+      "selected_cost_minus_observed_minimum": 0.054367283950617296,
+      "reader_training_seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115807,
+        76115808
+      ],
+      "held_out_seeds": [
+        76115809,
+        76115810
+      ]
+    }
+  ],
+  "mean_costs": {
+    "measured_response_reader": 1.3426512345679014,
+    "PP": 1.3287901234567898
+  },
+  "per_seed_costs": {
+    "measured_response_reader": {
+      "76115801": 1.3221373456790122,
+      "76115802": 1.3703703703703702,
+      "76115803": 1.3355941358024692,
+      "76115804": 1.3546219135802469,
+      "76115805": 1.3499614197530865,
+      "76115806": 1.284020061728395,
+      "76115807": 1.3797685185185187,
+      "76115808": 1.307283950617284,
+      "76115809": 1.3928472222222221,
+      "76115810": 1.3299074074074073
+    },
+    "PP": {
+      "76115801": 1.3139891975308642,
+      "76115802": 1.3445756172839505,
+      "76115803": 1.322608024691358,
+      "76115804": 1.344158950617284,
+      "76115805": 1.3423842592592594,
+      "76115806": 1.2753395061728394,
+      "76115807": 1.353688271604938,
+      "76115808": 1.307283950617284,
+      "76115809": 1.3671527777777777,
+      "76115810": 1.3167206790123456
+    }
+  },
+  "comparison_measured_minus_PP": {
+    "mean_difference": 0.013861111111111124,
+    "approximate_paired_seed_95_t": [
+      0.007393779860500609,
+      0.02032844236172164
+    ],
+    "df": 9,
+    "per_seed": [
+      {
+        "seed": 76115801,
+        "difference": 0.008148148148148016
+      },
+      {
+        "seed": 76115802,
+        "difference": 0.025794753086419764
+      },
+      {
+        "seed": 76115803,
+        "difference": 0.012986111111111143
+      },
+      {
+        "seed": 76115804,
+        "difference": 0.010462962962962896
+      },
+      {
+        "seed": 76115805,
+        "difference": 0.007577160493827062
+      },
+      {
+        "seed": 76115806,
+        "difference": 0.00868055555555558
+      },
+      {
+        "seed": 76115807,
+        "difference": 0.026080246913580574
+      },
+      {
+        "seed": 76115808,
+        "difference": 0.0
+      },
+      {
+        "seed": 76115809,
+        "difference": 0.025694444444444464
+      },
+      {
+        "seed": 76115810,
+        "difference": 0.013186728395061742
+      }
+    ]
+  },
+  "gate_passed": false,
+  "mean_selected_regret": 0.03874691358024694,
+  "per_seed_selected_regret": {
+    "76115801": 0.02682098765432095,
+    "76115802": 0.03635802469135796,
+    "76115803": 0.03087191358024688,
+    "76115804": 0.04304783950617297,
+    "76115805": 0.06486882716049391,
+    "76115806": 0.03292438271604936,
+    "76115807": 0.042955246913580325,
+    "76115808": 0.01672067901234575,
+    "76115809": 0.06339506172839515,
+    "76115810": 0.029506172839506184
+  },
+  "behavior": {
+    "overrides": 17,
+    "harmful_overrides": 12,
+    "beneficial_overrides": 4,
+    "harmful_cost_sum": 0.3110185185185188,
+    "beneficial_cost_sum": -0.033796296296296324
+  },
+  "uses_measured_held_out_responses": true,
+  "deployable_policy": false,
+  "new_dynamics_fits": 0,
+  "new_source_fits": 0,
+  "new_simulations": 0,
+  "source_450_costs_used": false,
+  "independent_confirmation": 0,
+  "original_hold_unchanged": true
+}

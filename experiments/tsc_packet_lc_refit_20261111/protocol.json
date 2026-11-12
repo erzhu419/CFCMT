@@ -1,0 +1,35 @@
+{
+  "status": "COMPLETE_LC_ONLY_REFIT",
+  "scope": "One LC-only cached coefficient fit followed by the fixed training and904 regression readouts. No new physical or native simulation calls.",
+  "training": "Exactly the424 completed registered cases and objective_weight values.387 exact laws and37 corrected fixed-anchor mixture256 laws, including3 existing reused pools. Preserve all labels and the original class frequencies. The mixed proposal anchor stays the original200-iteration candidate during all optimization evaluations.",
+  "parameters": {
+    "updated": "Only the two38-dimensional lane-change coefficient rows,76 variables total.",
+    "fixed": "Keep brake, start-permission and yield-permission rows at the saved original candidate. Physical outcomes, priors, geometry and cache masks are fixed.",
+    "initialization": "The two LC rows from the saved original candidate, with no alternate starts.",
+    "objective": "sum(objective_weight_i times native LC NLL_i) plus0.001 times squared non-bias LC coefficients. Apply the same weights to analytic gradients. Record unpenalized loss and penalty separately. Other-row penalties are constant and can be omitted from optimization.",
+    "optimizer": "Exactly one scipy L-BFGS-B invocation with analytic Jacobian, maxiter200, gtol1e-7 as in the original fit. No restarts, parameter sweeps, clipping or904-selected iterate. Record all consumed function evaluations and the returned termination."
+  },
+  "reference": "Before any new optimizer result, fix a feature-free LC point within the same conditional law. Keep the first3 rows at the original candidate; set all LC non-bias coefficients to0 and LC biases to log((165/30000)/(29669/30000)) and log((166/30000)/(29669/30000)), in left/right order. These are the already registered training class ratios. Masks and all latent factors use that point normally. Report this frequency-bias reference on the same training caches and fixed904 pairs, with no numerical fit for it.",
+  "readouts": "Report zero, original candidate, frequency-bias reference and the single returned fitted point. Training outputs include natural-weight overall/per-seed/per-class NLL, class contributions, regularization, gradients and mixed ESS/maxima. Report mixed128/256 sensitivity at returned point. The fixed90462-pair exact caches provide left/right positive and stay NLL, same-direction probability and ranking wins/ties/losses.904 has already been inspected and is a regression panel.",
+  "stopping": "Nonfinite parameters, objective or gradients and loss of native support terminate the one attempt and preserve its record. Do not floor probabilities, drop references, refresh proposals or increase particles. Log weight concentration for new iterates: the endpoint raw weight bound2 does not extend to arbitrary optimized parameters. Reaching the iteration cap is recorded as incomplete convergence. Stop after the returned-point readouts.",
+  "budgets": {
+    "new_full_forward_calls": 0,
+    "new_canonical_feature_evaluations": 0,
+    "new_native_starts": 0,
+    "new_nuisance_estimations": 0,
+    "new_coefficient_fits_max": 1,
+    "optimizer_invocations_max": 1,
+    "optimized_coefficients": 76,
+    "optimizer_iterations_max": 200,
+    "new_synthetic_full_forwards": 0,
+    "calibration_seeds_used": false
+  },
+  "storage": "All caches, coefficients and per-case arrays remain server-side. Retrieve compact summaries and logs. Preserve original fits, negative evidence, native records and the original optimizer HOLD.",
+  "authorized_by": "User: 继续下一步",
+  "frozen_at_utc": "2026-11-11T02:42:21.153771+00:00",
+  "parent_protocol": "../tsc_packet_positive_covered_cache_20261111/next_protocol.json",
+  "completed_at_utc": "2026-11-11T02:46:30.573514+00:00",
+  "result": "result.json",
+  "execution": "execution.json",
+  "next_protocol": "next_protocol.json"
+}

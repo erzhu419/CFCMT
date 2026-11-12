@@ -1,0 +1,9 @@
+{
+  "task_id": "t213669",
+  "status": "INTERFACE_FAILURE_BEFORE_MODEL_FITTING",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/erzhu419/scheduleurm_work/CFCMT_V93_selected_action_calibration_20261106/run_tsc_v93_selected_action_calibration.py\", line 256, in <module>\n    raise SystemExit(main())\n  File \"/home/erzhu419/scheduleurm_work/CFCMT_V93_selected_action_calibration_20261106/run_tsc_v93_selected_action_calibration.py\", line 222, in main\n    oof_records, fit_receipts = fit_seed_oof(source, adaptation, prior_spec)\n  File \"/home/erzhu419/scheduleurm_work/CFCMT_V93_selected_action_calibration_20261106/run_tsc_v93_selected_action_calibration.py\", line 138, in fit_seed_oof\n    component = fit_target_screening_models(\n  File \"/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/source/cf_h2o/eval/traffic_signal_tsc_mechanism_offline_ablation.py\", line 475, in fit_target_screening_models\n    selector_costs = {\n  File \"/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/source/cf_h2o/eval/traffic_signal_tsc_mechanism_offline_ablation.py\", line 476, in <dictcomp>\n    city_group: {\n  File \"/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/source/cf_h2o/eval/traffic_signal_tsc_mechanism_offline_ablation.py\", line 479, in <dictcomp>\n    [\n  File \"/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/source/cf_h2o/eval/traffic_signal_tsc_mechanism_offline_ablation.py\", line 480, in <listcomp>\n    source_rule_costs[name][policy]\nKeyError: 'atlanta_1x5'\n",
+  "reason": "Frozen source computes source-rule costs before applying the explicit prior override; new checkout allowed an empty costs map.",
+  "calibration_written": false,
+  "validation_labels_loaded": false,
+  "remedy": "Supply the actual matched-label cost of the single fixed GP reference; preserve all model and calibration settings; use attempt2 directory"
+}

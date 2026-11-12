@@ -1,0 +1,267 @@
+{
+  "contract": "causal-network-packet-rollout-design-v1",
+  "status": "DESIGN_ONLY_NOT_A_COLLECTION_OR_FIT_AUTHORIZATION",
+  "scope": {
+    "question": "Can a lane/link-resolved, mass-conserving packet model recursively update network traffic and the original PP executor without future-state replacement?",
+    "new_native_starts": 0,
+    "new_fits": 0,
+    "state_claim": "Closed state of a declared approximate model, not an exact SUMO Markov state or an established deployable controller.",
+    "observation_assumption": "Fully instrumented current benchmark network. Current positions, speeds and vehicle parameters are causal simulator observations; real-road availability or estimation is a separate requirement."
+  },
+  "clock": {
+    "state_time": "S_t is measured after the completed native step ending at t and before requests at t; E_t is the matching executor memory.",
+    "native_step_sec": 1,
+    "proposed_rollout_step_sec": 1,
+    "decision_interval_sec": 10,
+    "input_cutoff": "Only observations and events timestamped at or before t may initialize or update an online observation at t.",
+    "planning_rollout": "After initialization, every subsequent packet, lane sensor value, feasible action, request and applied signal comes from the model and executor; no measured future replacement."
+  },
+  "static_graph": {
+    "lanes": [
+      "lane_id",
+      "edge_id",
+      "junction/internal flag",
+      "length_m",
+      "speed_limit_mps",
+      "width_m",
+      "shape",
+      "adjacent lanes"
+    ],
+    "connections": [
+      "from_lane",
+      "to_lane",
+      "ordered internal/via-lane chain",
+      "tls_id",
+      "link_index",
+      "direction"
+    ],
+    "conflicts": [
+      "directed foes",
+      "directed yields_to",
+      "shared receiving lane",
+      "physical connection membership for every signal link"
+    ],
+    "signal_semantics": "For dynamics, preserve complete ordered phase strings and all physical connections sharing each link; G protection and g yielding remain distinct. No any-G lane substitution in the traffic transition model. The unchanged PP scoring rule below still deduplicates its permitted incoming lanes.",
+    "executor_static": [
+      "ordered feasible green strings",
+      "per-green min_green_sec/yellow_sec/all_red_sec",
+      "clearance_lane_ids",
+      "clearance_poll_sec"
+    ],
+    "cost_lanes": "The unchanged producer controlled_lane_set; internal lanes remain state even when absent from the original cost set.",
+    "cell_index": {
+      "nominal_width_m": 15,
+      "construction": "Geometry-only intervals [15k,min(15(k+1),lane_length)) with the final lane endpoint included in the final interval.",
+      "role": "Fixed adjacency/index and diagnostic aggregation only. Exact packet positions are retained; cells are neither sufficient state nor one-vehicle capacities. A packet may cross multiple cells in one step.",
+      "capacity": "Use actual vehicle lengths/gaps and receiving geometry; do not turn L/7.5 normalization into an asserted physical capacity."
+    },
+    "identifier_use": "Vehicle/lane/TLS/link IDs are joins and graph keys, never ordinal numeric features or cross-city phase-index alignments."
+  },
+  "recursive_state": {
+    "representation": "Lane-ordered packets, each with vehicle mass exactly one, plus geometry-only cell indices and complete all-TLS executor memory.",
+    "packets": {
+      "per_packet": [
+        "persistent local packet_id",
+        "front lane_id",
+        "front position_m",
+        "speed_mps",
+        "last acceleration_mps2",
+        "lateral_position_m",
+        "lateral_speed_mps",
+        "length_m",
+        "current allowed_speed_mps",
+        "actual parameter profile reference",
+        "causal body trail",
+        "persistent latent movement/lane-change belief"
+      ],
+      "ordering": "Order by physical front distance within each lane, retaining both queue-head and following packets.",
+      "parameter_profile": [
+        "length_m",
+        "min_gap_m",
+        "accel_mps2",
+        "decel_mps2",
+        "tau_s",
+        "imperfection",
+        "max_speed_mps",
+        "speed_factor"
+      ],
+      "parameter_updates": "Record actual getter values at first observation and when they change; sample allowed speed at each current lane state. Future entrants use past-observed parameter distributions in forecasts, never their future measured profile.",
+      "body_trail": "Retain the already traversed lane/connection chain until every rear-body segment has cleared it, including current partial occupancy across lane boundaries. Maintain during the native prefix in RAM; a fixed one-second history is insufficient for a stopped straddling vehicle. Missing initial trail remains unresolved rather than being reconstructed from a future route.",
+      "movement_belief": "Unknown shared-lane destination/turn and future lane changes are persistent latent state inferred only from static legal connections and past observations. A sampled intended connection is retained for the packet, not independently resampled every second. Already occupied internal paths are observed current state.",
+      "no_fake_state": "An empty lane has no free-flow vehicle or parameter sample. Packet identities, body trail and latent choices survive recursive steps."
+    },
+    "lane_sensor_memory": {
+      "fields": [
+        "last-step vehicle IDs",
+        "vehicle_count",
+        "halted_count",
+        "occupancy_native_raw",
+        "mean_speed_mps"
+      ],
+      "purpose": "Initialize the same last-step observables consumed by PP and cost. Future sensor memory must be reconstructed from predicted packets and their one-second traversals, not copied from future SUMO getters.",
+      "halted_speed_threshold_mps": 0.1,
+      "halted_comparison": "speed strictly below threshold",
+      "native_empty_speed": "Preserve the raw getter for audit; use an empty mask rather than interpreting its placeholder as a moving vehicle."
+    },
+    "executors": {
+      "per_tls_dynamic": [
+        "mode",
+        "complete current_state",
+        "complete current_green_state",
+        "complete target_green_state",
+        "green_elapsed_sec",
+        "remaining_sec",
+        "pending_all_red_sec"
+      ],
+      "static_references": [
+        "all phase timings",
+        "ordered feasible states",
+        "clearance lane set",
+        "clearance polling interval"
+      ],
+      "clearance": "At each one-second executor update, any predicted vehicle on the specified internal clearance lanes can extend all-red. Current phase identity and pending target are retained, not only clock/mode scalars."
+    },
+    "boundary_state": {
+      "inventory": "For every entry, due external demand, waiting-to-insert packets and actually inserted packets are separate quantities. Blocking insertion keeps demand in the external queue.",
+      "current_observation": "Use only genuinely observed current/up-to-t boundary arrivals and queue information. getPendingVehicles supplies bookkeeping identities but does not by itself establish their entry-lane allocation or complete demand history.",
+      "unknown_initial_pending": "Record observed global pending count/IDs and unknown entry allocation explicitly. Do not set unobserved entry queues to zero.",
+      "forecast": "Future due arrivals, entry allocation, initial speed/parameters and turns are forecasts/beliefs based on past data; uncertainty is carried as such. Future route-file schedule is not an online input.",
+      "due_event_labels": "A sealed demand schedule may label due-at-t demand and pending/inserted accounting after collection. These labels are not automatically available deployment observations."
+    }
+  },
+  "original_policy_and_cost": {
+    "queue_score": "q_lane = H_lane + 0.35*N_lane + 0.025*occupancy_native_raw",
+    "phase_pressure": "Preserve producer GREEN_CHARS={G,g}: a lane with any such permitted link contributes its q once to the candidate's deduplicated incoming-lane sum. Restrict candidates by the predicted executor feasible set; original candidate order resolves ties. This is the existing PhasePressure rule, not a downstream MaxPressure replacement. This scoring rule does not replace the connection-resolved G/g dynamics.",
+    "recursive_requests": "Recompute all-TLS PP requests from predicted observables every 10 seconds, except the declared focal counterfactual request at time zero.",
+    "cost": "Each completed one-second step contributes the halted vehicle count on the original controlled_lane_set. C450=sum(H_controlled)/(450*controlled_lane_count). Preserve raw vehicle units and the existing denominator.",
+    "packet_getter_matching": "The measurement pilot compares reconstructed N/H/occupancy/mean speed, requests and clearance behavior against the native getters. Keep any reachable body-overlap or last-step mismatch visible; do not repair it by injecting future measurements."
+  },
+  "transition_order": [
+    "At a decision epoch apply requested all-TLS actions to E_t, respecting current phase identity, minimum green and clearance memory.",
+    "Read the resulting signal strings for interval [t,t+1). Interpret permissions per physical connection, including yielding, receiving supply and internal inventory.",
+    "Advance packets along lane/link geometry with persistent movement beliefs and receiving-space constraints; account explicitly for lateral transfers, entries, exits and terminal removals.",
+    "Process forecast due demand through external pending queues and actual insertion; a forecast packet is neither silently dropped nor inserted twice.",
+    "Construct S_(t+1) and last-step lane sensor memory from the predicted one-second evolution; advance E using the predicted internal occupancy.",
+    "Repeat from S_(t+1),E_(t+1). Measured future requests, signal strings, flows, packets and costs remain labels."
+  ],
+  "measurement_contract": {
+    "native_frames": "Record full-network preaction t0 and every completed one-second state through the declared horizon, including every internal lane and all active packets.",
+    "packet_getters": {
+      "ids": "vehicle.getIDList",
+      "lane": "vehicle.getLaneID",
+      "position_m": "vehicle.getLanePosition",
+      "speed_mps": "vehicle.getSpeed",
+      "acceleration_mps2": "vehicle.getAcceleration",
+      "lateral_position_m": "vehicle.getLateralLanePosition",
+      "lateral_speed_mps": "vehicle.getLateralSpeed",
+      "parameters": "Actual vehicle getters already used by record_vehicle_params; never unobserved vType defaults"
+    },
+    "lane_getters_every_second": [
+      "getLastStepVehicleIDs",
+      "getLastStepVehicleNumber",
+      "getLastStepHaltingNumber",
+      "getLastStepOccupancy",
+      "getLastStepMeanSpeed"
+    ],
+    "executor_trace": "Record all-TLS request, acceptance, before/after executor memory at every request epoch, applied signal before every step, and matching executor memory after every completed step.",
+    "flow_labels": "Retain per-packet observed lane/cell crossings, physical connection/internal entry and receiving entry, same-road lane changes, due/pending/insertion events and terminal exits. Unobserved skipped internal paths remain unresolved unless uniquely identifiable from past/current observations and static topology.",
+    "population": "Keep initial/final active and pending inventories, per-second departed/arrived identities and counted discontinuities. Conservation includes external queues; occupancy is vehicle-body length, not packet mass.",
+    "write_roles": "Static graph once; causal observations by timestamp; future measured trajectories/actions/flows/costs in label records. Store large traces on server and return only compact admission results."
+  },
+  "forbidden_prediction_inputs": [
+    "vehicle.getRoute, getRouteIndex, route_ends_here, getNextTLS/getNextLinks, next route edge or actual future destination",
+    "future true packet positions/speeds, lane getters, flows, signal strings, PP requests, executor states or costs",
+    "future actual departures/insertions, pending queue changes or route-file departure schedule",
+    "actual future turn/lane-change outcomes or source/target city/phase IDs used as numeric shortcuts"
+  ],
+  "old_224_reuse": {
+    "cohort": "64 Hangzhou 10-second branches plus 160 Jinan 450-second branches; original action order, paid labels, splits and HOLD conclusions remain unchanged.",
+    "causal_initialization": "Full physical t0 current vehicle position/speed and actual parameter records, all-network lane endpoint0, full executor snapshots/timings and original repaired net geometry can support causal packet initialization after excluding saved route-derived fields.",
+    "static_coverage": {
+      "hangzhou_all_net_lanes": 816,
+      "jinan_all_net_lanes": 618,
+      "hangzhou_controlled_cost_lanes": 192,
+      "jinan_controlled_cost_lanes": 144
+    },
+    "first_ten_seconds": "Observed full-network positions/lane IDs and movement events at t0..t10 are reusable labels. Speeds/parameters were injected only at t0; post-t0 packets are not dense true-speed/parameter records.",
+    "dense_lane_label_limit": "First10-second receiving-lane H/O/speed labels cover 144/192 Hangzhou cost lanes and 102/144 Jinan cost lanes; do not relabel these as complete dense all-lane measurements.",
+    "later_target_labels": "Jinan full-network lane aggregates at 10/30/60/450, all-TLS signals and PP traces, per-second total controlled halting, population ledger and 450-second costs are reusable labels, not recursive observations.",
+    "missing_for_rollout_supervision": [
+      "initial causal body trail",
+      "complete packet speed/lateral state each second",
+      "new entrant actual parameter profiles",
+      "all-lane sensor memory each second",
+      "full-network packets/flows after10",
+      "entry-resolved external pending demand history"
+    ],
+    "nominal_limit": "Saved nominal10 sequence is focal-TLS only. All-TLS nominal plans can be constructed from causal initial executor memory and requested actions, but actual clearance extensions depend on traffic predictions.",
+    "source_costs": "No new source450 cost supervision is inferred from the 10-second source branches."
+  },
+  "native_occupancy_evidence": {
+    "fixed_runtime_unit": "Native libsumo1.22 fraction of lane length occupied by vehicle bodies; retain raw values and PP coefficient0.025 without conversion.",
+    "formula_boundary": "Body overlap includes partial vehicles. Sum(length of current front-lane IDs)/lane_length is insufficient when a vehicle straddles a boundary; maintain body trail and compare with measured native getter.",
+    "observed_single_vehicle_examples": [
+      {
+        "case": "hangzhou_76115701_600",
+        "branch": "first_pp",
+        "lane": "road_3_2_3_0",
+        "vehicle_id": "101",
+        "front_position_m": 596.9877982939595,
+        "vehicle_length_m": 5.0,
+        "lane_length_m": 600.0,
+        "native_raw": 0.008333333333333333,
+        "length_over_lane": 0.008333333333333333,
+        "hundred_times_length_over_lane": 0.8333333333333334
+      },
+      {
+        "case": "jinan_76115801_600",
+        "branch": "first_pp",
+        "lane": "road_5_2_2_2",
+        "vehicle_id": "jinan_3x4_real_1050",
+        "front_position_m": 398.9989694804115,
+        "vehicle_length_m": 5.0,
+        "lane_length_m": 400.0,
+        "native_raw": 0.0125,
+        "length_over_lane": 0.0125,
+        "hundred_times_length_over_lane": 1.25
+      }
+    ],
+    "evidence_source": "Existing predecision_server_only.json + physical_start_server_only.json + original repaired net, read on jtl110gpu2 without starting SUMO.",
+    "implementation_sources": [
+      "https://raw.githubusercontent.com/eclipse-sumo/sumo/v1_22_0/src/libsumo/Lane.cpp",
+      "https://raw.githubusercontent.com/eclipse-sumo/sumo/v1_22_0/src/microsim/MSLane.cpp"
+    ],
+    "documentation_note": "Generic TraCI Python documentation says percent; it does not override this fixed native implementation and its recorded measurements."
+  },
+  "minimal_measurement_pilot_proposal": {
+    "not_authorized_by_this_file": true,
+    "city": "jinan",
+    "new_seeds": 1,
+    "fixed_preaction_states": 1,
+    "all_canonical_actions": 8,
+    "horizon_sec_per_branch": 450,
+    "native_branches": 8,
+    "source_branches": 0,
+    "fits": 0,
+    "seed_tls_anchor": "Assigned and frozen by the root protocol before any native start; not selected from pilot cost outcomes.",
+    "purpose": "Check dense observation availability, prefix body-trail initialization, native getter semantics, event/population accounting and causal executor update order. This is measurement admission, not an efficacy or transfer experiment.",
+    "hold_if_missing": "If required causal initial state or boundary observability is unavailable, report the missing state; do not promote a future-label-conditioned rollout to a deployable model.",
+    "future_training_budget": null
+  },
+  "evidence_paths": {
+    "server_study": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/response_cost_readout",
+    "collector": "experiments/tsc_response_cost_readout_20261109/collect_native.py",
+    "native_measurement": "experiments/tsc_response_cost_readout_20261109/advance_native.py",
+    "old_observer": "scripts/cluster/tsc_movement_response.py",
+    "current_packet_parameters": "experiments/tsc_response_cost_readout_20261109/lane_interface.py",
+    "executor": "cf_h2o/traffic_signal/safe_phase_controller.py",
+    "original_pp_getters": "cf_h2o/eval/traffic_signal_resco_phase_benchmark.py::_lane_queue",
+    "original_pp_selection": "cf_h2o/eval/traffic_signal_resco_cfcmt_v2.py::_rule_candidate"
+  },
+  "implementation_clarification_after_first_measurement": {
+    "case_reference": "../tsc_network_dense_measurement_20261109/observer_replay_result.json",
+    "body_trail": "The causally computed native partial-occupancy accounting trail may be remapped to logical predecessor lanes during an instantaneous lane change. It is not always the sequence of lanes traversed by the front.",
+    "observed_lane_path": "Keep the unique inferred past front-movement path separately for actual connection/flow labels. Never infer a future route from the remapped occupancy trail.",
+    "new_sensor_privilege_required": false
+  }
+}

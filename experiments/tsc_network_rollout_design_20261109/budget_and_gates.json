@@ -1,0 +1,183 @@
+{
+  "protocol": "network-rollout-staged-budget-and-gates-design-v1",
+  "status": "DESIGN_ONLY_0FIT_0SIM",
+  "current_authorization": {
+    "work": "Research design and interface review",
+    "authorized_native_starts": 0,
+    "authorized_real_data_fits": 0,
+    "next_request": "Approve only the eight-start dense-measurement pilot after its collection contract is frozen. Later stages each need a separate protocol and authorization."
+  },
+  "sequence": [
+    "dense_measurement_pilot",
+    "target_only_recursive_rollout",
+    "source_increment_paired_450s_action_cost",
+    "independent_one_hour_closed_loop"
+  ],
+  "cohort_separation": {
+    "reserved_seeds_untouched": [
+      35110701,
+      35110702,
+      35110703,
+      35110704
+    ],
+    "old_twenty_target_states_excluded_from_new_training_calibration_and_confirmation": {
+      "seeds": [
+        76115801,
+        76115802,
+        76115803,
+        76115804,
+        76115805,
+        76115806,
+        76115807,
+        76115808,
+        76115809,
+        76115810
+      ],
+      "anchors_seconds": [
+        600,
+        1800
+      ]
+    },
+    "other_consumed_data": "Existing corridor development, confirmation, native-pilot and source-prior studies retain their original roles. Their outcomes do not select new hyperparameters or count as fresh network-rollout validation.",
+    "pilot_role": "Engineering measurement only. All eight counterfactual branches remain permanently outside future model training, calibration, development and confirmation cohorts.",
+    "new_roles": "Assign complete seeds to training, calibration, paired-action evaluation and final one-hour confirmation before collecting those cohorts. No seed, overlapping trajectory window or branch from one initial state crosses roles.",
+    "target_online_budget_unit": "A single native trajectory of actually executed actions, measured in trajectory-hours, actual transitions and complete seeds. Eight simulated counterfactual arms are eight measurement branches, not eight online trajectories available from one deployment."
+  },
+  "execution_and_storage": {
+    "permitted_hosts": [
+      "jtl110gpu",
+      "jtl110gpu2",
+      "jtl311linux"
+    ],
+    "raw_trajectories_and_models": "Remain on the execution server",
+    "local_artifacts": "Protocol, code, logs and compact aggregate results",
+    "failure_accounting": "Every started native branch and attempted fit consumes its declared budget. Preserve failures and partial records. A failed stage stops progression; no automatic retry, replacement seed, extra branch or budget enlargement."
+  },
+  "stages": {
+    "dense_measurement_pilot": {
+      "status": "PROPOSED_NEXT_MEASUREMENT_ONLY",
+      "purpose": "Determine whether the frozen causal network-state and executor contract can be observed densely and whether its physical ledgers and cost labels close under native execution.",
+      "target_city": "jinan",
+      "source_native_starts": 0,
+      "target_native_starts_maximum": 8,
+      "real_data_fits": 0,
+      "candidate_seed": 76116801,
+      "seed_status": "No match found in existing local project experiment/code/paper manifests before this new design was written; proposal registration only, not a consumed seed.",
+      "focal_tls": "intersection_2_2",
+      "anchor_seconds": 600,
+      "opportunity": "First eight-action opportunity in [600,660] under the existing native-prefix contract; no outcome-conditioned state replacement",
+      "states": 1,
+      "canonical_actions_per_state": 8,
+      "post_action_horizon_seconds": 450,
+      "post_anchor_simulated_seconds_at_full_completion": 3600,
+      "prefix_contract": "The first PP discovery continues as the PP branch and counts within the eight starts. Other actions replay natively from time zero with the same seed, demand and repaired network. Compare the complete preaction state directly; no loadState or extra discovery run.",
+      "continuation": "After the initial focal request, each branch runs its own factual network and PP continuation. Recorded future PP requests, actual signals and arrivals are measurement labels.",
+      "measurement_contract": "data_contract.json defines the dense full-network, internal-lane, packet state, persistent latent movement inventory, executor and boundary records. Observe the full 0..450-second window. The packet representation uses a 15-metre auxiliary spatial index, a one-second state update and a ten-second decision cadence; deployed packets do not assume known individual routes.",
+      "state_update_seconds": 1,
+      "decision_interval_seconds": 10,
+      "auxiliary_spatial_index_metres": 15,
+      "admission": {
+        "complete_native_measurement": "All eight branches satisfy the fixed horizon, clock, action roster, preaction pairing and dense field contract. Retain every branch; an incomplete essential record fails the pilot.",
+        "ledger_and_cost_closure": "Direct counts establish network vehicle accounting and reproduce each actual controlled-lane stopped-vehicle-second integral and its stored 450-second cost. Internal and boundary transfers have explicit meanings rather than disappearing mass.",
+        "causal_partition": "Each field is assigned to t0 information, static geometry, modeled exogenous input, or future supervision. A realized future signal, PP request, vehicle departure or downstream state cannot silently enter a free rollout as known input.",
+        "recursive_state_exposure": "The review identifies every state quantity needed by the next transition and PP/executor update, together with how it is predicted or updated. Missing persistent latent movement inventory, spatial ordering, boundary insertion or clearance state is an exposed design failure, not an imputed observation or an assumption that deployed routes are known.",
+        "decision": "Passing permits a separate target-only model protocol to be proposed. It authorizes neither fitting nor a claim of predictive or control benefit. Failing stops before model fitting."
+      },
+      "performance_gate": null,
+      "statistical_power_claim": null,
+      "prefix_seconds_maximum": 5280,
+      "total_simulated_seconds_maximum": 8880,
+      "dense_postaction_frames_at_full_completion": 3608
+    },
+    "target_only_recursive_rollout": {
+      "status": "CONDITIONAL_FUTURE_PROTOCOL_REQUIRED",
+      "prerequisite": "Dense-measurement admission and an explicit recursive state, boundary process, kernel, action search and executor contract",
+      "source_data_used": false,
+      "budget": {
+        "training_target_seeds": null,
+        "single_trajectory_hours_per_training_seed": null,
+        "calibration_target_seeds": null,
+        "calibration_trajectory_hours": null,
+        "real_data_fits": null,
+        "reason_unset": "The packet-state recursion contract is defined in this design; the statistical kernel family, complexity and required training coverage are not yet selected. The eight pilot branches supply neither a training sample budget nor a justified power estimate."
+      },
+      "training_unit": "Target observations from single trajectories of actual executed actions. Freeze the behavior policy, logging interval, data amount and all seed roles before collection.",
+      "model_scope": "One target-only transition family and one fixed planning rule. The cost is computed from rollout stopped counts; this stage does not reopen the closed 211-dimensional cost-reader recipe.",
+      "exposure_gates": {
+        "one_step": "The executed action a_t is an observed conditioning variable for a supervised transition. Report state and flow errors, numerical mass balance and executor consistency using held calibration transitions. Conditional diagnostics using future observed execution are labeled as such.",
+        "free_rollout": "Advance the complete predicted network state, predicted or predeclared exogenous boundary process, PP decisions and executor together without replacing intermediate states, signals or requests by their recorded future values.",
+        "cost_definition": "For fixed controlled-lane count L, I450=sum(t=1..450) sum(lane in controlled lanes) H_lane(t)*1 second is the unnormalized stopped-vehicle-second integral. C450=I450/(450*L) is the normalized mean halting vehicles per controlled lane. Compute predicted and actual values with the same lane roster and normalization; C450 is not trip waiting time.",
+        "cost_calibration": "Check free-rollout cost prediction against actual target calibration trajectories with complete state, population and executor accounting. Calibration observations are separate from the later selected-action evaluation panel; a small absolute cost error does not establish correct action contrasts.",
+        "thresholds": null,
+        "threshold_rule": "Set quantitative state-error, conservation, executor and cost-calibration tolerances in the target-only protocol before calibration outcomes are inspected. The present measurement design leaves their values unset because the recursive kernel is not yet selected.",
+        "decision": "Technical state/executor and cost-calibration admission permits a separately budgeted, single T/S/P action-cost comparison. T need not first beat PP: a source prior may rescue a weak few-shot target model. Prediction MAE or ledger closure alone cannot pass a control gate."
+      }
+    },
+    "source_increment_paired_450s_action_cost": {
+      "status": "CONDITIONAL_ON_TECHNICAL_ADMISSION_AND_SEPARATE_BUDGET",
+      "prerequisite": "The target-only recursive state, executor and cost predictor pass the separately frozen technical calibration gates. A new protocol approves one T/S/P comparison; target-only superiority to PP is not a prerequisite.",
+      "budget": {
+        "source_cities": null,
+        "source_complete_seeds": null,
+        "source_offline_trajectory_hours": null,
+        "target_single_trajectory_training_hours": "Identical for T, S and P; use the approved target-training cohort only",
+        "target_calibration_budget": "Identical for T, S and P; separate from action-cost evaluation",
+        "new_evaluation_seeds": null,
+        "preselected_states_per_seed": null,
+        "native_starts_upper_bound": "4 * evaluation_seeds * states_per_seed; one branch per distinct frozen {T,S,P,PP} action",
+        "post_action_seconds_per_branch": 450,
+        "real_data_fits": null
+      },
+      "arms": {
+        "T": "Target-only recursive dynamics",
+        "S": "Real source transition information plus the same target observations",
+        "P": "A frozen source-label placebo with the same source amount, numerical input support, target observations and fitting budget as S"
+      },
+      "source_information": "Use transferable local passage, supply and conservation dynamics with explicit topology and action semantics. Source 450-second costs and target evaluation costs do not train or calibrate any arm. The actual action a_t can condition a supervised transition; future actions beyond the current rollout state are not known planning inputs.",
+      "observed_execution_labels": "Factual applied signals accompany transition supervision and check request/executor semantics. Conditional diagnostics using observed execution are labeled as such. A free planning rollout generates its signals and PP requests from its own predicted state and causal executor; recorded future plans are never supplied as known planning inputs.",
+      "fairness": "T/S/P share target trajectory amount, train/calibration seed roles, observation definitions, planner and action-search budget. Fit source preprocessing and priors on source training data only; target adaptation and its weighting use target training/calibration only. Keep whole transitions jointly coherent when defining P; freeze its construction before evaluation.",
+      "selection_and_pairing": "Freeze T/S/P selections from t0 information before reading the state's future cost labels. Run their distinct actions and PP from the same native preaction state; each follows its own factual 450-second PP continuation. Identical requests share a measurement branch.",
+      "primary": "Actual C450 differences S-minus-T and S-minus-P, with S-minus-PP also reported and required for progression; C450=I450/(450*L) on the same controlled-lane roster",
+      "aggregation_and_uncertainty": "Average preselected states within each complete seed, then weight complete seeds equally. Freeze the paired 95% interval method and seed count before the action-cost evaluation panel is collected.",
+      "pass_gate": "All three predeclared paired upper confidence bounds S-minus-T, S-minus-P and S-minus-PP are strictly below zero on the same new evaluation panel",
+      "secondary": [
+        "Frozen T-minus-PP comparison",
+        "Harmful and beneficial overrides",
+        "Rollout cost calibration and action ranking",
+        "State and flow errors"
+      ],
+      "zero_increment": "Identical T/S actions or a source correction reduced to target-only fallback establish no source control increment, even if the combined system beats PP.",
+      "failure_stop": "A failed gate closes this source-increment recipe while retaining every T/S/P result. Do not select a favorable city, seed subset, source or threshold after reading the panel.",
+      "interpretation": "Passing supports source-attributable single-intervention 450-second value under PP continuation. It does not establish one-hour repeated-control benefit."
+    },
+    "independent_one_hour_closed_loop": {
+      "status": "SEPARATE_CONFIRMATION_AFTER_ACTION_COST_GATES",
+      "budget": {
+        "independent_confirmation_seeds": null,
+        "policies": [
+          "T",
+          "S",
+          "P",
+          "PP"
+        ],
+        "native_runs_upper_bound": "4 * confirmation_seeds",
+        "seconds_per_native_run": 3600,
+        "additional_fits": 0
+      },
+      "frozen_before_panel": "All models, target adaptation, planner settings, control scope and action cadence are frozen before the confirmation trajectories begin.",
+      "pairing": "Use the same demand seeds, network and executor for all policies. Each policy repeatedly controls its own evolving network for the whole hour; this is a different estimand from same-state single-action branching.",
+      "primary": "Actual C3600=I3600/(3600*L), where I3600=sum(t=1..3600) sum(controlled lanes) H_lane(t)*1 second and L is the fixed controlled-lane count. Weight complete seeds equally and compute paired uncertainty across seeds.",
+      "secondary_waiting": "Waiting time may be reported separately with its own vehicle cohort, denominator and units. It is not a substitute for C3600 and adds no performance gate.",
+      "pass_gate": "Source-contribution confirmation requires S-minus-T, S-minus-P and S-minus-PP paired upper confidence bounds below zero. Report the frozen target-only T-minus-PP comparison as well.",
+      "failure_stop": "A failed full-hour gate limits the conclusion to any earlier passed stage; no confirmation-based retuning or automatic new panel follows.",
+      "policy_continuation_unresolved": "Current design specifies Q_PP single-intervention rollout only. Before any one-hour panel choose and freeze model intervention scope/cadence and continuation;10s repeated learned actions do not share the450s PP-continuation estimand. No full-hour learned policy is selected or authorized here.",
+      "poststep_cost_timing": "For C3600 integrate H after each completed native second1..3600; never include the initialization frame as a cost sample."
+    }
+  },
+  "limits": [
+    "The eight-start pilot estimates interface feasibility, not expected effect size or statistical power.",
+    "Dense factual measurement does not by itself prove a Markov state or identify unexecuted-action dynamics.",
+    "Per-transition, per-lane and per-action observations are dependent within a trajectory; they do not replace independent complete seeds for uncertainty.",
+    "Only future stage protocols can set model-dependent training and evaluation counts. The current design does not authorize the whole research program."
+  ]
+}

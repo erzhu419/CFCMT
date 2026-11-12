@@ -1,0 +1,21 @@
+{
+  "status": "FROZEN_NOT_RUN",
+  "question": "Does adding Hangzhou stopped-queue discharge measured at Jinan's native accel improve fixed high-arm predictions on untouched Jinan seeds?",
+  "target_seeds": [34110701, 34110702, 34110703, 34110704],
+  "native_target": "Use the same native Jinan network, vehicle parameters, PP prefix and phase executor as inputs.json. Use the original two straight vehicle IDs in order of stop-line distance. Outcome is entry by t+10 inclusive of the second vehicle under the preselected high request.",
+  "development_counts": {
+    "columns": ["right_near", "straight_near", "jinan_n", "jinan_native_entries", "hangzhou_n", "hangzhou_at_2.0_entries", "hangzhou_at_2.6_entries"],
+    "rows": [[1,2,1,0,1,0,1], [1,3,2,1,2,0,2], [1,4,4,0,1,0,1], [1,5,4,1,1,0,1], [2,3,3,1,2,1,2], [3,2,1,0,2,0,2]]
+  },
+  "frozen_predictions": {
+    "notation": "T = native Jinan rate at this point, A = Hangzhou rate at this point after both cars receive accel 2.0, H = native Hangzhou rate at this point. Pooling all development cases gives T_pool=3/15 and A_pool=1/9.",
+    "candidate": "(T+A)/2",
+    "controls": ["T", "T_pool", "(T+T_pool)/2", "(T+A_pool)/2", "(T+H)/2"],
+    "weights": "Use exactly one half wherever shown; all prediction arms share the six strata, development target labels and test cases. No calibration on evaluation seeds."
+  },
+  "selection": "Take a 3600-second PP preaction census at the existing ten-second cadence for each seed. Use the previous Jinan opportunity rule: eight candidates, high/low nominal straight priority exposure 4/0, six fixed right/straight counts. Additionally require exactly zero speed for both front straight vehicles at t0. For each seed iterate points lexicographically, take the earliest eligible epoch then lexicographically first (tls_id,right_id,straight_id), skipping already used times and continuous both-supplied visits as in the existing selector. Freeze all rosters before opening branch outcomes.",
+  "coverage": "Require all six points in each of the four seeds for a balanced comparison. If coverage fails, report the missing cells and stop before branch replay; do not replace a seed, point or cohort.",
+  "acquisition": "One native high branch per frozen case; bind the preaction state, chosen high request and two vehicle IDs. Preserve the actual signal and any clearance extension in the evaluation. Stop on unsafe, irreproducible or incomplete records.",
+  "budget": {"new_1h_pp_censuses": 4, "max_prefix_replays_after_census": 24, "max_new_10s_high_branches": 24, "fits": 0, "closed_loop_evaluations": 0},
+  "decision": "Brier loss (probability minus binary entry indicator, squared), mean over six points then equally over four seeds. Report all controls, per-seed losses and paired differences. Only consider an independent action-contrast study if the candidate has strictly lower overall loss than every control and improves on the same-strength target-only (T+T_pool)/2 in at least three of four seeds. Otherwise close this fixed predictor. This is an exploratory prediction gate."
+}

@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-09",
+  "status": "FROZEN_MODEL_MECHANISM_DIAGNOSTIC",
+  "previous_result": "../tsc_corridor_residual_transfer_20261109/development_result.json",
+  "scope": "Existing12PP development hours and exact frozen histogram rules; no new candidate, weight/threshold adjustment, simulation, action branch or confirmation.",
+  "model_restore": "Rebuild deterministic histograms from identical8h source and block-specific2h target data; verify all previous per-seed five-arm MAEs, edge denominators and request differences before interpretation.",
+  "decision_chain": [
+    "raw CDF",
+    "fixed0.5 decoded detector arrivals",
+    "tail-shifted service arrivals",
+    "legal-phase score differences",
+    "relative source score changes vs T winner",
+    "original first-index tie and requested phase"
+  ],
+  "partitions": [
+    "locked/unlocked",
+    "original common-scored/all observable risk",
+    "endpoint-only/service-only/both decoded changes",
+    "unchanged score/common additive shift/margin not crossed/tie rules/request changed"
+  ],
+  "timing": "Keep physical ETA continuous and actual tail_s; inspect detectorCDF1..10 as well as original ten service columns. No longer horizon or alternative threshold.",
+  "score_explanation": "For T winner versus every legal rival, retain queue-base gap, T arrival-credit gap and S relative-score change; describe only PP-state requests, never realized counterfactual benefit.",
+  "negative_transfer_features": [
+    "current lane",
+    "physical history ETA bin",
+    "past10s speed ratio bin",
+    "queued_at_entry",
+    "fixed block",
+    "seed",
+    "edge"
+  ],
+  "loss_attribution": "Use actual edge-epoch |prediction-count\u2212truth| changes. Single changed context gets exact contribution; several changed contexts joint; separate each partition. Weight each seed edge loss1/(6*Nseed_scope). Per-flight FP/FN only diagnostics.",
+  "source_comparison": "Compare same-cell real source and target CDF, sample counts and physical prior fractions; distinguish empirical distribution gap from unequal sample-size shrinkage.",
+  "labels": "Future outcomes read only after fixed forecasts and scores; no output changes fed back into model.",
+  "stop": "Keep HOLD_RESIDUAL_DEVELOPMENT; produce concise diagnostic and next-step recommendation only.",
+  "execution": "jtl110gpu2; all raw records and model counts stay server-side, pull compact aggregates only."
+}

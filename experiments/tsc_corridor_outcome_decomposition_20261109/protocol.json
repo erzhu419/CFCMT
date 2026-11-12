@@ -1,0 +1,84 @@
+{
+  "status": "LOCKED_BEFORE_OUTCOME_DECOMPOSITION",
+  "date": "2026-11-09",
+  "scope": "Existing-record outcome description only. No model, action, calibration fit, parameter search, simulator or new data.",
+  "previous_stage": "tsc_corridor_state_stratification_20261109",
+  "frozen_contexts": [
+    [
+      true,
+      1,
+      "(0.5,0.9]",
+      false
+    ],
+    [
+      true,
+      1,
+      "(0.5,0.9]",
+      true
+    ],
+    [
+      true,
+      2,
+      "(0.5,0.9]",
+      false
+    ],
+    [
+      true,
+      2,
+      "(0.5,0.9]",
+      true
+    ],
+    [
+      true,
+      3,
+      "(0.5,0.9]",
+      false
+    ],
+    [
+      true,
+      4,
+      "(0.5,0.9]",
+      false
+    ],
+    [
+      true,
+      5,
+      "(0.5,0.9]",
+      false
+    ],
+    [
+      true,
+      5,
+      "(0.5,0.9]",
+      true
+    ],
+    [
+      true,
+      7,
+      "(0.5,0.9]",
+      false
+    ]
+  ],
+  "detector_horizon_sec": 10,
+  "outcome_classes": [
+    "straight_by10",
+    "straight_after10",
+    "other_by10",
+    "other_after10",
+    "terminal_by10",
+    "terminal_after10",
+    "censored"
+  ],
+  "semantics": "straight/other denote detector crossing in monitored straight/other lane; terminal is SUMO-reported trip arrival before paired detector completion; censored remains active at recorded end. after10 denotes final observed event after the fixed complete10s window, not an event within it.",
+  "censoring": "Complete10s window required. A censored record with observed end>=t+10 is known not to arrive within10s; final eventual outcome remains unknown. No zero-label records dropped.",
+  "cohort": "Same40 hours and nine frozen contexts; all eligible records in them. Othercity donor8h only as source, own local3x2h anddev6h; pilots/reserved excluded.",
+  "conditioning": "On unlocked rows, preceding sameTLS PP request identifies currentgreen; existing exact nominal reconstruction yields currentphase aggregate halted count, zero versuspositive. Edge currentprotected from that recovered candidate mask. Locked/joint-unidentified separate unknown; no lane queue fabricated.",
+  "populations": "All matched nonspillback moving flights with full10s outcomes. Primary target-dev reference unlocked (actual choice opportunity); secondary reference allobservable. Source/adapt fulloriginal observable population retained, including unknown.",
+  "weights": "Within each frozen context and paired adapt/dev block, fixed empirical dev state weights on identifiable states common to source/local_adapt/dev. Source8h unchanged acrossblocks. Also pooled andperdevseed with pairedlocalblock; all6seeds retained.",
+  "decomposition": "On identical full/common/standardized populations, seven rates sum1 and source-minus-dev straight_by10 gap equals minus sum of six no-straight-by10 component gaps. Same for local_minus_dev. Keep full-to-common separately.",
+  "reproduction": "Every prior hour category0..10 counts/CDF, roster and risk set, state support and weights, block/seed comparisons reproduced. Integer observations exact; float arithmetic within1e-12 to accommodate unordered summation.",
+  "aggregation": "Preserve perhour, threeblocks, sixdevseeds andpooled descriptive results. Do not pool outcomes into a changed predictor or choose a new horizon; query risk is correlated repeated flight snapshots.",
+  "interpretation": "Can distinguish observed late straight detection from changed endpoint mixture, but cannot identify red-light/queue/lane-change intent or other physical causes. Existing development and preselected contexts are reused; no independent confirmation or actual control-cost result.",
+  "execution": "jtl110gpu2. Full raw records stay server-side; pull compressed aggregate only.",
+  "prior_development_gate": "DEVELOPMENT_SIGNAL_ONLY unchanged; no new pass gate or automatic native branch."
+}

@@ -1,0 +1,158 @@
+{
+  "status": "PASS_INPUT",
+  "source": {
+    "groups": 195,
+    "rows": 1560,
+    "controlled_lane_count": 8,
+    "horizon_sec": 450,
+    "physical_cost_factor": 3600,
+    "reference_rule": "phase_pressure; first maximum green_q in original candidate order",
+    "reference_groups": 195,
+    "group_range_per_lane_min_median_max": [
+      0.005833333333333329,
+      0.21138888888888885,
+      0.7550000000000001
+    ],
+    "maximum_abs_physical_delta": 2261.9999999999995,
+    "seed_group_counts": {
+      "2027": 66,
+      "3037": 64,
+      "4047": 65
+    }
+  },
+  "target": {
+    "groups": 100,
+    "rows": 800,
+    "controlled_lane_count": 144,
+    "horizon_sec": 450,
+    "physical_cost_factor": 64800,
+    "reference_rule": "phase_pressure; first maximum green_q in original candidate order",
+    "reference_groups": 100,
+    "group_range_per_lane_min_median_max": [
+      0.013441358024691263,
+      0.037507716049382744,
+      0.07739197530864206
+    ],
+    "maximum_abs_physical_delta": 5015.0000000000055,
+    "seed_group_counts": {
+      "127178": 10,
+      "134310": 10,
+      "150744": 10,
+      "150945": 10,
+      "161481": 10,
+      "163775": 10,
+      "173412": 10,
+      "177524": 10,
+      "180314": 10,
+      "188625": 10
+    }
+  },
+  "state_feature_names": [
+    "total_q",
+    "total_veh",
+    "mean_speed",
+    "mean_occ",
+    "lane_count_norm",
+    "candidate_count_norm",
+    "time_sin",
+    "time_cos",
+    "current_green_elapsed_norm",
+    "queue_concentration",
+    "graph_upstream_q_mean",
+    "graph_downstream_q_mean",
+    "graph_neighbor_q_max",
+    "graph_two_hop_q_mean",
+    "graph_neighbor_occ_mean",
+    "graph_neighbor_pressure_mean",
+    "graph_global_q_per_tls",
+    "graph_global_q_p90",
+    "graph_focal_q_percentile",
+    "graph_focal_to_neighbor_q_ratio",
+    "graph_in_degree_norm",
+    "graph_out_degree_norm",
+    "network_active_per_tls"
+  ],
+  "action_feature_names": [
+    "phase_duration_norm",
+    "green_q",
+    "red_q",
+    "green_veh",
+    "red_veh",
+    "green_occ",
+    "red_occ",
+    "green_down_q",
+    "green_down_occ",
+    "green_link_ratio",
+    "green_lane_ratio",
+    "service_pressure",
+    "red_pressure",
+    "switch_indicator",
+    "clearance_fraction",
+    "current_phase_overlap",
+    "green_q_mean",
+    "green_q_max",
+    "green_q_cv",
+    "red_q_max",
+    "red_q_cv",
+    "green_speed_mean",
+    "red_speed_mean",
+    "green_occ_max",
+    "red_occ_max",
+    "green_down_q_max",
+    "green_down_occ_max",
+    "green_down_occ_std",
+    "green_movement_ratio",
+    "green_outgoing_ratio",
+    "green_movement_down_q_mean",
+    "green_movement_down_occ_mean",
+    "green_movement_down_occ_max",
+    "movement_service_pressure",
+    "green_signal_down_q_mean",
+    "green_signal_down_q_max",
+    "green_signal_down_occ_mean",
+    "green_signal_down_occ_max",
+    "green_signal_reach_ratio",
+    "green_corridor_pressure"
+  ],
+  "state_feature_count": 23,
+  "action_feature_count": 40,
+  "topology": {
+    "cologne": {
+      "controlled_lanes": 8,
+      "signals": 1,
+      "net": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.net.xml"
+    },
+    "jinan_3x4_real": {
+      "controlled_lanes": 144,
+      "signals": 12,
+      "net": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9/jinan_3x4_real/jinan_3x4_real.net.xml"
+    },
+    "jinan_3x4_real_2000": {
+      "controlled_lanes": 144,
+      "signals": 12,
+      "net": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9/jinan_3x4_real_2000/jinan_3x4_real_2000.net.xml"
+    },
+    "jinan_3x4_real_2500": {
+      "controlled_lanes": 144,
+      "signals": 12,
+      "net": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9/jinan_3x4_real_2500/jinan_3x4_real_2500.net.xml"
+    }
+  },
+  "source_native_contract": {
+    "collision_accounting": "diagnostic_not_admission_gate",
+    "continuation_policy": "phase_pressure",
+    "controlled_lane_count": 8,
+    "cost_aggregation": "mean_native_halted_vehicles_per_controlled_lane",
+    "cost_samples": 450,
+    "features_context_priors": "unchanged_original_candidate_rows",
+    "first_interval_sec": 10,
+    "horizon_sec": 450,
+    "prefix_policy": "phase_pressure",
+    "snapshot_restore_used": false,
+    "start": "fresh_sumo_start_with_original_seed"
+  },
+  "legacy_prediction_columns_used": false,
+  "new_fits": 0,
+  "new_simulations": 0,
+  "limits": "Source is one junction; matching units does not equate its propagation effects with Jinan's network. Source and target retain their original selected development-state distributions."
+}

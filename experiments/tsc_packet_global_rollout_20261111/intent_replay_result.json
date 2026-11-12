@@ -1,0 +1,1107 @@
+{
+  "status": "COMPLETE_SHORT_INTENT_DIAGNOSTIC",
+  "horizon_sec": 30,
+  "planned_cases": 96,
+  "planned_model_steps": 2880,
+  "completed_cases": 96,
+  "checked_model_steps": 2880,
+  "new_native_starts": 0,
+  "new_fits": 0,
+  "workers": 12,
+  "failure": null,
+  "native_seeds": [
+    76116911,
+    76116912
+  ],
+  "anchor_seconds": [
+    600,
+    1200
+  ],
+  "scenario_seeds": [
+    76117001,
+    76117002,
+    76117003,
+    76117004,
+    76117005,
+    76117006,
+    76117007,
+    76117008
+  ],
+  "arms": [
+    "baseline",
+    "lane_conditioned",
+    "route_oracle"
+  ],
+  "green_entry": "First stopline crossing by an anchor-cohort vehicle with applied G/g at the physical link.",
+  "signal_source": "Archived native applied signal states for each second.",
+  "windows": [
+    {
+      "seed": 76116911,
+      "anchor_sec": 600,
+      "native": {
+        "cohort_size": 189,
+        "oracle_ordinary_covered": 690,
+        "ordinary_at_anchor": 690,
+        "oracle_cohort_covered": 189,
+        "checkpoints": {
+          "10": {
+            "halted_total": 216,
+            "active_total": 710,
+            "cohort_active": 189,
+            "cohort_halted": 151,
+            "cohort_moving_to_halt": 12,
+            "cohort_halt_to_moving": 19,
+            "cohort_green_starts": 19,
+            "cohort_crossed_stopline": 28,
+            "cohort_green_entries": 28,
+            "cohort_crossing_green_unresolved": 0,
+            "cohort_terminal_exits": 0,
+            "inserted": 25
+          },
+          "30": {
+            "halted_total": 208,
+            "active_total": 709,
+            "cohort_active": 189,
+            "cohort_halted": 94,
+            "cohort_moving_to_halt": 16,
+            "cohort_halt_to_moving": 76,
+            "cohort_green_starts": 76,
+            "cohort_crossed_stopline": 82,
+            "cohort_green_entries": 82,
+            "cohort_crossing_green_unresolved": 0,
+            "cohort_terminal_exits": 0,
+            "inserted": 64
+          }
+        }
+      },
+      "arms": {
+        "baseline": {
+          "checkpoints": {
+            "10": {
+              "halted_total": 262.625,
+              "active_total": 706,
+              "cohort_active": 188.625,
+              "cohort_halted": 174.25,
+              "cohort_moving_to_halt": 35,
+              "cohort_halt_to_moving": 20.125,
+              "cohort_green_starts": 4,
+              "cohort_crossed_stopline": 13,
+              "cohort_green_entries": 11.625,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0.375,
+              "inserted": 16.5,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 4.375,
+                "route_incompatible": 18.5,
+                "start_permission_denied": 14.75,
+                "start_permitted_but_proposal_below_stop_speed": 8.375,
+                "still_stopped": 23.125,
+                "stopped_on_factual_release": 24
+              }
+            },
+            "30": {
+              "halted_total": 357.625,
+              "active_total": 705.25,
+              "cohort_active": 188.5,
+              "cohort_halted": 155.625,
+              "cohort_moving_to_halt": 65.25,
+              "cohort_halt_to_moving": 63.25,
+              "cohort_green_starts": 26.25,
+              "cohort_crossed_stopline": 29.875,
+              "cohort_green_entries": 28.375,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0.5,
+              "inserted": 47.625,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 14.375,
+                "route_incompatible": 62.125,
+                "selected_signal_not_green": 0.125,
+                "start_permission_denied": 55.375,
+                "start_permitted_but_proposal_below_stop_speed": 38.125,
+                "still_stopped": 93.5,
+                "stopped_on_factual_release": 106.875
+              }
+            }
+          },
+          "mean_intent_counts": {
+            "cohort_size": 189,
+            "changed_from_baseline": 0,
+            "baseline_incompatible": 116.5,
+            "selected_incompatible": 116.5,
+            "no_conditioned_support": 0,
+            "oracle_present": 0,
+            "oracle_legal": 0,
+            "oracle_incompatible": 0,
+            "agrees_with_oracle": 0,
+            "baseline_end": 0.875,
+            "selected_end": 0.875
+          },
+          "errors_at_30": {
+            "signed_halt_error": 149.625,
+            "positive_halt_excess": 149.625,
+            "absolute_halt_error": 149.625,
+            "signed_green_entry_error": -53.625,
+            "absolute_green_entry_error": 53.625
+          }
+        },
+        "lane_conditioned": {
+          "checkpoints": {
+            "10": {
+              "halted_total": 243.875,
+              "active_total": 705.125,
+              "cohort_active": 187.75,
+              "cohort_halted": 156.625,
+              "cohort_moving_to_halt": 40.125,
+              "cohort_halt_to_moving": 40.875,
+              "cohort_green_starts": 13.25,
+              "cohort_crossed_stopline": 28.125,
+              "cohort_green_entries": 26,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 1.25,
+              "inserted": 16.5,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 5,
+                "end_intent": 0.5,
+                "start_permission_denied": 3.625,
+                "start_permitted_but_proposal_below_stop_speed": 9,
+                "still_stopped": 12.625,
+                "stopped_on_factual_release": 17.375
+              }
+            },
+            "30": {
+              "halted_total": 291.25,
+              "active_total": 702.5,
+              "cohort_active": 186.375,
+              "cohort_halted": 104,
+              "cohort_moving_to_halt": 85.875,
+              "cohort_halt_to_moving": 113.5,
+              "cohort_green_starts": 71,
+              "cohort_crossed_stopline": 77.25,
+              "cohort_green_entries": 74.875,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 2.625,
+              "inserted": 47.625,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 11.875,
+                "end_intent": 1.625,
+                "start_permission_denied": 12.375,
+                "start_permitted_but_proposal_below_stop_speed": 31.5,
+                "still_stopped": 43.875,
+                "stopped_on_factual_release": 78.625
+              }
+            }
+          },
+          "mean_intent_counts": {
+            "cohort_size": 189,
+            "changed_from_baseline": 119.5,
+            "baseline_incompatible": 116.5,
+            "selected_incompatible": 0,
+            "no_conditioned_support": 0,
+            "oracle_present": 0,
+            "oracle_legal": 0,
+            "oracle_incompatible": 0,
+            "agrees_with_oracle": 0,
+            "baseline_end": 0.875,
+            "selected_end": 4.875
+          },
+          "errors_at_30": {
+            "signed_halt_error": 83.25,
+            "positive_halt_excess": 83.25,
+            "absolute_halt_error": 83.25,
+            "signed_green_entry_error": -7.125,
+            "absolute_green_entry_error": 7.125
+          }
+        },
+        "route_oracle": {
+          "checkpoints": {
+            "10": {
+              "halted_total": 244.125,
+              "active_total": 706.375,
+              "cohort_active": 189,
+              "cohort_halted": 156.75,
+              "cohort_moving_to_halt": 40,
+              "cohort_halt_to_moving": 41.25,
+              "cohort_green_starts": 13.875,
+              "cohort_crossed_stopline": 28.75,
+              "cohort_green_entries": 26.5,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0,
+              "inserted": 16.5,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 5,
+                "start_permission_denied": 3.375,
+                "start_permitted_but_proposal_below_stop_speed": 8.75,
+                "still_stopped": 12.125,
+                "stopped_on_factual_release": 17.375
+              }
+            },
+            "30": {
+              "halted_total": 291.875,
+              "active_total": 705.125,
+              "cohort_active": 189,
+              "cohort_halted": 104.5,
+              "cohort_moving_to_halt": 87.125,
+              "cohort_halt_to_moving": 115.25,
+              "cohort_green_starts": 72.75,
+              "cohort_crossed_stopline": 79.375,
+              "cohort_green_entries": 76.875,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0,
+              "inserted": 47.625,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 11.875,
+                "start_permission_denied": 11.5,
+                "start_permitted_but_proposal_below_stop_speed": 30.75,
+                "still_stopped": 42.25,
+                "stopped_on_factual_release": 78.5
+              }
+            }
+          },
+          "mean_intent_counts": {
+            "cohort_size": 189,
+            "changed_from_baseline": 117.375,
+            "baseline_incompatible": 116.5,
+            "selected_incompatible": 0,
+            "no_conditioned_support": 0,
+            "oracle_present": 189,
+            "oracle_legal": 189,
+            "oracle_incompatible": 0,
+            "agrees_with_oracle": 189,
+            "baseline_end": 0.875,
+            "selected_end": 0
+          },
+          "errors_at_30": {
+            "signed_halt_error": 83.875,
+            "positive_halt_excess": 83.875,
+            "absolute_halt_error": 83.875,
+            "signed_green_entry_error": -5.125,
+            "absolute_green_entry_error": 5.125
+          }
+        }
+      }
+    },
+    {
+      "seed": 76116911,
+      "anchor_sec": 1200,
+      "native": {
+        "cohort_size": 175,
+        "oracle_ordinary_covered": 652,
+        "ordinary_at_anchor": 652,
+        "oracle_cohort_covered": 175,
+        "checkpoints": {
+          "10": {
+            "halted_total": 182,
+            "active_total": 656,
+            "cohort_active": 175,
+            "cohort_halted": 137,
+            "cohort_moving_to_halt": 10,
+            "cohort_halt_to_moving": 24,
+            "cohort_green_starts": 24,
+            "cohort_crossed_stopline": 27,
+            "cohort_green_entries": 27,
+            "cohort_crossing_green_unresolved": 0,
+            "cohort_terminal_exits": 0,
+            "inserted": 11
+          },
+          "30": {
+            "halted_total": 163,
+            "active_total": 618,
+            "cohort_active": 175,
+            "cohort_halted": 87,
+            "cohort_moving_to_halt": 12,
+            "cohort_halt_to_moving": 76,
+            "cohort_green_starts": 76,
+            "cohort_crossed_stopline": 75,
+            "cohort_green_entries": 75,
+            "cohort_crossing_green_unresolved": 0,
+            "cohort_terminal_exits": 0,
+            "inserted": 28
+          }
+        }
+      },
+      "arms": {
+        "baseline": {
+          "checkpoints": {
+            "10": {
+              "halted_total": 234.5,
+              "active_total": 662.25,
+              "cohort_active": 174.5,
+              "cohort_halted": 162.125,
+              "cohort_moving_to_halt": 34.375,
+              "cohort_halt_to_moving": 24.125,
+              "cohort_green_starts": 7,
+              "cohort_crossed_stopline": 10.125,
+              "cohort_green_entries": 10.125,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0.5,
+              "inserted": 16.5,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 5,
+                "end_intent": 0.875,
+                "route_incompatible": 15.875,
+                "selected_signal_not_green": 0.125,
+                "start_permission_denied": 13,
+                "start_permitted_but_proposal_below_stop_speed": 12,
+                "still_stopped": 25,
+                "stopped_on_factual_release": 28.75
+              }
+            },
+            "30": {
+              "halted_total": 307.125,
+              "active_total": 650.125,
+              "cohort_active": 174.125,
+              "cohort_halted": 147.5,
+              "cohort_moving_to_halt": 55,
+              "cohort_halt_to_moving": 56.875,
+              "cohort_green_starts": 24.625,
+              "cohort_crossed_stopline": 23.375,
+              "cohort_green_entries": 23.25,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0.875,
+              "inserted": 47.625,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 15.5,
+                "end_intent": 1.125,
+                "route_incompatible": 54.625,
+                "selected_signal_not_green": 0.625,
+                "start_permission_denied": 48.75,
+                "start_permitted_but_proposal_below_stop_speed": 42.375,
+                "still_stopped": 91.125,
+                "stopped_on_factual_release": 101.75
+              }
+            }
+          },
+          "mean_intent_counts": {
+            "cohort_size": 175,
+            "changed_from_baseline": 0,
+            "baseline_incompatible": 113.875,
+            "selected_incompatible": 113.875,
+            "no_conditioned_support": 0,
+            "oracle_present": 0,
+            "oracle_legal": 0,
+            "oracle_incompatible": 0,
+            "agrees_with_oracle": 0,
+            "baseline_end": 1.625,
+            "selected_end": 1.625
+          },
+          "errors_at_30": {
+            "signed_halt_error": 144.125,
+            "positive_halt_excess": 144.125,
+            "absolute_halt_error": 144.125,
+            "signed_green_entry_error": -51.75,
+            "absolute_green_entry_error": 51.75
+          }
+        },
+        "lane_conditioned": {
+          "checkpoints": {
+            "10": {
+              "halted_total": 210.25,
+              "active_total": 660.75,
+              "cohort_active": 173,
+              "cohort_halted": 142.375,
+              "cohort_moving_to_halt": 37.125,
+              "cohort_halt_to_moving": 42.5,
+              "cohort_green_starts": 22.125,
+              "cohort_crossed_stopline": 26.75,
+              "cohort_green_entries": 26.75,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 2,
+              "inserted": 16.5,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 5.25,
+                "end_intent": 1.125,
+                "start_permission_denied": 2.625,
+                "start_permitted_but_proposal_below_stop_speed": 9.625,
+                "still_stopped": 12.25,
+                "stopped_on_factual_release": 21.75
+              }
+            },
+            "30": {
+              "halted_total": 247.875,
+              "active_total": 647.625,
+              "cohort_active": 171.75,
+              "cohort_halted": 101.25,
+              "cohort_moving_to_halt": 75.625,
+              "cohort_halt_to_moving": 101.875,
+              "cohort_green_starts": 65.375,
+              "cohort_crossed_stopline": 64,
+              "cohort_green_entries": 63.625,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 3.25,
+              "inserted": 47.625,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 12.625,
+                "end_intent": 2.125,
+                "start_permission_denied": 14.5,
+                "start_permitted_but_proposal_below_stop_speed": 36.25,
+                "still_stopped": 50.75,
+                "stopped_on_factual_release": 77.375
+              }
+            }
+          },
+          "mean_intent_counts": {
+            "cohort_size": 175,
+            "changed_from_baseline": 116.875,
+            "baseline_incompatible": 113.875,
+            "selected_incompatible": 0,
+            "no_conditioned_support": 0,
+            "oracle_present": 0,
+            "oracle_legal": 0,
+            "oracle_incompatible": 0,
+            "agrees_with_oracle": 0,
+            "baseline_end": 1.625,
+            "selected_end": 6.125
+          },
+          "errors_at_30": {
+            "signed_halt_error": 84.875,
+            "positive_halt_excess": 84.875,
+            "absolute_halt_error": 84.875,
+            "signed_green_entry_error": -11.375,
+            "absolute_green_entry_error": 11.375
+          }
+        },
+        "route_oracle": {
+          "checkpoints": {
+            "10": {
+              "halted_total": 210.25,
+              "active_total": 662.75,
+              "cohort_active": 175,
+              "cohort_halted": 142.75,
+              "cohort_moving_to_halt": 37.625,
+              "cohort_halt_to_moving": 44.375,
+              "cohort_green_starts": 24,
+              "cohort_crossed_stopline": 27.875,
+              "cohort_green_entries": 27.875,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0,
+              "inserted": 16.5,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 5.375,
+                "start_permission_denied": 2,
+                "start_permitted_but_proposal_below_stop_speed": 8.875,
+                "still_stopped": 10.875,
+                "stopped_on_factual_release": 21.25
+              }
+            },
+            "30": {
+              "halted_total": 248.375,
+              "active_total": 650.875,
+              "cohort_active": 175,
+              "cohort_halted": 101.125,
+              "cohort_moving_to_halt": 77.625,
+              "cohort_halt_to_moving": 104.875,
+              "cohort_green_starts": 69.25,
+              "cohort_crossed_stopline": 67.625,
+              "cohort_green_entries": 67.25,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0,
+              "inserted": 47.625,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 12.625,
+                "start_permission_denied": 12.125,
+                "start_permitted_but_proposal_below_stop_speed": 34,
+                "still_stopped": 46.125,
+                "stopped_on_factual_release": 77.25
+              }
+            }
+          },
+          "mean_intent_counts": {
+            "cohort_size": 175,
+            "changed_from_baseline": 115.5,
+            "baseline_incompatible": 113.875,
+            "selected_incompatible": 0,
+            "no_conditioned_support": 0,
+            "oracle_present": 175,
+            "oracle_legal": 175,
+            "oracle_incompatible": 0,
+            "agrees_with_oracle": 175,
+            "baseline_end": 1.625,
+            "selected_end": 0
+          },
+          "errors_at_30": {
+            "signed_halt_error": 85.375,
+            "positive_halt_excess": 85.375,
+            "absolute_halt_error": 85.375,
+            "signed_green_entry_error": -7.75,
+            "absolute_green_entry_error": 7.75
+          }
+        }
+      }
+    },
+    {
+      "seed": 76116912,
+      "anchor_sec": 600,
+      "native": {
+        "cohort_size": 187,
+        "oracle_ordinary_covered": 683,
+        "ordinary_at_anchor": 683,
+        "oracle_cohort_covered": 187,
+        "checkpoints": {
+          "10": {
+            "halted_total": 186,
+            "active_total": 711,
+            "cohort_active": 187,
+            "cohort_halted": 138,
+            "cohort_moving_to_halt": 19,
+            "cohort_halt_to_moving": 21,
+            "cohort_green_starts": 21,
+            "cohort_crossed_stopline": 39,
+            "cohort_green_entries": 38,
+            "cohort_crossing_green_unresolved": 0,
+            "cohort_terminal_exits": 0,
+            "inserted": 25
+          },
+          "30": {
+            "halted_total": 189,
+            "active_total": 707,
+            "cohort_active": 187,
+            "cohort_halted": 90,
+            "cohort_moving_to_halt": 19,
+            "cohort_halt_to_moving": 69,
+            "cohort_green_starts": 69,
+            "cohort_crossed_stopline": 77,
+            "cohort_green_entries": 76,
+            "cohort_crossing_green_unresolved": 0,
+            "cohort_terminal_exits": 0,
+            "inserted": 64
+          }
+        }
+      },
+      "arms": {
+        "baseline": {
+          "checkpoints": {
+            "10": {
+              "halted_total": 261.5,
+              "active_total": 705.875,
+              "cohort_active": 186.875,
+              "cohort_halted": 171.5,
+              "cohort_moving_to_halt": 53.375,
+              "cohort_halt_to_moving": 29.375,
+              "cohort_green_starts": 5.875,
+              "cohort_crossed_stopline": 12.5,
+              "cohort_green_entries": 11.25,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0.125,
+              "inserted": 16.5,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 8.5,
+                "route_incompatible": 19.75,
+                "start_permission_denied": 13.375,
+                "start_permitted_but_proposal_below_stop_speed": 13,
+                "still_stopped": 26.375,
+                "stopped_on_factual_release": 28.375
+              }
+            },
+            "30": {
+              "halted_total": 329.875,
+              "active_total": 699.25,
+              "cohort_active": 186.875,
+              "cohort_halted": 156.625,
+              "cohort_moving_to_halt": 73,
+              "cohort_halt_to_moving": 64.25,
+              "cohort_green_starts": 23.625,
+              "cohort_crossed_stopline": 25.75,
+              "cohort_green_entries": 24.375,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0.125,
+              "inserted": 47.625,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 19.125,
+                "route_incompatible": 59.75,
+                "selected_signal_not_green": 0.125,
+                "start_permission_denied": 44.375,
+                "start_permitted_but_proposal_below_stop_speed": 39.25,
+                "still_stopped": 83.625,
+                "stopped_on_factual_release": 94.75
+              }
+            }
+          },
+          "mean_intent_counts": {
+            "cohort_size": 187,
+            "changed_from_baseline": 0,
+            "baseline_incompatible": 119.375,
+            "selected_incompatible": 119.375,
+            "no_conditioned_support": 0,
+            "oracle_present": 0,
+            "oracle_legal": 0,
+            "oracle_incompatible": 0,
+            "agrees_with_oracle": 0,
+            "baseline_end": 0.5,
+            "selected_end": 0.5
+          },
+          "errors_at_30": {
+            "signed_halt_error": 140.875,
+            "positive_halt_excess": 140.875,
+            "absolute_halt_error": 140.875,
+            "signed_green_entry_error": -51.625,
+            "absolute_green_entry_error": 51.625
+          }
+        },
+        "lane_conditioned": {
+          "checkpoints": {
+            "10": {
+              "halted_total": 228.375,
+              "active_total": 705.125,
+              "cohort_active": 186.125,
+              "cohort_halted": 145.375,
+              "cohort_moving_to_halt": 50.625,
+              "cohort_halt_to_moving": 50.75,
+              "cohort_green_starts": 22.375,
+              "cohort_crossed_stopline": 36.875,
+              "cohort_green_entries": 33.625,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0.875,
+              "inserted": 16.5,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 8.75,
+                "end_intent": 0.375,
+                "start_permission_denied": 3.875,
+                "start_permitted_but_proposal_below_stop_speed": 11.125,
+                "still_stopped": 15,
+                "stopped_on_factual_release": 21.625
+              }
+            },
+            "30": {
+              "halted_total": 266.5,
+              "active_total": 698.125,
+              "cohort_active": 185.625,
+              "cohort_halted": 99.625,
+              "cohort_moving_to_halt": 85.625,
+              "cohort_halt_to_moving": 107.75,
+              "cohort_green_starts": 69.125,
+              "cohort_crossed_stopline": 76.125,
+              "cohort_green_entries": 72.75,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 1.375,
+              "inserted": 47.625,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 16.125,
+                "end_intent": 1.125,
+                "start_permission_denied": 8.875,
+                "start_permitted_but_proposal_below_stop_speed": 29.5,
+                "still_stopped": 38.375,
+                "stopped_on_factual_release": 76.125
+              }
+            }
+          },
+          "mean_intent_counts": {
+            "cohort_size": 187,
+            "changed_from_baseline": 121.875,
+            "baseline_incompatible": 119.375,
+            "selected_incompatible": 0,
+            "no_conditioned_support": 0,
+            "oracle_present": 0,
+            "oracle_legal": 0,
+            "oracle_incompatible": 0,
+            "agrees_with_oracle": 0,
+            "baseline_end": 0.5,
+            "selected_end": 3.75
+          },
+          "errors_at_30": {
+            "signed_halt_error": 77.5,
+            "positive_halt_excess": 77.5,
+            "absolute_halt_error": 77.5,
+            "signed_green_entry_error": -3.25,
+            "absolute_green_entry_error": 3.25
+          }
+        },
+        "route_oracle": {
+          "checkpoints": {
+            "10": {
+              "halted_total": 228.625,
+              "active_total": 706,
+              "cohort_active": 187,
+              "cohort_halted": 145.625,
+              "cohort_moving_to_halt": 50.875,
+              "cohort_halt_to_moving": 51.25,
+              "cohort_green_starts": 22.625,
+              "cohort_crossed_stopline": 37.25,
+              "cohort_green_entries": 34,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0,
+              "inserted": 16.5,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 9,
+                "start_permission_denied": 3.875,
+                "start_permitted_but_proposal_below_stop_speed": 11.375,
+                "still_stopped": 15.25,
+                "stopped_on_factual_release": 22
+              }
+            },
+            "30": {
+              "halted_total": 265.875,
+              "active_total": 699.5,
+              "cohort_active": 187,
+              "cohort_halted": 99.625,
+              "cohort_moving_to_halt": 86.25,
+              "cohort_halt_to_moving": 109.25,
+              "cohort_green_starts": 70.5,
+              "cohort_crossed_stopline": 77.625,
+              "cohort_green_entries": 74.25,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0,
+              "inserted": 47.625,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 16.125,
+                "start_permission_denied": 8.5,
+                "start_permitted_but_proposal_below_stop_speed": 28.875,
+                "still_stopped": 37.375,
+                "stopped_on_factual_release": 75.875
+              }
+            }
+          },
+          "mean_intent_counts": {
+            "cohort_size": 187,
+            "changed_from_baseline": 119.875,
+            "baseline_incompatible": 119.375,
+            "selected_incompatible": 0,
+            "no_conditioned_support": 0,
+            "oracle_present": 187,
+            "oracle_legal": 187,
+            "oracle_incompatible": 0,
+            "agrees_with_oracle": 187,
+            "baseline_end": 0.5,
+            "selected_end": 0
+          },
+          "errors_at_30": {
+            "signed_halt_error": 76.875,
+            "positive_halt_excess": 76.875,
+            "absolute_halt_error": 76.875,
+            "signed_green_entry_error": -1.75,
+            "absolute_green_entry_error": 1.75
+          }
+        }
+      }
+    },
+    {
+      "seed": 76116912,
+      "anchor_sec": 1200,
+      "native": {
+        "cohort_size": 164,
+        "oracle_ordinary_covered": 634,
+        "ordinary_at_anchor": 634,
+        "oracle_cohort_covered": 164,
+        "checkpoints": {
+          "10": {
+            "halted_total": 171,
+            "active_total": 635,
+            "cohort_active": 164,
+            "cohort_halted": 126,
+            "cohort_moving_to_halt": 16,
+            "cohort_halt_to_moving": 16,
+            "cohort_green_starts": 16,
+            "cohort_crossed_stopline": 29,
+            "cohort_green_entries": 28,
+            "cohort_crossing_green_unresolved": 0,
+            "cohort_terminal_exits": 0,
+            "inserted": 11
+          },
+          "30": {
+            "halted_total": 141,
+            "active_total": 612,
+            "cohort_active": 164,
+            "cohort_halted": 79,
+            "cohort_moving_to_halt": 16,
+            "cohort_halt_to_moving": 62,
+            "cohort_green_starts": 62,
+            "cohort_crossed_stopline": 70,
+            "cohort_green_entries": 69,
+            "cohort_crossing_green_unresolved": 0,
+            "cohort_terminal_exits": 0,
+            "inserted": 28
+          }
+        }
+      },
+      "arms": {
+        "baseline": {
+          "checkpoints": {
+            "10": {
+              "halted_total": 233.875,
+              "active_total": 645.625,
+              "cohort_active": 163.375,
+              "cohort_halted": 151.25,
+              "cohort_moving_to_halt": 42.875,
+              "cohort_halt_to_moving": 21.375,
+              "cohort_green_starts": 3.625,
+              "cohort_crossed_stopline": 10.875,
+              "cohort_green_entries": 9.25,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0.625,
+              "inserted": 16.5,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 3.75,
+                "route_incompatible": 14.875,
+                "selected_signal_not_green": 0.125,
+                "start_permission_denied": 11,
+                "start_permitted_but_proposal_below_stop_speed": 7.625,
+                "still_stopped": 18.625,
+                "stopped_on_factual_release": 19.5
+              }
+            },
+            "30": {
+              "halted_total": 303.375,
+              "active_total": 642.125,
+              "cohort_active": 163.375,
+              "cohort_halted": 143.625,
+              "cohort_moving_to_halt": 62.5,
+              "cohort_halt_to_moving": 51.125,
+              "cohort_green_starts": 13.875,
+              "cohort_crossed_stopline": 18.25,
+              "cohort_green_entries": 16.375,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0.625,
+              "inserted": 47.625,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 16.25,
+                "end_intent": 0.5,
+                "route_incompatible": 57.75,
+                "selected_signal_not_green": 0.5,
+                "start_permission_denied": 40.875,
+                "start_permitted_but_proposal_below_stop_speed": 38.5,
+                "still_stopped": 79.375,
+                "stopped_on_factual_release": 84.875
+              }
+            }
+          },
+          "mean_intent_counts": {
+            "cohort_size": 164,
+            "changed_from_baseline": 0,
+            "baseline_incompatible": 109,
+            "selected_incompatible": 109,
+            "no_conditioned_support": 0,
+            "oracle_present": 0,
+            "oracle_legal": 0,
+            "oracle_incompatible": 0,
+            "agrees_with_oracle": 0,
+            "baseline_end": 1.125,
+            "selected_end": 1.125
+          },
+          "errors_at_30": {
+            "signed_halt_error": 162.375,
+            "positive_halt_excess": 162.375,
+            "absolute_halt_error": 162.375,
+            "signed_green_entry_error": -52.625,
+            "absolute_green_entry_error": 52.625
+          }
+        },
+        "lane_conditioned": {
+          "checkpoints": {
+            "10": {
+              "halted_total": 206.25,
+              "active_total": 644.25,
+              "cohort_active": 162,
+              "cohort_halted": 126.75,
+              "cohort_moving_to_halt": 37.25,
+              "cohort_halt_to_moving": 36.75,
+              "cohort_green_starts": 13.375,
+              "cohort_crossed_stopline": 33.375,
+              "cohort_green_entries": 28.25,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 2,
+              "inserted": 16.5,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 3.5,
+                "start_permission_denied": 0.25,
+                "start_permitted_but_proposal_below_stop_speed": 7.75,
+                "still_stopped": 8,
+                "stopped_on_factual_release": 11.125
+              }
+            },
+            "30": {
+              "halted_total": 237.125,
+              "active_total": 639.875,
+              "cohort_active": 161.125,
+              "cohort_halted": 92,
+              "cohort_moving_to_halt": 70.5,
+              "cohort_halt_to_moving": 89.25,
+              "cohort_green_starts": 51.375,
+              "cohort_crossed_stopline": 65.125,
+              "cohort_green_entries": 60,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 2.875,
+              "inserted": 47.625,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 14.375,
+                "end_intent": 1.625,
+                "receiving_dominant_bound": 0.125,
+                "start_permission_denied": 3,
+                "start_permitted_but_proposal_below_stop_speed": 29.625,
+                "still_stopped": 32.75,
+                "stopped_on_factual_release": 55.125
+              }
+            }
+          },
+          "mean_intent_counts": {
+            "cohort_size": 164,
+            "changed_from_baseline": 111.375,
+            "baseline_incompatible": 109,
+            "selected_incompatible": 0,
+            "no_conditioned_support": 0,
+            "oracle_present": 0,
+            "oracle_legal": 0,
+            "oracle_incompatible": 0,
+            "agrees_with_oracle": 0,
+            "baseline_end": 1.125,
+            "selected_end": 5
+          },
+          "errors_at_30": {
+            "signed_halt_error": 96.125,
+            "positive_halt_excess": 96.125,
+            "absolute_halt_error": 96.125,
+            "signed_green_entry_error": -9,
+            "absolute_green_entry_error": 9
+          }
+        },
+        "route_oracle": {
+          "checkpoints": {
+            "10": {
+              "halted_total": 208,
+              "active_total": 646.25,
+              "cohort_active": 164,
+              "cohort_halted": 128.25,
+              "cohort_moving_to_halt": 37.75,
+              "cohort_halt_to_moving": 37.25,
+              "cohort_green_starts": 13.625,
+              "cohort_crossed_stopline": 34,
+              "cohort_green_entries": 28.75,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0,
+              "inserted": 16.5,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 3.5,
+                "start_permission_denied": 0.25,
+                "start_permitted_but_proposal_below_stop_speed": 7.75,
+                "still_stopped": 8,
+                "stopped_on_factual_release": 11.125
+              }
+            },
+            "30": {
+              "halted_total": 236.375,
+              "active_total": 642.75,
+              "cohort_active": 164,
+              "cohort_halted": 92.5,
+              "cohort_moving_to_halt": 71.625,
+              "cohort_halt_to_moving": 90.625,
+              "cohort_green_starts": 53.625,
+              "cohort_crossed_stopline": 67.125,
+              "cohort_green_entries": 61.875,
+              "cohort_crossing_green_unresolved": 0,
+              "cohort_terminal_exits": 0,
+              "inserted": 47.625,
+              "mean_caps_on_native_green_release": {
+                "brake_draw_on_low_proposal": 14.75,
+                "start_permission_denied": 2.25,
+                "start_permitted_but_proposal_below_stop_speed": 30.125,
+                "still_stopped": 32.375,
+                "stopped_on_factual_release": 55.75
+              }
+            }
+          },
+          "mean_intent_counts": {
+            "cohort_size": 164,
+            "changed_from_baseline": 110.125,
+            "baseline_incompatible": 109,
+            "selected_incompatible": 0,
+            "no_conditioned_support": 0,
+            "oracle_present": 164,
+            "oracle_legal": 164,
+            "oracle_incompatible": 0,
+            "agrees_with_oracle": 164,
+            "baseline_end": 1.125,
+            "selected_end": 0
+          },
+          "errors_at_30": {
+            "signed_halt_error": 95.375,
+            "positive_halt_excess": 95.375,
+            "absolute_halt_error": 95.375,
+            "signed_green_entry_error": -7.125,
+            "absolute_green_entry_error": 7.125
+          }
+        }
+      }
+    }
+  ],
+  "gate": {
+    "scope": "Strict paired improvement on each seed at +30 seconds, equally weighting its two starts.",
+    "per_seed": {
+      "76116911": {
+        "baseline": {
+          "signed_halt_error": 146.875,
+          "positive_halt_excess": 146.875,
+          "absolute_halt_error": 146.875,
+          "absolute_green_entry_error": 52.6875
+        },
+        "lane_conditioned": {
+          "signed_halt_error": 84.0625,
+          "positive_halt_excess": 84.0625,
+          "absolute_halt_error": 84.0625,
+          "absolute_green_entry_error": 9.25
+        },
+        "route_oracle": {
+          "signed_halt_error": 84.625,
+          "positive_halt_excess": 84.625,
+          "absolute_halt_error": 84.625,
+          "absolute_green_entry_error": 6.4375
+        }
+      },
+      "76116912": {
+        "baseline": {
+          "signed_halt_error": 151.625,
+          "positive_halt_excess": 151.625,
+          "absolute_halt_error": 151.625,
+          "absolute_green_entry_error": 52.125
+        },
+        "lane_conditioned": {
+          "signed_halt_error": 86.8125,
+          "positive_halt_excess": 86.8125,
+          "absolute_halt_error": 86.8125,
+          "absolute_green_entry_error": 6.125
+        },
+        "route_oracle": {
+          "signed_halt_error": 86.125,
+          "positive_halt_excess": 86.125,
+          "absolute_halt_error": 86.125,
+          "absolute_green_entry_error": 4.4375
+        }
+      }
+    },
+    "candidates": {
+      "lane_conditioned": {
+        "pass_both_seeds": true,
+        "seed_improvement": {
+          "76116911": {
+            "signed_halt_error": 62.8125,
+            "positive_halt_excess": 62.8125,
+            "absolute_halt_error": 62.8125,
+            "absolute_green_entry_error": 43.4375
+          },
+          "76116912": {
+            "signed_halt_error": 64.8125,
+            "positive_halt_excess": 64.8125,
+            "absolute_halt_error": 64.8125,
+            "absolute_green_entry_error": 46.0
+          }
+        }
+      },
+      "route_oracle": {
+        "pass_both_seeds": true,
+        "seed_improvement": {
+          "76116911": {
+            "signed_halt_error": 62.25,
+            "positive_halt_excess": 62.25,
+            "absolute_halt_error": 62.25,
+            "absolute_green_entry_error": 46.25
+          },
+          "76116912": {
+            "signed_halt_error": 65.5,
+            "positive_halt_excess": 65.5,
+            "absolute_halt_error": 65.5,
+            "absolute_green_entry_error": 47.6875
+          }
+        }
+      }
+    },
+    "all_crossing_signals_resolved": true
+  },
+  "shared_due_streams_checked": 32
+}

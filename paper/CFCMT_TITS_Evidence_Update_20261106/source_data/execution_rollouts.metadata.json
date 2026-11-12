@@ -1,0 +1,25 @@
+{
+  "created_at_utc": "2026-10-31T14:12:12.254656+00:00",
+  "operation": "Read-only scalar extraction from existing archived result.json files; no simulation/replay and no model or raw log transfer.",
+  "archive_hostname": "node001",
+  "rollout_count": 1344,
+  "identity": [
+    "method",
+    "scenario",
+    "seed"
+  ],
+  "cohort_source": "confirmation_rollouts.csv",
+  "record_source": "result_path in each CSV row",
+  "definitions": {
+    "decisions": "Post-warm-up intersection-by-decision-epoch choices, excluding the 60-s warm-up.",
+    "collision_events": "Sum of len(simulation.getCollisions()) over simulation steps: raw collision records, not a count of colliding vehicles. A continuing contact can contribute repeated records.",
+    "collision_event_steps": "Number of simulation steps with at least one collision record.",
+    "collision_incidents": "Within-run distinct (sorted collider/victim IDs, collision type, lane) keys.",
+    "effective_overrides": "Executor-accepted non-reference switch requests plus effective holds of current green. An accepted request is not a completed green-phase change.",
+    "guard_rejections": "All rejected_* counters except rejected_cooldown, rejected_coordination, and rejected_executor.",
+    "accepted_trace": "Coordinator-approved proposals; may include ineffective requests and is capped at 256 per run. Rates use complete guard counters, not trace lengths.",
+    "pressure_policies": "PP and MP have no learned guard audit; empty guard fields mean not applicable, not zero.",
+    "accounting": "decisions = prior_agreements + guard_rejections + proposed_overrides; proposed_overrides = effective_overrides + rejected_cooldown + rejected_coordination + rejected_executor."
+  },
+  "recompute": "python3 recompute_execution_summaries.py --out ."
+}

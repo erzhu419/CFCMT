@@ -1,0 +1,81 @@
+{
+  "scenario": "la_1x4",
+  "seed": 1020485,
+  "selection": "smallest prespecified final-evaluation seed, selected before outcome inspection",
+  "bin_width_sec": 60,
+  "simulation_begin_sec": 0.0,
+  "evaluation_horizon_sec": 3600.0,
+  "rows": 240,
+  "binning": "actual vehicle departure time relative to configured simulation begin; 60 bins; final bin includes any departure exactly at the horizon",
+  "waiting_definition": "SUMO tripinfo waitingTime for all departed vehicles, including unfinished records with arrival=-1 and accrued duration/waiting/timeLoss at the 3600-second horizon",
+  "measurement_population": "actual inserted/departed vehicles; excludes vehicles pending insertion",
+  "time_interpretation": "departure cohort means of final accrued waiting, not instantaneous queue or a spatial vehicle trajectory",
+  "censoring": "late departure cohorts have shorter exposure before the fixed horizon; completed and unfinished counts are both exported",
+  "missing_bins": "empty bins retain n=0 and blank statistics; never replaced with zero",
+  "native_trajectory_gap": "No FCD, per-step queue or per-step vehicle-position files present; only result.json and tripinfo.xml",
+  "original_config": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v42r38_external_la_jinan_20260809/conversion/full_networks_v8/la_1x4/la_1x4.sumocfg",
+  "sources": [
+    {
+      "method": "phase_pressure",
+      "result_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v92_topology_context_repair_20260831/phase_pressure_v1/la_1x4/seed_1020485/phase_pressure_v92_diagnostic/result.json",
+      "tripinfo_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v92_topology_context_repair_20260831/phase_pressure_v1/la_1x4/seed_1020485/phase_pressure_v92_diagnostic/tripinfo.xml",
+      "tripinfo_size_bytes": 865802,
+      "observed_directory_files": [
+        "result.json",
+        "tripinfo.xml"
+      ],
+      "sumo_version": "1.22.0",
+      "evaluation_horizon_sec": 3600,
+      "control_interval_sec": 10,
+      "warmup_sec": 60.0,
+      "aggregate_matches_original_result": true
+    },
+    {
+      "method": "max_pressure",
+      "result_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v93_max_pressure_20261030/execution/la_1x4/seed_1020485/max_pressure/result.json",
+      "tripinfo_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v93_max_pressure_20261030/execution/la_1x4/seed_1020485/max_pressure/tripinfo.xml",
+      "tripinfo_size_bytes": 831842,
+      "observed_directory_files": [
+        "result.json",
+        "tripinfo.xml"
+      ],
+      "sumo_version": "1.22.0",
+      "evaluation_horizon_sec": 3600,
+      "control_interval_sec": 10,
+      "warmup_sec": 60.0,
+      "aggregate_matches_original_result": true
+    },
+    {
+      "method": "equal_all_sources",
+      "result_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v93_source_city_components_20260831/disjoint_confirmation_v1/la_1x4/seed_1020485/equal_all_sources/result.json",
+      "tripinfo_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v93_source_city_components_20260831/disjoint_confirmation_v1/la_1x4/seed_1020485/equal_all_sources/tripinfo.xml",
+      "tripinfo_size_bytes": 850701,
+      "observed_directory_files": [
+        "result.json",
+        "tripinfo.xml"
+      ],
+      "sumo_version": "1.22.0",
+      "evaluation_horizon_sec": 3600,
+      "control_interval_sec": 10,
+      "warmup_sec": 60.0,
+      "aggregate_matches_original_result": true
+    },
+    {
+      "method": "frozen_selector",
+      "result_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v93_source_city_components_20260831/disjoint_confirmation_v1/la_1x4/seed_1020485/frozen_selector/result.json",
+      "tripinfo_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v93_source_city_components_20260831/disjoint_confirmation_v1/la_1x4/seed_1020485/frozen_selector/tripinfo.xml",
+      "tripinfo_size_bytes": 836416,
+      "observed_directory_files": [
+        "result.json",
+        "tripinfo.xml"
+      ],
+      "sumo_version": "1.22.0",
+      "evaluation_horizon_sec": 3600,
+      "control_interval_sec": 10,
+      "warmup_sec": 60.0,
+      "aggregate_matches_original_result": true
+    }
+  ],
+  "remote_read_return_bytes": 37533,
+  "comparability": "Same prespecified seed, input network/demand, executor and timing. Actual departure times and inserted-vehicle populations can differ across controllers; departure-cohort curves are descriptive case evidence rather than matched-vehicle causal effects."
+}

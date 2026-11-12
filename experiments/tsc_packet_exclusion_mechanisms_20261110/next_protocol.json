@@ -1,0 +1,28 @@
+{
+  "status": "EXECUTED",
+  "scope": "One shared discrete-braking speed formula and a zero-fit comparison on the frozen training references; no new simulation.",
+  "basis": "Fixed15 mechanism diagnosis; original parameters on six preselected cases explain the continuous/Euler mismatch. Lane gaps also have separate neighbor lateral and speed mechanisms.",
+  "formula": "dt=1; D(v,b)=sum(n>=1,max(v-n*b,0)); solve tau*v+D(v,b)=max(g,0)+D(vL,bL) piecewise analytically. The stationary-stop term uses vL=0. Retain the supplied observed b,bL,tau.",
+  "implementation": "Use a single following/stationary-stop safe-speed helper in the local mean response and full forward operator. Replace the continuous speed-bound formula only; preserve the current yellow can-stop branch predicate and all other proposal terms.",
+  "controls": "Freeze entity2m geometry, lane/prefix3.2m, directed priority, reservation timing, current physical-path selection, lane masks, target history laws, priors, labels, feature seeds, noise scale and theta0. Do not jointly alter the lane rule or calibrate thresholds.",
+  "data": "The same full160000 frozen references, 40000 per head, from training seeds76116901..76116904; saved mean_alignment/output_v2 continuous arrays are the comparator. Do not redraw samples or repeat a settled baseline run.",
+  "verification": "Verify the discrete gap inverse and shared local/full speed calculation with meaningful fixtures, preserving the processed-packet fix and existing receiving/spatial semantics. Do not assert mu(residual) monotonicity or equality to the full stochastic expectation.",
+  "readout": [
+    "Full160000 reference joins and support/mask counts by head and seed, plus retained counts; no silently dropped original positives.",
+    "Recompute the twelve original theta0 hard exclusions and list all newly excluded positives as well as restored ones. Record changed zero-label permissions too.",
+    "Re-resolve the three selected entry cases and report actual physical-path mismatch at t580 separately; do not count algebraic P as an entry-mask repair.",
+    "Motion native speed versus P and mu0 on all40000 frozen motion records, plus Gaussian sigma1 NLL on the same references; compare the original578 ceiling deficits without reselecting favorable cases.",
+    "Track all original9 lane cases, including adverse gap changes and the independent lateral/stay assumption. Do not loosen a mask to force finite likelihood.",
+    "Preserve full arrays/server details remotely; pull only small summaries and representative cases."
+  ],
+  "after": "Stop after the zero-fit comparison and judge the complete changes. No automatic fitting, nuisance estimation, calibration or free rollout. General-theta joint objective and gradients require their own later work.",
+  "new_native_starts": 0,
+  "new_fits": 0,
+  "new_nuisance_estimations": 0,
+  "optimizer_calls": 0,
+  "free_rollouts": 0,
+  "calibration_seeds_used": false,
+  "completed_at_utc": "2026-11-10T05:58:10.539250+00:00",
+  "execution_directory": "../tsc_packet_discrete_braking_20261110",
+  "result": "../tsc_packet_discrete_braking_20261110/comparison.json"
+}

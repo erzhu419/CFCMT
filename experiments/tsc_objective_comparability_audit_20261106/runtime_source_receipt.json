@@ -1,0 +1,89 @@
+{
+  "sklearn_version": "1.7.2",
+  "root": "/home/zhengliang01/scheduleurm_work/runtimes/cfcmt-sumo122-py310-v1/sklearn/ensemble/_hist_gradient_boosting",
+  "source_hits": {
+    "splitting.pyx": [
+      {
+        "line": 679,
+        "text": "n_samples_left += hist.count"
+      },
+      {
+        "line": 692,
+        "text": "if n_samples_left < self.min_samples_leaf:"
+      },
+      {
+        "line": 694,
+        "text": "if n_samples_right < self.min_samples_leaf:"
+      },
+      {
+        "line": 808,
+        "text": "if n_samples_right < self.min_samples_leaf:"
+      },
+      {
+        "line": 810,
+        "text": "if n_samples_left < self.min_samples_leaf:"
+      },
+      {
+        "line": 1011,
+        "text": "n_samples_left += hist.count"
+      },
+      {
+        "line": 1024,
+        "text": "n_samples_left < self.min_samples_leaf or"
+      },
+      {
+        "line": 1029,
+        "text": "n_samples_right < self.min_samples_leaf or"
+      }
+    ],
+    "grower.py": [
+      {
+        "line": 172,
+        "text": "min_samples_leaf : int, default=20"
+      },
+      {
+        "line": 252,
+        "text": "min_samples_leaf=20,"
+      },
+      {
+        "line": 327,
+        "text": "min_samples_leaf=min_samples_leaf,"
+      },
+      {
+        "line": 337,
+        "text": "self.min_samples_leaf = min_samples_leaf"
+      },
+      {
+        "line": 445,
+        "text": "if self.root.n_samples < 2 * self.min_samples_leaf:"
+      },
+      {
+        "line": 468,
+        "text": "(min_hessians_to_split, min_gain_to_split, min_samples_leaf)"
+      },
+      {
+        "line": 569,
+        "text": "if left_child_node.n_samples < self.min_samples_leaf * 2:"
+      },
+      {
+        "line": 571,
+        "text": "if right_child_node.n_samples < self.min_samples_leaf * 2:"
+      }
+    ],
+    "binning.py": [
+      {
+        "line": 24,
+        "text": "def _find_binning_thresholds(col_data, max_bins):"
+      },
+      {
+        "line": 173,
+        "text": "def fit(self, X, y=None):"
+      },
+      {
+        "line": 236,
+        "text": "delayed(_find_binning_thresholds)(X[:, f_idx], max_bins)"
+      }
+    ]
+  },
+  "bin_data_source": "    def _bin_data(self, X, is_training_data):\n        \"\"\"Bin data X.\n\n        If is_training_data, then fit the _bin_mapper attribute.\n        Else, the binned data is converted to a C-contiguous array.\n        \"\"\"\n\n        description = \"training\" if is_training_data else \"validation\"\n        if self.verbose:\n            print(\n                \"Binning {:.3f} GB of {} data: \".format(X.nbytes / 1e9, description),\n                end=\"\",\n                flush=True,\n            )\n        tic = time()\n        if is_training_data:\n            X_binned = self._bin_mapper.fit_transform(X)  # F-aligned array\n        else:\n            X_binned = self._bin_mapper.transform(X)  # F-aligned array\n            # We convert the array to C-contiguous since predicting is faster\n            # with this layout (training is faster on F-arrays though)\n            X_binned = np.ascontiguousarray(X_binned)\n        toc = time()\n        if self.verbose:\n            duration = toc - tic\n            print(\"{:.3f} s\".format(duration))\n\n        return X_binned\n"
+}

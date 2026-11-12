@@ -1,0 +1,21 @@
+{
+  "protocol": "repaired-action-cost-measurement-v1",
+  "status": "LOCKED_BEFORE_NATIVE_MEASUREMENT",
+  "date": "2026-11-09",
+  "purpose": "Establish valid same-native-state action-cost tables on the currently repaired Hangzhou and Jinan networks, including post10s executor evolution. Measurement feasibility only; no controller or cross-city benefit test.",
+  "cases": [
+    {"case_id":"hangzhou_seed76114701_t600","city":"hangzhou","scenario":"hangzhou_4x4","seed":76114701,"checkpoint_sec":600,"checkpoint_search_sec":60,"tls_id":"intersection_2_2"},
+    {"case_id":"jinan_seed76114801_t600","city":"jinan","scenario":"jinan_3x4_real","seed":76114801,"checkpoint_sec":600,"checkpoint_search_sec":60,"tls_id":"intersection_2_2"}
+  ],
+  "budget": "Two fixed states x eight actions = at most16 native SUMO starts/branches, including PP. First PP prefix discovers the first eight-action epoch in600..660 and directly continues450s as the PP arm; no separate discovery run. Other seven restart the same seed from t0 to exactly that resolved time. No loadState, replacement TLS/seed, extra attempts or new fits.",
+  "networks": "Reuse the actual repaired Hangzhou source_repair and Jinan left_geometry net/route files and original423dc producer, SUMO1.22.0. Only config path relocation allowed; no geometry rebuild or vehicle-parameter change.",
+  "intervention": "At resolved t0, only the focal request differs for the first10s; all other TLS use their native PP request. At t0+10 and every10s afterwards all TLS use PP along each branch's own state. Each request is issued once, all450 simulation steps logged.",
+  "inputs": "Direct t0 focal lane measurements, physical network/executor snapshot, nominal joint signal plans and static geometry. Raw37-field representation is retained for measurement compatibility, not selected as a new model. No future measurements enter inputs.",
+  "labels": "Complete first10s movement entry/receiving counts with competing/unresolved bookkeeping;450 per-second controlled-lane halted-vehicle counts; integer stopping integrals I10/I30/I60/I450 and nonoverlapping0-10/10-30/30-60/60-450 segments. Primary cost=I450/(450*controlled_lane_count), not trip waiting time.",
+  "future_diagnostics": "Every10s record all-TLS requests, request return values, feasible states and executor snapshots before/after request. Every1s record actual applied signal before simulationStep. Save observed lane/executor states at0/10/30/60/450; future entries are labels only. Retain global initial/final active and pending IDs, per-second departures/arrivals and vehicle accounting closure.",
+  "admission": "Same exact native physical start, pending population, candidate roster, PP index, ordered movements and network preaction across all8 actions. Full native clock,450 cost samples, complete movement accounting, direct t0 inputs, integer cost/unit closure and global vehicle population closure required. Actual signal may deviate from nominal solely through the documented occupancy-clearance rule; verify that rule instead of demanding nominal equality.",
+  "events": "Record raw collision and teleport events. Collision counts are metadata, not a control objective. Teleportation, vehicle-accounting loss or invalid execution makes the measurement incomplete; preserve the trace and do not replace it.",
+  "stopping": "Stop further branches on the first invalid/ineligible branch and retain all started data. At most16 native starts; no retries or missing-as-zero. After completion summarize measurement validity, cost differences from PP, timing segments and actual execution. No model fits, optimal-chooser performance claim, expanded source/adapt panel, native confirmation or paper edit follows automatically.",
+  "boundary": "All old HOLDs remain unchanged. The two pilot states must be excluded from future training/effect confirmation. They do not establish stable action effects or transferable dynamics; one realized future per action.",
+  "execution": "jtl110gpu2, sequential native starts with raw data server-only. Reuse existing SUMO1.22 dependencies, original producer and v2 occupancy-clearance audit helpers. Pull only compact measurement receipts/logs; no raw vehicle trajectories or checkpoints."
+}

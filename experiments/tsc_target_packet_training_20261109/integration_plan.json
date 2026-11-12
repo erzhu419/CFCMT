@@ -1,0 +1,50 @@
+{
+  "status": "READ_ONLY_INTEGRATION_CHECK_COMPLETE_NO_EXECUTION",
+  "old_base": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_training",
+  "new_base": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_clock_corrected",
+  "root_reported_setup": {
+    "training_directory": "Ordinary new directory; contains only a normal copy of the old COMPLETE training/result.json receipt",
+    "static_graph_server_only.json": "Ordinary metadata copy, not a symlink",
+    "protocol.json": "Full original protocol, retaining the fixed cohorts, observation horizon and calibration gates",
+    "clock_fix_protocol.json": "Separate authorization and budget amendment for the corrected candidate"
+  },
+  "receipt_provenance": {
+    "source": "OLD/training/result.json",
+    "destination": "NEW/training/result.json",
+    "required_status": "COMPLETE",
+    "meaning": "Its four native starts belong to the preserved old collection. This candidate reuses those trajectories and adds zero training starts; no raw seed directory needs copying or linking for calibration prerequisites."
+  },
+  "fit_prerequisites": {
+    "NEW/fit_result.json": "Corrected candidate's own PASS_FIT receipt; never reuse the old HOLD receipt",
+    "NEW/model.json": "Corrected coefficients plus the unchanged four target-history laws, with training_seeds exactly76116901..76116904",
+    "model_keys_consumed_by_evaluator": ["coefficients", "target_laws", "training_seeds"],
+    "original_prepare_and_fit": "Not a command for this candidate: it would re-estimate laws and expects raw training seed directories under the new base. The separately approved corrected-fit procedure reads preserved training assets explicitly."
+  },
+  "collector_write_scope": {
+    "role": "calibration",
+    "outputs": ["NEW/calibration/result.json", "NEW/calibration/seed76116911/*", "NEW/calibration/seed76116912/*"],
+    "root_metadata_refreshed": "NEW/static_graph_server_only.json",
+    "training_receipt_modified": false,
+    "old_base_modified": false,
+    "static_note": "The root-level static file is rewritten from the same repaired input and original policy ordering. An ordinary copy preserves the old artifact."
+  },
+  "evaluation_inputs": {
+    "static": "NEW/static_graph_server_only.json",
+    "model": "NEW/model.json",
+    "protocol": "NEW/protocol.json",
+    "seed_directories": ["NEW/calibration/seed76116911", "NEW/calibration/seed76116912"],
+    "files_required_in_each_seed_directory": ["frames_server_only.jsonl.gz", "execution_server_only.jsonl.gz", "executor_seed_server_only.json"],
+    "executor_role": "The seed file supplies phase timings and clearance configuration; each anchor frame supplies the observed current executor memory. No old raw trajectory or old training executor directory is needed by evaluate.py.",
+    "output": "NEW/evaluation, which must not already exist",
+    "workers": 4
+  },
+  "short_command_plan": {
+    "environment": "Retain the frozen runtime/producer/branch-helper environment from run_calibration.sh and run_evaluation.sh. Replace every absolute OLD base occurrence by NEW, including the first PYTHONPATH entry, input/output arguments and log paths; keep Python module names and repaired producer/runtime paths unchanged.",
+    "calibration_module_arguments": "-m experiments.tsc_target_packet_training_20261109.collect --base NEW --input-base /home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot --role calibration",
+    "evaluation_module_arguments": "-m experiments.tsc_target_packet_training_20261109.evaluate --static NEW/static_graph_server_only.json --model NEW/model.json --protocol NEW/protocol.json --seed-dir 76116911=NEW/calibration/seed76116911 --seed-dir 76116912=NEW/calibration/seed76116912 --output NEW/evaluation --workers 4",
+    "root_commands_after_corrected_PASS_FIT": ["bash NEW/run_calibration.sh", "bash NEW/run_evaluation.sh"],
+    "ordering": "Run evaluation only after the calibration command exits successfully with both fixed seeds COMPLETE. Existing cohort/output guards retain failed or partial runs and prevent automatic retries."
+  },
+  "code_resolution": "NEW must precede the frozen producer in PYTHONPATH and contain the corrected experiments packages: training, kernel, protocol primitives and dense-v2 observer/auditor dependencies. OLD must not precede NEW and select the preserved failed code.",
+  "this_check": {"new_native_starts": 0, "new_fits": 0, "model_evaluations": 0, "raw_or_model_transfers": 0}
+}

@@ -1,0 +1,1454 @@
+{
+  "status": "ALL_TARGET_WEIGHTS_FROZEN",
+  "development_hours_read": 0,
+  "original_training_reproduced": true,
+  "protocol": {
+    "status": "LOCKED_BEFORE_TARGET_SHRINK_FIT",
+    "date": "2026-11-09",
+    "scope": "One offline development candidate using the same 40 PP seed-hours; no simulation, new label collection, action branch, paper edit or independent confirmation.",
+    "cohort": "Original two cities, other-city donor 8h, three disjoint local 2h blocks and six reused development seeds per city. Pilots excluded; seeds 35110701-04 belong to another study and remain untouched.",
+    "change": "Only replace count-fusion S/P CDFs by T + lambda * (pooled S/P - T). One scalar lambda per target adaptation block and arm, shared across all contexts and horizons, constrained to [0,1]. T, source permutations, features and physical pseudocount remain unchanged.",
+    "fitting": "Within each 2h target block, fit T on one complete hour and evaluate on the other, then swap. Source and placebo heads use only the fixed other-city donor. For each held hour, average all eligible flight snapshots times detector horizons 1..10 equally; average the two hour objectives equally. Lambda=clip(sum w*d*(Y-T)/sum w*d*d,0,1), d=pooled arm-T; denominator zero -> lambda=0.",
+    "training_eligibility": "Original full-observable matched, non-spillback moving flights with a complete future 10s label. No new context selection or magnitude subdivision. Competing, terminal and complete censored outcomes remain no-straight-arrival labels.",
+    "freeze": "Fit both source heads and all six target block weights, refit each T using its full original 2h, verify original training metadata, and write all training artifacts before reading any development labels. No subsequent lambda change.",
+    "timing": {
+      "service_seconds": 13,
+      "detector_seconds": 10,
+      "execution_seconds": 10,
+      "physical_pseudocount": 20,
+      "point_threshold": 0.5,
+      "permutation_seed": 11072026
+    },
+    "action_semantics": "Observed PP plan is excluded from the predictor. Keep the existing expected-service decoder, nominal masks, fractional tail, first-feasible round12 tie and GP fallback. Do not present PP-label scores as counterfactual arrival or control-cost estimates.",
+    "primary": "Raw CDF Brier over detector horizons 1..10 on all observable risk-set flight snapshots; average within hour then six development hours equally per target city. Compare calibrated true-source S to unchanged pure-target T, calibrated placebo P and history baseline.",
+    "secondary": "Retain original common-scored scope separately, hard endpoint edge-count MAE, horizon10 bias/Brier, paired per-seed and per-block changes, all request pairs and all-TLS-normalized PP-label nominal score contrasts S-T/S-P. Keep zero weights and empty supports.",
+    "gate": "Development prediction signal only if both cities have S raw-CDF Brier strictly below T, P and history. A control-ranking development signal additionally requires S/T and S/P requests differing in at least two of six seeds per city and positive equal-seed PP-label score contrasts versus T and P in both cities. Otherwise retain HOLD or PREDICTION_ONLY, without automatic confirmation.",
+    "reproduction": "Reproduce the preceding expected-service five-arm endpoint MAEs, decision counts, request differences and PP-label score contrasts before interpreting new results; T/history/analytic/GP unchanged.",
+    "stopping": "One fixed candidate only. No retry with cell-specific weights, a different proper score, features, horizons or decoder after seeing development. A zero-weight or true-source/placebo tie is no source contribution. A successful development screen still requires a separately allocated untouched confirmation panel.",
+    "execution": "jtl110gpu2 only. Raw records and any detailed predictions remain server-side; pull compact summaries and logs only."
+  },
+  "training": {
+    "source": {
+      "hangzhou": {
+        "real": {
+          "city": "hangzhou",
+          "part": "donor",
+          "seeds": [
+            76110701,
+            76110702,
+            76110703,
+            76110704,
+            76110705,
+            76110706,
+            76110707,
+            76110708
+          ],
+          "seed_examples": {
+            "76110701": 47568,
+            "76110702": 47534,
+            "76110703": 47593,
+            "76110704": 47767,
+            "76110705": 47460,
+            "76110706": 47220,
+            "76110707": 47303,
+            "76110708": 47515
+          },
+          "support_cells": 123,
+          "pseudocount": 20,
+          "feature_names": [
+            "current_straight",
+            "history_eta_second_bin",
+            "past_speed_ratio_bin",
+            "entry_queue"
+          ],
+          "all_decisions": 46080,
+          "snapshot_examples": 379960,
+          "positive_arrival_examples": 33585,
+          "zero_label_examples": 346375,
+          "hours": 8,
+          "permutation_strata": 8360,
+          "permutation_changed_labels": 9407,
+          "permuted": false
+        },
+        "placebo": {
+          "city": "hangzhou",
+          "part": "donor",
+          "seeds": [
+            76110701,
+            76110702,
+            76110703,
+            76110704,
+            76110705,
+            76110706,
+            76110707,
+            76110708
+          ],
+          "seed_examples": {
+            "76110701": 47568,
+            "76110702": 47534,
+            "76110703": 47593,
+            "76110704": 47767,
+            "76110705": 47460,
+            "76110706": 47220,
+            "76110707": 47303,
+            "76110708": 47515
+          },
+          "support_cells": 123,
+          "pseudocount": 20,
+          "feature_names": [
+            "current_straight",
+            "history_eta_second_bin",
+            "past_speed_ratio_bin",
+            "entry_queue"
+          ],
+          "all_decisions": 46080,
+          "snapshot_examples": 379960,
+          "positive_arrival_examples": 33585,
+          "zero_label_examples": 346375,
+          "hours": 8,
+          "permutation_strata": 8360,
+          "permutation_changed_labels": 9407,
+          "permuted": true,
+          "permutation_seed": 11072026
+        }
+      },
+      "jinan": {
+        "real": {
+          "city": "jinan",
+          "part": "donor",
+          "seeds": [
+            76110801,
+            76110802,
+            76110803,
+            76110804,
+            76110805,
+            76110806,
+            76110807,
+            76110808
+          ],
+          "seed_examples": {
+            "76110801": 52714,
+            "76110802": 51599,
+            "76110803": 52435,
+            "76110804": 52140,
+            "76110805": 50578,
+            "76110806": 52482,
+            "76110807": 52872,
+            "76110808": 53028
+          },
+          "support_cells": 110,
+          "pseudocount": 20,
+          "feature_names": [
+            "current_straight",
+            "history_eta_second_bin",
+            "past_speed_ratio_bin",
+            "entry_queue"
+          ],
+          "all_decisions": 34560,
+          "snapshot_examples": 417848,
+          "positive_arrival_examples": 37586,
+          "zero_label_examples": 380262,
+          "hours": 8,
+          "permutation_strata": 5967,
+          "permutation_changed_labels": 26955,
+          "permuted": false
+        },
+        "placebo": {
+          "city": "jinan",
+          "part": "donor",
+          "seeds": [
+            76110801,
+            76110802,
+            76110803,
+            76110804,
+            76110805,
+            76110806,
+            76110807,
+            76110808
+          ],
+          "seed_examples": {
+            "76110801": 52714,
+            "76110802": 51599,
+            "76110803": 52435,
+            "76110804": 52140,
+            "76110805": 50578,
+            "76110806": 52482,
+            "76110807": 52872,
+            "76110808": 53028
+          },
+          "support_cells": 110,
+          "pseudocount": 20,
+          "feature_names": [
+            "current_straight",
+            "history_eta_second_bin",
+            "past_speed_ratio_bin",
+            "entry_queue"
+          ],
+          "all_decisions": 34560,
+          "snapshot_examples": 417848,
+          "positive_arrival_examples": 37586,
+          "zero_label_examples": 380262,
+          "hours": 8,
+          "permutation_strata": 5967,
+          "permutation_changed_labels": 26955,
+          "permuted": true,
+          "permutation_seed": 11072026
+        }
+      }
+    },
+    "target": {
+      "hangzhou": [
+        {
+          "metadata": {
+            "block": 0,
+            "city": "hangzhou",
+            "part": "adapt",
+            "seeds": [
+              76111701,
+              76111702
+            ],
+            "seed_examples": {
+              "76111701": 47362,
+              "76111702": 47981
+            },
+            "support_cells": 118,
+            "pseudocount": 20,
+            "feature_names": [
+              "current_straight",
+              "history_eta_second_bin",
+              "past_speed_ratio_bin",
+              "entry_queue"
+            ],
+            "all_decisions": 11520,
+            "snapshot_examples": 95343,
+            "positive_arrival_examples": 8422,
+            "zero_label_examples": 86921,
+            "hours": 2,
+            "permuted": false
+          },
+          "calibration": {
+            "city": "hangzhou",
+            "target_seeds": [
+              76111701,
+              76111702
+            ],
+            "weights": {
+              "S": 0.09040371592228724,
+              "P": 0.06727642805525545
+            },
+            "folds": [
+              {
+                "held_seed": 76111701,
+                "hour_weight": 0.5,
+                "samples": 47362,
+                "queries": 473620,
+                "all_decisions": 5760,
+                "arms": {
+                  "S": {
+                    "A_sum": 1040.2272419267586,
+                    "B_sum": 129.1456587098967,
+                    "C_sum": 1601.830087958413,
+                    "A": 0.0021963330136538966,
+                    "B": 0.00027267779804462797,
+                    "C": 0.0033820997592128987,
+                    "loss_at_zero": 0.0033820997592128987,
+                    "loss_at_one": 0.005033077176777539,
+                    "loss_at_fitted": 0.00335074784724023
+                  },
+                  "P": {
+                    "A_sum": 909.5591085071695,
+                    "B_sum": 99.22076540962327,
+                    "C_sum": 1601.830087958413,
+                    "A": 0.0019204406665832726,
+                    "B": 0.00020949445844690526,
+                    "C": 0.0033820997592128987,
+                    "loss_at_zero": 0.0033820997592128987,
+                    "loss_at_one": 0.004883551508902361,
+                    "loss_at_fitted": 0.003362603822120395
+                  }
+                },
+                "training_seed": 76111702,
+                "training_metadata": {
+                  "city": "hangzhou",
+                  "part": "adapt",
+                  "seeds": [
+                    76111702
+                  ],
+                  "seed_examples": {
+                    "76111702": 47981
+                  },
+                  "support_cells": 113,
+                  "pseudocount": 20,
+                  "feature_names": [
+                    "current_straight",
+                    "history_eta_second_bin",
+                    "past_speed_ratio_bin",
+                    "entry_queue"
+                  ],
+                  "all_decisions": 5760,
+                  "snapshot_examples": 47981,
+                  "positive_arrival_examples": 4249,
+                  "zero_label_examples": 43732,
+                  "hours": 1,
+                  "permuted": false
+                }
+              },
+              {
+                "held_seed": 76111702,
+                "hour_weight": 0.5,
+                "samples": 47981,
+                "queries": 479810,
+                "all_decisions": 5760,
+                "arms": {
+                  "S": {
+                    "A_sum": 952.119485105174,
+                    "B_sum": 50.511079011032386,
+                    "C_sum": 1377.9144971538406,
+                    "A": 0.0019843677395326776,
+                    "B": 0.00010527308520254347,
+                    "C": 0.002871791953385383,
+                    "loss_at_zero": 0.002871791953385383,
+                    "loss_at_one": 0.004645613522512974,
+                    "loss_at_fitted": 0.0028689757010763963
+                  },
+                  "P": {
+                    "A_sum": 861.9666371052488,
+                    "B_sum": 19.464138669140215,
+                    "C_sum": 1377.9144971538406,
+                    "A": 0.0017964749319631704,
+                    "B": 4.056634640616122e-05,
+                    "C": 0.002871791953385383,
+                    "loss_at_zero": 0.002871791953385383,
+                    "loss_at_one": 0.004587134192536231,
+                    "loss_at_fitted": 0.00287446469273075
+                  }
+                },
+                "training_seed": 76111701,
+                "training_metadata": {
+                  "city": "hangzhou",
+                  "part": "adapt",
+                  "seeds": [
+                    76111701
+                  ],
+                  "seed_examples": {
+                    "76111701": 47362
+                  },
+                  "support_cells": 110,
+                  "pseudocount": 20,
+                  "feature_names": [
+                    "current_straight",
+                    "history_eta_second_bin",
+                    "past_speed_ratio_bin",
+                    "entry_queue"
+                  ],
+                  "all_decisions": 5760,
+                  "snapshot_examples": 47362,
+                  "positive_arrival_examples": 4173,
+                  "zero_label_examples": 43189,
+                  "hours": 1,
+                  "permuted": false
+                }
+              }
+            ],
+            "arms": {
+              "S": {
+                "A": 0.0020903503765932873,
+                "B": 0.0001889754416235857,
+                "C": 0.003126945856299141,
+                "unconstrained_weight": 0.09040371592228724,
+                "weight": 0.09040371592228724,
+                "loss_at_zero": 0.003126945856299141,
+                "loss_at_one": 0.004839345349645257,
+                "loss_at_fitted": 0.003109861774158313
+              },
+              "P": {
+                "A": 0.0018584577992732214,
+                "B": 0.00012503040242653325,
+                "C": 0.003126945856299141,
+                "unconstrained_weight": 0.06727642805525545,
+                "weight": 0.06727642805525545,
+                "loss_at_zero": 0.003126945856299141,
+                "loss_at_one": 0.004735342850719295,
+                "loss_at_fitted": 0.0031185342574255727
+              }
+            },
+            "objective": "mean of two held-hour flight-by-detector-horizon (1..10) mean Brier losses",
+            "moment_definitions": {
+              "A": "mean squared pooled-minus-target CDF; denominator",
+              "B": "mean pooled-minus-target CDF times (truth-target); numerator",
+              "C": "mean target Brier loss"
+            },
+            "full_target_metadata": {
+              "city": "hangzhou",
+              "part": "adapt",
+              "seeds": [
+                76111701,
+                76111702
+              ],
+              "seed_examples": {
+                "76111701": 47362,
+                "76111702": 47981
+              },
+              "support_cells": 118,
+              "pseudocount": 20,
+              "feature_names": [
+                "current_straight",
+                "history_eta_second_bin",
+                "past_speed_ratio_bin",
+                "entry_queue"
+              ],
+              "all_decisions": 11520,
+              "snapshot_examples": 95343,
+              "positive_arrival_examples": 8422,
+              "zero_label_examples": 86921,
+              "hours": 2,
+              "permuted": false
+            }
+          }
+        },
+        {
+          "metadata": {
+            "block": 1,
+            "city": "hangzhou",
+            "part": "adapt",
+            "seeds": [
+              76111703,
+              76111704
+            ],
+            "seed_examples": {
+              "76111703": 46841,
+              "76111704": 47466
+            },
+            "support_cells": 117,
+            "pseudocount": 20,
+            "feature_names": [
+              "current_straight",
+              "history_eta_second_bin",
+              "past_speed_ratio_bin",
+              "entry_queue"
+            ],
+            "all_decisions": 11520,
+            "snapshot_examples": 94307,
+            "positive_arrival_examples": 8321,
+            "zero_label_examples": 85986,
+            "hours": 2,
+            "permuted": false
+          },
+          "calibration": {
+            "city": "hangzhou",
+            "target_seeds": [
+              76111703,
+              76111704
+            ],
+            "weights": {
+              "S": 0.09658059716338024,
+              "P": 0.06904186175770549
+            },
+            "folds": [
+              {
+                "held_seed": 76111703,
+                "hour_weight": 0.5,
+                "samples": 46841,
+                "queries": 468410,
+                "all_decisions": 5760,
+                "arms": {
+                  "S": {
+                    "A_sum": 907.2027536377034,
+                    "B_sum": 81.17149079075917,
+                    "C_sum": 1509.1564434602356,
+                    "A": 0.0019367706787594273,
+                    "B": 0.0001732915411514681,
+                    "C": 0.0032218706762456727,
+                    "loss_at_zero": 0.0032218706762456727,
+                    "loss_at_one": 0.004812058272702164,
+                    "loss_at_fitted": 0.003206463307481487
+                  },
+                  "P": {
+                    "A_sum": 870.9241503327969,
+                    "B_sum": 53.399102770692984,
+                    "C_sum": 1509.1564434602356,
+                    "A": 0.0018593201475903523,
+                    "B": 0.00011400077447256246,
+                    "C": 0.0032218706762456727,
+                    "loss_at_zero": 0.0032218706762456727,
+                    "loss_at_one": 0.0048531892748909,
+                    "loss_at_fitted": 0.0032149919924523364
+                  }
+                },
+                "training_seed": 76111704,
+                "training_metadata": {
+                  "city": "hangzhou",
+                  "part": "adapt",
+                  "seeds": [
+                    76111704
+                  ],
+                  "seed_examples": {
+                    "76111704": 47466
+                  },
+                  "support_cells": 113,
+                  "pseudocount": 20,
+                  "feature_names": [
+                    "current_straight",
+                    "history_eta_second_bin",
+                    "past_speed_ratio_bin",
+                    "entry_queue"
+                  ],
+                  "all_decisions": 5760,
+                  "snapshot_examples": 47466,
+                  "positive_arrival_examples": 4160,
+                  "zero_label_examples": 43306,
+                  "hours": 1,
+                  "permuted": false
+                }
+              },
+              {
+                "held_seed": 76111704,
+                "hour_weight": 0.5,
+                "samples": 47466,
+                "queries": 474660,
+                "all_decisions": 5760,
+                "arms": {
+                  "S": {
+                    "A_sum": 971.7150182432478,
+                    "B_sum": 100.38152793571369,
+                    "C_sum": 1585.4066622089913,
+                    "A": 0.0020471811786189013,
+                    "B": 0.00021148090830428874,
+                    "C": 0.003340089036803167,
+                    "loss_at_zero": 0.003340089036803167,
+                    "loss_at_one": 0.004964308398813491,
+                    "loss_at_fitted": 0.003318334852626899
+                  },
+                  "P": {
+                    "A_sum": 872.7073880770363,
+                    "B_sum": 67.07427829882835,
+                    "C_sum": 1585.4066622089913,
+                    "A": 0.0018385947585156455,
+                    "B": 0.00014131015526656627,
+                    "C": 0.003340089036803167,
+                    "loss_at_zero": 0.003340089036803167,
+                    "loss_at_one": 0.0048960634847856795,
+                    "loss_at_fitted": 0.0033293405786802227
+                  }
+                },
+                "training_seed": 76111703,
+                "training_metadata": {
+                  "city": "hangzhou",
+                  "part": "adapt",
+                  "seeds": [
+                    76111703
+                  ],
+                  "seed_examples": {
+                    "76111703": 46841
+                  },
+                  "support_cells": 112,
+                  "pseudocount": 20,
+                  "feature_names": [
+                    "current_straight",
+                    "history_eta_second_bin",
+                    "past_speed_ratio_bin",
+                    "entry_queue"
+                  ],
+                  "all_decisions": 5760,
+                  "snapshot_examples": 46841,
+                  "positive_arrival_examples": 4161,
+                  "zero_label_examples": 42680,
+                  "hours": 1,
+                  "permuted": false
+                }
+              }
+            ],
+            "arms": {
+              "S": {
+                "A": 0.001991975928689164,
+                "B": 0.0001923862247278784,
+                "C": 0.00328097985652442,
+                "unconstrained_weight": 0.09658059716338024,
+                "weight": 0.09658059716338024,
+                "loss_at_zero": 0.00328097985652442,
+                "loss_at_one": 0.004888183335757827,
+                "loss_at_fitted": 0.0032623990800541933
+              },
+              "P": {
+                "A": 0.0018489574530529988,
+                "B": 0.00012765546486956438,
+                "C": 0.00328097985652442,
+                "unconstrained_weight": 0.06904186175770549,
+                "weight": 0.06904186175770549,
+                "loss_at_zero": 0.00328097985652442,
+                "loss_at_one": 0.004874626379838289,
+                "loss_at_fitted": 0.00327216628556628
+              }
+            },
+            "objective": "mean of two held-hour flight-by-detector-horizon (1..10) mean Brier losses",
+            "moment_definitions": {
+              "A": "mean squared pooled-minus-target CDF; denominator",
+              "B": "mean pooled-minus-target CDF times (truth-target); numerator",
+              "C": "mean target Brier loss"
+            },
+            "full_target_metadata": {
+              "city": "hangzhou",
+              "part": "adapt",
+              "seeds": [
+                76111703,
+                76111704
+              ],
+              "seed_examples": {
+                "76111703": 46841,
+                "76111704": 47466
+              },
+              "support_cells": 117,
+              "pseudocount": 20,
+              "feature_names": [
+                "current_straight",
+                "history_eta_second_bin",
+                "past_speed_ratio_bin",
+                "entry_queue"
+              ],
+              "all_decisions": 11520,
+              "snapshot_examples": 94307,
+              "positive_arrival_examples": 8321,
+              "zero_label_examples": 85986,
+              "hours": 2,
+              "permuted": false
+            }
+          }
+        },
+        {
+          "metadata": {
+            "block": 2,
+            "city": "hangzhou",
+            "part": "adapt",
+            "seeds": [
+              76111705,
+              76111706
+            ],
+            "seed_examples": {
+              "76111705": 47206,
+              "76111706": 47774
+            },
+            "support_cells": 117,
+            "pseudocount": 20,
+            "feature_names": [
+              "current_straight",
+              "history_eta_second_bin",
+              "past_speed_ratio_bin",
+              "entry_queue"
+            ],
+            "all_decisions": 11520,
+            "snapshot_examples": 94980,
+            "positive_arrival_examples": 8407,
+            "zero_label_examples": 86573,
+            "hours": 2,
+            "permuted": false
+          },
+          "calibration": {
+            "city": "hangzhou",
+            "target_seeds": [
+              76111705,
+              76111706
+            ],
+            "weights": {
+              "S": 0.09632652325529475,
+              "P": 0.07330989675493592
+            },
+            "folds": [
+              {
+                "held_seed": 76111705,
+                "hour_weight": 0.5,
+                "samples": 47206,
+                "queries": 472060,
+                "all_decisions": 5760,
+                "arms": {
+                  "S": {
+                    "A_sum": 953.5412608892677,
+                    "B_sum": 77.25658420507062,
+                    "C_sum": 1500.8530322506056,
+                    "A": 0.002019957761490632,
+                    "B": 0.0001636583997904305,
+                    "C": 0.003179369216308532,
+                    "loss_at_zero": 0.003179369216308532,
+                    "loss_at_one": 0.0048720101782183025,
+                    "loss_at_fitted": 0.0031665827092257704
+                  },
+                  "P": {
+                    "A_sum": 859.0189882948526,
+                    "B_sum": 65.82816662809226,
+                    "C_sum": 1500.8530322506056,
+                    "A": 0.0018197241628073817,
+                    "B": 0.0001394487281872903,
+                    "C": 0.003179369216308532,
+                    "loss_at_zero": 0.003179369216308532,
+                    "loss_at_one": 0.004720195922741333,
+                    "loss_at_fitted": 0.003168703090684613
+                  }
+                },
+                "training_seed": 76111706,
+                "training_metadata": {
+                  "city": "hangzhou",
+                  "part": "adapt",
+                  "seeds": [
+                    76111706
+                  ],
+                  "seed_examples": {
+                    "76111706": 47774
+                  },
+                  "support_cells": 115,
+                  "pseudocount": 20,
+                  "feature_names": [
+                    "current_straight",
+                    "history_eta_second_bin",
+                    "past_speed_ratio_bin",
+                    "entry_queue"
+                  ],
+                  "all_decisions": 5760,
+                  "snapshot_examples": 47774,
+                  "positive_arrival_examples": 4230,
+                  "zero_label_examples": 43544,
+                  "hours": 1,
+                  "permuted": false
+                }
+              },
+              {
+                "held_seed": 76111706,
+                "hour_weight": 0.5,
+                "samples": 47774,
+                "queries": 477740,
+                "all_decisions": 5760,
+                "arms": {
+                  "S": {
+                    "A_sum": 972.0488963513916,
+                    "B_sum": 108.40443003279862,
+                    "C_sum": 1516.0268160180733,
+                    "A": 0.002034681827670682,
+                    "B": 0.00022691093488675558,
+                    "C": 0.0031733302968519977,
+                    "loss_at_zero": 0.0031733302968519977,
+                    "loss_at_one": 0.004754190254749168,
+                    "loss_at_fitted": 0.0031484946178351723
+                  },
+                  "P": {
+                    "A_sum": 883.2626119449742,
+                    "B_sum": 61.86398235743809,
+                    "C_sum": 1516.0268160180733,
+                    "A": 0.0018488353747749282,
+                    "B": 0.00012949299275220432,
+                    "C": 0.0031733302968519977,
+                    "loss_at_zero": 0.0031733302968519977,
+                    "loss_at_one": 0.0047631796861225175,
+                    "loss_at_fitted": 0.003164280332680747
+                  }
+                },
+                "training_seed": 76111705,
+                "training_metadata": {
+                  "city": "hangzhou",
+                  "part": "adapt",
+                  "seeds": [
+                    76111705
+                  ],
+                  "seed_examples": {
+                    "76111705": 47206
+                  },
+                  "support_cells": 109,
+                  "pseudocount": 20,
+                  "feature_names": [
+                    "current_straight",
+                    "history_eta_second_bin",
+                    "past_speed_ratio_bin",
+                    "entry_queue"
+                  ],
+                  "all_decisions": 5760,
+                  "snapshot_examples": 47206,
+                  "positive_arrival_examples": 4177,
+                  "zero_label_examples": 43029,
+                  "hours": 1,
+                  "permuted": false
+                }
+              }
+            ],
+            "arms": {
+              "S": {
+                "A": 0.002027319794580657,
+                "B": 0.00019528466733859305,
+                "C": 0.0031763497565802648,
+                "unconstrained_weight": 0.09632652325529475,
+                "weight": 0.09632652325529475,
+                "loss_at_zero": 0.0031763497565802648,
+                "loss_at_one": 0.004813100216483736,
+                "loss_at_fitted": 0.0031575386635304716
+              },
+              "P": {
+                "A": 0.001834279768791155,
+                "B": 0.0001344708604697473,
+                "C": 0.0031763497565802648,
+                "unconstrained_weight": 0.07330989675493592,
+                "weight": 0.07330989675493592,
+                "loss_at_zero": 0.0031763497565802648,
+                "loss_at_one": 0.004741687804431925,
+                "loss_at_fitted": 0.0031664917116826802
+              }
+            },
+            "objective": "mean of two held-hour flight-by-detector-horizon (1..10) mean Brier losses",
+            "moment_definitions": {
+              "A": "mean squared pooled-minus-target CDF; denominator",
+              "B": "mean pooled-minus-target CDF times (truth-target); numerator",
+              "C": "mean target Brier loss"
+            },
+            "full_target_metadata": {
+              "city": "hangzhou",
+              "part": "adapt",
+              "seeds": [
+                76111705,
+                76111706
+              ],
+              "seed_examples": {
+                "76111705": 47206,
+                "76111706": 47774
+              },
+              "support_cells": 117,
+              "pseudocount": 20,
+              "feature_names": [
+                "current_straight",
+                "history_eta_second_bin",
+                "past_speed_ratio_bin",
+                "entry_queue"
+              ],
+              "all_decisions": 11520,
+              "snapshot_examples": 94980,
+              "positive_arrival_examples": 8407,
+              "zero_label_examples": 86573,
+              "hours": 2,
+              "permuted": false
+            }
+          }
+        }
+      ],
+      "jinan": [
+        {
+          "metadata": {
+            "block": 0,
+            "city": "jinan",
+            "part": "adapt",
+            "seeds": [
+              76111801,
+              76111802
+            ],
+            "seed_examples": {
+              "76111801": 51887,
+              "76111802": 51848
+            },
+            "support_cells": 110,
+            "pseudocount": 20,
+            "feature_names": [
+              "current_straight",
+              "history_eta_second_bin",
+              "past_speed_ratio_bin",
+              "entry_queue"
+            ],
+            "all_decisions": 8640,
+            "snapshot_examples": 103735,
+            "positive_arrival_examples": 9303,
+            "zero_label_examples": 94432,
+            "hours": 2,
+            "permuted": false
+          },
+          "calibration": {
+            "city": "jinan",
+            "target_seeds": [
+              76111801,
+              76111802
+            ],
+            "weights": {
+              "S": 0.0,
+              "P": 0.0
+            },
+            "folds": [
+              {
+                "held_seed": 76111801,
+                "hour_weight": 0.5,
+                "samples": 51887,
+                "queries": 518870,
+                "all_decisions": 4320,
+                "arms": {
+                  "S": {
+                    "A_sum": 736.4204560558437,
+                    "B_sum": -162.42943454051385,
+                    "C_sum": 6746.969359492634,
+                    "A": 0.0014192773836526368,
+                    "B": -0.0003130445671179946,
+                    "C": 0.013003198025502793,
+                    "loss_at_zero": 0.013003198025502793,
+                    "loss_at_one": 0.015048564543391419,
+                    "loss_at_fitted": 0.013003198025502793
+                  },
+                  "P": {
+                    "A_sum": 810.4576203967172,
+                    "B_sum": -202.91352907040428,
+                    "C_sum": 6746.969359492634,
+                    "A": 0.0015619666205344638,
+                    "B": -0.0003910681462994667,
+                    "C": 0.013003198025502793,
+                    "loss_at_zero": 0.013003198025502793,
+                    "loss_at_one": 0.01534730093863619,
+                    "loss_at_fitted": 0.013003198025502793
+                  }
+                },
+                "training_seed": 76111802,
+                "training_metadata": {
+                  "city": "jinan",
+                  "part": "adapt",
+                  "seeds": [
+                    76111802
+                  ],
+                  "seed_examples": {
+                    "76111802": 51848
+                  },
+                  "support_cells": 110,
+                  "pseudocount": 20,
+                  "feature_names": [
+                    "current_straight",
+                    "history_eta_second_bin",
+                    "past_speed_ratio_bin",
+                    "entry_queue"
+                  ],
+                  "all_decisions": 4320,
+                  "snapshot_examples": 51848,
+                  "positive_arrival_examples": 4633,
+                  "zero_label_examples": 47215,
+                  "hours": 1,
+                  "permuted": false
+                }
+              },
+              {
+                "held_seed": 76111802,
+                "hour_weight": 0.5,
+                "samples": 51848,
+                "queries": 518480,
+                "all_decisions": 4320,
+                "arms": {
+                  "S": {
+                    "A_sum": 797.1753275201769,
+                    "B_sum": -105.57345902567448,
+                    "C_sum": 6460.27690830447,
+                    "A": 0.0015375237762694355,
+                    "B": -0.00020362108282995385,
+                    "C": 0.012460031068323697,
+                    "loss_at_zero": 0.012460031068323697,
+                    "loss_at_one": 0.01440479701025304,
+                    "loss_at_fitted": 0.012460031068323697
+                  },
+                  "P": {
+                    "A_sum": 877.4508437986511,
+                    "B_sum": -137.58425775348266,
+                    "C_sum": 6460.27690830447,
+                    "A": 0.0016923523449287362,
+                    "B": -0.00026536078103973665,
+                    "C": 0.012460031068323697,
+                    "loss_at_zero": 0.012460031068323697,
+                    "loss_at_one": 0.014683104975331906,
+                    "loss_at_fitted": 0.012460031068323697
+                  }
+                },
+                "training_seed": 76111801,
+                "training_metadata": {
+                  "city": "jinan",
+                  "part": "adapt",
+                  "seeds": [
+                    76111801
+                  ],
+                  "seed_examples": {
+                    "76111801": 51887
+                  },
+                  "support_cells": 110,
+                  "pseudocount": 20,
+                  "feature_names": [
+                    "current_straight",
+                    "history_eta_second_bin",
+                    "past_speed_ratio_bin",
+                    "entry_queue"
+                  ],
+                  "all_decisions": 4320,
+                  "snapshot_examples": 51887,
+                  "positive_arrival_examples": 4670,
+                  "zero_label_examples": 47217,
+                  "hours": 1,
+                  "permuted": false
+                }
+              }
+            ],
+            "arms": {
+              "S": {
+                "A": 0.0014784005799610362,
+                "B": -0.00025833282497397423,
+                "C": 0.012731614546913246,
+                "unconstrained_weight": -0.17473804358273634,
+                "weight": 0.0,
+                "loss_at_zero": 0.012731614546913246,
+                "loss_at_one": 0.01472668077682223,
+                "loss_at_fitted": 0.012731614546913246
+              },
+              "P": {
+                "A": 0.0016271594827316,
+                "B": -0.0003282144636696017,
+                "C": 0.012731614546913246,
+                "unconstrained_weight": -0.201710076457048,
+                "weight": 0.0,
+                "loss_at_zero": 0.012731614546913246,
+                "loss_at_one": 0.01501520295698405,
+                "loss_at_fitted": 0.012731614546913246
+              }
+            },
+            "objective": "mean of two held-hour flight-by-detector-horizon (1..10) mean Brier losses",
+            "moment_definitions": {
+              "A": "mean squared pooled-minus-target CDF; denominator",
+              "B": "mean pooled-minus-target CDF times (truth-target); numerator",
+              "C": "mean target Brier loss"
+            },
+            "full_target_metadata": {
+              "city": "jinan",
+              "part": "adapt",
+              "seeds": [
+                76111801,
+                76111802
+              ],
+              "seed_examples": {
+                "76111801": 51887,
+                "76111802": 51848
+              },
+              "support_cells": 110,
+              "pseudocount": 20,
+              "feature_names": [
+                "current_straight",
+                "history_eta_second_bin",
+                "past_speed_ratio_bin",
+                "entry_queue"
+              ],
+              "all_decisions": 8640,
+              "snapshot_examples": 103735,
+              "positive_arrival_examples": 9303,
+              "zero_label_examples": 94432,
+              "hours": 2,
+              "permuted": false
+            }
+          }
+        },
+        {
+          "metadata": {
+            "block": 1,
+            "city": "jinan",
+            "part": "adapt",
+            "seeds": [
+              76111803,
+              76111804
+            ],
+            "seed_examples": {
+              "76111803": 53368,
+              "76111804": 53151
+            },
+            "support_cells": 110,
+            "pseudocount": 20,
+            "feature_names": [
+              "current_straight",
+              "history_eta_second_bin",
+              "past_speed_ratio_bin",
+              "entry_queue"
+            ],
+            "all_decisions": 8640,
+            "snapshot_examples": 106519,
+            "positive_arrival_examples": 9666,
+            "zero_label_examples": 96853,
+            "hours": 2,
+            "permuted": false
+          },
+          "calibration": {
+            "city": "jinan",
+            "target_seeds": [
+              76111803,
+              76111804
+            ],
+            "weights": {
+              "S": 0.0,
+              "P": 0.0
+            },
+            "folds": [
+              {
+                "held_seed": 76111803,
+                "hour_weight": 0.5,
+                "samples": 53368,
+                "queries": 533680,
+                "all_decisions": 4320,
+                "arms": {
+                  "S": {
+                    "A_sum": 710.7674475815562,
+                    "B_sum": -151.73049105516913,
+                    "C_sum": 6731.544090619477,
+                    "A": 0.0013318232790840133,
+                    "B": -0.0002843098693133884,
+                    "C": 0.012613446429732193,
+                    "loss_at_zero": 0.012613446429732193,
+                    "loss_at_one": 0.014513889447442984,
+                    "loss_at_fitted": 0.012613446429732193
+                  },
+                  "P": {
+                    "A_sum": 776.587662219772,
+                    "B_sum": -210.02397392451033,
+                    "C_sum": 6731.544090619477,
+                    "A": 0.0014551560152521587,
+                    "B": -0.0003935391506605275,
+                    "C": 0.012613446429732193,
+                    "loss_at_zero": 0.012613446429732193,
+                    "loss_at_one": 0.014855680746305406,
+                    "loss_at_fitted": 0.012613446429732193
+                  }
+                },
+                "training_seed": 76111804,
+                "training_metadata": {
+                  "city": "jinan",
+                  "part": "adapt",
+                  "seeds": [
+                    76111804
+                  ],
+                  "seed_examples": {
+                    "76111804": 53151
+                  },
+                  "support_cells": 110,
+                  "pseudocount": 20,
+                  "feature_names": [
+                    "current_straight",
+                    "history_eta_second_bin",
+                    "past_speed_ratio_bin",
+                    "entry_queue"
+                  ],
+                  "all_decisions": 4320,
+                  "snapshot_examples": 53151,
+                  "positive_arrival_examples": 4742,
+                  "zero_label_examples": 48409,
+                  "hours": 1,
+                  "permuted": false
+                }
+              },
+              {
+                "held_seed": 76111804,
+                "hour_weight": 0.5,
+                "samples": 53151,
+                "queries": 531510,
+                "all_decisions": 4320,
+                "arms": {
+                  "S": {
+                    "A_sum": 757.4990068773618,
+                    "B_sum": -71.86400315587207,
+                    "C_sum": 6553.960963536911,
+                    "A": 0.0014251829822155026,
+                    "B": -0.00013520724568845754,
+                    "C": 0.012330832841408273,
+                    "loss_at_zero": 0.012330832841408273,
+                    "loss_at_one": 0.01402643031500069,
+                    "loss_at_fitted": 0.012330832841408273
+                  },
+                  "P": {
+                    "A_sum": 824.1839247678492,
+                    "B_sum": -100.65026037499521,
+                    "C_sum": 6553.960963536911,
+                    "A": 0.0015506461303980157,
+                    "B": -0.00018936663538784824,
+                    "C": 0.012330832841408273,
+                    "loss_at_zero": 0.012330832841408273,
+                    "loss_at_one": 0.014260212242581985,
+                    "loss_at_fitted": 0.012330832841408273
+                  }
+                },
+                "training_seed": 76111803,
+                "training_metadata": {
+                  "city": "jinan",
+                  "part": "adapt",
+                  "seeds": [
+                    76111803
+                  ],
+                  "seed_examples": {
+                    "76111803": 53368
+                  },
+                  "support_cells": 109,
+                  "pseudocount": 20,
+                  "feature_names": [
+                    "current_straight",
+                    "history_eta_second_bin",
+                    "past_speed_ratio_bin",
+                    "entry_queue"
+                  ],
+                  "all_decisions": 4320,
+                  "snapshot_examples": 53368,
+                  "positive_arrival_examples": 4924,
+                  "zero_label_examples": 48444,
+                  "hours": 1,
+                  "permuted": false
+                }
+              }
+            ],
+            "arms": {
+              "S": {
+                "A": 0.001378503130649758,
+                "B": -0.00020975855750092297,
+                "C": 0.012472139635570232,
+                "unconstrained_weight": -0.152164005171358,
+                "weight": 0.0,
+                "loss_at_zero": 0.012472139635570232,
+                "loss_at_one": 0.014270159881221836,
+                "loss_at_fitted": 0.012472139635570232
+              },
+              "P": {
+                "A": 0.0015029010728250872,
+                "B": -0.0002914528930241879,
+                "C": 0.012472139635570232,
+                "unconstrained_weight": -0.19392686471127976,
+                "weight": 0.0,
+                "loss_at_zero": 0.012472139635570232,
+                "loss_at_one": 0.014557946494443695,
+                "loss_at_fitted": 0.012472139635570232
+              }
+            },
+            "objective": "mean of two held-hour flight-by-detector-horizon (1..10) mean Brier losses",
+            "moment_definitions": {
+              "A": "mean squared pooled-minus-target CDF; denominator",
+              "B": "mean pooled-minus-target CDF times (truth-target); numerator",
+              "C": "mean target Brier loss"
+            },
+            "full_target_metadata": {
+              "city": "jinan",
+              "part": "adapt",
+              "seeds": [
+                76111803,
+                76111804
+              ],
+              "seed_examples": {
+                "76111803": 53368,
+                "76111804": 53151
+              },
+              "support_cells": 110,
+              "pseudocount": 20,
+              "feature_names": [
+                "current_straight",
+                "history_eta_second_bin",
+                "past_speed_ratio_bin",
+                "entry_queue"
+              ],
+              "all_decisions": 8640,
+              "snapshot_examples": 106519,
+              "positive_arrival_examples": 9666,
+              "zero_label_examples": 96853,
+              "hours": 2,
+              "permuted": false
+            }
+          }
+        },
+        {
+          "metadata": {
+            "block": 2,
+            "city": "jinan",
+            "part": "adapt",
+            "seeds": [
+              76111805,
+              76111806
+            ],
+            "seed_examples": {
+              "76111805": 51817,
+              "76111806": 52199
+            },
+            "support_cells": 110,
+            "pseudocount": 20,
+            "feature_names": [
+              "current_straight",
+              "history_eta_second_bin",
+              "past_speed_ratio_bin",
+              "entry_queue"
+            ],
+            "all_decisions": 8640,
+            "snapshot_examples": 104016,
+            "positive_arrival_examples": 9384,
+            "zero_label_examples": 94632,
+            "hours": 2,
+            "permuted": false
+          },
+          "calibration": {
+            "city": "jinan",
+            "target_seeds": [
+              76111805,
+              76111806
+            ],
+            "weights": {
+              "S": 0.0,
+              "P": 0.0
+            },
+            "folds": [
+              {
+                "held_seed": 76111805,
+                "hour_weight": 0.5,
+                "samples": 51817,
+                "queries": 518170,
+                "all_decisions": 4320,
+                "arms": {
+                  "S": {
+                    "A_sum": 705.7124912509425,
+                    "B_sum": -245.27327592610908,
+                    "C_sum": 6803.176141472198,
+                    "A": 0.0013619323605205678,
+                    "B": -0.0004733451877301061,
+                    "C": 0.013129235852079814,
+                    "loss_at_zero": 0.013129235852079814,
+                    "loss_at_one": 0.015437858588060594,
+                    "loss_at_fitted": 0.013129235852079814
+                  },
+                  "P": {
+                    "A_sum": 775.5024155298472,
+                    "B_sum": -292.33331480647445,
+                    "C_sum": 6803.176141472198,
+                    "A": 0.0014966177423043543,
+                    "B": -0.0005641648779483074,
+                    "C": 0.013129235852079814,
+                    "loss_at_zero": 0.013129235852079814,
+                    "loss_at_one": 0.015754183350280785,
+                    "loss_at_fitted": 0.013129235852079814
+                  }
+                },
+                "training_seed": 76111806,
+                "training_metadata": {
+                  "city": "jinan",
+                  "part": "adapt",
+                  "seeds": [
+                    76111806
+                  ],
+                  "seed_examples": {
+                    "76111806": 52199
+                  },
+                  "support_cells": 110,
+                  "pseudocount": 20,
+                  "feature_names": [
+                    "current_straight",
+                    "history_eta_second_bin",
+                    "past_speed_ratio_bin",
+                    "entry_queue"
+                  ],
+                  "all_decisions": 4320,
+                  "snapshot_examples": 52199,
+                  "positive_arrival_examples": 4724,
+                  "zero_label_examples": 47475,
+                  "hours": 1,
+                  "permuted": false
+                }
+              },
+              {
+                "held_seed": 76111806,
+                "hour_weight": 0.5,
+                "samples": 52199,
+                "queries": 521990,
+                "all_decisions": 4320,
+                "arms": {
+                  "S": {
+                    "A_sum": 892.377913512987,
+                    "B_sum": -30.264121759329853,
+                    "C_sum": 6381.268821335505,
+                    "A": 0.0017095689831471618,
+                    "B": -5.797835544613853e-05,
+                    "C": 0.012224887107675443,
+                    "loss_at_zero": 0.012224887107675443,
+                    "loss_at_one": 0.014050412801714884,
+                    "loss_at_fitted": 0.012224887107675443
+                  },
+                  "P": {
+                    "A_sum": 986.0419023594678,
+                    "B_sum": -57.77125461407922,
+                    "C_sum": 6381.268821335505,
+                    "A": 0.0018890053494501195,
+                    "B": -0.00011067502177068376,
+                    "C": 0.012224887107675443,
+                    "loss_at_zero": 0.012224887107675443,
+                    "loss_at_one": 0.01433524250066693,
+                    "loss_at_fitted": 0.012224887107675443
+                  }
+                },
+                "training_seed": 76111805,
+                "training_metadata": {
+                  "city": "jinan",
+                  "part": "adapt",
+                  "seeds": [
+                    76111805
+                  ],
+                  "seed_examples": {
+                    "76111805": 51817
+                  },
+                  "support_cells": 109,
+                  "pseudocount": 20,
+                  "feature_names": [
+                    "current_straight",
+                    "history_eta_second_bin",
+                    "past_speed_ratio_bin",
+                    "entry_queue"
+                  ],
+                  "all_decisions": 4320,
+                  "snapshot_examples": 51817,
+                  "positive_arrival_examples": 4660,
+                  "zero_label_examples": 47157,
+                  "hours": 1,
+                  "permuted": false
+                }
+              }
+            ],
+            "arms": {
+              "S": {
+                "A": 0.0015357506718338648,
+                "B": -0.0002656617715881223,
+                "C": 0.012677061479877629,
+                "unconstrained_weight": -0.17298496198662983,
+                "weight": 0.0,
+                "loss_at_zero": 0.012677061479877629,
+                "loss_at_one": 0.01474413569488774,
+                "loss_at_fitted": 0.012677061479877629
+              },
+              "P": {
+                "A": 0.0016928115458772369,
+                "B": -0.00033741994985949557,
+                "C": 0.012677061479877629,
+                "unconstrained_weight": -0.1993251704132489,
+                "weight": 0.0,
+                "loss_at_zero": 0.012677061479877629,
+                "loss_at_one": 0.015044712925473857,
+                "loss_at_fitted": 0.012677061479877629
+              }
+            },
+            "objective": "mean of two held-hour flight-by-detector-horizon (1..10) mean Brier losses",
+            "moment_definitions": {
+              "A": "mean squared pooled-minus-target CDF; denominator",
+              "B": "mean pooled-minus-target CDF times (truth-target); numerator",
+              "C": "mean target Brier loss"
+            },
+            "full_target_metadata": {
+              "city": "jinan",
+              "part": "adapt",
+              "seeds": [
+                76111805,
+                76111806
+              ],
+              "seed_examples": {
+                "76111805": 51817,
+                "76111806": 52199
+              },
+              "support_cells": 110,
+              "pseudocount": 20,
+              "feature_names": [
+                "current_straight",
+                "history_eta_second_bin",
+                "past_speed_ratio_bin",
+                "entry_queue"
+              ],
+              "all_decisions": 8640,
+              "snapshot_examples": 104016,
+              "positive_arrival_examples": 9384,
+              "zero_label_examples": 94632,
+              "hours": 2,
+              "permuted": false
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "status": "AUTHORIZED",
+  "scope": "One zero-fit shared same-step receiving-motion prototype and paired readout using existing training records.",
+  "reason": "Two fixed native cases exceed the current-body cap while the same receiving vehicle advances and the end gap stays above2.5m; _speed applies the static cap before _move can update occupancy.",
+  "implementation": "Separate physical velocity proposal from shared same-step receiving/body resolution; align conditional training readout and forward motion. Inspect receiving dependency order so resolved motion can release space. Do not replace model predictions with observed next packets.",
+  "controls": "Freeze explicit entity width2.0m, lane widths and receiving prefix3.2m, model family, residual law, right of way and conflict reservation timing. Preserve the unresolved t716 local-zone ordering.",
+  "readout": "Test moving and stopped receivers, body-tail fragments and receiver dependencies. Then reproduce the frozen entity baseline and compare all original40000 yield references and all253 internal probes, including the two exact static-cap cases and the unresolved spatial case; report every new exclusion.",
+  "native_records": "Original four training trajectories only; calibration seeds76116911/76116912 untouched.",
+  "new_native_starts": 0,
+  "new_fits": 0,
+  "new_nuisance_estimations": 0,
+  "free_rollouts": 0,
+  "after": "Assess causal input support and any new constraints before separately considering fitting or calibration budgets; retain all prior HOLD evidence.",
+  "authorized_by": "User: \u7ee7\u7eed\u4e0b\u4e00\u6b65",
+  "candidate_package": "experiments.tsc_packet_same_step_receiving_20261110",
+  "frozen_baseline": "Entity-width model; exact saved40k references and253 internal probes",
+  "baseline_expected": {
+    "positive_rows": 9371,
+    "zero_rows": 30629,
+    "positive_allowed": 9368,
+    "zero_allowed": 29458,
+    "internal_below": 3,
+    "internal_planned": 253
+  },
+  "readout_convention": "Other current intents fixed by original per-frame seed; zero-residual receiving motion from current state only. Never insert native next packets.",
+  "baseline_rowwise_reproduction": true
+}

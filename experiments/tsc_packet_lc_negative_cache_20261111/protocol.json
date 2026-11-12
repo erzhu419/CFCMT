@@ -1,0 +1,52 @@
+{
+  "status": "COMPLETE_STRATIFIED_FOUR_POINT_CACHE",
+  "scope": "Construct only the667 missing numerical caches for the frozen1000-row naturally weighted cohort, then read fixed parameter points. No coefficient fit or new native simulation.",
+  "training": "Exactly the registered165 left,166 right and669 stay references, fixed inclusion probabilities and objective weights. Preserve all331 positives, all unsupported cases and the original1.1033% positive frequency. Do not resample, drop cases, change tolerances or use904 to tune this cohort.",
+  "methods": {
+    "exact": {
+      "cases": 921,
+      "reused": 325,
+      "new": 596,
+      "new_full_forward_ceiling": 14208,
+      "new_feature_ceiling": 5080,
+      "new_leaf_ceiling": 110478
+    },
+    "mixture256": {
+      "cases": 79,
+      "reused": 8,
+      "new": 71,
+      "new_full_forward_ceiling": 18176,
+      "new_feature_ceiling": 55808,
+      "new_leaf_ceiling": 0
+    }
+  },
+  "proposal": "Reuse the frozen original first-fit candidate as qf. The corrected proposal is the equal q0/qf mixture, interleaved128+128, with denominator0.5q0+0.5qf. The later LC-refitted point is a target readout only, not a new proposal anchor. All current domains, geometry, masks, priors and coefficient rows remain fixed. Read both128 and256 prefixes for mixed caches.",
+  "parameter_points": "Zero, original saved candidate, the previously frozen class-frequency-bias reference and the single returned LC-refitted point. No optimizer invocation or point selected using new losses. The arbitrary frequency-bias and LC-refitted targets need not satisfy the endpoint raw-weight bound2; record their weight concentration without clipping.",
+  "readouts": [
+    "Require all1000 native LC likelihoods and analytic gradients to be supported and finite at all fixed points and both prefix sizes. Report normalization, support counts, objective weight totals and unpenalized overall/per-seed/per-class NLL, class contributions and regularization separately.",
+    "Report mixed128/256 sensitivity, global and native-posterior ESS and maximum normalized weights. Reused exact/mixed caches must retain their saved reference, feature layout, whole geometric actor set and proposal identity; do not regenerate paid caches.",
+    "On the same training cases, compare direction probability and permission-conditional choice scores using the fixed registered neighbourhoods and weights. Report both unpaired weighted discrimination and registered matched-neighbourhood contrasts with their own denominators, including all zero-permission cases. These are internal diagnostics, not independent validation or directly comparable sampling designs."
+  ],
+  "budgets": {
+    "new_full_forward_calls_max": 32384,
+    "new_canonical_feature_evaluations_max": 60888,
+    "new_exact_leaf_visits_max": 110478,
+    "new_native_starts": 0,
+    "new_coefficient_fits": 0,
+    "optimizer_invocations": 0,
+    "new_nuisance_estimations": 0,
+    "new_synthetic_full_forward_calls": 0,
+    "workers_max": 3
+  },
+  "storage": "Run on jtl110gpu2; keep numerical caches, coefficients, gradients and per-case arrays server-side. Retrieve only compact result summaries and logs.",
+  "stopping": "Stop after the complete fixed-point readouts. Record and stop on lost native support, nonfinite results or consumed budget limits. Do not floor probabilities, refresh proposals, add particles, retry failed cases automatically or begin fitting. Preserve original fits, negative evidence, V93, manuscript and Thesis.",
+  "authorized_by": "User: 继续下一步",
+  "frozen_at_utc": "2026-11-11T04:05:30.718079+00:00",
+  "parent_protocol": "../tsc_packet_lc_negative_registration_20261111/next_protocol.json",
+  "started_at_utc": "2026-11-11T04:08:51.794280+00:00",
+  "execution": "execution.json",
+  "server_result": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_lc_negative_cache/evaluation/result.json",
+  "completed_at_utc": "2026-11-11T06:08:19.851233+00:00",
+  "result": "result.json",
+  "next_protocol": "next_protocol.json"
+}

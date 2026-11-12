@@ -1,0 +1,151 @@
+{
+  "protocol": "tsc-native-calibration-budget-diagnostic-v1",
+  "status": "PREPARED_NOT_RUN",
+  "purpose": "distinguish_native_calibration_sample_budget_effect_from_fixed_model_feature_limitations",
+  "native_group_budgets": [
+    20,
+    40,
+    80
+  ],
+  "training_seed_budgets": [
+    2,
+    4,
+    8
+  ],
+  "development_seeds": [
+    180314,
+    188625,
+    127178,
+    177524,
+    163775,
+    150945,
+    173412,
+    161481,
+    150744,
+    134310
+  ],
+  "outer_folds": [
+    [
+      180314,
+      188625
+    ],
+    [
+      127178,
+      177524
+    ],
+    [
+      163775,
+      150945
+    ],
+    [
+      173412,
+      161481
+    ],
+    [
+      150744,
+      134310
+    ]
+  ],
+  "arms": [
+    "static",
+    "history"
+  ],
+  "model_config": {
+    "learning_rate": 0.05,
+    "max_iter": 100,
+    "max_leaf_nodes": 15,
+    "min_samples_leaf": 20,
+    "l2_regularization": 10.0,
+    "uncertainty_quantile": 0.9,
+    "random_state": 20260803
+  },
+  "history_definition": {
+    "offsets_sec": [
+      -60,
+      -50,
+      -40,
+      -30,
+      -20,
+      -10
+    ],
+    "state_fields": [
+      "total_q",
+      "total_veh",
+      "mean_speed",
+      "mean_occ",
+      "graph_upstream_q_mean",
+      "graph_downstream_q_mean"
+    ],
+    "action_fields": [
+      "green_q",
+      "red_q",
+      "green_veh",
+      "red_veh",
+      "green_speed_mean",
+      "green_down_q",
+      "green_down_occ",
+      "movement_service_pressure"
+    ],
+    "summaries": [
+      "mean",
+      "ols_slope_times_60sec"
+    ],
+    "feature_names": [
+      "hist_mean_total_q",
+      "hist_trend60_total_q",
+      "hist_mean_total_veh",
+      "hist_trend60_total_veh",
+      "hist_mean_mean_speed",
+      "hist_trend60_mean_speed",
+      "hist_mean_mean_occ",
+      "hist_trend60_mean_occ",
+      "hist_mean_graph_upstream_q_mean",
+      "hist_trend60_graph_upstream_q_mean",
+      "hist_mean_graph_downstream_q_mean",
+      "hist_trend60_graph_downstream_q_mean",
+      "hist_mean_green_q",
+      "hist_trend60_green_q",
+      "hist_mean_red_q",
+      "hist_trend60_red_q",
+      "hist_mean_green_veh",
+      "hist_trend60_green_veh",
+      "hist_mean_red_veh",
+      "hist_trend60_red_veh",
+      "hist_mean_green_speed_mean",
+      "hist_trend60_green_speed_mean",
+      "hist_mean_green_down_q",
+      "hist_trend60_green_down_q",
+      "hist_mean_green_down_occ",
+      "hist_trend60_green_down_occ",
+      "hist_mean_movement_service_pressure",
+      "hist_trend60_movement_service_pressure"
+    ],
+    "candidate_alignment": "current_candidate_signal_state_and_current_pp_reference",
+    "observation_hook": "prepare_interval_before_current_executor_requests"
+  },
+  "execution": {
+    "threshold": 0,
+    "no_stay_override_of_pp_switch": true,
+    "reference": "phase_pressure"
+  },
+  "subset_rule": "keep original development seed order after removing both outer held-out seeds; for each of eight cyclic rotations use first 2 then first 4 seeds; the 8-seed/80-group endpoint reuses the prior OOF actions",
+  "new_fits": 160,
+  "new_native_labels": 0,
+  "new_simulator_runs": 0,
+  "endpoint_80": "existing HOLD_DEVELOPMENT is preserved and reused",
+  "legacy_base_predictions": "native_target_score/uncertainty/trust remain fixed from the earlier legacy B100 target model; budgets describe additional native calibration only, not total target data",
+  "aggregation": "evaluate each fitted subset policy separately; average costs and harm over rotations within each held-out simulator seed, then average the ten seeds; do not average predictions into an ensemble",
+  "analysis": [
+    "per-seed cost versus PP",
+    "harmful action count and raw harmful cost",
+    "paired changes 20 to 40 to 80 groups",
+    "variation across the fixed nested subsets"
+  ],
+  "interpretation": "consistent improvement with budget motivates a bounded new-label protocol; flat or unstable curves favor revisiting benefit modeling. No new policy selection, threshold tuning or automatic closed-loop expansion.",
+  "bootstrap": {
+    "draws": 10000,
+    "seed": 20261106,
+    "unit": "heldout_simulator_seed_after_averaging_fixed_rotations",
+    "interpretation": "descriptive_budget_diagnostic_not_confirmatory_testing"
+  }
+}

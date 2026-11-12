@@ -1,0 +1,93 @@
+{
+  "scope": "Existing dynamic evidence for the g-capable assets and exact historical Cologne package. Counts and input schemas only, new simulations 0, new fits 0. Historical responses and costs were not used in selecting sources.",
+  "salt_lake": {
+    "demand_source": "cf_h2o/data/derived/traffic_signal_saltlake_q1_weekday_peak/build_summary.json",
+    "demand_clock": "65 complete Q1 2023 weekdays, pooled 17:00–18:00 coordinate-wise five-minute median. Deterministic demand construction, original upstream route templates are empty.",
+    "scenario": [
+      {
+        "name": "saltlake_400s_200w_q1_weekday_peak",
+        "vehicles": 4625,
+        "current_snapshot_sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e/cf_h2o/data/derived/traffic_signal_saltlake_q1_weekday_peak/saltlake_400s_200w_q1_weekday_peak/saltlake_400s_200w_q1_weekday_peak.sumocfg",
+        "historical_cache_sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/e23713bcedbd0683eae0/cf_h2o/data/derived/traffic_signal_saltlake_q1_weekday_peak/saltlake_400s_200w_q1_weekday_peak/saltlake_400s_200w_q1_weekday_peak.sumocfg"
+      },
+      {
+        "name": "saltlake_state_university_q1_weekday_peak",
+        "vehicles": 3471,
+        "current_snapshot_sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e/cf_h2o/data/derived/traffic_signal_saltlake_q1_weekday_peak/saltlake_state_university_q1_weekday_peak/saltlake_state_university_q1_weekday_peak.sumocfg",
+        "historical_cache_sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/e23713bcedbd0683eae0/cf_h2o/data/derived/traffic_signal_saltlake_q1_weekday_peak/saltlake_state_university_q1_weekday_peak/saltlake_state_university_q1_weekday_peak.sumocfg"
+      }
+    ],
+    "current_config_check": "Both current frozen snapshot directories contain sumocfg, net and route files. Plain server CFCMT/cf_h2o checkout does not contain these derived directories.",
+    "admission_directory": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/saltlake_admission_v1_20260808",
+    "admission_contents": "admission.json and eight tripinfo XML files (one per two scenarios x four controllers). Five-minute movement_profile is a demand input. Trip-level outputs and profile totals cannot determine per-lane near vehicles at a ten-second decision."
+  },
+  "v114": {
+    "server_audit": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v114_pure_waiting_rebuild_20260831/source_pure_waiting_cache_v2_audit.json",
+    "server_cache": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v114_pure_waiting_rebuild_20260831/source_pure_waiting_cache_v1",
+    "seeds": [
+      2027,
+      3037,
+      4047
+    ],
+    "retained": [
+      {
+        "scenario": "arterial4x4",
+        "groups_across_three_seeds": 510,
+        "covered_tls_in_each_seed": 16
+      },
+      {
+        "scenario": "cologne1",
+        "groups_across_three_seeds": 100,
+        "covered_tls_in_each_seed": 1
+      },
+      {
+        "scenario": "cologne3",
+        "groups_across_three_seeds": 641,
+        "covered_tls_in_each_seed": 3
+      },
+      {
+        "scenario": "cologne8",
+        "groups_across_three_seeds": 885,
+        "covered_tls_in_each_seed": 8
+      },
+      {
+        "scenario": "ingolstadt1",
+        "groups_across_three_seeds": 514,
+        "covered_tls_in_each_seed": 1
+      },
+      {
+        "scenario": "ingolstadt7",
+        "groups_across_three_seeds": 672,
+        "covered_tls_in_each_seed": 7
+      },
+      {
+        "scenario": "ingolstadt21",
+        "groups_across_three_seeds": 0,
+        "covered_tls_in_each_seed": 0
+      },
+      {
+        "scenario": "saltlake_400s_200w_q1_weekday_peak",
+        "groups_across_three_seeds": 1272,
+        "covered_tls_in_each_seed": 2
+      },
+      {
+        "scenario": "saltlake_state_university_q1_weekday_peak",
+        "groups_across_three_seeds": 1132,
+        "covered_tls_in_each_seed": 2
+      }
+    ],
+    "salt_lake_behavior_collision_steps_both_networks": 0,
+    "metadata_evidence": "For one shard in each of both Salt Lake networks, Ingolstadt7, arterial4x4 and Cologne1, inspected NPZ directory/field names. Salt Lake schema has 63 aggregate action features and 24 context features. Metadata carries row times, focal TLS and candidate states. Source input lacks vehicle-to-stopline distances by lane for exact own-g and simultaneous priority-G supply.",
+    "snapshot_storage": "Captured SUMO states were temporary at /dev/shm under sumo_state_directory; cf_h2o/sumo_runtime.py uses TemporaryDirectory. The cache products store summaries and response arrays.",
+    "safety_exclusion": "Ingolstadt21: no retained groups; three unsafe native audit runs. See cf_h2o/config/traffic_signal_tsc_v114_source_pure_waiting_admission_v2.json."
+  },
+  "cologne_native": {
+    "server_graphs": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_joint_response_interface_20261106/audit_exact_lane_v2/interfaces_server_only",
+    "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+    "groups": 8,
+    "candidate_views": 64,
+    "exact_program": "Repaired Cologne1 cluster_357187_359543 program 0 has 8 stable candidates. Across those candidates, g occurs on four left and four U-turn edge-pair movements only. Incoming movement lanes in this sample are all shared.",
+    "local_summary": "../tsc_joint_response_interface_20261106/exact_lane_recovery_result.json"
+  },
+  "implication": "Historic demand, admission, action-group counts and aggregate green/red queues cannot establish dynamic joint supply for a new source network. Only a static movement and right-of-way match could justify a separately frozen preaction measurement pilot."
+}

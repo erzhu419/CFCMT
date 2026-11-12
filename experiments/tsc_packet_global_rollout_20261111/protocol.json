@@ -1,0 +1,33 @@
+{
+  "scope": "Single-step global model verification, frozen PP calibration, and one two-action Jinan diagnostic.",
+  "model": {
+    "candidate": "target_packet_lc_stratified_refit/fit/coefficients_server_only.json",
+    "comparison": "target_packet_lc_refit/fit/coefficients_server_only.json",
+    "priors": "target_packet_training/target_laws_server_only.json",
+    "new_fits": 0,
+    "interpretation": "The full-frame stochastic extension is tested where the conditional reference randomizes every actor."
+  },
+  "calibration": {
+    "native_seeds": [76116911, 76116912],
+    "native_seconds_each": 1800,
+    "anchors": [600, 1200],
+    "model_scenario_seeds": [76117001, 76117002, 76117003, 76117004, 76117005, 76117006, 76117007, 76117008],
+    "horizon_seconds": 450,
+    "accuracy_gates": "../tsc_target_packet_protocol_20261109/protocol.json",
+    "workers": 4,
+    "resume_workers": 12
+  },
+  "action_diagnostic": {
+    "native_seed": 76116921,
+    "junction": "intersection_2_2",
+    "anchor": "First ten-second epoch from 600 to 660 inclusive with at least two feasible states.",
+    "arms": "PhasePressure and the first feasible non-PhasePressure state in executor order, then own-state PhasePressure from the next decision.",
+    "native_starts": 2,
+    "horizon_seconds": 450,
+    "model_scenarios_per_arm_and_model": 8,
+    "prediction_workers": 16,
+    "cost": "Post-step halted vehicles summed across the fixed 144 controlled lanes and 450 seconds.",
+    "decision": "Structurally valid calibration permits the paired diagnostic. Numerical calibration failure is retained and limits the action result to a failure diagnostic."
+  },
+  "storage": "jtl110gpu2. Keep vehicle records, coefficients, caches and per-draw sequences server-side. Retrieve compact receipts."
+}

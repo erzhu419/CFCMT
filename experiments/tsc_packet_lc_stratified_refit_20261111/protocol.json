@@ -1,0 +1,30 @@
+{
+  "status": "COMPLETE_STRATIFIED_LC_REFIT",
+  "authorized_by": "User previously requested: 看看这轮损失和换道排序的结果，继续下一步",
+  "scope": "One LC-only numerical refit on the completed1000 naturally weighted caches, then fixed returned-point training and904 regression readouts. No new physical, feature or native simulation calls.",
+  "training": "Exactly the1000 completed cases,165 left/166 right/669 stay, their frozen row identities and inclusion weights. Keep all priors, masks, physical outcomes and the original proposal anchor. The current old LC-refitted point has penalized LC gradient norm0.04233 on this changed objective; the new fit tests whether the added negative coverage can improve conditional discrimination.",
+  "parameters": "Update only rows3 and4,76 coefficients. Initialize from the original first-fit candidate, exactly as in the previous424-case LC fit. Keep brake/start/yield rows fixed at that candidate. No alternative starts, restarts or parameter/feature changes.",
+  "objective": "The identical natural-weight LC NLL plus0.001 times squared non-bias LC coefficients; biases remain unpenalized. Analytic76-variable gradient, one L-BFGS-B invocation, maxiter200, gtol1e-7. Record every objective evaluation and actual termination.",
+  "readouts": "Keep the completed four-point baselines separate. Read the single returned point on all1000 primary/128 native losses, gradients and weight diagnostics, both unpaired and registered-neighborhood discrimination with the same denominators, plus the existing90462-pair exact regression panel.904 is internal regression and is never used to choose an iterate or threshold.",
+  "budgets": {
+    "new_coefficient_fits_max": 1,
+    "optimizer_invocations_max": 1,
+    "optimized_coefficients": 76,
+    "optimizer_iterations_max": 200,
+    "new_full_forward_calls": 0,
+    "new_canonical_feature_evaluations": 0,
+    "new_native_starts": 0,
+    "new_nuisance_estimations": 0,
+    "new_particle_pools": 0
+  },
+  "stopping": "Unsupported/nonfinite native likelihoods or gradients terminate the single attempt and preserve its trace. No clipping, proposal refresh, particle expansion or automatic continuation after an iteration cap. Stop after returned-point readouts. Preserve original fit HOLD, V93, manuscript and Thesis.",
+  "storage": "Run on jtl110gpu2; retain coefficients, caches, gradients and per-case arrays server-side. Retrieve compact result summaries only.",
+  "frozen_at_utc": "2026-11-11T06:37:12.875684+00:00",
+  "parent_protocol": "../tsc_packet_lc_negative_cache_20261111/next_protocol.json",
+  "started_at_utc": "2026-11-11T06:38:34.904517+00:00",
+  "execution": "execution.json",
+  "server_result": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_lc_stratified_refit/fit/result.json",
+  "completed_at_utc": "2026-11-11T06:41:56.994035+00:00",
+  "result": "result.json",
+  "next_protocol": "next_protocol.json"
+}

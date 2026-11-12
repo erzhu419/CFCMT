@@ -1,0 +1,17 @@
+{
+  "source": "execution_rollouts.csv, recomputed by recompute_execution_summaries.py",
+  "operation": "read-only remote aggregation; no simulation/replay; no raw artifact transfer",
+  "formal_rollouts_covered": 1344,
+  "learned_controller_rollouts_with_guard_audit": 896,
+  "learned_controller_rows": 8,
+  "pressure_controller_status": "PP and MP use no learned override audit and are not included in execution_summary.csv; missing rates are not zero.",
+  "denominator": "All post-warmup intersection-by-decision-epoch decisions in the guard audit, summed within method and city; 79,296 for Los Angeles and 713,664 for Jinan.",
+  "effective_override": "A learned-reference disagreement that becomes an executor-accepted switch request or an effective hold of the current green. These counters record accepted requests and effective holds, not completed green-phase changes.",
+  "guard_rejections": "Sum of rejected_* counters excluding rejected_cooldown, rejected_coordination, and rejected_executor; in these data, nonzero guard counters are confidence and service-safety checks.",
+  "accounting": "decisions = model-reference agreements + guard rejections + proposed overrides; proposed overrides = effective overrides + cooldown + spatial + executor rejections.",
+  "rates": "All percentage columns divide the corresponding summed count by post_warmup_intersection_decisions and multiply by 100. These are not per-run mean rates or percentages conditional on disagreement.",
+  "trace_warning": "Do not derive execution rates from accepted_intervention_trace length; traces can be capped and can include ineffective requests. Rates here use complete guard counters.",
+  "interpretation": "Jinan CFCMT accepts one non-reference switch request in 713,664 decisions; the archived result describes a nearly reference-following controller. Learned-intervention benefit is not isolated without the exact standalone generalized-pressure reference.",
+  "recompute_command": "python3 recompute_execution_summaries.py --out .",
+  "per_run_provenance": "execution_rollouts.csv retains method, city, scenario, seed, archived result_path and every integer guard counter; pressure-policy guard fields are empty."
+}

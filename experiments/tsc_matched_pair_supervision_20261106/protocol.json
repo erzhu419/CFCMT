@@ -1,0 +1,128 @@
+{
+  "protocol": "tsc-matched-pair-supervision-development-v1",
+  "status": "PREPARED_NOT_RUN",
+  "question": "Does supervising all action pairs improve selected native cost over PP-linked pair supervision under common design, weights and selection?",
+  "parent_snapshot": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e",
+  "parent_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v158_native_prefix_ranking_calibration_20260911",
+  "history_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_predecision_history_20261106",
+  "development": {
+    "seeds": [
+      180314,
+      188625,
+      127178,
+      177524,
+      163775,
+      150945,
+      173412,
+      161481,
+      150744,
+      134310
+    ],
+    "action_groups": 100,
+    "candidate_rows": 800,
+    "max_new_fits": 10,
+    "new_simulator_trajectories": 0,
+    "labels": "original 450-second native one-action-then-PP cost; all 100 groups, not only nine timeline cases",
+    "cost_unit": "450-second mean network halted vehicles per controlled lane; lower is better"
+  },
+  "crossfit": {
+    "folds": [
+      [
+        180314,
+        188625
+      ],
+      [
+        127178,
+        177524
+      ],
+      [
+        163775,
+        150945
+      ],
+      [
+        173412,
+        161481
+      ],
+      [
+        150744,
+        134310
+      ]
+    ],
+    "unit": "whole_seed",
+    "fold_count": 5,
+    "threshold": 0.0,
+    "threshold_selection": "fixed_before_native_outcomes"
+  },
+  "features": {
+    "state": "PAIRWISE_CAUSAL_STATE_PARENTS + HISTORY_STATE_NAMES, same order as history80",
+    "action": "PAIRWISE_CAUSAL_ACTION_PARENTS + META_ACTION_FEATURES + HISTORY_ACTION_NAMES, same order as history80",
+    "state_feature_count": 35,
+    "action_feature_count": 62,
+    "history": "Reuse original joined history bank, including frozen legacy B100 prediction columns; exclude six downstream phase columns."
+  },
+  "common_training_design": {
+    "rows": "All 56 ordered a!=b edges for each of the 80 training groups; 4480 rows per fold, identical row order in S and A.",
+    "X": "[shared predecision state, action_features(a)-action_features(b)]",
+    "y": "absolute_cost(a)-absolute_cost(b), equivalently interval_cost(a)-interval_cost(b); no group-range normalization",
+    "group_weight": "W_g=560/(3*G_d), where training groups G_d=(32,24,24)",
+    "S": "Only 14 directed edges touching PP have weight W_g/14; all other edges have weight zero.",
+    "A": "All 56 directed edges have weight W_g/56.",
+    "total_weight": 560,
+    "per_domain_weight": "560/3",
+    "normalization": "Use these weights directly; no subsequent mean-row-weight normalization.",
+    "binning": "Use complete common training-fold X in both arms; no held-out rows. In sklearn 1.7.2 zero-weight rows affect binning and sample counts."
+  },
+  "model": {
+    "estimator": "HistGradientBoostingRegressor",
+    "sklearn_version": "1.7.2",
+    "config": {
+      "learning_rate": 0.05,
+      "max_iter": 100,
+      "max_leaf_nodes": 15,
+      "min_samples_leaf": 160,
+      "l2_regularization": 10.0,
+      "random_state": 20260803,
+      "loss": "squared_error",
+      "early_stopping": false
+    },
+    "leaf_count_choice": "160/4480=20/560 preserves original raw-row fraction. Common row count constraints are not equal positive-weight or independent-group support.",
+    "fits": "Two arms x original five whole-seed folds. Reuse cached history80 OOF records without refitting."
+  },
+  "prediction": {
+    "score": "s(a)=0.5*(f(state,x_a-x_PP)-f(state,x_PP-x_a)); force s(PP)=0",
+    "selection": "Use V158 _select_row: full candidate argmin; tolerance 1e-12 tie prefers PP, otherwise first original row. Nonnegative minimum returns PP. Selected stay while PP switches returns PP without second-best search.",
+    "threshold": 0,
+    "no_stay_override_of_pp_switch": true,
+    "uncertainty": "No q90, cycle, support, alpha or beta enters selection. Training diagnostic is weighted MAE only; it is not held-out selected-action calibration."
+  },
+  "analysis": {
+    "bootstrap_draws": 10000,
+    "bootstrap_seed": 20261106,
+    "primary_unit": "equal_simulator_seed_then_mean_of_10_groups_with_demands_4_3_3",
+    "comparisons": [
+      "A_minus_S",
+      "A_minus_history80",
+      "A_minus_phase_pressure"
+    ],
+    "gate": "All three paired 95% upper bounds below zero, and A raw harmful-cost sum no greater than both S and history80. All must pass; no winner selection among arms.",
+    "report": [
+      "Equal-seed paired cost and 95% interval",
+      "per-demand cost",
+      "overrides and harmful overrides",
+      "harmful and beneficial cost sums",
+      "S versus history80 descriptively as bridge context"
+    ]
+  },
+  "execution_requirements": "Confirm original 100-group, 800-row joins and reference costs; verify each train fold has the common 4480 rows and total/domain/group weights above. Stop on mismatch, without dropping groups.",
+  "limits": [
+    "Exploratory reused development labels; derived action pairs are not new independent outcomes.",
+    "S is a bridge model, not an equivalent implementation of history80. The contrast changes supervised edge weights under common design/count constraints; it does not equalize leaf Hessians or independent-group support.",
+    "Prediction tests only candidate-versus-PP differences; it does not test all-opponent aggregation.",
+    "Training remains equal-domain; reporting remains equal-seed with demand mix 4/3/3. Preserve and disclose this shared distinction."
+  ],
+  "closure": "On failure, HOLD without feature, weight, threshold, leaf-size or fold tuning. A pass supports preparing independent validation only; no automatic closed-loop expansion.",
+  "audit_execution": {
+    "new_fits": 0,
+    "new_simulator_trajectories": 0
+  }
+}

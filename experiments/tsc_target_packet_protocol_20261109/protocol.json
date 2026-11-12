@@ -1,0 +1,339 @@
+{
+  "protocol": "target-packet-GLM-technical-calibration-v1",
+  "status": "FROZEN_DESIGN_ENGINE_PENDING_NOT_RUN",
+  "current_step": {
+    "new_native_starts": 0,
+    "new_real_data_fits": 0,
+    "work": "Freeze one model family, causal primitives and proposed independent calibration budget. Full transition engine is not implemented or admitted by these primitives."
+  },
+  "prerequisite_measurement": "../tsc_network_dense_measurement_v2_20261109/result.json:PASS_DENSE_MEASUREMENT,8 new/9 cumulative starts,0 fits",
+  "reuse": {
+    "producer": "423dc81960505f69f08e frozen producer, not latest workspace",
+    "sumo": "1.22.0",
+    "inputs": "same repaired Jinan net and fixed demand file as dense v2",
+    "policy": "original PhasePressure and original SafePhaseExecutor; no controller retuning",
+    "server_base": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109",
+    "allowed_hosts": [
+      "jtl110gpu",
+      "jtl110gpu2",
+      "jtl311linux"
+    ]
+  },
+  "cohorts": {
+    "training_seeds": [
+      76116901,
+      76116902,
+      76116903,
+      76116904
+    ],
+    "calibration_seeds": [
+      76116911,
+      76116912
+    ],
+    "seed_check": "No occurrence in local experiments/scripts/config manifests before this registration. Remote current run manifests must be checked before execution. Do not silently replace a consumed seed.",
+    "excluded": "76116801 and its failed fragment/all8 branches; old20 target states, all closed-study calibration/evaluation data; reserved35110701-04. Assign no trajectory window to multiple roles.",
+    "demand_scope": "Same fixed route demand; new seeds vary microscopic randomness, not independent demand days."
+  },
+  "proposed_budget": {
+    "native_starts_max": 6,
+    "seconds_per_single_trajectory": 1800,
+    "native_seconds_max": 10800,
+    "training_trajectory_seconds": 7200,
+    "calibration_trajectory_seconds": 3600,
+    "full_native_frames": 10806,
+    "behavior": "PP from time0,1s passive observations,10s decisions. One actual trajectory per seed, no counterfactual training arms or loadState.",
+    "joint_GLM_optimizations_max": 1,
+    "closed_form_nuisance_law_estimations": 4,
+    "total_fitting_operations_max": 5,
+    "nuisance_laws": [
+      "road movement/END law",
+      "global boundary due intensity",
+      "entry allocation mixture",
+      "entrant profile distribution"
+    ],
+    "source_fits": 0,
+    "source_starts": 0,
+    "native_evaluation_branches": 0,
+    "full_hour_control_runs": 0,
+    "cumulative_native_starts_including_measurement_if_all_run": 15,
+    "failure": "Every started trajectory/attempted optimization counts. Stop on first essential observation/execution failure or later failed calibration; no retries/replacement/tuning on held seeds.",
+    "execution_order": [
+      "Finish and freeze the full engine/feature extractor/likelihood/collector/evaluators with synthetic closure admission before collecting any new data",
+      "Collect the4 training trajectories, stopping on first essential measurement failure",
+      "Estimate4 nuisance laws and run the one declared jointGLM optimization from training only; stop on fit failure",
+      "Freeze all parameters, then collect the2 calibration trajectories without any model refit, stopping on essential measurement failure",
+      "Evaluate all4 fixed windows once and retain every completed seed; failed accuracy gate closes candidate"
+    ]
+  },
+  "model": {
+    "family": "One physical packet kernel plus joint low-capacity generalized linear residual/decision heads; no scalar cost head.",
+    "time": {
+      "state_step_sec": 1,
+      "policy_step_sec": 10,
+      "horizon_sec": 450
+    },
+    "known_vehicle_parameters": "Actual observed profiles are shared inputs, never relearned as evidence of transfer. Predicted future allowed speed is derived from current predicted lane/static limit and stored profile; no future getter.",
+    "motion": {
+      "definition": "dt=1s; v is current speed, last_a is separately observed signed acceleration; a_max,b,tau are the positive accel_mps2,decel_mps2,tau_s profile values. b is the nominal braking scale, not an emergency deceleration bound. Vehicle leader gap g=max(front-to-rear gap-min_gap,0); vL,bL are leader speed/deceleration. A stopline blocker instead uses g=distance_to_line,vL=0,bL=b. Omit leader bounds when absent.",
+      "approximate_mechanistic_bound": "v_safe=max(0,-b*tau+sqrt((b*tau)^2+2*b*g+(b/bL)*vL^2)); omit leader bound on a free road. This is a declared approximation, not an exact SUMO law or safety proof.",
+      "mean_proposal": "Let U=max(0,min(v_allowed,v+a_max*dt,v_safe,D_admissible/dt)), omitting absent leader/travel constraints; D_admissible is the nonnegative travel permitted by the deterministic path/receiving/conflict resolver. v_base=U, r=clip(w_motion dot phi,-b*dt,a_max*dt), final mean speed mu=clip(v_base+r,0,U). Euler travel=mu*dt. Reapply every upper bound after residual; never infer a_max from last_a. Stronger-than-nominal braking forced by geometry is a declared approximation; report its rate, not a safety claim.",
+      "intersection": "For a movement, red creates an upstream stopline blocker; yellow admission is fixed by current braking distance versus distance-to-line. G/g and directed foes/yields remain distinct. g-entry willingness uses its learned head only after physical receiving/conflict admissibility. A packet already inside continues along its committed internal path even if the entry signal changes. END intent terminates at the road end without consulting the next signal.",
+      "projection": "Do not move through an unavailable receiving gap or legal-path constraint. New junction admissions reserve predicted conflict-space travel intervals; directed yielding checks already-internal packets and priority approach arrivals. No traffic-light-level any-G shortcut.",
+      "multi_packet_order": "Compute longitudinal proposals from the same pre-step packets; resolve front-to-back receiving reservations with priority before yielding and stable physical/FIFO order for exact ties; use predicted movement results for lateral gap checks. No lane/TLS ID as a numeric feature.",
+      "residual_identifiability": "Because the final upper bound includes v_base, positive residuals can saturate; the learned motion correction is a slowdown relative to the declared upper-bound base. Positive residual saturation is reported, not presented as identified acceleration improvement."
+    },
+    "heads": {
+      "motion": "bounded linear residual of next speed",
+      "start": "Bernoulli logit when current v<0.1 and structurally able to move; memoryless, no unobserved wait-age",
+      "yield_entry": "Bernoulli logit for a physically admissible yielding connection whose front could reach its entry in this step",
+      "lane_change": "left/stay/right softmax with logits from the same pre-step causal state as training; execute after longitudinal movement, with hard adjacency/gap masks from predicted intermediate packets. Stay is the reference logit. No observed next-step lateral environment enters features."
+    },
+    "features": [
+      {
+        "name": "bias",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "speed_mps",
+        "fixed_divisor": 15
+      },
+      {
+        "name": "acceleration_mps2",
+        "fixed_divisor": 3
+      },
+      {
+        "name": "allowed_speed_mps",
+        "fixed_divisor": 15
+      },
+      {
+        "name": "accel_mps2",
+        "fixed_divisor": 3
+      },
+      {
+        "name": "decel_mps2",
+        "fixed_divisor": 3
+      },
+      {
+        "name": "tau_s",
+        "fixed_divisor": 2
+      },
+      {
+        "name": "min_gap_m",
+        "fixed_divisor": 5
+      },
+      {
+        "name": "length_m",
+        "fixed_divisor": 5
+      },
+      {
+        "name": "imperfection",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "speed_factor",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "stopline_distance_m",
+        "fixed_divisor": 100
+      },
+      {
+        "name": "net_leader_gap_m",
+        "fixed_divisor": 50
+      },
+      {
+        "name": "leader_speed_mps",
+        "fixed_divisor": 15
+      },
+      {
+        "name": "leader_present",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "internal_lane",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "signal_G",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "signal_g",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "signal_Y",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "signal_y",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "signal_r",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "signal_s",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "signal_O",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "signal_uncontrolled",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "foe_min_TTA_s",
+        "fixed_divisor": 10
+      },
+      {
+        "name": "foe_present",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "foe_internal_count",
+        "fixed_divisor": 10
+      },
+      {
+        "name": "receiving_free_space_m",
+        "fixed_divisor": 50
+      },
+      {
+        "name": "left_front_gap_m",
+        "fixed_divisor": 50
+      },
+      {
+        "name": "left_rear_gap_m",
+        "fixed_divisor": 50
+      },
+      {
+        "name": "right_front_gap_m",
+        "fixed_divisor": 50
+      },
+      {
+        "name": "right_rear_gap_m",
+        "fixed_divisor": 50
+      },
+      {
+        "name": "left_rear_speed_mps",
+        "fixed_divisor": 15
+      },
+      {
+        "name": "right_rear_speed_mps",
+        "fixed_divisor": 15
+      },
+      {
+        "name": "left_legal",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "right_legal",
+        "fixed_divisor": 1
+      },
+      {
+        "name": "lateral_position_m",
+        "fixed_divisor": 4
+      },
+      {
+        "name": "lateral_speed_mps",
+        "fixed_divisor": 3
+      }
+    ],
+    "feature_count": 38,
+    "coefficient_vectors": 5,
+    "coefficient_count": 190,
+    "feature_semantics": "Current physical state/local leaders, exact intended legal connection, directed conflicts and current receiving space only. Gap variables are geometrical free space if no vehicle is present; present/masked relations remain explicit. No empirical RMS division, city/phase indices, routes, costs or future PP plan.",
+    "latent_intent": "On entry to each ordinary road, draw a persistent legal movement or END from target-history priors. At an anchor sample from the same prior conditioned on observed current lane and past traversals. Keep the intention across seconds/lane changes; choose a legal physical connection consistent with it. Already occupied internal paths are observed current state. Never resample a blocked intention to force throughput.",
+    "target_intent_law": "Use complete historical road-exit events at/before training-end; END is a separate outcome even when static successors exist. Right-censored road visits do not label non-END. Road-level probabilities shrink with strength8 to the masked network direction/END law with0.5 pseudocount per legal outcome. No individual realized future link becomes a feature.",
+    "boundary": "Global due rate is inferred from past inserted identities plus changes in observed global pending inventory. Entry mixture uses observed historical insertions, never XML per-entry due labels. Unknown initial pending entries are latent draws from the training mixture and stay assigned while blocked. Future due counts are generated by Poisson(training global rate); profile draws use training observations; actual due schedules/arrivals remain labels. Global-rate plus insertion-mixture allocation is an approximation under entry blockage.",
+    "body_and_sensors": "Advance fronts longitudinally then change lanes, preserving the separate traversed front path and native remapped occupancy body trail; insert newly due/pending packets using receiving space. Reconstruct N/H/O/meanSpeed from predicted packets with v2 semantics. Cost uses speed<0.1, not isStopped.",
+    "update_order": "Request originalPP from own state at epochs; apply signals; propagate packets/insertions; aggregate sensors; Advance original executor with predicted internal N; repeat. No true intermediate reset.",
+    "training": {
+      "optimizer": "One joint L-BFGS-B solve with analytic gradients, zero coefficient initialization,maxiter200,gtol1e-7; non-convergence is reported and stops, no optimizer scan",
+      "loss": "Equal-weight mean conditional NLL per eligible head plus fixedL2=1e-3 on non-intercept coefficients. Motion is fixed-sigma1m/s Gaussian; decision heads use categorical likelihood. Unknown intent is marginalized under the same training-law prior for each conditional likelihood, never replaced with that vehicle actual future link.",
+      "sample_cap": "One fixed reservoir of at most10000 eligible records per head per training seed, uniform within that head/seed; random seed76116999. No control-cost selection. Keep every observed transition as paid data, even when not sampled for optimizer.",
+      "maximum_head_records": 160000,
+      "hyperparameter_search": false,
+      "calibration_refitting": false,
+      "label_masks": "Speed likelihood applies to observed surviving vehicles, not a fabricated zero speed for disappeared vehicles. The same latent-intent prior is used in every head; training eligibility is declared by current geometry/current v (plus observed next speed availability for the Gaussian label), not a favorable future cost. END/road-exit laws use only complete training road visits; censored visits remain censored.",
+      "label_risk_and_likelihood": {
+        "features": "For every packet/current state and candidate intent k, build phi(S_t,k) without the actual future link. Priors pi_k are the frozen target training history law. Observed future speed/entry/lateral/exit supply labels only.",
+        "risk_sets": "Form head risk sets using current state and the union of candidate-intent admissibility, not observed successful passage. Structurally impossible intents have probability0 for a positive start/pass/change, not an invented compatible connection. Keep blocked and unsuccessful cases in their risk set.",
+        "motion": "A Gaussian label is available when the packet is observed at both endpoints. Its mean is the final projected speed, not an unprojected residual target. Fixedsigma1m/s is the likelihood scale only; no additional Gaussian speed noise is sampled during rollout. END exits have no fabricated next-speed label.",
+        "start": "For every currently halted packet (v<0.1), label next speed>=0.1 when next speed is observed. Use Bernoulli start probability times current-intent structural movement admissibility. Likelihood is marginalized over pi_k; no actual next link chooses the head input.",
+        "yield_entry": "For an ordinary-road packet, include it if some candidate g-connection can be reached within1s under current speed+a_max and current geometric receiving/conflict admissibility. Label any observed entry from that approach into a compatible internal path; no entry is0. Incompatible/red/not-reachable intents contribute structural0. No eligibility by observed actual crossing.",
+        "lane_change": "When current/zero-residual candidate path has a possible ordinary-road lateral choice, label left/stay/right from the last same-edge lateral segment of the observed front path (including connection_then_lane_change). No lateral segment means stay. Risk includes observed stays. Legal masks/contexts use the frozen pre-step candidate calculation; actual next link is not a feature.",
+        "composite_loss": "For each head h use -(1/n_h)sum_i log(sum_k pi_ik*p_h(y_ih|S_i,k;theta_h)); sum the4 head means with equal weight and fixedL2. Missing speed labels do not become zero; structural-zero hypotheses remain in the mixture. This is a declared composite likelihood, not a joint latent trajectory likelihood."
+      }
+    },
+    "intent_connection_resolution": {
+      "intent": "Persist an outgoing ordinary-road/direction or END, not a secretly observed individual route. Internal entry commits the exact path until reaching the receiving road.",
+      "compatible": "At each pre-step, collect static connections from the current lane consistent with the persistent intent. If several remain, select the first in frozen XML connection order; use this exact physical connection for signal/foe/receiving features. Selection changes only when the front lane changes; never choose by actual future flow.",
+      "incompatible": "If none exists, retain intent. Find approach lanes on the current road with a compatible connection; compute shortest legal adjacent-lane distances. The projected target is the nearest lane, XML-order tie. Motion sees a stopline blocker; entry risk is structurally zero. Signal features are r, receiver/foe fields refer to the static projected target connection in the current pre-state, and masks identify only legal adjacent moves that do not increase distance to the compatible-lane set. No teleport, intent resampling or future-link lookup.",
+      "END": "Current lane supportsEND regardless of successors; no junction entry or next signal is needed. Adjacent lane choices use ordinary legal gap constraints.",
+      "lateral_context": "All logits use pre-step information. To define the possible receiving-road context for a connection-then-lanechange, use the fixed zero-residual mechanistic proposal and candidate path applied to pre-step packets; do not use observed poststep positions. Apply the actual lateral feasibility mask after predicted longitudinal propagation. Left/right labels come from the observed causal front path, not remapped body trails."
+    }
+  },
+  "calibration": {
+    "anchors_sec": [
+      600,
+      1200
+    ],
+    "horizon_sec": 450,
+    "model_scenarios": 8,
+    "scenario_random_seeds": [
+      76117001,
+      76117002,
+      76117003,
+      76117004,
+      76117005,
+      76117006,
+      76117007,
+      76117008
+    ],
+    "model_rollout_windows": 4,
+    "model_simulated_seconds": 14400,
+    "native_extra_starts": 0,
+    "initialization": "Use only observations through anchor; frozen target priors plus causal filtering may update latent state, not model coefficients. No route file, future signal/request/packet/actual entry event during rollout. AllTLS own-statePP thereafter.",
+    "one_step": "Separate diagnostic: condition on observed current state and the currently executed signal/action, predict one next step. Report packet speed, laneN/H/O, flow/terminal error; label it conditional one-step. Never substitute its results for free rollout.",
+    "structural_gates": "Every scenario/second finite legal states, exact active/pending identity and mass ledgers including generated due/inserted/END exits, legal paths, own-state sensor aggregation and original executor semantics. These require the full transition engine audit; numerical calibration_gates.py alone is insufficient.",
+    "accuracy_gates": {
+      "per_seed_cost_MAE_max": 0.05,
+      "window_cost_absolute_error_max": 0.1,
+      "window_relative_active_error_max": 0.05,
+      "window_terminal_error_rule": "max(5 vehicles,0.10*actual terminals)",
+      "window_nonsink_terminal_error_max": 2
+    },
+    "aggregation": "For each window use the mean of all8 predicted scenarios; C error is absolute. Average its2 absolute errors within each seed and retain every window. Active metric=sum_s1..450 abs(mean_scenario Ahat_s-A_s)/sum_s1..450 A_s. Terminals are counts over poststeps1..450. Seed-level reporting, no efficacy confidence interval from2 seeds.",
+    "references_to_report": "Report frozen H-at-anchor persistence cost forecast as a diagnostic; it does not select model weights or replace the above gates. Neither target controller superiority toPP nor source benefit is a prerequisite of this technical stage.",
+    "stop": "Failure closes this one candidate at this data budget, preserving all seeds. Do not adjust heads/features/tolerances on these4 windows. Pass permits a separate T/S/P same-state action-cost protocol only."
+  },
+  "cost": {
+    "lane_count": 144,
+    "formula": "C450=sum_s1..450 H_controlled(s)/(450*144); frame0 excluded",
+    "units": "mean halted vehicles per controlled lane; not trip waiting time",
+    "accuracy_scope": "0.05 and0.10 correspond to3240 and6480 halted-vehicle seconds. These are engineering calibration tolerances, not claimed sensitivity to small action effects or evidence of ranking accuracy."
+  },
+  "implementation_before_execution": [
+    "Full pure-Python packet propagation, admission/receiving/conflict resolution, lateral/body remapping and PP/executor adapter",
+    "Training-head feature/latent likelihood implementation and fixed sampler",
+    "Single-trajectory collector with full logging through1800s and train/cal split",
+    "Independent one-step and free450 evaluators; zero-fit synthetic closure cases including nonsink END, internal red changes, blocked boundary, competing G/g and multistep lane changes",
+    "Remote seed/runtime/current-run checks, then explicit start decision within this concrete budget"
+  ],
+  "current_deliverable": "packet_contract.py provides causal initialization, bounded-speed proposal, persistent intent/pending/END and identity primitives; calibration_gates.py provides numerical gates. Neither is a complete learned transition engine or a completed real-data test.",
+  "storage": "Raw trajectories, model parameters and large diagnostics remain on the approved server; pull only compact logs/JSON. Do not alter Thesis, closed studies or V93 paper.",
+  "next_after_pass": "Separately freeze source training amount and placebo, shared target beliefs, action search, new same-state native action-cost evaluation seeds and paired uncertainty before T/S/P. No automatic extra starts or fits.",
+  "implementation_followup": {
+    "record": "../tsc_target_packet_kernel_20261109/README.md",
+    "status": "KERNEL_SYNTHETIC_ADMITTED_DATA_PIPELINE_PENDING",
+    "related_tests_passed": 39,
+    "new_native_starts": 0,
+    "new_real_data_fits": 0,
+    "training_and_calibration_collection": "NOT_STARTED",
+    "family_and_budget": "Unchanged; no real-data retuning"
+  }
+}

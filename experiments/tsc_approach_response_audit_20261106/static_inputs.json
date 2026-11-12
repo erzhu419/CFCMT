@@ -1,0 +1,93 @@
+{
+  "source": "Static inputs referenced by executed SUMO configurations and registered movement pairs on node007. Only lanes for the selected 14 Hangzhou and 28 Jinan cases are described. Each direction has a dedicated inlet in these cases.",
+  "both": {
+    "near_rule": "distance to stop line <= 10 seconds times posted lane speed",
+    "near_distance_m": 111.1,
+    "additional_vehicle_types": 0,
+    "route_type_distributions": 0,
+    "explicit_tau_s": null
+  },
+  "hangzhou": {
+    "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_phase_pair_readout_20261106/hangzhou_aligned_v1/hangzhou_aligned.sumocfg",
+    "registry": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_phase_pair_readout_20261106/hangzhou_aligned_v1/movement_pairs.json",
+    "pairs": 14,
+    "right": {
+      "selected_unique_incoming_lanes": 6,
+      "length_m": 800,
+      "posted_speed_mps": 11.11
+    },
+    "straight": {
+      "selected_unique_incoming_lanes": 6,
+      "length_m": 600,
+      "posted_speed_mps": 11.11
+    },
+    "declared_vehicle_types": [
+      {
+        "id": "pkw",
+        "length_m": 5.0,
+        "width_m": 2.0,
+        "min_gap_m": 2.5,
+        "max_speed_mps": 11.111,
+        "accel_mps2": 2.0,
+        "decel_mps2": 4.5
+      }
+    ],
+    "vehicle_count": 2983,
+    "type_attribute_omitted": 2983,
+    "departLane_attribute_omitted": 2983,
+    "departSpeed_attribute_omitted": 2983
+  },
+  "jinan": {
+    "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9/jinan_3x4_real/jinan_3x4_real.sumocfg",
+    "registry": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_fresh_opportunity_20261106/registry/movement_pairs.json",
+    "pairs": 28,
+    "right": {
+      "selected_unique_incoming_lanes": 13,
+      "length_m": 400,
+      "posted_speed_mps": 11.11
+    },
+    "straight": {
+      "selected_unique_incoming_lanes": 13,
+      "length_m": 800,
+      "posted_speed_mps": 11.11
+    },
+    "declared_vehicle_types": [
+      {
+        "id": "passenger",
+        "length_m": 5.0,
+        "width_m": 2.0,
+        "min_gap_m": 2.5,
+        "max_speed_mps": 11.111,
+        "accel_mps2": 2.0,
+        "decel_mps2": 4.5,
+        "vClass": "passenger",
+        "sigma": 0.5
+      }
+    ],
+    "vehicle_count": 6295,
+    "vehicle_type_counts": {
+      "passenger": 6295
+    },
+    "departLane_counts": {
+      "best": 6295
+    },
+    "departSpeed_counts": {
+      "max": 6295
+    }
+  },
+  "interpretation": "Hangzhou records declare pkw but never explicitly reference it. Unspecified effective vehicle, headway and insertion defaults were not measured. Input differences do not isolate their effects on crossings.",
+  "version_specific_nominal_accel": {
+    "sumo_version": "1.22.0",
+    "hangzhou_type": "DEFAULT_VEHTYPE (passenger)",
+    "hangzhou_accel_mps2": 2.6,
+    "jinan_type": "passenger (explicit)",
+    "jinan_accel_mps2": 2.0,
+    "source": "Inferred from executed input files, launch options and the SUMO release source; the archived frames omit the live car-following parameter. This is a nominal parameter rather than a vehicle acceleration observation.",
+    "code": [
+      "https://github.com/eclipse-sumo/sumo/blob/0c6c47d6893d45f2d67a34b62f11a0d10ceedef8/src/utils/vehicle/SUMOVehicleParameter.cpp#L35-L50",
+      "https://github.com/eclipse-sumo/sumo/blob/0c6c47d6893d45f2d67a34b62f11a0d10ceedef8/src/microsim/MSVehicleControl.cpp#L74-L88",
+      "https://github.com/eclipse-sumo/sumo/blob/0c6c47d6893d45f2d67a34b62f11a0d10ceedef8/src/microsim/cfmodels/MSCFModel.cpp#L47-L65",
+      "https://github.com/eclipse-sumo/sumo/blob/0c6c47d6893d45f2d67a34b62f11a0d10ceedef8/src/utils/vehicle/SUMOVTypeParameter.cpp#L825-L884"
+    ]
+  }
+}

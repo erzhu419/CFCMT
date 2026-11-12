@@ -1,0 +1,26 @@
+{
+  "status": "PREPARED_NOT_RUN",
+  "type": "training_objective_comparability_audit_only",
+  "new_fits": 0,
+  "new_simulator_trajectories": 0,
+  "question": "Can a same-bank contrast between reference-cost regression and within-group pairwise cost differences be defined without confounding labels, target scales, weighting or selection rules?",
+  "fixed_inputs": "Existing V158 native B100, original450second cost labels, whole-seed split and no-stay reference fallback remain the comparison basis; no new feature search.",
+  "known_history": {
+    "native_bank": "V158, V159 endpoint, history80 and phase_context all use CausalReferenceResidualRegressor.",
+    "older_pairwise": "V127 used AntisymmetricPairwiseActionRegressor on V123 B500 and 22 selector seeds, with range normalization and separate pressure/calibration filters; it failed and is not a matched native B100 comparison.",
+    "search_limit": "Local small protocols, reports and call sites for V158/V159, 20261106 diagnostics, V127 and V150N/O; no claim that no other unpublished run exists."
+  },
+  "work": [
+    "Trace exact training labels and pair construction, including group-range normalization and reverse augmentation, in the existing two estimators.",
+    "Derive per-group total sample weight and how pair multiplication interacts with l2 and minimum leaf sample count; do not call equal tree parameters fully matched regularization without checking.",
+    "Trace pair-score aggregation, reference anchoring and no-stay fallback; preserve the 450-second cost endpoint.",
+    "Deliver one concise proposed comparison contract or explain why a clean comparison is not yet justified; do not fit during this audit."
+  ],
+  "closure": "No automatic retry of phase features, threshold tuning, new labels, or closed-loop expansion.",
+  "sources": [
+    "cf_h2o/traffic_signal/action_ranker.py",
+    "cf_h2o/eval/traffic_signal_v158_native_prefix_ranking_calibration.py",
+    "paper/tsc_v127_causal_pairwise_source_prior_feasibility_protocol.md",
+    "paper/tsc_v159_native_endpoint_ablation_result.md"
+  ]
+}

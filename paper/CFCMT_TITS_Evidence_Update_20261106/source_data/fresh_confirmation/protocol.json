@@ -1,0 +1,178 @@
+{
+  "name": "cfcmt-v93-fresh-confirmation-20261106",
+  "created_at_utc": "2026-11-06T01:23:02.490362+00:00",
+  "purpose": "Fresh-seed confirmation of the frozen V93 complete control pipeline versus three pressure policies, with the original V93 results retained separately.",
+  "confirmation_seeds": [
+    1493084744,
+    203789186,
+    289711547,
+    386867677,
+    604830887,
+    116399041,
+    1426141946,
+    1924698426,
+    798082686,
+    971541103,
+    698167204,
+    1993137150,
+    1538724680,
+    124921288,
+    1493541020,
+    153493330,
+    343052421,
+    561860748,
+    685484247,
+    394820517,
+    467810910,
+    763941494,
+    1342551449,
+    386425940,
+    827944634,
+    1559668210,
+    105465912,
+    620089133,
+    1633279274,
+    1761164385,
+    1590550050,
+    1187012115,
+    111535769,
+    266595182,
+    1332296838,
+    1179300555,
+    1891193754,
+    1668053556,
+    1132901994,
+    1807882748,
+    1208088284,
+    598076858,
+    1588335662,
+    531778586,
+    253178010,
+    1987017204,
+    881337724,
+    1641136131,
+    996495004,
+    1270865336,
+    1025536549,
+    1671259187,
+    266372158,
+    440806832,
+    1782042293,
+    1773662405
+  ],
+  "city_scenarios": {
+    "los_angeles": [
+      "la_1x4"
+    ],
+    "jinan": [
+      "jinan_3x4_real",
+      "jinan_3x4_real_2000",
+      "jinan_3x4_real_2500"
+    ]
+  },
+  "methods": [
+    "frozen_selector",
+    "max_pressure",
+    "phase_pressure",
+    "exact_generalized_pressure"
+  ],
+  "seed_count": 56,
+  "scenario_count": 4,
+  "method_count": 4,
+  "rollout_count": 896,
+  "parent_v93_confirmation_spec": "cf_h2o/config/traffic_signal_tsc_v93_source_city_disjoint_confirmation_v1.json",
+  "parent_v93_launch": "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/disjoint_confirmation_v1/launch.json",
+  "parent_exact_reference_protocol": "experiments/tsc_v93_exact_reference_20261031/protocol.json",
+  "sumo_version": "1.22.0",
+  "evaluation_horizon_sec": 3600,
+  "warmup_sec": 60,
+  "control_interval_sec": 10,
+  "fixed_controller": {
+    "los_angeles": "Original unguarded target anchor and sparse coordinator",
+    "jinan": "Original Atlanta source component, source weight 1, within-component alpha 0.9, guard beta 0.5, sparse coordinator",
+    "reference_key": "gp_d0_o0p02_s0",
+    "new_model_refits": 0,
+    "new_target_labels": 0,
+    "parameter_selection": false,
+    "executor_changes": false,
+    "only_experimental_change": "SUMO evaluation seed; frozen models, networks, demands, controller parameters and execution timing remain original"
+  },
+  "primary_metric": "mean_tripinfo_waiting_time",
+  "primary_population": "All departed vehicles including unfinished trips at the 3600-second endpoint; waiting includes warm-up.",
+  "primary_estimand": "For each paired seed, first average the three Jinan scenario waiting means. Compute (V93-comparator)/comparator separately in each city, then average the two city ratios equally, then average all 56 seeds. Negative favors V93.",
+  "scopes": [
+    "los_angeles",
+    "jinan",
+    "macro"
+  ],
+  "bootstrap": {
+    "replicates": 20000,
+    "seed_base": 20261106,
+    "scope_order": [
+      "los_angeles",
+      "jinan",
+      "macro"
+    ],
+    "generator": "numpy.default_rng(seed_base + scope_index)",
+    "resampling_unit": "Complete paired seed blocks shared across cities, scenarios and methods",
+    "interval": "Percentile 2.5 and 97.5; same resample indices for the three comparators within each scope"
+  },
+  "statistical_test": {
+    "test": "Two-sided paired Wilcoxon signed-rank on seed-level relative changes",
+    "zero_method": "wilcox",
+    "method": "auto",
+    "all_exact_ties_p": 1.0,
+    "multiplicity": "Holm9 over three comparators by three scopes",
+    "family_size": 9
+  },
+  "decision_rule": "For each comparator/scope, confirm a waiting advantage only when the paired mean relative change is negative, its 95% bootstrap upper endpoint is below zero, and Holm9 p<0.05. Report all nine comparisons, raw means, ties and adverse seeds. Non-confirmation is not a claim of zero benefit.",
+  "secondary_reporting": [
+    "Mean waiting difference in seconds",
+    "Ratio of scope means, explicitly distinct from the primary mean of paired city ratios",
+    "Mean duration and time loss",
+    "System vehicle-hours",
+    "Completion ratio",
+    "Raw collision records, collision-event steps, deduplicated collision incidents, teleport starts and ends",
+    "Exact GP outcome ties and complete learned-action counters"
+  ],
+  "cohort_handling": {
+    "fixed_sample_size": 56,
+    "sequential_stopping": false,
+    "historical_pooling": false,
+    "seed_replacement": false,
+    "post_result_tuning": false,
+    "missing_or_failed_runs": "Remain missing and prevent final confirmation analysis; never encode as zero or drop a seed",
+    "technical_retry": "No automatic rerun. If an identical-identity technical retry is separately authorized, preserve the first failure and use unchanged seed/settings."
+  },
+  "pre_run_admission": [
+    "Local seed novelty PASS in seed_novelty.json",
+    "Server visible historical/config/result seed novelty PASS in a separate receipt",
+    "Frozen runtime and original controller assets bound by the runner receipt",
+    "Technical smoke uses only previously used seeds; do not inspect a fresh confirmation seed to tune or debug"
+  ],
+  "scope": "Fresh simulator-seed generalization on the same two target geometries. This panel evaluates complete pipelines and learned increments over GP; it does not isolate cross-city source-data effects or add unseen target cities.",
+  "storage": "Keep raw logs, tripinfo XML, networks and models on the server. Pull compact scalar JSON/CSV and short logs only.",
+  "analysis_input": {
+    "format": "CSV",
+    "identity_columns": [
+      "method",
+      "city",
+      "scenario",
+      "seed"
+    ],
+    "required_outcome_columns": [
+      "mean_tripinfo_waiting_time",
+      "mean_tripinfo_duration",
+      "mean_tripinfo_time_loss",
+      "system_vehicle_hours",
+      "completion_ratio",
+      "collision_events",
+      "collision_event_steps",
+      "collision_incidents",
+      "starting_teleports",
+      "ending_teleports"
+    ],
+    "extra_columns": "Allowed, including result_path and full scalar guard counters",
+    "completeness": "Exactly all 896 unique preregistered identities and finite metrics; run validity and frozen-runtime provenance are supplied by the collection receipt"
+  }
+}

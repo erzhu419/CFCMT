@@ -1,0 +1,47 @@
+{
+  "status": "EXECUTED",
+  "scope": "Cache-only explanation of the fitted model's very small probabilities for known lane-change events. Cross focal class probabilities and latent-prefix weights, without another fit, proposal sampler, physical response or parameter selection.",
+  "basis": "The128-reference development loss improved in all four64-particle blocks, but entry loss worsened in every block. Eight of nine selected true lane changes still worsened at1024; the sole improving positive was the naturally reused training example1178. Case728's native-class probability fell0.026367 to8.80e-9 despite global ESS about182. Numerical concentration alone is insufficient as a working explanation; the responsible factor must be checked before more sampling or optimization.",
+  "fixed": {
+    "server_host": "jtl110gpu2",
+    "first_fit_root": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_particle_first_fit",
+    "pilot_root": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_real_particle_pilot/evaluation",
+    "parameter_points": "Exactly zero and the finite coefficients returned by the single200-iteration fit. No scaling, clipping, block clearing, alternate checkpoint or learned threshold.",
+    "cohorts": "All96 coefficient-training lane-change references, all32 development lane-change references, and all10 lane-change references in the original15-case diagnostic panel:138 panel references, with1178 explicitly shared between training and diagnostics. Keep all labels/ordinals and panels separate. No label-conditioned replacement or additional target labels.",
+    "particle_sizes": "Existing256 pools for training/development; existing first256 and full1024 for the10 auxiliary lane-change cases. Reuse cached feature/factor IDs and physical masks. No new particles, current frames or canonical features.",
+    "label_meaning": "Lane-change labels0=left lane change,1=stay,2=right lane change; these are lateral maneuvers, not route left/right turns.",
+    "exposure": "Four training trajectories totaling7200 seconds entered frozen priors; development has no positive lane changes and is not independent validation. The10 auxiliary cases are selected training diagnostics, including one coefficient-training overlap."
+  },
+  "diagnostic": [
+    "Use existing ParticleLaw evaluations at zero/candidate to obtain the complete focal-prefix log weights and analytic focal class probabilities. Keep the zero physical kernel, nuisance, stored masks, outcomes and all fitted coefficients unchanged; do not construct a kernel or sampler.",
+    "For each frozen pool, form four diagnostic class distributions M_ab(y)=sum_{survived i} softmax_survivor(logw_a)_i * p_b(y|focal_group_i), with a and b independently zero or candidate. Only the latent-prefix weights and focal analytic class table are crossed. These four factor combinations are explanatory readouts, not four new fitted candidates or policies.",
+    "Do not zero the global lane-change coefficient blocks to simulate a focal ablation: those same blocks also control pre-focal lane changes and would alter latent-prefix weights. Preserve all pre-focal mask conditioning and integrate the focal class only once.",
+    "Record all three class probabilities, native-class NLL and weighted native-class mask availability for every combination. Check class normalization and that M_00 and M_ff reproduce the already stored baseline/fitted native-class readouts within1e-10. Retain physical zeros, infinities and undefined differences; no probability floors or finite-subset averages.",
+    "Report both telescoping NLL decompositions:00 to0f toff and00 tof0 toff, plus their interaction. The decomposition order matters; do not assign a unique causal percentage to focal versus latent effects.",
+    "Within cached focal feature groups, read the candidate left/right scores relative to stay and their existing coefficient-times-feature contributions. Compare the3 training positive events,32 development stay labels and9 auxiliary positive events, keeping1178's overlap visible. This is descriptive coverage/score analysis, not new feature fitting or a post-hoc acceptance threshold.",
+    "Conclude whether the known failures primarily accompany focal class suppression, redistribution toward physically disallowed masks, or a combination in the sampled prefixes. Preserve the single adverse auxiliary motion case as unresolved evidence; do not generalize selected lane-change failures to population performance. Stop after this explanation. Any new sampling, training data design, optimizer extension or source/control comparison needs a separate bounded protocol."
+  ],
+  "budgets": {
+    "training_lane_change_references": 96,
+    "development_lane_change_references": 32,
+    "auxiliary_lane_change_references": 10,
+    "fixed_parameter_tensors": 2,
+    "diagnostic_factor_combinations": 4,
+    "new_full_forward_calls": 0,
+    "new_canonical_feature_evaluations": 0,
+    "new_exact_reference_calls": 0,
+    "new_native_starts": 0,
+    "new_fits": 0,
+    "optimizer_calls": 0,
+    "new_nuisance_estimations": 0,
+    "source_fits": 0,
+    "free_rollouts": 0,
+    "calibration_seeds_used": false
+  },
+  "storage": "Keep arrays and coefficients on the approved server; retrieve only compact metadata summaries. Preserve all prior losses, the optimizer HOLD, fixed V93, manuscript and Thesis.",
+  "authorized_by": "User: \u7ee7\u7eed\u4e0b\u4e00\u6b65",
+  "execution_stage": "../tsc_packet_focal_latent_decomposition_20261111",
+  "completed_at_utc": "2026-11-10T17:10:42.296722+00:00",
+  "result_status": "COMPLETE_FIXED_FOCAL_LATENT_DECOMPOSITION",
+  "result_file": "../tsc_packet_focal_latent_decomposition_20261111/result.json"
+}

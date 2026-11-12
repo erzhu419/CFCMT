@@ -1,0 +1,343 @@
+{
+  "protocol": "v93-selected-action-calibration-input-inventory-v1",
+  "status": "EXISTING_INPUTS_LOCATED_EVALUATION_REPAIR_PENDING",
+  "recorded_at_utc": "2026-11-06T02:29:51.461079+00:00",
+  "fixed_parameters": {
+    "alpha": 0.9,
+    "beta": 0.5,
+    "source_city": "atlanta",
+    "source_mass": 1.0
+  },
+  "nodes_read": [
+    "jtl110gpu2",
+    "node007"
+  ],
+  "scope": "Read-only path statistics, existing small audits and embedded NPZ metadata only. No raw feature/target arrays or model files downloaded; no refits, simulations, repair writes, scheduler tasks or changes to V93.",
+  "banks": [
+    {
+      "path": "/home/zhengliang01/scheduleurm_work/CFCMT_V92_INPUTS/topology_repair_v2/source_combined_cache_v2",
+      "prefix": "atlanta_1x5",
+      "exists": true,
+      "npz_count": 48,
+      "total_bytes": 1000692,
+      "scenario_seed_shard_counts": {
+        "atlanta_1x5:seed4047": 16,
+        "atlanta_1x5:seed2027": 16,
+        "atlanta_1x5:seed3037": 16
+      },
+      "role": "source_atlanta_train",
+      "seeds": [
+        2027,
+        3037,
+        4047
+      ],
+      "seed_role_note": "Existing source component training seeds; fixed Atlanta source identity.",
+      "groups_by_scenario_seed": {
+        "atlanta_1x5:seed4047": 206,
+        "atlanta_1x5:seed2027": 200,
+        "atlanta_1x5:seed3037": 203
+      },
+      "group_count": 609,
+      "embedded_input_by_scenario": {
+        "atlanta_1x5": "334def1c256a5e894e0e"
+      },
+      "sample_metadata_shows_topology_repair": true,
+      "label_contract_matches_common_in_each_scenario_seed_sample": true
+    },
+    {
+      "path": "/home/zhengliang01/scheduleurm_work/CFCMT_V92_INPUTS/topology_repair_v2/external_adaptation_cache_v2",
+      "prefix": "jinan",
+      "exists": true,
+      "npz_count": 96,
+      "total_bytes": 3238236,
+      "scenario_seed_shard_counts": {
+        "jinan_3x4_real_2000:seed6067": 16,
+        "jinan_3x4_real_2000:seed5057": 16,
+        "jinan_3x4_real_2500:seed6067": 16,
+        "jinan_3x4_real_2500:seed5057": 16,
+        "jinan_3x4_real:seed5057": 16,
+        "jinan_3x4_real:seed6067": 16
+      },
+      "role": "target_jinan_adaptation",
+      "seeds": [
+        5057,
+        6067
+      ],
+      "seed_role_note": "Both seeds trained the frozen full bundle; two-fold refits are required for seed-held-out predictions used to calibrate the new selected-action threshold.",
+      "groups_by_scenario_seed": {
+        "jinan_3x4_real_2000:seed6067": 147,
+        "jinan_3x4_real_2000:seed5057": 148,
+        "jinan_3x4_real_2500:seed6067": 158,
+        "jinan_3x4_real_2500:seed5057": 154,
+        "jinan_3x4_real:seed5057": 150,
+        "jinan_3x4_real:seed6067": 154
+      },
+      "group_count": 911,
+      "embedded_input_by_scenario": {
+        "jinan_3x4_real_2000": "e747ca0530e167095f4e",
+        "jinan_3x4_real_2500": "dc80c9357d9515384e10",
+        "jinan_3x4_real": "2191b1b939c60fa12645"
+      },
+      "sample_metadata_shows_topology_repair": true,
+      "label_contract_matches_common_in_each_scenario_seed_sample": true
+    },
+    {
+      "path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v43r39_external_full_budget_20260809/counterfactual/evaluation_seed8171_cache",
+      "prefix": "jinan",
+      "exists": true,
+      "npz_count": 48,
+      "total_bytes": 1609599,
+      "scenario_seed_shard_counts": {
+        "jinan_3x4_real_2000:seed8171": 16,
+        "jinan_3x4_real_2500:seed8171": 16,
+        "jinan_3x4_real:seed8171": 16
+      },
+      "role": "target_jinan_historical_development",
+      "seeds": [
+        8171
+      ],
+      "seed_role_note": "Previously consumed V43 offline evaluation seed. Valid only as historical development validation of a frozen new threshold; not new untouched confirmation.",
+      "groups_by_scenario_seed": {
+        "jinan_3x4_real_2000:seed8171": 130,
+        "jinan_3x4_real_2500:seed8171": 169,
+        "jinan_3x4_real:seed8171": 158
+      },
+      "group_count": 457,
+      "embedded_input_by_scenario": {
+        "jinan_3x4_real_2000": "e747ca0530e167095f4e",
+        "jinan_3x4_real_2500": "dc80c9357d9515384e10",
+        "jinan_3x4_real": "2191b1b939c60fa12645"
+      },
+      "sample_metadata_shows_topology_repair": false,
+      "label_contract_matches_common_in_each_scenario_seed_sample": true
+    },
+    {
+      "path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v42r38_external_la_jinan_20260809/counterfactual/evaluation_v8_cache",
+      "prefix": "jinan",
+      "exists": true,
+      "npz_count": 48,
+      "total_bytes": 1671931,
+      "scenario_seed_shard_counts": {
+        "jinan_3x4_real_2000:seed7079": 16,
+        "jinan_3x4_real_2500:seed7079": 16,
+        "jinan_3x4_real:seed7079": 16
+      },
+      "role": "target_jinan_diagnostic_only",
+      "seeds": [
+        7079
+      ],
+      "seed_role_note": "Earlier V42 diagnostic failure; parent protocol permanently excludes this seed from V43 selection and confirmation. Keep diagnostic-only; do not use for the new threshold selection.",
+      "groups_by_scenario_seed": {
+        "jinan_3x4_real_2000:seed7079": 153,
+        "jinan_3x4_real_2500:seed7079": 169,
+        "jinan_3x4_real:seed7079": 161
+      },
+      "group_count": 483,
+      "embedded_input_by_scenario": {
+        "jinan_3x4_real_2000": "e747ca0530e167095f4e",
+        "jinan_3x4_real_2500": "dc80c9357d9515384e10",
+        "jinan_3x4_real": "2191b1b939c60fa12645"
+      },
+      "sample_metadata_shows_topology_repair": false,
+      "label_contract_matches_common_in_each_scenario_seed_sample": true
+    }
+  ],
+  "label_contract": {
+    "version": "v19-policy-consistent-one-step-mechanisms-two-pass-20260809",
+    "behavior_policy": "phase_pressure",
+    "control_interval_sec": 10,
+    "counterfactual_horizon_intervals": 6,
+    "duration_sec": 600.0,
+    "warmup_sec": 60.0,
+    "libsumo_version": "1.22.0",
+    "counterfactual_estimand": "one-control-interval-local-mechanisms-plus-pressure-rollout-value-v1",
+    "counterfactual_horizon_sec": 60,
+    "local_mechanism_horizon_sec": 10,
+    "rollout_value_horizon_sec": 60,
+    "counterfactual_cost_population": "active_inserted_plus_pending_insertion_vehicles",
+    "counterfactual_cost_scope": "global_system_vehicles_per_controlled_lane",
+    "counterfactual_cost_normalization": "controlled_lane_count",
+    "branch_semantics": "One local candidate acts for the first 10 seconds while other junctions use phase_pressure; all junctions then use phase_pressure for the remaining 50 seconds.",
+    "raw_interval_cost": "Mean over the 60 one-second system-load samples: (active inserted vehicles + pending insertion vehicles) / controlled lane count; this raw label is not an hour-long waiting-time outcome.",
+    "state_snapshot_protocol": {
+      "behavior_capture": "uninterrupted_first_pass",
+      "branch_evaluation": "snapshot_full_reload_second_pass",
+      "focal_selection": "least_covered_feasible_round_robin_v1",
+      "precision": 8,
+      "reload_mode": "full_network_load",
+      "safe_phase_execution": "min-green-yellow-all-red-full-junction-occupancy-clearance-v4",
+      "save_rng": true,
+      "thread_rngs": 1
+    },
+    "cost_semantics_source": "NPZ metadata plus frozen collection implementation; cf_h2o/eval/traffic_signal_resco_cfcmt_v3.py:_counterfactual_branch_outcome_v3"
+  },
+  "gpu2_available": {
+    "adaptation_copy": {
+      "path": "/home/erzhu419/scheduleurm_work/CFCMT_V93_fresh_confirmation_20261106/jinan_adaptation_cache",
+      "file_count": 96,
+      "total_bytes": 3238236,
+      "sample_names": [
+        "jinan_3x4_real_2000__0931bd68c39ed6f6d2e5.npz",
+        "jinan_3x4_real_2000__094f92f7766a9f45430f.npz",
+        "jinan_3x4_real_2000__09af9af35f38a479fffd.npz",
+        "jinan_3x4_real_2000__0b0a222db480250e0193.npz",
+        "jinan_3x4_real_2000__0fb56402a06a331acf05.npz",
+        "jinan_3x4_real_2000__1288619e2f53ed04c412.npz"
+      ],
+      "parent_counts": {
+        ".": 96
+      }
+    },
+    "frozen_jinan_artifacts": [
+      {
+        "path": "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/models/components/jinan/bundle.pkl",
+        "bytes": 3826410
+      },
+      {
+        "path": "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/models/main/jinan/model.pkl",
+        "bytes": 2423445
+      },
+      {
+        "path": "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/freeze/jinan/baseline_freeze.json",
+        "bytes": 964447
+      },
+      {
+        "path": "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/freeze/jinan/baseline_model.pkl",
+        "bytes": 1911580
+      },
+      {
+        "path": "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/freeze/jinan/method_freeze.json",
+        "bytes": 990196
+      },
+      {
+        "path": "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/freeze/jinan/method_model.pkl",
+        "bytes": 645127
+      }
+    ],
+    "joint_freeze_summary": {
+      "path": "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/evidence/joint_freeze_audit_v1.json",
+      "status": "PASS",
+      "decision": "authorize_external_seed8171_collection",
+      "jinan_target_group_count": 911,
+      "jinan_adaptation_seeds_only": true,
+      "jinan_evaluation_seed_absent": true,
+      "evaluation_cache_file_count_at_freeze": 0
+    }
+  },
+  "topology_compatibility": {
+    "repaired_evaluation_copy_found_in_scanned_roots": false,
+    "searched_roots": [
+      "/home/zhengliang01/scheduleurm_work/CFCMT_V92_INPUTS/topology_repair_v2",
+      "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v92_topology_context_repair_20260831",
+      "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v93_source_city_components_20260831",
+      "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v43r39_external_full_budget_20260809/counterfactual"
+    ],
+    "jinan_original_evaluation_and_repaired_adaptation_input_identities_match": true,
+    "existing_external_repair_audit": {
+      "path": "/home/zhengliang01/scheduleurm_work/CFCMT_V92_INPUTS/topology_repair_v2/external_cache_repair_audit_v2.json",
+      "protocol": "static-topology-multihop-context-repair-v1",
+      "jinan_scenarios": {
+        "jinan_3x4_real": {
+          "file_count": 32,
+          "maximum_absolute_context_change": 0.0,
+          "maximum_absolute_prior_change": 0.0,
+          "row_count": 2432
+        },
+        "jinan_3x4_real_2000": {
+          "file_count": 32,
+          "maximum_absolute_context_change": 0.0,
+          "maximum_absolute_prior_change": 0.0,
+          "row_count": 2360
+        },
+        "jinan_3x4_real_2500": {
+          "file_count": 32,
+          "maximum_absolute_context_change": 0.0,
+          "maximum_absolute_prior_change": 0.0,
+          "row_count": 2496
+        }
+      }
+    },
+    "existing_atlanta_repair_audit": {
+      "path": "/home/zhengliang01/scheduleurm_work/CFCMT_V92_INPUTS/topology_repair_v2/source_combined_cache_repair_audit_v2.json",
+      "scenario": {
+        "file_count": 48,
+        "maximum_absolute_context_change": 0.0,
+        "maximum_absolute_prior_change": 0.0,
+        "row_count": 2131
+      }
+    },
+    "conclusion": "8171/7079 labels use the same input identities and collection contract as V93 adaptation, but their metadata lacks the V92 repair stamp. The existing adaptation audit shows Jinan context/prior changes were zero; record an in-memory evaluation repair audit before use. 7079 remains diagnostic-only and is not a staging input for the new run.",
+    "repair_code": {
+      "path": "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/source/cf_h2o/eval/traffic_signal_topology_context_repair.py",
+      "exists": true,
+      "matching_lines": [
+        {
+          "line": 36,
+          "text": "def corrected_scenario_contexts("
+        },
+        {
+          "line": 60,
+          "text": "def repair_dataset_topology_context("
+        },
+        {
+          "line": 123,
+          "text": "\"counterfactual_features_unchanged\": True,"
+        },
+        {
+          "line": 124,
+          "text": "\"counterfactual_targets_unchanged\": True,"
+        },
+        {
+          "line": 134,
+          "text": "def repair_cache_tree("
+        },
+        {
+          "line": 164,
+          "text": "raise AssertionError(\"topology repair changed counterfactual evidence\")"
+        }
+      ]
+    },
+    "bounded_next_step": "Stage only 48 Atlanta and 48 Jinan8171 NPZ files server-to-server into the new experiment. Obtain the already-corrected one-dimensional static context for each Jinan scenario from the repaired adaptation bank. Call frozen repair_dataset_topology_context in memory on each loaded 8171 dataset, assert original features and every target array unchanged, and record maximum context/prior changes. Keep source NPZ files intact. Do not call corrected_scenario_contexts, which starts SUMO.",
+    "repair_needed_before_consumption": true
+  },
+  "known_prior_use_sources": [
+    "cf_h2o/config/traffic_signal_tsc_v29_external_full_budget_confirmation.json: diagnostic 7079, adaptation 5057/6067, evaluation 8171",
+    "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/components_v2/jinan/result.json: frozen source/target training audit",
+    "cf_h2o/results/cluster/tsc_v43r39_external_full_budget_20260809/heldout_seed8171_evaluation_v1/result.json: previously consumed evaluation"
+  ],
+  "limits": [
+    "This is a targeted inventory of the named V92/V93 and V42/V43 cache paths, not an exhaustive server history scan.",
+    "No feature/prior numeric equality claim for the evaluation cache was made; its separate deterministic repair audit is pending.",
+    "8171 has only one simulator seed; multiple scenarios/groups do not create independent seed replications.",
+    "Source and target training/calibration remain seed-separated only if both target and Atlanta-augmented fold models exclude the held-out target seed."
+  ],
+  "access_notes": [
+    "All shared calls completed through node007; no detached scan or duplicate scan was needed.",
+    "Direct relocated Python without runtime PYTHONPATH lacks numpy. Inventory metadata was read with Python stdlib zipfile only; actual model/calibration jobs must use the frozen run_cfcmt_sumo122.sh wrapper."
+  ],
+  "staging_selection": [
+    {
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_V92_INPUTS/topology_repair_v2/source_combined_cache_v2",
+      "relative_filename_glob": "atlanta_1x5__*.npz",
+      "expected_files": 48,
+      "expected_bytes": 1000692
+    },
+    {
+      "source_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v43r39_external_full_budget_20260809/counterfactual/evaluation_seed8171_cache",
+      "relative_filename_globs": [
+        "jinan_3x4_real__*.npz",
+        "jinan_3x4_real_2000__*.npz",
+        "jinan_3x4_real_2500__*.npz"
+      ],
+      "expected_files": 48,
+      "expected_bytes": 1609599
+    }
+  ],
+  "staging_selection_total": {
+    "files": 96,
+    "bytes": 2610291,
+    "materialization": "server-to-server stream only; no archive or NPZ stored locally",
+    "excluded_seed": 7079,
+    "gpu2_adaptation_already_present": true
+  }
+}

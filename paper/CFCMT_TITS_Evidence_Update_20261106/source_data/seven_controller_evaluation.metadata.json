@@ -1,0 +1,25 @@
+{
+  "version": "CFCMT-V93-ExactReference-20261031",
+  "formal_rollout_count": 1568,
+  "original_rollouts": 1344,
+  "added_exact_reference_rollouts": 224,
+  "technical_smoke": "One duplicate scenario/seed validation is kept in experiment smoke_result.json and excluded from formal estimates.",
+  "cohort": "Four fixed scenarios,56 reused benchmark seeds,7 controllers; no refit,labelcollection,parameterselection or replacement seeds.",
+  "primary_estimand": "Within-city/seed relative waiting changes, average3Jinan scenarios first, equal-average2cities, then56seeds.",
+  "multiplicity": "six comparators times three scopes; wilcoxon_p_holm_expanded18 is the current manuscript correction. Historical Holm12/15 columns remain historical.",
+  "original_execution_counters": "execution_rollouts.csv has1344originalrun counters, including896 learned-policy guard audits. Missing pressure guard fields mean not applicable.",
+  "new_reference_counters": "seven_controller_rollouts.csv contains the224 exact-reference request counts; no learned guard audit applies.",
+  "outcome_fields": {
+    "mean_tripinfo_waiting_time": "Mean recorded vehicle waiting time,seconds.",
+    "mean_tripinfo_duration": "Mean recorded trip duration,seconds.",
+    "mean_tripinfo_time_loss": "Mean recorded trip time loss,seconds.",
+    "system_vehicle_hours": "Active plus pending vehicle-seconds in [60,3600],divided by3600.",
+    "completion_ratio": "Cumulative arrivals/(cumulative departures+pending insertion at endpoint),fraction.",
+    "collision_events": "Raw collision records returned by SUMO getCollisions(),summed over steps.",
+    "collision_event_steps": "Simulation steps with at least one collision record.",
+    "collision_incidents": "Distinct vehicle-pair,type,lane records within eachrun.",
+    "starting_teleports": "Cumulative simulator teleport-start events.",
+    "ending_teleports": "Cumulative simulator teleport-end events."
+  },
+  "source_binding": "Original code and experiment records:GitHub commit12e7955d0350e4cac2a344d04954cfb5efea70a2; new records, code and traces are in the accompanying versioned source archive."
+}

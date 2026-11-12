@@ -1,0 +1,98 @@
+{
+  "status": "PROSPECTIVE_STAGE_GATES",
+  "study": "Transfer of adjacent-signal arrival distributions on the two repaired networks",
+  "cities": {
+    "hangzhou": {
+      "cfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_hangzhou_source_repair_20261107/candidate/hangzhou_aligned.sumocfg",
+      "pilot": [
+        32061101,
+        32061102
+      ],
+      "donor": [
+        76110701,
+        76110702,
+        76110703,
+        76110704,
+        76110705,
+        76110706,
+        76110707,
+        76110708
+      ],
+      "adapt": [
+        [
+          76111701,
+          76111702
+        ],
+        [
+          76111703,
+          76111704
+        ],
+        [
+          76111705,
+          76111706
+        ]
+      ],
+      "dev": [
+        76112701,
+        76112702,
+        76112703,
+        76112704,
+        76112705,
+        76112706
+      ]
+    },
+    "jinan": {
+      "cfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_left_geometry_20261107/candidate/jinan_3x4_real.sumocfg",
+      "pilot": [
+        33061101,
+        33061102
+      ],
+      "donor": [
+        76110801,
+        76110802,
+        76110803,
+        76110804,
+        76110805,
+        76110806,
+        76110807,
+        76110808
+      ],
+      "adapt": [
+        [
+          76111801,
+          76111802
+        ],
+        [
+          76111803,
+          76111804
+        ],
+        [
+          76111805,
+          76111806
+        ]
+      ],
+      "dev": [
+        76112801,
+        76112802,
+        76112803,
+        76112804,
+        76112805,
+        76112806
+      ]
+    }
+  },
+  "reserved_other_study": [
+    35110701,
+    35110702,
+    35110703,
+    35110704
+  ],
+  "pilot_gate": "Each city requires two complete safe matched 3600-step PP development hours, expected 48 Hangzhou / 34 Jinan eligible directed links, a nonzero true matched straight detector passage and a nonzero unblocked PP decision with a genuinely in-flight vehicle on a monitored approach, different legal protected straight windows, and an attainable positive credited second before horizon end. Retain all epochs and both seeds. True unexplained identity loss is an observability failure. No label fitting or formal seed in pilot.",
+  "sensor": "First control-junction release onto the actual directed link to first crossing of a plane 30m before its downstream stop line (any detected lane, class through vs competing). Trace IDs on consecutive 1s observations; count competing terminal and right-censored end. Current queues use <0.1 m/s. Link normalization full length/posted speed. Entry condition: any stopped dedicated-straight car in final 30m. Detector spillback: a stopped vehicle spans the plane or it lies within a <=5m inter-bumper gap between consecutive stopped vehicles there. Flights already counted in halted demand are excluded.",
+  "development": "No pilot cases in training. No reuse of donor hours as local training/evaluation of that same city. Use the three disjoint local adaptation blocks, assign the six dev seeds in listed pairs to those blocks. No fitting across blocks.",
+  "estimator": "Competing-risk cumulative incidence of straight-detector arrival; condition on having survived current normalized link age with no terminal/detector crossing. T uses local two-hour block. S/P mix T and donor distributions equally before conditioning. P permutes complete (time, status) outcomes within original source link x seed across entry-condition records with seed 11072026. Analytic projects remaining observed distance / posted speed in current lane. Future labels never enter current state.",
+  "decision": "Common queue-only base over all unique G/g inlets and ten legal nominal seconds; add accumulated expected straight arrivals reaching stop line during protected seconds with 30m/freeflow delay. GP common fallback on spillback, missing support or unknown measurement. Tie by initial feasible index.",
+  "dev_gate": "Both cities: seed-equally-weighted MAE on common risk-set edge epochs for next ten-second detector arrivals from t0 in-flight vehicles lower for S than T and analytic, and S vs T and S vs P executable requests differ on >=2 of six development seeds each. No tuning, city deletion or seed substitution.",
+  "branch": "Only after passed dev gate, freeze S,T,P and exact GP choices at all eligible PP TLS-epochs in 60..3150s inclusive. Uniform without replacement at most 4 distinct disagreement TLS-epochs per seed; PRNG fixed in model code, known inclusion probabilities; all identical actions structural zero. Native common PP prefix, only focal request differs for first 10s, followed by 440s native PP in each arm. Per-seed sampling-weighted full-population focal cost contrast then equal seed mean. Each city S mean cost lower than T,P,GP and harmful cost vs GP <= T. No replacement of failed states; any native collision/teleport stops experiment.",
+  "final": "Only after both directional branch gates: freeze policy, preallocate disjoint 6-seed/city planning variance pilot and new formal lists before reading their outputs. Four arms, one fixed adaptation block per paired seed, one hour all departed including unfinished. 1% effect for joint 80% power planning; upper cap N=96 per city; preserve all six comparisons, <=1pp completion loss vs T, GP and safety. No testing or expansion after a failed gate."
+}

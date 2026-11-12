@@ -1,0 +1,18 @@
+{
+  "status": "LOCKED_BEFORE_TARGET_SHRINK_FIT",
+  "date": "2026-11-09",
+  "scope": "One offline development candidate using the same 40 PP seed-hours; no simulation, new label collection, action branch, paper edit or independent confirmation.",
+  "cohort": "Original two cities, other-city donor 8h, three disjoint local 2h blocks and six reused development seeds per city. Pilots excluded; seeds 35110701-04 belong to another study and remain untouched.",
+  "change": "Only replace count-fusion S/P CDFs by T + lambda * (pooled S/P - T). One scalar lambda per target adaptation block and arm, shared across all contexts and horizons, constrained to [0,1]. T, source permutations, features and physical pseudocount remain unchanged.",
+  "fitting": "Within each 2h target block, fit T on one complete hour and evaluate on the other, then swap. Source and placebo heads use only the fixed other-city donor. For each held hour, average all eligible flight snapshots times detector horizons 1..10 equally; average the two hour objectives equally. Lambda=clip(sum w*d*(Y-T)/sum w*d*d,0,1), d=pooled arm-T; denominator zero -> lambda=0.",
+  "training_eligibility": "Original full-observable matched, non-spillback moving flights with a complete future 10s label. No new context selection or magnitude subdivision. Competing, terminal and complete censored outcomes remain no-straight-arrival labels.",
+  "freeze": "Fit both source heads and all six target block weights, refit each T using its full original 2h, verify original training metadata, and write all training artifacts before reading any development labels. No subsequent lambda change.",
+  "timing": {"service_seconds":13,"detector_seconds":10,"execution_seconds":10,"physical_pseudocount":20,"point_threshold":0.5,"permutation_seed":11072026},
+  "action_semantics": "Observed PP plan is excluded from the predictor. Keep the existing expected-service decoder, nominal masks, fractional tail, first-feasible round12 tie and GP fallback. Do not present PP-label scores as counterfactual arrival or control-cost estimates.",
+  "primary": "Raw CDF Brier over detector horizons 1..10 on all observable risk-set flight snapshots; average within hour then six development hours equally per target city. Compare calibrated true-source S to unchanged pure-target T, calibrated placebo P and history baseline.",
+  "secondary": "Retain original common-scored scope separately, hard endpoint edge-count MAE, horizon10 bias/Brier, paired per-seed and per-block changes, all request pairs and all-TLS-normalized PP-label nominal score contrasts S-T/S-P. Keep zero weights and empty supports.",
+  "gate": "Development prediction signal only if both cities have S raw-CDF Brier strictly below T, P and history. A control-ranking development signal additionally requires S/T and S/P requests differing in at least two of six seeds per city and positive equal-seed PP-label score contrasts versus T and P in both cities. Otherwise retain HOLD or PREDICTION_ONLY, without automatic confirmation.",
+  "reproduction": "Reproduce the preceding expected-service five-arm endpoint MAEs, decision counts, request differences and PP-label score contrasts before interpreting new results; T/history/analytic/GP unchanged.",
+  "stopping": "One fixed candidate only. No retry with cell-specific weights, a different proper score, features, horizons or decoder after seeing development. A zero-weight or true-source/placebo tie is no source contribution. A successful development screen still requires a separately allocated untouched confirmation panel.",
+  "execution": "jtl110gpu2 only. Raw records and any detailed predictions remain server-side; pull compact summaries and logs only."
+}

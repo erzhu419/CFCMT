@@ -1,0 +1,102 @@
+{
+  "status": "COMPLETE",
+  "scope": "Synthetic-only evaluation of a normalized fixed-proposal importance-particle approximation to the same conditional law, with exact integration of focal LC choices. No real cache, likelihood queries, fitting or native simulation.",
+  "basis": "The original160000 references are current-head eligible, but30027 require5-10 random actors and overflow cap4. Even the shared in-domain symbolic bound is1.303B full forwards. Exact cached derivatives do not solve first-enumeration scaling.",
+  "fixed": {
+    "population_law": "Keep the existing current-geometry selector, full responsive background, canonical current-goal features, priors, residual nodes, permissions, LC order and observation kernel. No participant pruning or physical-rule changes.",
+    "existing_synthetic_cases": [
+      "cap4_lateral",
+      "cap4_lateral_earlier_neighbour",
+      "cap4_start_permissions",
+      "stopped_open",
+      "blocked_start",
+      "yielding_entry",
+      "blocked_entry",
+      "two_actor_lateral",
+      "intent_and_survival",
+      "receiving_intent",
+      "distant_background",
+      "binding_background",
+      "responsive_background"
+    ],
+    "new_cap5_case": "Five ordinary lanes a0..a4 on road a, length200, no connections, same frozen vehicle/road fixture defaults. Insert right(a1,44,5), left(a3,45,5), outer(a4,52,5), farleft(a0,46,5), focal(a2,40,5), in that order. Focal is last. Require the unchanged selector to return exactly5 actors before responses.",
+    "new_cap10_case": "Same road. Insert side actors at a0 positions30,38,46; a1 positions32,40; a3 positions30,38; a4 positions32,40, all speed5; focal is last at a2,40,speed5. No other actor occupies the focal longitudinal lane. Require exactly10 selected actors before responses.",
+    "parameter_probes": [
+      "All five coefficient blocks zero.",
+      "One deterministic nonzero point: theta[b,j]=0.1*(-1)^(b+j)/(j+1), using the existing fixed block order b=0..4 and canonical feature index j=0..p-1."
+    ],
+    "proposal": "q0 is the frozen zero-coefficient law. Draw all selected current intents/residual/permission nodes, receiving intents and the LC prefix before focal; outside J use exactly the declared fixed intervention.",
+    "replicates": 32,
+    "particles_per_replicate": 1024,
+    "paired_particle_sizes": [
+      256,
+      1024
+    ],
+    "particle_seed": "20261110+100000*case_index+replicate_index; fixed case_names order, replicate_index0..31.",
+    "case_names": [
+      "cap4_lateral",
+      "cap4_lateral_earlier_neighbour",
+      "cap4_start_permissions",
+      "stopped_open",
+      "blocked_start",
+      "yielding_entry",
+      "blocked_entry",
+      "two_actor_lateral",
+      "intent_and_survival",
+      "receiving_intent",
+      "distant_background",
+      "binding_background",
+      "responsive_background",
+      "cap5_focal_last",
+      "cap10_motion_oracle"
+    ],
+    "reuse": "One1024-particle pool per case/replicate; the first256 form the paired smaller estimate. Both theta points and finite differences reuse the same particles, features and masks. No seed replacement or parameter search."
+  },
+  "estimator": [
+    "Sample full physical latent choices and resolve the whole synthetic frame once per particle. For LC sample only the prefix before the focal actor. Integrate the focal masked3-class softmax exactly and integrate the LC suffix to1. Keep every participant in physical resolution.",
+    "For a focal that ends, omit its LC variable and integrate unneeded LC variables to1. Retain its END outcome in the common mixture.",
+    "All heads share the same prefix importance weights w(theta)=p_theta(sampled latent prefix)/q0(prefix). Do not combine physical-only Rao-Blackwell motion estimates with prefix-weighted LC estimates in the same reported joint law.",
+    "Normalize the common empirical mixture by sum_i w_i(theta). Motion/start/LC use the same survival denominator sum_i w_i D_i; entry uses sum_i w_i. Joint(class,speed) includes the exact focal-class factor and sums over classes to the same motion estimate.",
+    "Differentiate the finite normalized estimator itself, including both the shared importance-weight score and focal softmax derivatives. Entry must include the derivative of sum_i w_i even though the population normalizer is1. Use log-domain accumulation and no probability floor.",
+    "Call the result a finite-particle SNIS approximation with possible NLL/gradient bias, not the exact population likelihood or gradient."
+  ],
+  "reference": [
+    "Retain exact cached and independent-enumeration references at both frozen theta points for all original13 cases and the fixed5-actor case. A synthetic computational cap extension here does not extend real-data admission.",
+    "For cap10, the focal motion is independent of side-actor physical residuals on this ordinary interior lane. Enumerate the2^10 longitudinal draws without LC to verify this property before sampling. Use the two focal speeds mu0 and mu1 from the frozen physical proposal and the known focal brake probability for a closed-form motion likelihood and190-vector gradient. Do not claim a cap10 LC oracle.",
+    "Use the previous frozen observation queries: motion at0,.05,.1,1; eligible start/entry labels0/1; eligible LC classes0/1/2; joint(class,speed) at speeds0/1. Compare only quantities with an exact/closed oracle; report known structural zeros separately."
+  ],
+  "checks": [
+    "At both theta points, each finite common mixture normalizes, END plus survival mass is1, applicable event probabilities sum1, and joint class-speed sums to the same motion head; tolerance1e-10.",
+    "At1024 particles in the first fixed replicate of each case, check finite-SNIS analytic NLL gradients against central differences at both theta points, using the original five block directions plus mixed nonbias direction, h1e-5 and absolute1e-7+relative1e-5 tolerance. Do not resample for differences.",
+    "After particle construction, use failing physical-resolution stubs during all theta reuse and differences. Report physical preparation separately from particle-resolution counts.",
+    "Across all32 replicates and both particle budgets, report NLL/gradient bias, RMSE and95th absolute error against each available oracle, plus zero-numerator/zero-survival rates. ESS and maximum normalized weight explain failures but do not replace oracle errors.",
+    "For oracle-positive queries with zero sample numerator or denominator, preserve the failed replicate and infinite NLL/undefined gradient. Do not floor, drop it, select another seed, or extend the particle budget. Include these failures in the overall decision, rather than summarizing only finite survivors."
+  ],
+  "budgets": {
+    "synthetic_cases": 15,
+    "fixed_theta_points": 2,
+    "replicates_per_case": 32,
+    "maximum_particle_full_forward_calls": 491520,
+    "maximum_exact_reference_full_forward_calls": 3000,
+    "maximum_total_enumeration_or_particle_full_forward_calls": 494520,
+    "real_record_response_queries": 0,
+    "real_observation_likelihood_evaluations": 0,
+    "real_latent_cache_constructions": 0,
+    "new_native_starts": 0,
+    "new_fits": 0,
+    "new_nuisance_estimations": 0,
+    "optimizer_calls": 0,
+    "free_rollouts": 0,
+    "calibration_seeds_used": false
+  },
+  "decision": "Separate implementation consistency from finite-budget statistical error. Any consistency failure or oracle-positive zero-support failure at1024 makes this proposal unready for real fitting. Otherwise judge measured bias/noise and convergence at the frozen budgets; a synthetic pass never admits arbitrary theta, all5-10-actor LC distributions, or the complete160000 target.",
+  "after": "Stop after this fixed synthetic comparison or a technical HOLD. No automatic real-data sampling/cache construction or fitting; a later real-data design needs its own cost and estimation budget.",
+  "storage": "Process one synthetic case/replicate at a time, reuse its particles across theta/readouts, and persist compact metrics and failed-seed references rather than all particle trajectories. No server dataset download is needed.",
+  "authorized_by": "User: 继续下一步",
+  "authorized_at_utc": "2026-11-10T11:34:27.237929+00:00",
+  "execution_location": "local synthetic only",
+  "workers": 4,
+  "completed_at_utc": "2026-11-10T11:50:48.884900+00:00",
+  "result_status": "PASS_FIXED_SYNTHETIC_PARTICLE_COMPARISON",
+  "result_file": "output_v2/result.json"
+}

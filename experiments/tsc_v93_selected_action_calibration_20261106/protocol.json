@@ -1,0 +1,118 @@
+{
+  "name": "cfcmt-v93-final-selected-action-seed-oof-calibration-v1",
+  "created_at_utc": "2026-11-06T02:31:14.156479+00:00",
+  "purpose": "Evaluate a single final-selected-action error scale while retaining frozen V93 as incumbent",
+  "alpha": 0.9,
+  "beta": 0.5,
+  "source_group": "atlanta",
+  "source_seeds": [
+    2027,
+    3037,
+    4047
+  ],
+  "adaptation_seeds": [
+    5057,
+    6067
+  ],
+  "validation_seeds": [
+    8171
+  ],
+  "expected_source_groups": 609,
+  "expected_adaptation_groups": 911,
+  "expected_validation_groups": 457,
+  "scenarios": [
+    "jinan_3x4_real",
+    "jinan_3x4_real_2000",
+    "jinan_3x4_real_2500"
+  ],
+  "reference": "gp_d0_o0p02_s0",
+  "folds": [
+    {
+      "train_target_seeds": [
+        6067
+      ],
+      "heldout_target_seed": 5057
+    },
+    {
+      "train_target_seeds": [
+        5057
+      ],
+      "heldout_target_seed": 6067
+    }
+  ],
+  "model": {
+    "families": [
+      "causal_group_normalized_rigid_advantage",
+      "causal_antisymmetric_pairwise_advantage"
+    ],
+    "factory": "frozen fit_target_screening_models with MechanismFitConfig()",
+    "mean_prediction": "original FrozenAnchoredBlendModel constant_alpha_0p9; original antisymmetry, aggregation and reference anchoring",
+    "source_weights": {
+      "atlanta": 1.0
+    },
+    "full_deployment_bundle": "unchanged; used only after calibration is written for historical8171 validation"
+  },
+  "calibration": {
+    "object": "Error of the final argmin blended-score action relative to GP, conditional on non-reference and fixed pressure eligibility",
+    "true_target": "(raw selected cost - raw GP cost) / action_group_range(full group GP-centered interval_cost contrasts), matching the model training scale",
+    "error": "absolute(true normalized contrast - selected blended score)",
+    "quantile": 0.9,
+    "quantile_method": "weighted inverse CDF: smallest error with cumulative normalized weight >= 0.9",
+    "weights": "Equal total weight per nonempty seed/scenario eligible-proposal stratum; equal eligible groups within each stratum; disclose empty strata",
+    "candidate_guard": "selected score + 0.5 * frozen calibrated error quantile < 0",
+    "replaces": "Entire old composite uncertainty only; no additional cycle or distance penalty, no score/ranking/pressure/executor change",
+    "coverage_claim": false,
+    "write_before_validation": true
+  },
+  "validation": {
+    "role": "Historically exposed seed8171 development validation; excluded from model fitting and new calibration, not fresh confirmation",
+    "predictor": "Frozen full V93 Atlanta component with all original911 adaptation groups",
+    "expected_groups_by_scenario": {
+      "jinan_3x4_real": 158,
+      "jinan_3x4_real_2000": 130,
+      "jinan_3x4_real_2500": 169
+    },
+    "topology_context": "Repair in memory using label-free scenario context from repaired adaptation cache; assert features and all targets unchanged; preserve source files",
+    "comparators": [
+      "GP",
+      "original_guard",
+      "calibrated_guard",
+      "raw_argmin_diagnostic"
+    ],
+    "aggregation": "Equal scenarios within seed, then equal seeds",
+    "metrics": [
+      "raw mean selected cost minus GP and original guard",
+      "released beneficial/harmful/tied actions",
+      "harmful release fraction among releases",
+      "cumulative harmful raw-cost increase and beneficial raw-cost decrease"
+    ],
+    "uncertainty": "No confidence interval or seed-generalization significance from one validation seed"
+  },
+  "label_contract": {
+    "target": "interval_cost",
+    "unit": "Mean active inserted plus pending insertion vehicles per controlled lane over the60-second branch",
+    "behavior_policy": "phase_pressure",
+    "continuation_policy": "phase_pressure",
+    "control_interval_sec": 10,
+    "counterfactual_horizon_intervals": 6,
+    "collection_horizon_sec": 600,
+    "warmup_sec": 60
+  },
+  "decision": {
+    "no_release": "HOLD_NO_EFFECT",
+    "no_net_validation_benefit_against_GP_or_original_guard": "HOLD_NO_NET_BENEFIT",
+    "favorable_historical_validation": "HOLD_REQUIRES_FRESH_MULTI_SEED_VALIDATION",
+    "closed_loop_expansion_authorized": false,
+    "scope": "Use this stage to decide whether final-action calibration merits fresh validation; no closed-loop expansion based solely on one exposed historical seed"
+  },
+  "preservation": {
+    "frozen_v93_unchanged": true,
+    "prior_seven_controller_panel": "retained separately",
+    "fresh56_confirmation": "completed in tsc_v93_fresh_confirmation_20261106; not used to fit or select calibration",
+    "source_attribution": "Separate same-capacity no-source control study; not claimed by this calibration",
+    "v158_v159": "Closed historical failures are retained; no reopening or mixing their different label banks",
+    "post_result_tuning": false,
+    "new_simulator_runs": 0,
+    "storage": "Server-only banks/models; pull compact JSON and scalar CSV only"
+  }
+}

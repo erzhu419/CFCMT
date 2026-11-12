@@ -1,0 +1,115 @@
+{
+  "status": "STAGED_IMPORT_AND_STATIC_CHECKS_PASS_NO_SIMULATION",
+  "host": "jtl110gpu2",
+  "prepared_at_utc": "2026-11-09T11:26:20.059556+00:00",
+  "server_root": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot",
+  "producer": {
+    "path": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/producer",
+    "symlink_target": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_shrink_confirmation/producer",
+    "original_snapshot": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e",
+    "original_collection_task": "t213880",
+    "uses_v93_source": false
+  },
+  "branch_helpers": {
+    "path": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/branch_helpers",
+    "original_directory": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_joint_response_trial_20261106/amendment_v2",
+    "files": [
+      "recover_tsc_joint_response_trial.py",
+      "collect_tsc_joint_response_measurement.py",
+      "collect_tsc_physical_response_trial.py",
+      "tsc_joint_response_observer.py",
+      "tsc_joint_response_interface.py",
+      "static_context.py",
+      "tsc_clearance_execution_audit.py",
+      "tsc_physical_response_data.py",
+      "tsc_movement_response.py",
+      "collect_tsc_movement_response.py",
+      "cologne_action_branch_checks.py"
+    ],
+    "bytes": 104631,
+    "fit_scripts_copied": false
+  },
+  "inputs": {
+    "hangzhou": {
+      "cfg": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/inputs/hangzhou/hangzhou_aligned.sumocfg",
+      "original_cfg": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/inputs/hangzhou/hangzhou_aligned.original.sumocfg",
+      "original_server_cfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_hangzhou_source_repair_20261107/candidate/hangzhou_aligned.sumocfg",
+      "transfer": "Copy unchanged staged repaired inputs from /home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_shrink_confirmation/inputs/hangzhou",
+      "bytes": {
+        "hangzhou_aligned.sumocfg": 266,
+        "hangzhou_aligned.original.sumocfg": 402,
+        "hangzhou_aligned.net.xml": 448011,
+        "hangzhou_4x4_gudang_18041610_1h.rou.xml": 356636
+      }
+    },
+    "jinan": {
+      "cfg": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/inputs/jinan/jinan_3x4_real.sumocfg",
+      "original_cfg": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/inputs/jinan/jinan_3x4_real.original.sumocfg",
+      "original_server_cfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_left_geometry_20261107/candidate/jinan_3x4_real.sumocfg",
+      "original_route": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9/jinan_3x4_real/jinan_3x4_real.rou.xml",
+      "transfer": "Direct rsync on jtl110gpu2 from zhengliang01@202.197.46.16; no local input staging",
+      "bytes": {
+        "jinan_3x4_real.sumocfg": 259,
+        "jinan_3x4_real.original.sumocfg": 404,
+        "jinan_3x4_real.net.xml": 336577,
+        "jinan_3x4_real.rou.xml": 1174371
+      }
+    }
+  },
+  "relocation": "Retained original cfg in each city. Running cfg changes only route-files absolute path to the same-directory route filename. No net/route rebuild or parameter change.",
+  "runtime": {
+    "python": "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/python/bin/python3.10",
+    "python_version": "3.10.20",
+    "dependencies": "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/runtime",
+    "libsumo_version": "SUMO 1.22.0"
+  },
+  "validation": {
+    "native_module": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/branch_helpers/collect_tsc_physical_response_trial.py",
+    "revised_audit_module": "recover_tsc_joint_response_trial",
+    "joint_observer_module": "tsc_joint_response_observer",
+    "v3_module": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/producer/cf_h2o/eval/traffic_signal_resco_cfcmt_v3.py",
+    "imports_passed": true,
+    "simulation_started": false,
+    "new_labels_read": false,
+    "networks": {
+      "hangzhou": {
+        "tls": 16,
+        "focal_tls": "intersection_2_2",
+        "static_green_states": 8,
+        "clearance_lane_count": 36,
+        "full_conflict_context": true
+      },
+      "jinan": {
+        "tls": 12,
+        "focal_tls": "intersection_2_2",
+        "static_green_states": 8,
+        "clearance_lane_count": 36,
+        "full_conflict_context": true
+      }
+    }
+  },
+  "environment": {
+    "PYTHONPATH": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/producer:/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/branch_helpers:/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/runtime",
+    "LD_LIBRARY_PATH": "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/python/lib",
+    "CFCMT_SOURCE_ROOT": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/producer",
+    "CFCMT_RUNTIME_ROOT": "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/runtime",
+    "CFCMT_PYTHON": "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/python/bin/python3.10",
+    "SUMO_HOME": "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/runtime/sumo",
+    "PATH": "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/runtime/bin:/usr/bin:/bin",
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONHASHSEED": "0",
+    "CFCMT_EXPECTED_SUMO_VERSION": "1.22.0",
+    "CFCMT_SUMO_SCRATCH_DIR": "/dev/shm",
+    "TMPDIR": "/dev/shm",
+    "TMP": "/dev/shm",
+    "TEMP": "/dev/shm",
+    "LC_ALL": "C",
+    "LANG": "C",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "python_invocation_prefix": "env PYTHONPATH=/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/producer:/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/branch_helpers:/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/runtime LD_LIBRARY_PATH=/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/python/lib CFCMT_SOURCE_ROOT=/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/producer CFCMT_RUNTIME_ROOT=/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/runtime CFCMT_PYTHON=/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/python/bin/python3.10 SUMO_HOME=/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/runtime/sumo PATH=/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/runtime/bin:/usr/bin:/bin PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 CFCMT_EXPECTED_SUMO_VERSION=1.22.0 CFCMT_SUMO_SCRATCH_DIR=/dev/shm TMPDIR=/dev/shm TMP=/dev/shm TEMP=/dev/shm LC_ALL=C LANG=C OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 /home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/python/bin/python3.10"
+}

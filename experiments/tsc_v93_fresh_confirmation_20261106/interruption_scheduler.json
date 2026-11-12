@@ -1,0 +1,211 @@
+{
+  "recorded_at_utc": "2026-11-06T02:04:27.623210+00:00",
+  "task_id": "t213641",
+  "task_snapshot": {
+    "id": "t213641",
+    "status": "running",
+    "description": "Frozen V93 fresh-seed evaluation 5/5",
+    "signature": "CFCMT/v93/fresh-confirmation-20261106/evaluation/shard-4",
+    "priority": "normal",
+    "no_auto_requeue": true,
+    "cpu_cores": 4,
+    "ram_mb": 644,
+    "preferred_node": "jtl110gpu2",
+    "require_node": null,
+    "allowed_nodes": [
+      "jtl110gpu2",
+      "jtl311linux"
+    ],
+    "node": "jtl311linux",
+    "remote_pids": [
+      2659758
+    ],
+    "log_path": "/tmp/sched_t213641.log",
+    "started_at": 1793930497.9478128,
+    "finished_at": null,
+    "last_resource_estimate_update": {
+      "ts": 1793929318.9793174,
+      "kind": "ram_learned_prefix_lower",
+      "old_ram_mb": 4096,
+      "new_ram_mb": 644,
+      "observed_mb": 536,
+      "evidence_scope": "prefix",
+      "sample_count": 3
+    },
+    "last_killed_at": 1793930023.8123708,
+    "last_killed_by": "erzhu419@FATHERSUCKERMSI",
+    "last_kill_actor": {
+      "user": "erzhu419",
+      "host": "FATHERSUCKERMSI",
+      "label": "erzhu419@FATHERSUCKERMSI",
+      "scheduler_id": "FATHERSUCKERMSI:0d5872d15442",
+      "action": "preempt_high_priority",
+      "reason": "preempted by t213642 (high-prio waited 5min; deficit cpu=1, ram=0.00GB)",
+      "ts": 1793930023.8123708
+    },
+    "last_kill_action": "preempt_high_priority",
+    "last_kill_reason": "preempted by t213642 (high-prio waited 5min; deficit cpu=1, ram=0.00GB)",
+    "remote_started_at": 1793930497.338963,
+    "last_progress_line": "rollout=31/179; 2.657s/rollout",
+    "runtime_current_unit": 31,
+    "runtime_total_units": 179,
+    "post_launch_evict_loss_protected": false
+  },
+  "protection_field_present_in_persisted_task": false,
+  "queue_read": "read-only filtered snapshot from atomic queue.json; no scheduler health update or queue mutation",
+  "root_observed_first_attempt": {
+    "node": "jtl110gpu2",
+    "pid": 3832310,
+    "elapsed_sec": 628,
+    "completed_rollouts": 116,
+    "assigned_rollouts": 179,
+    "evidence_source": "root report before this investigation"
+  },
+  "post_cancel_snapshot_at_utc": "2026-11-06T02:08:50.165677+00:00",
+  "post_cancel_task_snapshot": {
+    "id": "t213641",
+    "status": "cancelled",
+    "description": "Frozen V93 fresh-seed evaluation 5/5",
+    "signature": "CFCMT/v93/fresh-confirmation-20261106/evaluation/shard-4",
+    "priority": "normal",
+    "no_auto_requeue": true,
+    "cpu_cores": 4,
+    "ram_mb": 644,
+    "preferred_node": "jtl110gpu2",
+    "require_node": null,
+    "allowed_nodes": [
+      "jtl110gpu2",
+      "jtl311linux"
+    ],
+    "node": "jtl311linux",
+    "remote_pids": [
+      2659758
+    ],
+    "log_path": "/tmp/sched_t213641.log",
+    "started_at": 1793930497.9478128,
+    "finished_at": 1793930811.5743468,
+    "last_resource_estimate_update": {
+      "ts": 1793929318.9793174,
+      "kind": "ram_learned_prefix_lower",
+      "old_ram_mb": 4096,
+      "new_ram_mb": 644,
+      "observed_mb": 536,
+      "evidence_scope": "prefix",
+      "sample_count": 3
+    },
+    "last_killed_at": 1793930804.915143,
+    "last_killed_by": "erzhu419@FATHERSUCKERMSI",
+    "last_kill_actor": {
+      "user": "erzhu419",
+      "host": "FATHERSUCKERMSI",
+      "label": "erzhu419@FATHERSUCKERMSI",
+      "scheduler_id": "FATHERSUCKERMSI:0d5872d15442",
+      "action": "user force-cancel",
+      "reason": "scheduler.py cancel --force",
+      "ts": 1793930804.915143
+    },
+    "last_kill_action": "user force-cancel",
+    "last_kill_reason": "scheduler.py cancel --force",
+    "remote_started_at": 1793930497.338963,
+    "last_progress_line": "rollout=69/179; 5.082s/rollout",
+    "runtime_current_unit": 69,
+    "runtime_total_units": 179,
+    "last_evicted_at": 1793930025.9997082,
+    "last_eviction_kind": "preempt_high_priority"
+  },
+  "submitted_spec": {
+    "priority": "normal",
+    "cpu": 4,
+    "ram_mb": 4096,
+    "preferred_node": "jtl110gpu2",
+    "allowed_nodes": [
+      "jtl110gpu2",
+      "jtl311linux"
+    ],
+    "protect_from_auto_eviction": true,
+    "no_auto_requeue": true
+  },
+  "submitted_spec_source": "experiments/tsc_v93_fresh_confirmation_20261106/evaluation_specs.json: shard-4",
+  "scheduler_findings": [
+    {
+      "finding": "bulk_submit.build_bulk_submit_task persists no_auto_requeue but never copies protect_from_auto_eviction from JSON spec; the true flag was silently omitted.",
+      "source": "/home/erzhu419/mine_code/scheduleurm/skill/scheduler_commands/bulk_submit.py:289",
+      "supporting_lines": [
+        310,
+        320
+      ]
+    },
+    {
+      "finding": "Single-task submit does persist protect_from_auto_eviction and no_auto_requeue.",
+      "source": "/home/erzhu419/mine_code/scheduleurm/skill/scheduler_submit/task.py:183",
+      "supporting_lines": [
+        184,
+        185,
+        186,
+        197
+      ]
+    },
+    {
+      "finding": "Protection is a soft victim-selection preference. If all eligible victims are protected, preemption falls back to the protected candidates.",
+      "source": "/home/erzhu419/mine_code/scheduleurm/skill/scheduler_placement_engine/preemption.py:63",
+      "supporting_lines": [
+        64
+      ]
+    },
+    {
+      "finding": "The observed preempt_high_priority path only selects running normal-priority victims.",
+      "source": "/home/erzhu419/mine_code/scheduleurm/skill/scheduler_placement_engine/preemption.py:42",
+      "supporting_lines": [
+        46,
+        47,
+        48
+      ]
+    },
+    {
+      "finding": "Eviction directly sets the same task to queued and clears its launch fields without checking no_auto_requeue. Cooldown applies only to the evicting node, permitting another allowed node.",
+      "source": "/home/erzhu419/mine_code/scheduleurm/skill/scheduler_placement_engine/eviction.py:56",
+      "supporting_lines": [
+        57,
+        58,
+        59,
+        75,
+        79
+      ]
+    },
+    {
+      "finding": "no_auto_requeue gates crash-clone recovery; it does not disable preemption requeue.",
+      "source": "/home/erzhu419/mine_code/scheduleurm/skill/scheduler_failure/crash_requeue.py:141",
+      "supporting_lines": [
+        151,
+        152,
+        153
+      ]
+    }
+  ],
+  "supported_recovery_options": {
+    "submission_route": "Single-task scheduler submit supports --protect-from-auto-eviction; submit-jsonl currently drops the equivalent JSON key.",
+    "prevent_this_preemption_class": "--priority high excludes the task from preempt_high_priority normal-priority victims.",
+    "reduce_other_eviction_preference": "--protect-from-auto-eviction is supported by single-task submit, but is explicitly soft.",
+    "crash_behavior": "--no-auto-requeue prevents crash-clone recovery only.",
+    "placement": "--require-node is a hard pin. --preferred-node is soft; repeatable --allowed-node restricts the candidate set but allows movement within it.",
+    "source": "/home/erzhu419/mine_code/scheduleurm/skill/scheduler_commands/cli.py:106",
+    "source_lines": [
+      108,
+      112,
+      114,
+      119,
+      121,
+      124,
+      127,
+      131
+    ],
+    "bounded_plan": "After explicit recovery authorization, preserve both attempts and completed results, derive the exact missing cases, and use a distinct task/signature/output root for only those cases. Use an idle eligible node with sufficient actual budget, single-task submit, high priority, explicit soft protection and hard node pin. Inspect the persisted new task once to confirm the flags survived.",
+    "limitations": [
+      "No identified submission option makes a task immune to all resource-pressure eviction.",
+      "A high-priority task may itself preempt normal tasks if it waits on a capacity deficit; select sufficient idle capacity instead of causing another eviction.",
+      "A node pin controls placement, not preemption or retry.",
+      "The current task is cancelled; no recovery task was created by this investigation."
+    ]
+  },
+  "investigation_actions": "Read local source and filtered local scheduler queue only; wrote this compact receipt. No scheduler mutation, submissions, server downloads, or cancellations."
+}

@@ -1,0 +1,40 @@
+{
+  "status": "COMPLETE_STRATIFIED_NEGATIVE_REGISTRATION",
+  "scope": "Register one naturally weighted training cohort with better negative coverage, using only existing901-903 archives. Census and symbolic cost accounting only; no new cache construction or fit.",
+  "population": "The original30000 lane-change reservoir rows on seeds76116901-903:331 observed positive rows and29669 stay rows. The sampling unit remains(seed,time,packet). Do not apply matched-panel vehicle exclusions or one-row-per-vehicle rules.",
+  "positive_selection": "Retain all165 left and166 right positive rows at raw_weight1 and objective_weight1/30000.",
+  "negative_strata": "For every stay row, use archived current states to test proximity to any of the331 training positives separately for left and right. Reuse the original current_stratum, exact lane/direction, speed difference<=2m/s and lane-end distance difference<=15m, omitting seed identity. This forms four disjoint bins00,10,01,11. An undefined static adjacent-lane stratum has no match in that direction and remains in the population. Do not use904, model scores, residuals or error-selected cases to define bins.",
+  "negative_budget": {
+    "per_training_seed": 223,
+    "total_stay_rows": 669,
+    "total_positive_and_stay_rows": 1000
+  },
+  "allocation": "Within each seed, give each nonempty bin min(N_h,floor(223/k)) places, where k is the number of nonempty bins. Distribute remaining places in repeated fixed order00,10,01,11 to bins not yet exhausted until exactly223 places are allocated. This takes small bins in full without changing the rule after seeing errors.",
+  "sampling": "Within each seed/bin, sample uniformly without replacement from reference-sorted rows. Freeze random seed20261111, with independent substreams keyed by training seed and bin index. Record row identities, population sizeN_h, selected countn_h and inclusion probabilitypi_i=n_h/N_h before numerical readouts.",
+  "weights": "For a selected stay, raw_weight=N_h/n_h and objective_weight=N_h/(30000*n_h). Positive raw_weight1. Verify total raw weight30000 and per-seed total10000, preserving the original1.1033% positive rate. Keep the new cohort separate from the existing424-case fit.",
+  "reuse": "Preserve all old results/caches. The original93 random stays and previously matched controls enter the new cohort only if selected by the frozen sample; reuse compatible existing caches when selected. Do not append an unweighted hard-negative set or force old negatives into this sampling design.",
+  "readouts": [
+    "Report each bin's population/sample size and inclusion weights; census the possible and sampled negative coverage of every training positive under the unchanged fine matching rule.",
+    "Record current-only geometric domains and compatible existing exact/mixed caches for all1000 selected rows, retaining the original fixed mixture anchor and masks.",
+    "Register exact full-forward/feature/leaf upper bounds and a bounded exact-versus-existing-mixture proposal for any later cache construction. Do not build caches or invent a budget until these costs are known."
+  ],
+  "budgets": {
+    "new_full_forward_calls": 0,
+    "new_canonical_feature_evaluations": 0,
+    "new_native_starts": 0,
+    "new_coefficient_fits": 0,
+    "optimizer_invocations": 0,
+    "new_nuisance_estimations": 0,
+    "new_particle_pools": 0
+  },
+  "storage": "Perform census and registration on jtl110gpu2; keep row identities/current frames server-side and retrieve compact summaries only.",
+  "stopping": "Stop after frozen sampling, weights, coverage and symbolic cost registration. No new numerical model readout, optimization, simulation, parameter/feature/threshold changes or automatic budget extension. Preserve V93, manuscript, Thesis, existing fits and HOLD records.",
+  "authorized_by": "User: 继续下一步",
+  "frozen_at_utc": "2026-11-11T03:52:17.123891+00:00",
+  "parent_protocol": "../tsc_packet_lc_discrimination_20261111/next_protocol.json",
+  "max_stochastic_actors": 10,
+  "completed_at_utc": "2026-11-11T03:54:47.568445+00:00",
+  "result": "result.json",
+  "execution": "execution.json",
+  "next_protocol": "next_protocol.json"
+}

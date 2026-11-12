@@ -1,0 +1,15 @@
+{
+  "scope": "Thirty-second diagnosis of current-road intent at the existing Jinan anchors",
+  "native_seeds": [76116911, 76116912],
+  "anchors_sec": [600, 1200],
+  "model_scenario_seeds": [76117001, 76117002, 76117003, 76117004, 76117005, 76117006, 76117007, 76117008],
+  "horizon_sec": 30,
+  "readouts_sec": [10, 30],
+  "anchor_cohort": "Vehicles on ordinary lanes with outgoing connections, at most 25 m from the lane end at the initial frame",
+  "arms": ["original road prior", "condition the first current-road draw on lane-compatible support including END", "use the recorded route's next road for that same first draw"],
+  "shared": "Corrected stopline projection, recorded actual signals, frozen new LC and longitudinal coefficients, and identical boundary and vehicle random streams",
+  "budget": {"native_starts": 0, "fits": 0, "model_rollouts": 96, "model_steps": 2880},
+  "decision": "Compare each seed's two windows at 30 s. Progress to a training-only lane prior only if lane conditioning improves both controlled halt excess and absolute green-entry error on both seeds. Otherwise use the same short trajectories to isolate the dominant residual constraint.",
+  "conditional_calibration": "If the short replay supports the lane prior, estimate it on the four original training seeds and run the frozen 450-second accuracy gates on new seeds 76116931 and 76116932. Keep the 30-second diagnostic separate from independent calibration.",
+  "storage": "jtl110gpu2; keep vehicle records and per-run traces server-side"
+}

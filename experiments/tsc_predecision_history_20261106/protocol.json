@@ -1,0 +1,147 @@
+{
+  "protocol": "tsc-predecision-history-development-v1",
+  "purpose": "single_fixed_test_of_observed_predecision_history",
+  "parent_snapshot": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e",
+  "parent_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v158_native_prefix_ranking_calibration_20260911",
+  "development": {
+    "seeds": [
+      180314,
+      188625,
+      127178,
+      177524,
+      163775,
+      150945,
+      173412,
+      161481,
+      150744,
+      134310
+    ],
+    "action_groups": 100,
+    "candidate_rows": 800,
+    "passive_replay_trajectories": 30,
+    "new_action_label_branches": 0
+  },
+  "history": {
+    "offsets_sec": [
+      -60,
+      -50,
+      -40,
+      -30,
+      -20,
+      -10
+    ],
+    "state_fields": [
+      "total_q",
+      "total_veh",
+      "mean_speed",
+      "mean_occ",
+      "graph_upstream_q_mean",
+      "graph_downstream_q_mean"
+    ],
+    "action_fields": [
+      "green_q",
+      "red_q",
+      "green_veh",
+      "red_veh",
+      "green_speed_mean",
+      "green_down_q",
+      "green_down_occ",
+      "movement_service_pressure"
+    ],
+    "summaries": [
+      "mean",
+      "ols_slope_times_60sec"
+    ],
+    "feature_names": [
+      "hist_mean_total_q",
+      "hist_trend60_total_q",
+      "hist_mean_total_veh",
+      "hist_trend60_total_veh",
+      "hist_mean_mean_speed",
+      "hist_trend60_mean_speed",
+      "hist_mean_mean_occ",
+      "hist_trend60_mean_occ",
+      "hist_mean_graph_upstream_q_mean",
+      "hist_trend60_graph_upstream_q_mean",
+      "hist_mean_graph_downstream_q_mean",
+      "hist_trend60_graph_downstream_q_mean",
+      "hist_mean_green_q",
+      "hist_trend60_green_q",
+      "hist_mean_red_q",
+      "hist_trend60_red_q",
+      "hist_mean_green_veh",
+      "hist_trend60_green_veh",
+      "hist_mean_red_veh",
+      "hist_trend60_red_veh",
+      "hist_mean_green_speed_mean",
+      "hist_trend60_green_speed_mean",
+      "hist_mean_green_down_q",
+      "hist_trend60_green_down_q",
+      "hist_mean_green_down_occ",
+      "hist_trend60_green_down_occ",
+      "hist_mean_movement_service_pressure",
+      "hist_trend60_movement_service_pressure"
+    ],
+    "candidate_alignment": "current_candidate_signal_state_and_current_pp_reference",
+    "observation_hook": "prepare_interval_before_current_executor_requests"
+  },
+  "crossfit": {
+    "folds": [
+      [
+        180314,
+        188625
+      ],
+      [
+        127178,
+        177524
+      ],
+      [
+        163775,
+        150945
+      ],
+      [
+        173412,
+        161481
+      ],
+      [
+        150744,
+        134310
+      ]
+    ],
+    "unit": "whole_seed",
+    "fold_count": 5,
+    "threshold": 0.0,
+    "threshold_selection": "fixed_before_native_outcomes"
+  },
+  "model": {
+    "config": {
+      "learning_rate": 0.05,
+      "max_iter": 100,
+      "max_leaf_nodes": 15,
+      "min_samples_leaf": 20,
+      "l2_regularization": 10.0,
+      "uncertainty_quantile": 0.9,
+      "random_state": 20260803
+    },
+    "history_dimension": 28,
+    "capacity": "same_HGB_tree_leaf_budget_static_history_columns_zero"
+  },
+  "action_selection": {
+    "threshold": 0,
+    "no_stay_override_of_pp_switch": true,
+    "reference": "phase_pressure"
+  },
+  "analysis": {
+    "bootstrap_draws": 10000,
+    "bootstrap_seed": 20261106,
+    "primary_unit": "equal_simulator_seed_then_mean_of_10_groups_with_demands_4_3_3",
+    "comparisons": [
+      "history_minus_static",
+      "history_minus_phase_pressure"
+    ],
+    "gate": "both_paired_95pct_upper_bounds_negative_and_history_harm_no_greater_than_static"
+  },
+  "scope": "reused_development_bank_not_independent_confirmation; original_focal_group_selection_is_preserved",
+  "next_stage": "a_pass_only_supports_preparing_independent_validation_no_automatic_closed_loop",
+  "closure": "do_not_search_history_windows_or_thresholds_after_this_result"
+}

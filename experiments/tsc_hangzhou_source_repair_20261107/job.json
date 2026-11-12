@@ -1,0 +1,20 @@
+[
+  {
+    "signature": "CFCMT/hangzhou-source-repair-20261107/one-build-two-pp",
+    "description": "One isolated Hangzhou source network; only after pre-build geometry and static admission run two native development PP hours and preaction counts.",
+    "cmd": "env CFCMT_SOURCE_ROOT=/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e /home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e/scripts/cluster/run_cfcmt_sumo122.sh /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_hangzhou_source_repair_20261107/scripts/build_hangzhou.py --source /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_phase_pair_readout_20261106/hangzhou_aligned_v1/hangzhou_aligned.sumocfg --netconvert /home/zhengliang01/scheduleurm_work/runtimes/cfcmt-sumo122-py310-v1/bin/netconvert --output /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_hangzhou_source_repair_20261107/candidate && env CFCMT_SOURCE_ROOT=/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e /home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e/scripts/cluster/run_cfcmt_sumo122.sh /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_hangzhou_source_repair_20261107/scripts/audit_hangzhou.py --prior /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_phase_pair_readout_20261106/hangzhou_aligned_v1/hangzhou_aligned.sumocfg --candidate /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_hangzhou_source_repair_20261107/candidate/hangzhou_aligned.sumocfg --roadnet /home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/hangzhou_4x4_gudang_18041610_1h/roadnet_4X4.json --registry /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_phase_pair_readout_20261106/hangzhou_aligned_v1/movement_pairs.json --output /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_hangzhou_source_repair_20261107/static_admission.json && if /home/zhengliang01/scheduleurm_work/conda_envs/freqduet-cpu-py310/bin/python3.10 -c 'import json,sys;d=json.load(open(sys.argv[1]));print(d[sys.argv[2]],flush=True);sys.exit(0 if d[sys.argv[2]]==sys.argv[3] else 1)' /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_hangzhou_source_repair_20261107/static_admission.json status PASS_STATIC_PRIORITY; then env CFCMT_SOURCE_ROOT=/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e /home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e/scripts/cluster/run_cfcmt_sumo122.sh /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_hangzhou_source_repair_20261107/scripts/run_source_hours.py --sumocfg /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_hangzhou_source_repair_20261107/candidate/hangzhou_aligned.sumocfg --admission /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_hangzhou_source_repair_20261107/static_admission.json --output /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_hangzhou_source_repair_20261107/census; else echo HOLD_BEFORE_PP; fi",
+    "cwd": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e",
+    "cpu": 1,
+    "ram_mb": 4096,
+    "vram": 0,
+    "priority": "normal",
+    "allowed_nodes": [
+      "node006",
+      "node005"
+    ],
+    "project": "CFCMT",
+    "env_spec": "none",
+    "skip_launch_staging": true,
+    "no_auto_requeue": true
+  }
+]

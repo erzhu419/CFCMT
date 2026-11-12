@@ -1,0 +1,40 @@
+{
+  "protocol": "tsc-joint-response-measurement-v1",
+  "status": "FROZEN_BEFORE_COLLECTION",
+  "frozen_at_utc": "2026-11-06T11:51:25.544665+00:00",
+  "response_horizon_sec": 10,
+  "cost_horizon_sec": 450,
+  "checkpoint_search_sec": 60,
+  "max_new_branches": 16,
+  "new_fits": 0,
+  "parent_snapshot": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e",
+  "conversion_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9",
+  "cases": [
+    {
+      "case_id": "hangzhou_seed24061101_t600",
+      "city": "hangzhou",
+      "scenario": "hangzhou_4x4",
+      "seed": 24061101,
+      "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_libsignal/repo/data/raw_data/hangzhou_4x4_gudang_18041610_1h/hangzhou_4x4_gudang_18041610_1h.sumocfg",
+      "checkpoint_sec": 600,
+      "tls_id": "intersection_2_2"
+    },
+    {
+      "case_id": "jinan_seed24061102_t600",
+      "city": "jinan",
+      "scenario": "jinan_3x4_real",
+      "seed": 24061102,
+      "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9/jinan_3x4_real/jinan_3x4_real.sumocfg",
+      "checkpoint_sec": 600,
+      "tls_id": "intersection_2_2"
+    }
+  ],
+  "seed_scope": "No occurrence in local experiment/config JSON rosters; measurement-only new seeds, not confirmation.",
+  "eligibility": "First native 10s epoch with eight feasible focal phases in [600,660]. First PP is one of eight branches; no outcome filter or replacement.",
+  "input": "Direct t0 focal incoming/outgoing lane measurements; t0 positions; static lane/conflict graph; full joint focal nominal phases. Future signal states/response labels remain audit/label outputs.",
+  "safety": "Require zero raw collision events and no teleports in both prefix and full 450s branch.",
+  "execution": "Any focal nominal/actual ten-step mismatch holds the pilot for explanation. Actual signals never replace nominal inputs.",
+  "stopping": "Stop the entire pilot on its first invalid/ineligible branch; keep partial measurements, never pad missing values with zero.",
+  "after_pass": "Freeze one new model protocol and separate whole-seed source/target development budget. Do not fit on measurement pilot.",
+  "existing_gate": "HOLD_RESPONSE remains closed; this is no fit, no cost readout, no closed loop."
+}

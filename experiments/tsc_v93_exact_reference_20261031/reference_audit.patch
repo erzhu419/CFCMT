@@ -1,0 +1,67 @@
+diff --git a/cf_h2o/eval/traffic_signal_resco_cfcmt_v3.py b/cf_h2o/eval/traffic_signal_resco_cfcmt_v3.py
+--- a/cf_h2o/eval/traffic_signal_resco_cfcmt_v3.py
++++ b/cf_h2o/eval/traffic_signal_resco_cfcmt_v3.py
+@@ -4763,6 +4763,9 @@ def evaluate_policy_v3(
+     executors: dict[str, SafePhaseExecutor] = {}
+     guard_audit = ContrastGuardAudit()
+     accepted_intervention_trace: list[dict[str, Any]] = []
++    reference_request_trace: list[dict[str, Any]] = []
++    reference_request_count = 0
++    reference_post_warmup_count = 0
+     residual_cooldowns: dict[str, int] = {}
+     residual_global_cooldown_remaining = 0
+     residual_global_stay_bypass_remaining = 0
+@@ -5100,7 +5103,32 @@ def evaluate_policy_v3(
+                             )
+                         else:
+                             raise ValueError(f"unknown V3 policy: {policy}")
+-                        executor.request(candidate.state)
++                        if policy == "selected_source_prior":
++                            executor_before = executor.snapshot()
++                            request_accepted = executor.request(candidate.state)
++                            reference_request_count += 1
++                            reference_post_warmup_count += int(
++                                float(sumo_api.simulation.getTime())
++                                >= begin_time + float(warmup_sec)
++                            )
++                            if (
++                                scenario == "jinan_3x4_real" and int(seed) == 5622039
++                                and 1820.0 <= float(sumo_api.simulation.getTime()) <= 1940.0
++                            ):
++                                reference_request_trace.append(
++                                    {
++                                        "time_sec": float(sumo_api.simulation.getTime()),
++                                        "tls_id": str(tls_id),
++                                        "requested_phase_state": str(candidate.state),
++                                        "current_green_state_before": str(
++                                            executor_before["current_green_state"]
++                                        ),
++                                        "executor_mode_before": str(executor_before["mode"]),
++                                        "request_accepted": bool(request_accepted),
++                                    }
++                                )
++                        else:
++                            executor.request(candidate.state)
+             remaining = min(int(control_interval_sec), max(int(math.ceil(end_time - float(sumo_api.simulation.getTime()))), 0))
+             for _ in range(remaining):
+                 before = float(sumo_api.simulation.getTime())
+@@ -5242,6 +5270,19 @@ def evaluate_policy_v3(
+             "active_vehicles_at_horizon": active_at_horizon,
+             "phase_execution_audit": aggregate_phase_audits(executors) if executors else {},
+             "guard_audit": guard_audit.to_dict() if learned_family is not None else {},
++            "reference_policy_audit": (
++                {
++                    "reference_policy_spec": models.prior_spec.to_dict(),
++                    "decision_requests": reference_request_count,
++                    "post_warmup_decision_requests": reference_post_warmup_count,
++                    "request_trace_encoding": "all_reference_requests_in_unique_Jinan_override_window_1820_1940s",
++                    "request_trace": reference_request_trace,
++                    "learned_predictions_used": False,
++                    "coordination_used": False,
++                }
++                if policy == "selected_source_prior"
++                else {}
++            ),
+             "accepted_intervention_trace": (
+                 accepted_intervention_trace if learned_family is not None else []
+             ),

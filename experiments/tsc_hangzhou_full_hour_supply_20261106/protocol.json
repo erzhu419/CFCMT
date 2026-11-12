@@ -1,0 +1,16 @@
+{
+  "status": "FIXED_BEFORE_SOURCE_TRAJECTORIES",
+  "parent": "../tsc_jinan_phase_pair_readout_20261106/next_plan.json",
+  "source_package": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_phase_pair_readout_20261106/hangzhou_aligned_v1",
+  "controller": "PhasePressure, SUMO 1.22.0, original Hangzhou demand",
+  "source_seeds": [32061101, 32061102],
+  "horizon_s": 3600,
+  "preaction_epochs_s": {"first": 0, "last": 3590, "step": 10},
+  "signals": 16,
+  "registry_movement_pairs": 32,
+  "budget": {"pp_trajectories": 2, "alternative_branches": 0, "fits": 0},
+  "measurement": "Record both near-stop-line inlet counts for each registered right/straight merge at every epoch. Distinguish physical supply, eight feasible actions, and presence of two available actions with identical full right signal sequence and differing straight priority. Track the Jinan exposure contrast of high 4 vs low 0 seconds.",
+  "visits": "Define a visit per physical movement pair as consecutive 10-second observations satisfying its joint supply condition, including epochs between switch opportunities. Report how many such visits contain a switchable opportunity. Tick counts and grid durations do not establish independent vehicle groups or continuous occupancy.",
+  "previously_identified_target_conditions": "Straight near count 8–11 with right positive; right near count at least 2 with straight positive; also report their intersection. Retain >11 separately. Compare both individual source seeds, their intersection and union, against all 15 fixed target rows; the eight previously measured tradeoffs are a descriptive subset.",
+  "decision": "Safety violation stops the run. If heavier switchable supply is absent or confined to one seed, close this unchanged-demand source for the full-target claim. If heavier supply recurs, judge the joint distribution, visit counts and target coverage before deciding the scope of a separate response study."
+}

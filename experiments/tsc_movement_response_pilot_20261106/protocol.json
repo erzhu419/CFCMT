@@ -1,0 +1,103 @@
+{
+  "protocol": "tsc-movement-response-measurement-v1",
+  "frozen_before_metadata_probe_utc": "2026-11-06T07:10:21.794344+00:00",
+  "purpose": "Measurement feasibility only; no source benefit estimate or fit",
+  "max_new_branches": 4,
+  "new_fits": 0,
+  "case_selection": "For Cologne native P100 and Jinan original-demand native B100: lexicographic numeric(seed,checkpoint,group_id), earliest group with preaction total_q>0 and a nonPP switch candidate. No outcome used to select group or action.",
+  "candidate_selection": "First stored candidate with index != PP and switch_indicator>0",
+  "horizon_sec": 450,
+  "windows_sec": [
+    10,
+    60,
+    450
+  ],
+  "main_measurements": [
+    "edge-pair movement stopline entries",
+    "edge-pair receiving entries",
+    "junction pending vehicles",
+    "downstream vehicle/halting/occupancy state",
+    "applied signal and preaction state"
+  ],
+  "validity_gate": "Four complete native branches; same-state PP/candidate; retained candidate features and original450cost reproduce; no teleport; movement event accounting has no unassigned crossings or double counts; per-movement labels distinguish measured zero from unresolved/missing. No performance gate in this measurement pilot.",
+  "limits": "Reused states and four trajectories only establish measurement feasibility; zero learning or transfer claims.",
+  "status": "FROZEN_BEFORE_SIMULATION",
+  "frozen_at_utc": "2026-11-06T07:12:13.055257+00:00",
+  "parent_snapshot": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e",
+  "conversion_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9",
+  "cases": [
+    {
+      "city": "cologne",
+      "scenario": "cologne1",
+      "group_id": "cologne1:seed2027:6:cluster_357187_359543",
+      "seed": 2027,
+      "checkpoint_sec": 25260,
+      "tls_id": "cluster_357187_359543",
+      "bank_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154p_cologne_native_b100_20260909/fit_v1/bank.npz",
+      "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154d_cologne_bilateral_waiting_geometry_20260909/package_v1/cologne1.sumocfg",
+      "candidate_states": [
+        "srrrrrrrrrGGGGGrrrrr",
+        "GGGGGrrrrrsrrrrrrrrr",
+        "GGGggrrrrrGGGggrrrrr",
+        "rrrGGrrrrrrrrGGrrrrr",
+        "rrrrrGGGGGrrrrrsrrrr",
+        "rrrrrsrrrrrrrrrGGGGG",
+        "rrrrrGGGggrrrrrGGGgg",
+        "rrrrrrrrGGrrrrrrrrGG"
+      ],
+      "reference_index": 1,
+      "candidate_index": 0,
+      "expected_costs": {
+        "pp": 0.9719444444444445,
+        "candidate": 1.1694444444444445
+      },
+      "preaction_total_q": 5.806484112486467,
+      "controlled_lane_count": 8,
+      "interval_index": 6,
+      "native_source_record": {
+        "bank_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154j_cologne_fraction_refit_20260909/local_v2/collection/cologne1/seed_2027/bank.npz",
+        "group_id": "cologne1:seed2027:6:cluster_357187_359543",
+        "reused_v154o": true,
+        "source_group_status": "INVALID",
+        "source_result_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v154o_cologne_training_label_restore_audit_20260909/audit/seed_2027/result.json"
+      }
+    },
+    {
+      "city": "jinan",
+      "scenario": "jinan_3x4_real",
+      "group_id": "jinan_3x4_real:seed127178:slot0:t300:intersection_2_3",
+      "seed": 127178,
+      "checkpoint_sec": 300,
+      "tls_id": "intersection_2_3",
+      "bank_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v158_native_prefix_ranking_calibration_20260911/fit_v1/native_b100.npz",
+      "sumocfg": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9/jinan_3x4_real/jinan_3x4_real.sumocfg",
+      "candidate_states": [
+        "gggrrrrrrgggGGGrrrgggrrrrrrgggGGGrrr",
+        "gggGGGrrrgggrrrrrrgggGGGrrrgggrrrrrr",
+        "gggrrrrrrgggrrrGGGgggrrrrrrgggrrrGGG",
+        "gggrrrGGGgggrrrrrrgggrrrGGGgggrrrrrr",
+        "gggrrrrrrgggrrrrrrgggrrrrrrgggGGGGGG",
+        "gggrrrrrrgggGGGGGGgggrrrrrrgggrrrrrr",
+        "gggrrrrrrgggrrrrrrgggGGGGGGgggrrrrrr",
+        "gggGGGGGGgggrrrrrrgggrrrrrrgggrrrrrr"
+      ],
+      "reference_index": 4,
+      "candidate_index": 1,
+      "expected_costs": {
+        "pp": 1.1258487654320988,
+        "candidate": 1.1275925925925925
+      },
+      "preaction_total_q": 20.360087647960132,
+      "controlled_lane_count": 144,
+      "parent_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v158_native_prefix_ranking_calibration_20260911",
+      "original_trace_path": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v158_native_prefix_ranking_calibration_20260911/development_v1/seed_127178/full_traces_server_only.pkl"
+    }
+  ],
+  "measurement_only_fields": [
+    "vehicle identity and complete route for event attribution",
+    "postaction applied signals",
+    "postaction downstream response"
+  ],
+  "preaction_inputs": "Only checkpoint-observed state/candidate fields; this pilot fits no model.",
+  "execution": "One CPU measurement job, four trajectories maximum, no automatic requeue. Full vehicle traces stay on server; retrieve small result JSON only."
+}

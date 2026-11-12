@@ -1,0 +1,20 @@
+[
+  {
+    "signature": "CFCMT/jinan-left-geometry-20261107/one-conditional-pp",
+    "description": "Jinan source left-turn geometry: one compile; physical admission before one possible PP safety replay on seed 34110704.",
+    "cmd": "env CFCMT_SOURCE_ROOT=/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e /home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e/scripts/cluster/run_cfcmt_sumo122.sh /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_left_geometry_20261107/scripts/build_geometry.py --priority /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_priority_rebuild_20261107/candidate/jinan_3x4_real.sumocfg --roadnet /home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_external/colight/data/Jinan/3_4/roadnet_3_4.json --netconvert /home/zhengliang01/scheduleurm_work/runtimes/cfcmt-sumo122-py310-v1/bin/netconvert --output /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_left_geometry_20261107/candidate && env CFCMT_SOURCE_ROOT=/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e /home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e/scripts/cluster/run_cfcmt_sumo122.sh /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_left_geometry_20261107/scripts/audit_geometry.py --prior /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_priority_rebuild_20261107/candidate/jinan_3x4_real.sumocfg --candidate /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_left_geometry_20261107/candidate/jinan_3x4_real.sumocfg --roadnet /home/zhengliang01/scheduleurm_work/CFCMT/H2Oplus/downloads/traffic_signal_external/colight/data/Jinan/3_4/roadnet_3_4.json --output /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_left_geometry_20261107/static_admission.json && if /home/zhengliang01/scheduleurm_work/conda_envs/freqduet-cpu-py310/bin/python3.10 -c 'import json,sys;d=json.load(open(sys.argv[1]));print(d['\"'\"'status'\"'\"'],flush=True);exit(0 if d['\"'\"'status'\"'\"']=='\"'\"'PASS_STATIC_PRIORITY'\"'\"' else 1)' /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_left_geometry_20261107/static_admission.json; then env CFCMT_SOURCE_ROOT=/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e /home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e/scripts/cluster/run_cfcmt_sumo122.sh /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_left_geometry_20261107/scripts/run_regression.py --sumocfg /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_left_geometry_20261107/candidate/jinan_3x4_real.sumocfg --admission /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_left_geometry_20261107/static_admission.json --incident /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_left_geometry_20261107/scripts/incident_geometry.json --output /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_left_geometry_20261107/regression; else echo HOLD_BEFORE_PP; fi",
+    "cwd": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e",
+    "cpu": 1,
+    "ram_mb": 4096,
+    "vram": 0,
+    "priority": "normal",
+    "allowed_nodes": [
+      "node006",
+      "node005"
+    ],
+    "project": "CFCMT",
+    "env_spec": "none",
+    "skip_launch_staging": true,
+    "no_auto_requeue": true
+  }
+]

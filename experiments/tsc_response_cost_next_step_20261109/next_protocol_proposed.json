@@ -1,0 +1,42 @@
+{
+  "status": "PROPOSED_NOT_EXECUTED",
+  "question": "Can the current211-dimensional fixed Ridge reader select lower450s native costs when both training and heldout inputs use measured10s responses?",
+  "purpose": "Diagnostic readability of the existing representation/model/data budget; not a deployable policy or source-transfer result.",
+  "dataset": "Existing Jinan20states,10seeds,160native branches; no new simulation; previous cohorts unchanged.",
+  "source_data_used": false,
+  "outer_folds": [
+    [
+      76115801,
+      76115802
+    ],
+    [
+      76115803,
+      76115804
+    ],
+    [
+      76115805,
+      76115806
+    ],
+    [
+      76115807,
+      76115808
+    ],
+    [
+      76115809,
+      76115810
+    ]
+  ],
+  "features": "Original211-dimensional PP differences unchanged. Replace predicted-state Phi by measured-state Phi for both reader-training and heldout inputs; retain t0/nominal fields.",
+  "model": "Ridge alpha1; training-only weighted RMS, no centering/intercept; PP exact0, round12 ties preferPP then canonical action.",
+  "weights": "Each training seed mass1;2states*7nonPP rows per seed. Each fold8training seeds,16states,112nonPP rows;2heldout seeds.",
+  "new_logical_fits": 5,
+  "new_dynamics_fits": 0,
+  "new_source_fits": 0,
+  "new_native_starts": 0,
+  "primary": "Actual450s selected stopped-vehicle-sec/(450*controlled_lane_count), equalstates then equalseeds; report oracle-reader minusPP paired95%t interval(df9).",
+  "decision_rule": "A negative paired95%t upper bound vsPP supports diagnostic readability only. Otherwise stop investment in this211D/alpha1/data-budget reader recipe, retaining uncertainty and all outcomes.",
+  "success_next_question": "Can decision-time predicted action contrasts recover the measured-response choice advantage on separate development data? Source contribution requires a separate real-source/target-only/placebo comparison.",
+  "limits": "Heldout true10s responses are unavailable at decision time. Data have already informed development. Failure does not rule out allshort-response methods; success does not establish deployment or source gains.",
+  "original_hold_unchanged": true,
+  "no_search": "No feature,alpha,seed,horizon or threshold search; no retry or enlargement based on these results."
+}

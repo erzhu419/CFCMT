@@ -1,0 +1,70 @@
+{
+  "status": "EXECUTED",
+  "scope": "One bounded target-only coefficient-fit feasibility trial using existing records and a frozen finite-particle objective. Stop after its internal development readout.",
+  "basis": "The real15-state pilot passed with15360 primary responses and bounded memory. Marginal LC/speed errors decreased at1024 particles, but joint tail errors and256-block gradient dispersion remain. These15 selected diagnostics are not a training cohort or independent validation.",
+  "fixed": {
+    "server_host": "jtl110gpu2",
+    "data_root": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_training",
+    "law": "Preserve the frozen current-goal conditional law, full required stochastic set at cap10, responsive complete background, observation kernels and numeric-only sampler. No physical-rule or feature changes.",
+    "history_exposure": "Frozen target_laws_server_only.json already uses all four training trajectories76116901-76116904, totaling7200 seconds. Earlier diagnostics/fits also accessed training records. This is not a claim that total target exposure is384 or512 labels.",
+    "heads_in_order": [
+      "motion",
+      "start",
+      "yield_entry",
+      "lane_change"
+    ],
+    "seeds_in_order": [
+      76116901,
+      76116902,
+      76116903,
+      76116904
+    ],
+    "cohort": "Project the original160000-reference manifest to current identifiers and per-head manifest ordinals. With one random.Random(20261112), iterate seeds then heads in the listed order, draw32 ordinals without replacement from each original10000-reference stratum, and sort selected ordinals within each stratum. Preserve all512 selected references, including repeated current tuples across heads. No label, likelihood, previous diagnostic outcome or post-fit result enters selection.",
+    "cohort_freeze": "Write the complete512-reference cohort before recovering labels or responses. Compare selected current geometry/required sets with the saved census at cap10. Any domain mismatch stops this trial without replacement. Preserve original head eligibility and multiplicity; no censoring or redefinition of the full160000 target.",
+    "coefficient_training": "Seeds76116901-76116903:384 references,96 per head.",
+    "internal_development": "Seed76116904:128 references,32 per head. This is coefficient holdout under shared history priors and earlier diagnostic exposure, not independent or unseen-data validation. Development results do not select parameters or checkpoints.",
+    "case_key": "(seed,time_sec,packet_id), including the focal ID; different focal vehicles in the same frame do not share a conditional law. Deduplicate only identical case keys, retaining all head references and original objective multiplicities.",
+    "case_order": "Lexicographic full case key after cohort freeze, with indices0..U-1 independent of worker dispatch.",
+    "nuisance_seed": "76116999+seed*100000+time_sec, unchanged.",
+    "particles": "One fixed256-particle q0 pool per unique current case. Reuse its outcomes/features across all linked head references and every optimizer evaluation. If a case exactly matches a completed pilot case, reuse its first256 saved particles and record the existing proposal seed; otherwise use20261112+100000*case_index. Disclose any naturally selected overlap with the15 diagnostics; do not claim all15 remain outside coefficient training. Do not redraw after observing support or losses.",
+    "objective": "Sum of four training-head mean marginal negative log likelihoods, plus0.001 times the sum of squared non-bias coefficients. Keep the five bias coefficients unpenalized. Implement the finite-SNIS objective and analytic normalizer gradients; do not reuse the old clipped-Gaussian mean-gradient objective.",
+    "optimizer": "Exactly one scipy L-BFGS-B invocation,190 coefficients (5 by38) initialized to zero, analytic jacobian, maxiter200 and gtol1e-7 as in the frozen earlier fit. No bounds, restarts, hyperparameter search, dev-selected iterate or source term. Record the actual SciPy version and optimizer termination.",
+    "workers_max": 8
+  },
+  "execution": [
+    "Before real responses, validate aggregate objective/gradient on small synthetic cached examples including unequal head counts, multiplicities and a genuine no-signal case. Use finite differences at fixed parameters, not a toy optimization; count any synthetic physics against its separate ceiling.",
+    "Register the complete labels-free cohort, all current domains and the exact tighter new-computation budget256*U_new and256*sum(J_new_case) before reading selected y. Record reused capacity separately. Existing four-trajectory priors remain frozen; no nuisance re-estimation.",
+    "Build pools once and evaluate every selected native head label at zero. Any sampled positive-branch error, selected label with zero/undefined likelihood, or budget/technical failure stops new-case dispatch and blocks fitting. Preserve completed/in-flight receipts, all reference dispositions and consumed counts; do not substitute examples, omit labels or raise N.",
+    "Only after all selected references have finite supported zero-point likelihood, make the one coefficient-fit invocation. Reuse fixed particles, feature arrays and outcomes throughout. Each objective evaluation records compact extrema of global/survivor/label-posterior ESS and maximum weights. A nonfinite objective or gradient terminates this attempt, without replacing it by a finite penalty. A failed attempt consumes the fit allowance; no restart or proposal refresh.",
+    "At the returned coefficient point and at zero, report every training/internal-development head mean and their unpenalized sum, regularization separately, signal counts, per-case global/survivor/observed-posterior ESS and maximum normalized weights. Report finite-pool support failures and weight concentration directly, without finite-subset averages or post-hoc threshold tuning.",
+    "Stop with a compact feasibility conclusion. A lower internal cached loss is optimization evidence only. Weight concentration, support loss or incomplete termination prevents treating it as a reliable prediction result. Independent particle/data checks and any source-transfer or control comparison require a later protocol."
+  ],
+  "budgets": {
+    "selected_references": 512,
+    "unique_current_cases_max": 512,
+    "selected_current_frames_decoded_max": 512,
+    "particles_per_case": 256,
+    "real_primary_full_forward_calls_max": 131072,
+    "real_canonical_feature_evaluations_max": 1310720,
+    "tighter_registered_bounds": "New work is at most256*U_new full forwards and256*sum(J_new_case) canonical feature evaluations, excluding reused pilot pools. Total cache capacity is at most256*U particles and256*sum(J_case) actor-feature evaluations. All selected J must be<=10. Record reused and newly generated counts separately.",
+    "synthetic_full_forward_calls_max": 1024,
+    "feature_stage_full_forward_resolver_calls_max": 0,
+    "parameter_readout_reuse_full_forward_calls_max": 0,
+    "new_exact_reference_full_forward_calls_max": 0,
+    "new_coefficient_fits_max": 1,
+    "optimizer_invocations_max": 1,
+    "new_nuisance_estimations": 0,
+    "source_fits": 0,
+    "new_native_starts": 0,
+    "free_rollouts": 0,
+    "calibration_seeds_used": false
+  },
+  "storage": "All frames, per-particle arrays and fitted coefficients stay on the server. Pull only compact summary JSON and logs. Do not modify shared runtimes, frozen V93, paper or Thesis.",
+  "decision_scope": "Feasibility of a single target-only finite-particle coefficient fit. No full160000 training admission, few-shot data-budget claim, cross-city attribution, independent predictive gain or control-gain claim.",
+  "execution_stage": "../tsc_packet_particle_first_fit_20261110",
+  "execution_file": "../tsc_packet_particle_first_fit_20261110/execution.json",
+  "authorized_by": "User: \u7ee7\u7eed\u4e0b\u4e00\u6b65",
+  "completed_at_utc": "2026-11-10T16:17:08.156279+00:00",
+  "result_status": "HOLD_FIRST_FIT_OPTIMIZER_TERMINATION",
+  "result_file": "../tsc_packet_particle_first_fit_20261110/fit_summary.json"
+}

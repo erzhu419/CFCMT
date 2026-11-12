@@ -1,0 +1,90 @@
+{
+  "status": "HOLD_GLOBAL_SUPPORT_INITIALIZATION",
+  "technical_audit_status": "COMPLETE_FIXED_BETA_THREE_HEAD_AUDIT",
+  "baseline_reproduced_records": 120000,
+  "evaluated_records": 120000,
+  "elapsed_sec": 612.0559151920024,
+  "heads": {
+    "motion": {
+      "records": 40000,
+      "baseline_mean_nll": 1.1033704231216512,
+      "candidate_mean_nll": 2.179457418129525,
+      "candidate_objective_status": "FINITE",
+      "newly_unsupported": 0,
+      "finite_in_both": 40000
+    },
+    "start": {
+      "records": 40000,
+      "baseline_mean_nll": 0.26566076092772056,
+      "candidate_mean_nll": null,
+      "candidate_objective_status": "ZERO_LABEL_LIKELIHOOD",
+      "newly_unsupported": 351,
+      "finite_in_both": 39649
+    },
+    "yield_entry": {
+      "records": 40000,
+      "baseline_mean_nll": 0.5650469297327871,
+      "candidate_mean_nll": null,
+      "candidate_objective_status": "ZERO_LABEL_LIKELIHOOD",
+      "newly_unsupported": 983,
+      "finite_in_both": 39017
+    }
+  },
+  "motion_relative_nll_increase": 0.975272648657205,
+  "motion_improved": 12951,
+  "motion_worsened": 20131,
+  "motion_unchanged": 6918,
+  "reduced_original_overprediction_by_final_mean": {
+    "below_y": {
+      "records": 15472,
+      "delta_nll_sum": 43804.8614180069,
+      "delta_nll_mean": 2.8312345797574263,
+      "improved": 1041,
+      "worsened": 14431,
+      "unchanged": 0
+    },
+    "equal_y": {
+      "records": 5489,
+      "delta_nll_sum": -691.6105602059158,
+      "delta_nll_mean": -0.12599937332955288,
+      "improved": 5489,
+      "worsened": 0,
+      "unchanged": 0
+    },
+    "above_y": {
+      "records": 11791,
+      "delta_nll_sum": -904.6558927478558,
+      "delta_nll_mean": -0.07672427213534525,
+      "improved": 6382,
+      "worsened": 5409,
+      "unchanged": 0
+    }
+  },
+  "motion_by_observed_speed": {
+    "zero_speed": {
+      "records": 8741,
+      "delta_nll_sum": -1379.2387004188163,
+      "delta_nll_mean": -0.15778957789941842,
+      "improved": 8738,
+      "worsened": 0,
+      "unchanged": 3
+    },
+    "positive_speed": {
+      "records": 31259,
+      "delta_nll_sum": 44422.71850073376,
+      "delta_nll_mean": 1.4211177101229648,
+      "improved": 4213,
+      "worsened": 20131,
+      "unchanged": 6915
+    }
+  },
+  "support_loss_fraction_among_positive_labels": {
+    "start": 0.36,
+    "yield_entry": 0.10489808985167004
+  },
+  "interpretation": "This fixed9-case min-L1 beta over-reduces accepted motion across the training distribution and loses1334 positive-label records across two heads. It is rejected as a global support initializer, not as a proof that the shared feature family is impossible. Gaussian motion itself worsens; removing binary hard zeros alone would not fix it.",
+  "new_native_starts": 0,
+  "new_fits": 0,
+  "optimizer_calls": 0,
+  "model_admitted": false
+}

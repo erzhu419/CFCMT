@@ -1,0 +1,91 @@
+{
+  "status": "COMPLETE",
+  "scope": "Synthetic-only verification of a complete latent-branch cache and analytic gradients for the frozen finite-residual conditional law. No new real-data readout or fitting.",
+  "basis": "All original9 selected states passed fixed-zero local support/normalization. Exact first enumeration remains expensive:6864 full-forward calls,54.74min panel. Theta changes branch weights while residual nodes, physical endpoints and prefix legality masks stay fixed for a given latent branch.",
+  "fixed": {
+    "law": "The current cap4 finite-node conditional law, canonical features, background intervention, priors, physics and sigma1 observation kernel remain unchanged.",
+    "synthetic_cases": [
+      "cap4_lateral",
+      "cap4_lateral_earlier_neighbour",
+      "cap4_start_permissions",
+      "stopped_open",
+      "blocked_start",
+      "yielding_entry",
+      "blocked_entry",
+      "two_actor_lateral",
+      "intent_and_survival",
+      "receiving_intent",
+      "distant_background",
+      "binding_background",
+      "responsive_background"
+    ],
+    "parameter_probes": [
+      "All five coefficient blocks zero.",
+      "One deterministic nonzero point: theta[b,j]=0.1*(-1)^(b+j)/(j+1), using the existing fixed block order b=0..4 and canonical feature index j=0..p-1."
+    ],
+    "no_parameter_search": true,
+    "real_panel": "Preserve completed evaluation_summary.json and all9 states; do not rerun them to add a cache.",
+    "gradient_directions": "Five block-only directions: entries (-1)^j/(j+1) in that block, normalized to unit L2. One mixed nonbias direction: entries (-1)^(b+j)/(j+1) for j>=1 across all blocks and0 for each bias, normalized to unit L2. Freeze these6 directions before evaluating."
+  },
+  "cache": [
+    "For each full current-intent configuration, retain the exact canonical feature vectors actually used at each stochastic decision, for every local random actor, with shared table indices.",
+    "Retain current and receiving intent IDs/prior factors, residual-node choices, permission bits and applicability. Include all local actors, not just the focal actor.",
+    "Retain sequential LC order, prefix-specific allowed masks, chosen classes and the exact feature-table references consumed at each decision.",
+    "Retain focal physical outcomes required by the existing observation kernel: survival/END, velocity, start, entry and LC class. Share prefixes and immutable feature tables; no duplicated full background frame per leaf."
+  ],
+  "likelihood_and_gradient": {
+    "numerator": "N_h(theta)=sum_eta w_eta(theta)*c_eta,h(y). Observation factors c use exactly the frozen kernel/reference measure.",
+    "denominator": "For motion/start/LC use D_h(theta)=P_theta(survive); entry uses1. Keep the denominator derivative.",
+    "score": "grad log q_h = E_eta|y,h[grad log w_eta] - E_eta|survive[grad log w_eta] for survivor-conditioned heads.",
+    "numerics": "Log-domain summation, no probability floor, no smoothing of fixed masks, no physical derivative through endpoints or masks."
+  },
+  "checks": [
+    {
+      "test": "At each fixed probe, total branch mass1 and sum_eta w_eta*grad log w_eta=0; head normalization including END/no-speed agrees with the current law.",
+      "tolerance": "absolute1e-10",
+      "on_failure": "Stop and correct factorization/conditioning on synthetic cases; do not move to real data."
+    },
+    {
+      "test": "Cached masses, event marginals and observation likelihoods equal an independently enumerated current-law reference at zero and the one fixed nonzero probe.",
+      "tolerance": "absolute1e-10",
+      "on_failure": "Stop and locate missing latent factors, feature context or prefix masks."
+    },
+    {
+      "test": "Analytic NLL directional derivatives match central differences at both probes: one fixed normalized direction in each of five blocks plus one mixed direction including nonbias features. Difference probes use only the cache.",
+      "central_difference_step": 1e-05,
+      "tolerance": "absolute1e-7 + relative1e-5",
+      "on_failure": "Stop and correct the analytic score/conditioning; no parameter selection."
+    },
+    {
+      "test": "Existing stopped_open case agrees with P(start)=p_U*(1-p_R). Existing intent_and_survival case uses speed observation y=1 and brake-bias-only perturbation.",
+      "closed_form": "D(beta)=0.4+0.6*sigmoid(beta). q(1|survive)=[0.4*(1-p)*phi(3)+p*phi(1)]/D; phi is the standard normal density. At beta0, the NLL survival-gradient contribution is3/14.",
+      "on_failure": "Stop: the missing denominator gradient or event derivation is detectable here; do not substitute y=2, whose two speed components cancel."
+    },
+    {
+      "test": "After building a cache, replace physical resolution with a failing stub during all repeated likelihood/gradient and finite-difference evaluations.",
+      "on_failure": "Remove hidden physical re-evaluation from cached evaluation before considering real use."
+    }
+  ],
+  "readouts": [
+    "Exact agreement errors, normalization and score identities.",
+    "Analytic versus finite-difference errors and closed-form checks.",
+    "One-time synthetic enumeration counts versus zero physical calls during cache reuse, compact cache size and runtime."
+  ],
+  "budgets": {
+    "real_state_probability_evaluations": 0,
+    "real_full_frame_forward_calls": 0,
+    "new_native_starts": 0,
+    "new_fits": 0,
+    "new_nuisance_estimations": 0,
+    "optimizer_calls": 0,
+    "free_rollouts": 0,
+    "calibration_seeds_used": false
+  },
+  "decision": "Only implementation consistency and reweighting feasibility. A pass does not admit a model, establish full training-domain support, or demonstrate prediction/source-transfer/control gains.",
+  "after": "Stop after synthetic verification or a technical HOLD. Before any real cache construction/fitting, separately register the cohort/domain and actual storage/query/fitting budget. Current merged theta0 focal atoms cannot reconstruct latent weights or gradients.",
+  "authorized_by": "User: 继续下一步",
+  "authorized_at_utc": "2026-11-10T10:16:34.672521+00:00",
+  "completed_at_utc": "2026-11-10T10:23:13.622154+00:00",
+  "result_status": "PASS_SYNTHETIC_BRANCH_CACHE_GRADIENT",
+  "result_file": "result.json"
+}

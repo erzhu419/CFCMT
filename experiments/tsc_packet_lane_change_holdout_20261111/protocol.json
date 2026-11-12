@@ -1,0 +1,35 @@
+{
+  "status": "COMPLETE_904_EXACT_PAIRED_HOLDOUT",
+  "authorized_by": "User: 继续下一步",
+  "frozen_at_utc": "2026-11-11T01:09:39.456250+00:00",
+  "server_host": "jtl110gpu2",
+  "scope": "All archived seed76116904 matched pairs, fixed current particle coefficients and zero, one conditional law readout per case.",
+  "method_choice": "The existing labels-free census registers 93 J1, 29 J2 and 2 J3 cases. Exact enumeration uses at most2444 forwards, less than31744 at the prior256 particles per case, and identifies structural zeros. Reuse the validated exact cache with the same physical law. Exact enumeration replaces the initially considered balanced sampling.",
+  "cohort": {
+    "source": "target_packet_lane_change_coverage/coverage/matched_pairs_server_only.json",
+    "pairs": 62,
+    "left": 32,
+    "right": 30,
+    "cases": 124,
+    "seed": 76116904,
+    "distinct_current_times": 122,
+    "case_controls_disjoint_from_all_current_train_development_and_previous_diagnostic_vehicles": true,
+    "historical_prior_exposure_seconds": 7200
+  },
+  "metrics": "Both endpoint directional probabilities on each case-control pair, native observed-label NLL, direction ranking win/tie/loss and the four focal/other factor combinations. Ties at log probability difference within1e-10 and both zeros. Retain all zeros as infinite NLL and all undefined cases. Left/right separately, time blocks descriptive. Matched cohort is for a coefficient holdout diagnosis.",
+  "budgets": {
+    "full_forward_calls_max": 2444,
+    "leaf_visits_max": 31008,
+    "features_formula": "sum J times the registered current goal configuration count per case",
+    "workers_max": 4,
+    "new_native_starts": 0,
+    "new_nuisance_estimations": 0,
+    "new_fits": 0,
+    "optimizer_calls": 0,
+    "new_synthetic_full_forwards": 0
+  },
+  "stop_policy": "Technical or budget failure stops new dispatch while active cases finish. Undefined physical branch marks its exact case unavailable; retain its consumed cost and do not average a reduced panel. A structurally zero observed label remains an infinite NLL. No parameter updates, resampling, new trajectories, or alternate fits.",
+  "storage": "Full case records and exact caches stay server-side. Pull aggregate scalar summary and launch receipt only.",
+  "completed_at_utc": "2026-11-11T01:18:38.179825+00:00",
+  "result_file": "result.json"
+}

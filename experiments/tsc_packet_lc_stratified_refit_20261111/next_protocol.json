@@ -1,0 +1,26 @@
+{
+  "status": "EXECUTED",
+  "scope": "One arithmetic audit of the observed old-versus-new LC matched-ranking gain using saved readout files only. No numerical model queries, fitting or cache construction.",
+  "inputs": "Old refitted probabilities from the completed1000-case cache readouts, new returned probabilities from returned_directions_server_only.jsonl.gz, and the unchanged registered neighbor edges/method labels. All identities, labels, weights and zero-permission cases stay fixed.",
+  "estimand": "Keep the same109 left and119 right covered positives and each positive's full neighbor weight denominatorW_p. For an edge use a_pj=w_j/(M*W_p). Do not delete mixed edges then renormalize or change the positive cohort.",
+  "readouts": [
+    "Split edges into EE,EM,ME,MM according to whether positive and stay laws are exact or mixture. Report counts, positive coverage, coefficient mass and old/new contributions for marginal direction and permission-conditional choice ranking.",
+    "Verify that all component contributions sum to the recorded old/new scores and their difference. Both parameter points use the same edge coefficients and matched definitions.",
+    "Let E_theta be the EE contribution and B the coefficient mass of all mixed-affected edges. Without trusting their ranking, the score lies in[E_theta,E_theta+B], and the gain lies in[deltaE-B,deltaE+B]. Report whether the gain lower bound is positive; do not infer statistical independence or causal/control benefit from the bound.",
+    "For conditional ranking, retain any undefined edge and its coefficient mass explicitly; do not turn it into a tie or silently remove it. Full-diagnosis support and the existing904 exact regression remain separate evidence."
+  ],
+  "budgets": {
+    "new_full_forward_calls": 0,
+    "new_canonical_feature_evaluations": 0,
+    "new_native_starts": 0,
+    "new_coefficient_fits": 0,
+    "optimizer_invocations": 0,
+    "new_numerical_likelihood_readouts": 0,
+    "new_particle_pools": 0
+  },
+  "storage": "Read stored per-case scalars server-side on jtl110gpu2 and retrieve a compact decomposition summary only.",
+  "stopping": "Stop after the fixed-cohort contribution and bound audit. Do not retune coefficients, ranking rules, proposals, particles or thresholds. Preserve all old evidence, original HOLD, V93, manuscript and Thesis.",
+  "completed_at_utc": "2026-11-11T07:01:22.153176+00:00",
+  "executed_protocol": "../tsc_packet_lc_gain_audit_20261111/protocol.json",
+  "result": "../tsc_packet_lc_gain_audit_20261111/result.json"
+}

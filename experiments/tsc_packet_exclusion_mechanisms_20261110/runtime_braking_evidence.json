@@ -1,0 +1,25 @@
+{
+  "frozen_start_source": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/producer/cf_h2o/eval/traffic_signal_resco_phase_benchmark.py",
+  "frozen_start_function": "def _start_sumo(sumo_api: Any, sumocfg: Path, seed: int, *, tripinfo_output: Path | None = None) -> None:\n    try:\n        sumo_api.close()\n    except Exception:\n        pass\n    sumo_api.start(\n        _sumo_arguments(\n            sumocfg,\n            seed,\n            include_executable=True,\n            tripinfo_output=tripinfo_output,\n        )\n    )\n\n",
+  "sumocfg": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/repaired_action_cost_pilot/inputs/jinan/jinan_3x4_real.sumocfg",
+  "configuration": "<configuration>\n  <input>\n    <net-file value=\"jinan_3x4_real.net.xml\" />\n    <route-files value=\"jinan_3x4_real.rou.xml\" />\n  </input>\n  <time>\n    <begin value=\"0\" />\n    <end value=\"3600\" />\n  </time>\n</configuration>",
+  "vtypes": [
+    {
+      "id": "passenger",
+      "vClass": "passenger",
+      "length": "5.0",
+      "width": "2.0",
+      "minGap": "2.5",
+      "maxSpeed": "11.111",
+      "accel": "2.0",
+      "decel": "4.5",
+      "sigma": "0.5"
+    }
+  ],
+  "scope": "Read-only frozen launcher/config evidence; does not import libsumo or start a simulator.",
+  "frozen_argument_function": "def _sumo_arguments(\n    sumocfg: Path,\n    seed: int,\n    *,\n    include_executable: bool,\n    tripinfo_output: Path | None = None,\n    load_state: Path | None = None,\n    begin_time: float | None = None,\n) -> list[str]:\n    args = [\n        \"-c\",\n        str(sumocfg),\n        \"--seed\",\n        str(seed),\n        \"--no-step-log\",\n        \"true\",\n        \"--no-warnings\",\n        \"true\",\n        \"--duration-log.disable\",\n        \"true\",\n        \"--time-to-teleport\",\n        str(SUMO_EXECUTION_PROTOCOL[\"time_to_teleport_sec\"]),\n        \"--collision.action\",\n        str(SUMO_EXECUTION_PROTOCOL[\"collision_action\"]),\n        \"--collision.check-junctions\",\n        str(SUMO_EXECUTION_PROTOCOL[\"collision_check_junctions\"]).lower(),\n        \"--save-state.rng\",\n        \"true\",\n        \"--save-state.precision\",\n        \"8\",\n        \"--thread-rngs\",\n        \"1\",\n    ]\n    if include_executable:\n        args.insert(0, \"sumo\")\n    if load_state is not None:\n        args.extend([\"--load-state\", str(load_state)])\n    if begin_time is not None:\n        args.extend([\"--begin\", f\"{float(begin_time):.8f}\"])\n    if tripinfo_output is not None:\n        tripinfo_output.parent.mkdir(parents=True, exist_ok=True)\n        tripinfo_output.unlink(missing_ok=True)\n        args.extend(\n            [\n                \"--tripinfo-output\",\n                str(tripinfo_output),\n                \"--tripinfo-output.write-unfinished\",\n                str(SUMO_EXECUTION_PROTOCOL[\"tripinfo_write_unfinished\"]).lower(),\n            ]\n        )\n    return args\n\n",
+  "vtypes_xml": [
+    "<vType id=\"passenger\" vClass=\"passenger\" length=\"5.0\" width=\"2.0\" minGap=\"2.5\" maxSpeed=\"11.111\" accel=\"2.0\" decel=\"4.5\" sigma=\"0.5\" />"
+  ],
+  "runtime_branch_inference": "Frozen config, full vType XML and launcher have no CFmodel, action-step or integration overrides. SUMO1.22 defaults therefore select Krauss, dt1 and semi-implicit Euler; this is input/source inference, not an effective-option dump."
+}

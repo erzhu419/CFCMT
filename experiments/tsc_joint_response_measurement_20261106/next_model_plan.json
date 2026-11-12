@@ -1,0 +1,72 @@
+{
+  "status": "PLANNED_NOT_LAUNCHED",
+  "next_step": "Implement and freeze one fixed graph-summary representation plus the existing HGB recipe, then freeze new seed/TLS roster before collection.",
+  "input_families": [
+    "Per-movement lane supply, observed positions, receiving conditions and executor state, without uniform turn allocation.",
+    "Ten-step nominal signals and lane supply aggregated by own movement, static foe and directed yielding relations; preserve signal characters and time order. IDs are join keys only."
+  ],
+  "model": {
+    "estimator": "HistGradientBoostingRegressor",
+    "sklearn_version": "1.7.2",
+    "config": {
+      "learning_rate": 0.05,
+      "max_iter": 100,
+      "max_leaf_nodes": 15,
+      "min_samples_leaf": 20,
+      "l2_regularization": 10.0,
+      "random_state": 20261106,
+      "loss": "squared_error",
+      "early_stopping": false
+    }
+  },
+  "arms": [
+    "target_only",
+    "source_target",
+    "source_placebo"
+  ],
+  "data_budget": {
+    "source_city": "canonical_hangzhou_4x4",
+    "source_seeds": 4,
+    "target_city": "current_repaired_jinan",
+    "target_seeds": 10,
+    "anchors_sec": [
+      600,
+      1800
+    ],
+    "groups": 28,
+    "actions_per_group": 8,
+    "max_branches": 224,
+    "excluded_measurement_seeds": [
+      24061101,
+      24061102
+    ]
+  },
+  "fit_budget": {
+    "target_seed_folds": 5,
+    "heldout_whole_target_seeds_per_fold": 2,
+    "arms": 3,
+    "outputs": 2,
+    "max_fits": 30
+  },
+  "weighting": {
+    "total_weight": 1536.0,
+    "source_fraction": 0.5,
+    "rule": "Target-only16groups x8actions x12focalmovements have unit mean row weight; mixed arms keep totalmass1536 with source/target768each, equal groups/actions/movements within each side. Same hyperparameters do not imply identical bins or leaf support."
+  },
+  "analysis": {
+    "bootstrap_draws": 10000,
+    "bootstrap_seed": 20261106,
+    "primary_metric": "Mean absolute error of predicted candidate-minus-PP response contrasts; equal seven nonPP actions, focal movements and two outputs, then equal two groups within each target seed, then equal ten seeds.",
+    "comparators": [
+      "target_only",
+      "source_placebo",
+      "analytic"
+    ],
+    "gate": "Source minus each comparator paired seed-bootstrap95upper<0 AND each source single-output contrast MAE<=target-only. All conditions conjunctive; exploratory development, no winner/threshold reselection.",
+    "secondary": "Report per-output contrast error, raw-count error, all heldout seed/case results and unphysical predicted receipt>initial_internal+entry counts; no posthoc projection."
+  },
+  "placebo": "Permute complete nonPP action response vectors within each source group; PP remains fixed.",
+  "implementation_note": "Both cities have 12 focal movements. Source training rows are 768, not old Cologne 1024; preserve mass1536 and mixed source/target768 each, group and within-group weighting.",
+  "source_coverage": "Describe all frozen new t0 supply states before fitting. If they remain predominantly low-queue and cannot inform the target queue regime, record HOLD_SOURCE_COVERAGE; do not retune demand, replace states or search weights within this recipe.",
+  "boundary": "Do not fit pilot data. No hyperparameter sweep, alpha/beta change, cost head or closed loop. Preserve existing response gates and close the new recipe if they fail."
+}

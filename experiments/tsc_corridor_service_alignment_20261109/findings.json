@@ -1,0 +1,147 @@
+{
+  "status": "HOLD_SERVICE_ALIGNMENT_DEVELOPMENT",
+  "model_changed": false,
+  "execution_interval_sec": 10,
+  "detector_horizon_sec": 10,
+  "service_horizon_sec": 13,
+  "new_simulations": 0,
+  "cities": {
+    "hangzhou": {
+      "mae_unchanged": {
+        "T": 0.02115993206520581,
+        "S": 0.020438155988407557,
+        "P": 0.022502422300824235,
+        "history": 0.023063687689908734,
+        "analytic": 0.05130419603765037
+      },
+      "S_vs_T_requests": 6,
+      "S_vs_P_requests": 7,
+      "disagreement_seeds": {
+        "S_vs_T": [
+          76112703,
+          76112704,
+          76112706
+        ],
+        "S_vs_P": [
+          76112703,
+          76112704,
+          76112705,
+          76112706
+        ]
+      },
+      "gate": {
+        "forecast": true,
+        "actions": true,
+        "passed": true
+      },
+      "new_vs_old_requests": {
+        "T": 247,
+        "S": 247,
+        "P": 251,
+        "history": 248,
+        "analytic": 249
+      },
+      "PP_label_score_net_vs_T": {
+        "net": -13.0,
+        "positive": 0.0,
+        "negative": -13.0,
+        "positive_epochs": 0,
+        "negative_epochs": 5
+      },
+      "PP_label_score_net_vs_P": {
+        "net": -13.0,
+        "positive": 0.0,
+        "negative": -13.0,
+        "positive_epochs": 0,
+        "negative_epochs": 5
+      },
+      "label_score_mean_differences": {
+        "S_vs_T": -0.0003761574074074074,
+        "S_vs_P": -0.0003761574074074074,
+        "S_vs_GP": 0.17256944444444444
+      },
+      "oracle_gap_from_T": {
+        "strict_score_gain_sum": 53.0,
+        "positive_epochs": 17,
+        "tie_only_change": 15,
+        "equal_seed_mean_score_gain": 0.0015335648148148149
+      },
+      "oracle_gap_from_S": {
+        "strict_score_gain_sum": 66.0,
+        "positive_epochs": 22,
+        "tie_only_change": 14,
+        "equal_seed_mean_score_gain": 0.0019097222222222222
+      },
+      "eligible_source_disagreements": {
+        "T": 6,
+        "P": 7
+      },
+      "secondary_gate": true
+    },
+    "jinan": {
+      "mae_unchanged": {
+        "T": 0.20562693444809982,
+        "S": 0.20360434943285963,
+        "P": 0.20580808156805358,
+        "history": 0.20904991478028276,
+        "analytic": 0.2882913872019769
+      },
+      "S_vs_T_requests": 0,
+      "S_vs_P_requests": 0,
+      "disagreement_seeds": {
+        "S_vs_T": [],
+        "S_vs_P": []
+      },
+      "gate": {
+        "forecast": true,
+        "actions": false,
+        "passed": false
+      },
+      "new_vs_old_requests": {
+        "T": 106,
+        "S": 106,
+        "P": 106,
+        "history": 111,
+        "analytic": 116
+      },
+      "PP_label_score_net_vs_T": {
+        "net": 0.0,
+        "positive": 0.0,
+        "negative": 0.0,
+        "positive_epochs": 0,
+        "negative_epochs": 0
+      },
+      "PP_label_score_net_vs_P": {
+        "net": 0.0,
+        "positive": 0.0,
+        "negative": 0.0,
+        "positive_epochs": 0,
+        "negative_epochs": 0
+      },
+      "label_score_mean_differences": {
+        "S_vs_T": 0.0,
+        "S_vs_P": 0.0,
+        "S_vs_GP": 0.09278549382716049
+      },
+      "oracle_gap_from_T": {
+        "strict_score_gain_sum": 589.0,
+        "positive_epochs": 83,
+        "tie_only_change": 34,
+        "equal_seed_mean_score_gain": 0.022723765432098766
+      },
+      "oracle_gap_from_S": {
+        "strict_score_gain_sum": 589.0,
+        "positive_epochs": 83,
+        "tie_only_change": 34,
+        "equal_seed_mean_score_gain": 0.022723765432098766
+      },
+      "eligible_source_disagreements": {
+        "T": 0,
+        "P": 0
+      },
+      "secondary_gate": false
+    }
+  },
+  "interpretation": "No established source control benefit. Oracle is a nominal PP-label score ceiling, not an actual counterfactual cost ceiling.",
+  "next_candidate": "Keep predictor and13s horizon fixed; use raw CDF for posterior expected service score in T/S/P, retain0.5 only for endpoint point-prediction MAE. Not implemented here."
+}

@@ -1,0 +1,24 @@
+{
+  "protocol": "tsc-movement-response-measurement-v1",
+  "frozen_before_metadata_probe_utc": "2026-11-06T07:10:21.794344+00:00",
+  "purpose": "Measurement feasibility only; no source benefit estimate or fit",
+  "max_new_branches": 4,
+  "new_fits": 0,
+  "case_selection": "For Cologne native P100 and Jinan original-demand native B100: lexicographic numeric(seed,checkpoint,group_id), earliest group with preaction total_q>0 and a nonPP switch candidate. No outcome used to select group or action.",
+  "candidate_selection": "First stored candidate with index != PP and switch_indicator>0",
+  "horizon_sec": 450,
+  "windows_sec": [
+    10,
+    60,
+    450
+  ],
+  "main_measurements": [
+    "edge-pair movement stopline entries",
+    "edge-pair receiving entries",
+    "junction pending vehicles",
+    "downstream vehicle/halting/occupancy state",
+    "applied signal and preaction state"
+  ],
+  "validity_gate": "Four complete native branches; same-state PP/candidate; retained candidate features and original450cost reproduce; no teleport; movement event accounting has no unassigned crossings or double counts; per-movement labels distinguish measured zero from unresolved/missing. No performance gate in this measurement pilot.",
+  "limits": "Reused states and four trajectories only establish measurement feasibility; zero learning or transfer claims."
+}

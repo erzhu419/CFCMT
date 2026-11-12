@@ -1,0 +1,53 @@
+{
+  "role": "two_seed_oof_selected_action_error_calibration",
+  "calibration_seeds": [
+    5057,
+    6067
+  ],
+  "alpha": 0.9,
+  "beta": 0.5,
+  "quantile": 0.9,
+  "q": 0.9061557592249757,
+  "oof_group_count": 911,
+  "eligible_group_count": 683,
+  "eligible_stratum_count": 6,
+  "strata": [
+    {
+      "seed": 5057,
+      "scenario": "jinan_3x4_real",
+      "eligible_group_count": 116
+    },
+    {
+      "seed": 5057,
+      "scenario": "jinan_3x4_real_2000",
+      "eligible_group_count": 113
+    },
+    {
+      "seed": 5057,
+      "scenario": "jinan_3x4_real_2500",
+      "eligible_group_count": 117
+    },
+    {
+      "seed": 6067,
+      "scenario": "jinan_3x4_real",
+      "eligible_group_count": 115
+    },
+    {
+      "seed": 6067,
+      "scenario": "jinan_3x4_real_2000",
+      "eligible_group_count": 110
+    },
+    {
+      "seed": 6067,
+      "scenario": "jinan_3x4_real_2500",
+      "eligible_group_count": 112
+    }
+  ],
+  "empty_strata": [],
+  "error": "abs((selected_cost-gp_cost)/normalization_range - final_argmin_score)",
+  "weighting": "Each nonempty seed/scenario eligible stratum has total weight one; its groups have equal weights",
+  "quantile_definition": "Weighted inverse empirical CDF at 0.90; no interpolation or quantile search",
+  "application": "Replace the entire old uncertainty with q; release only if score + 0.5*q < 0 and the original pressure condition passes",
+  "assessment": "Applying this q to its calibration OOF records is calibration-apparent, not independent verification",
+  "coverage": "No 90-percent coverage guarantee; beta remains 0.5 and action groups within a seed are dependent"
+}

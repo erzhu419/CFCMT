@@ -1,0 +1,146 @@
+{
+  "protocol": "response-prior-target-cost-development-v1",
+  "status": "FROZEN_DESIGN_INTERFACE_CHECK_ONLY",
+  "date": "2026-11-09",
+  "current_step": "Freeze a concrete study and verify the semantic input/label interface plus the source-prior algebra. No new native starts or real-data fits in this preparation step. The nested runner and new data collection are subsequent work, not completed results.",
+  "question": "Does a source-informed short-time dynamics slope prior, adapted using target observations, improve target-native450s action selection when the long-cost head uses target labels only?",
+  "direction": "Hangzhou source to Jinan target only, prioritizing the existing Jinan learning-increment gap rather than selecting the favorable pilot city. No two-city benefit claim.",
+  "excluded": {
+    "measurement_pilots": [
+      76114701,
+      76114801
+    ],
+    "other_study_reserved": [
+      35110701,
+      35110702,
+      35110703,
+      35110704
+    ],
+    "old_network_banks": true,
+    "previous_corridor_development_and_confirmation_training": true
+  },
+  "proposed_native_budget": {
+    "source_seeds": [
+      76115701,
+      76115702,
+      76115703,
+      76115704
+    ],
+    "target_seeds": [
+      76115801,
+      76115802,
+      76115803,
+      76115804,
+      76115805,
+      76115806,
+      76115807,
+      76115808,
+      76115809,
+      76115810
+    ],
+    "anchors": [
+      600,
+      1800
+    ],
+    "tls_pool": [
+      "intersection_1_1",
+      "intersection_1_2",
+      "intersection_1_3",
+      "intersection_1_4",
+      "intersection_2_1",
+      "intersection_2_2",
+      "intersection_2_3",
+      "intersection_2_4",
+      "intersection_3_1",
+      "intersection_3_2",
+      "intersection_3_3",
+      "intersection_3_4"
+    ],
+    "focal_assignment": "Within each ordered city seed list, seed ordinal j and anchor ordinal k use tls_pool[(2*j+k)%12]. First eight-action opportunity within anchor..anchor+60; no supply/cost selection or replacement.",
+    "source": "4seeds x2states x8actions =64 native starts, ten-second dynamics only; never collect/use source450s cost for fitting.",
+    "target": "10seeds x2states x8actions =160 native starts, ten-second dynamics plus450s PP-continuation cost.",
+    "total_native_starts": 224,
+    "native_contract": "First PP discovery continues as the PP arm, then other seven native-from-t0 replays; same repaired networks/producer/runtime as the passed pilot. No loadState, separate discovery, retries, failed-state deletion or label-conditioned selection. Preserve every started case."
+  },
+  "predecision_interface": {
+    "join_keys_only": [
+      "lane_id",
+      "vehicle_id",
+      "link_index",
+      "candidate_index",
+      "phase_state_string"
+    ],
+    "state_units": "s=L/7.5m is a fixed geometric storage proxy; rhoN=N/s, rhoH=H/s, rhoM=(N*lane_mean_speed/lane_limit)/s (N0 ->M0); native SUMO1.22 occupancy getter retained without guessed percent conversion. Ratios above1 are not clipped.",
+    "spatial_supply": "Current same-lane t0 vehicle positions/speeds, sorted distance to lane end; first-two presence/distance/(10*lane_limit)/speed-ratio and count within10*lane_limit. Empty lanes remain empty, never assigned free-flow observations.",
+    "actual_vehicle_parameters": "Record only currently seen vehicles' getTypeID, getSpeed, getLength, getMinGap, getAccel, getDecel, getTau, getImperfection, getMaxSpeed, getSpeedFactor and getAllowedSpeed at t0. Do not infer parameters from an unused route vType. Empty lanes get an observed-empty mask; absent records for present vehicles are a missing-input failure.",
+    "joint_signal_graph": "Exact XML fromLane/toLane/TLS-link binding, full directed foes and yields_to, common receiving lanes; full ten-step G/g/s/O/y/Y/r nominal sequence. Multiple connections contribute fractions, never an any-G substitute for all protection. IDs carry no numerical features.",
+    "executor": "Record all t0 timings/snapshot and an isolated nominal-clone t10 snapshot, feasible count and minimum-green clock. No future occupancy-clearance oracle or actual t10 snapshot in inputs.",
+    "new_collection_fields": [
+      "actual current vehicle parameter/speed records",
+      "all t0 executor timings",
+      "nominal executor10 state"
+    ],
+    "signal_order": [
+      "G",
+      "g",
+      "s",
+      "O",
+      "Y",
+      "y",
+      "r"
+    ],
+    "internal_and_executor": "Retain t0 internal-lane N/H/M/occupancy and deduplicated internal vehicle count, plus current executor mode/green age/minimum green/remaining/pending-allred. Known present clearance occupancy must not disappear from the dynamics interface."
+  },
+  "dynamics_targets": "Per focal incoming lane: delta(rhoN), delta(rhoH), delta(rhoM), delta(native occupancy) from0 to10s, in physical normalized units. Source labels contain no450cost. Actual endpoint10 is passed only to a separate label extractor.",
+  "fixed_numeric_projection": {
+    "local": "t0 rhoN/rhoH/rhoM/occupancy, empty mask, freeflow_time/10, lane_limit/11.11, shared-turn flag (more than one distinct outgoing edge, not merely multiple toLanes); the seven spatial-supply fields; mean actual length/7.5,minGap/7.5,accel*10/limit,decel*10/limit,tau/10,sigma,maxSpeed/limit,speedFactor,allowedSpeed/limit and a parameter-observed mask. Receiving-lane rhoN/rhoH/rhoM/occupancy means over the exact toLanes. Also include focal t0 internal_vehicle_count divided by internal-lane count, current executor mode3onehot, green_age/min_green, remaining/10 and pending_allred/10.",
+    "own_action": "For each of10 steps and7 signal characters, own-lane connection fraction p(t,c); retain p, rhoN*p, rhoH*p and rhoM*p.",
+    "joint_action": "For each of four directed relations (foes,self_yields,other_yields,shared_receiving), step t, other-lane color G/g and density rhoN/rhoH, sum other-lane density times the mean relation indicator across own/other connection pairs, conditional on own signal being G/g/s/O and other color c; divide by11. No cross-city column-number alignment.",
+    "status": "The structured graph interface is checked in this step; numerical projection/collection/nested runner must implement these declared fields before real fitting. No feature search based on outer-fold outcomes."
+  },
+  "models": {
+    "family": "One multi-output source-prior Ridge dynamics family and a separate target-only Ridge cost reader for each arm; all alpha=1, no hyperparameter search.",
+    "source_prefit": "Fit real and within-group action-permuted source dynamics once each using identical source X/scaler/weights. Permutation seed20261109; shuffle complete nonPP action x12lane x4output tensors within each source group, retaining PP. No lane/output-independent shuffle.",
+    "target_adaptation": "T uses zero slope prior. S/P map source slopes into each target-training fold's standardized coordinates and minimize sum(w*||Y-ZB-b||^2)+||B-Bprior||^2. The target intercept is unpenalized and freely refitted; source mean bias is not imposed.",
+    "scaling": "Weighted population mean/std fitted only on the assigned training inputs; constant column scale1. Source model coefficients map by target_scale/source_scale, with equivalent intercept checked separately. T never uses source scaling. Each arm's cost reader uses target-OOF weighted RMS scale only, without centering/intercept.",
+    "weights": "Each complete training seed has total loss mass1: equal two states, eight actions and twelve lane rows in dynamics; equal two states and seven nonPP rows in cost reader. Sum-loss convention, not a renormalized mean-loss alpha. Source mass4; inner target mass6; outer target/reader mass8.",
+    "cost_features": "F(a) concatenates u(a)-u(PP), g0 tensor [u(a)-u(PP)], and Phi(predicted_state10(a))-Phi(predicted_state10(PP)). g0 contains mean rhoN/rhoH/rhoM/occupancy over global controlled lanes, focal incoming and focal receiving lanes. u contains nominal t10 mode3onehot, green_age/min_green, remaining/10,pending_allred/10,feasible_count/8,request_differs, and seven mean t0-rhoH-weighted color exposure fractions. Phi takes mean/std(ddof0)/min/max of four predicted normalized lane-state components. Predicted N>=0,H in[0,N],M>=0,occupancy>=0 are projected identically in all arms before Phi. No raw local-feature shortcut or actual future state.",
+    "PP_anchor": "Every feature is a PP difference or its t0 interaction. Reader is scale-only/no-intercept; PP features and score are exactly0. Choose minimum rounded12 delta-cost, tie preferring PP then original candidate order. No tuned switch threshold."
+  },
+  "nested_validation": {
+    "outer": [
+      [
+        76115801,
+        76115802
+      ],
+      [
+        76115803,
+        76115804
+      ],
+      [
+        76115805,
+        76115806
+      ],
+      [
+        76115807,
+        76115808
+      ],
+      [
+        76115809,
+        76115810
+      ]
+    ],
+    "inner": "For each outer fold, use the remaining four complete seed pairs as four inner folds. Each dynamics train uses6target seeds; inner-held predictions cover all8 outer-training seeds. Each arm's reader fits its own OOF predicted-response features and target450cost deltas only. Refit dynamics on8seeds for outer-held prediction; readers frozen. Outer2seeds enter no fit/scaler/calibration.",
+    "logical_fit_budget": {
+      "source_prefits": 2,
+      "inner_target_dynamics": 60,
+      "outer_target_dynamics": 15,
+      "target_cost_readers": 15,
+      "total": 92
+    },
+    "provenance": "Every OOF record must identify response-training, reader-training and held-out seed sets. No train-in predicted responses or actual heldout endpoint10 in reader inputs. Matrix caching does not change logical fit counts."
+  },
+  "primary": "Actual held-out chosen450cost=controlled-lane stopped-vehicle-seconds/(450*lane_count), first equal states within seed then equal10target seeds. S-T,S-P,S-PP approximate paired-seed95%t upper bounds(df9) must all be below0 for a development control signal. Response error/harmful overrides are secondary; no source superiority from response MAE alone.",
+  "stopping": "No new simulations/fits this preparation turn. Future collection must pass the declared interface/complete-case checks before the one92-fit run. A failed collection or performance gate keeps all cases and HOLD, without new weights/features/thresholds/extra seeds. Old HOLDs remain; this is OOF development, not independent or full-hour confirmation.",
+  "execution": "Approved jtl110gpu/jtl110gpu2/jtl311linux only; raw data/model coefficients remain server-side and only compact summaries/logs return locally. No changes to Thesis, old results or the manuscript."
+}

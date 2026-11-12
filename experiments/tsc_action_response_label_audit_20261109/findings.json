@@ -1,0 +1,120 @@
+{
+  "status": "COMPLETE_EXISTING_RESPONSE_COST_AUDIT",
+  "archived_groups": 28,
+  "archived_branches": 224,
+  "new_fits": 0,
+  "new_simulations": 0,
+  "chooser_evaluations": 0,
+  "cities": {
+    "cologne": {
+      "seed_count": 4,
+      "group_count": 8,
+      "descriptive_totals": {
+        "identical_Y_pairs": 55,
+        "sameY_pair_cost10_different": 0,
+        "sameY_pair_cost450_different": 45,
+        "sameY_pair_cost10_equal_but450_different": 45,
+        "has_identical_response_pair": 6,
+        "alias_group_450": 4,
+        "pp_alias_group_450": 4,
+        "alias_group_10": 0,
+        "pp_alias_group_10": 0
+      },
+      "equal_seed_statistics": {
+        "response_classes": 5.125,
+        "identical_Y_pairs": 6.875,
+        "sameY_pair_cost10_different": 0,
+        "sameY_pair_cost450_different": 5.625,
+        "sameY_pair_cost10_equal_but450_different": 5.625,
+        "has_identical_response_pair": 0.75,
+        "alias_group_450": 0.5,
+        "pp_alias_group_450": 0.5,
+        "mean_class_span_450_vehicle_seconds": 102.8875,
+        "max_class_span_450_vehicle_seconds": 295.25,
+        "pp_class_span_450_vehicle_seconds": 295.25,
+        "mean_class_span_450_per_lane": 0.02857986111111111,
+        "max_class_span_450_per_lane": 0.0820138888888889,
+        "pp_class_span_450_per_lane": 0.0820138888888889,
+        "alias_group_10": 0,
+        "pp_alias_group_10": 0,
+        "mean_class_span_10_vehicle_seconds": 0,
+        "max_class_span_10_vehicle_seconds": 0,
+        "pp_class_span_10_vehicle_seconds": 0,
+        "mean_class_span_10_per_lane": 0.0,
+        "max_class_span_10_per_lane": 0.0,
+        "pp_class_span_10_per_lane": 0.0
+      },
+      "seeds_with_sameY_different_cost450": 3,
+      "seeds_with_PP_sameY_different_cost450": 3
+    },
+    "jinan": {
+      "seed_count": 10,
+      "group_count": 20,
+      "descriptive_totals": {
+        "identical_Y_pairs": 2,
+        "sameY_pair_cost10_different": 0,
+        "sameY_pair_cost450_different": 1,
+        "sameY_pair_cost10_equal_but450_different": 1,
+        "has_identical_response_pair": 2,
+        "alias_group_450": 1,
+        "pp_alias_group_450": 0,
+        "alias_group_10": 0,
+        "pp_alias_group_10": 0
+      },
+      "equal_seed_statistics": {
+        "response_classes": 7.9,
+        "identical_Y_pairs": 0.1,
+        "sameY_pair_cost10_different": 0,
+        "sameY_pair_cost450_different": 0.05,
+        "sameY_pair_cost10_equal_but450_different": 0.05,
+        "has_identical_response_pair": 0.1,
+        "alias_group_450": 0.05,
+        "pp_alias_group_450": 0,
+        "mean_class_span_450_vehicle_seconds": 2.1785714285714284,
+        "max_class_span_450_vehicle_seconds": 15.25,
+        "pp_class_span_450_vehicle_seconds": 0,
+        "mean_class_span_450_per_lane": 3.361992945326279e-05,
+        "max_class_span_450_per_lane": 0.00023533950617283953,
+        "pp_class_span_450_per_lane": 0.0,
+        "alias_group_10": 0,
+        "pp_alias_group_10": 0,
+        "mean_class_span_10_vehicle_seconds": 0,
+        "max_class_span_10_vehicle_seconds": 0,
+        "pp_class_span_10_vehicle_seconds": 0,
+        "mean_class_span_10_per_lane": 0.0,
+        "max_class_span_10_per_lane": 0.0,
+        "pp_class_span_10_per_lane": 0.0
+      },
+      "seeds_with_sameY_different_cost450": 1,
+      "seeds_with_PP_sameY_different_cost450": 0
+    }
+  },
+  "jinan_example": {
+    "case_id": "jinan_seed10882387_t600",
+    "reference_index": 4,
+    "class_members": [
+      5,
+      6
+    ],
+    "contains_pp": false,
+    "range450": {
+      "stopped_vehicle_seconds_min": 84668,
+      "stopped_vehicle_seconds_max": 84973,
+      "stopped_vehicle_seconds_span": 305,
+      "mean_halted_per_lane_min": 1.306604938271605,
+      "mean_halted_per_lane_max": 1.3113117283950617,
+      "mean_halted_per_lane_span": 0.0047067901234567906
+    },
+    "range10": {
+      "stopped_vehicle_seconds_min": 1847,
+      "stopped_vehicle_seconds_max": 1847,
+      "stopped_vehicle_seconds_span": 0,
+      "mean_halted_per_lane_min": 1.2826388888888889,
+      "mean_halted_per_lane_max": 1.2826388888888889,
+      "mean_halted_per_lane_span": 0.0
+    }
+  },
+  "judgment": "Some archived same-state actions have identical focal10s movement count vectors and10s stopping integrals, yet different later realized stopping costs. The phenomenon is uncommon in this Jinan panel and never occurs in its PP class; it is not established as the cause of the target transfer failure.",
+  "next_step": "Do not restart closed regressors. A new action-response learner first needs a fixed current-network same-state action-cost measurement design; existing repaired-network PP observations alone cannot supply unexecuted-action labels.",
+  "limits": "Archived old networks, one realized future per action; no conditional-expected-cost, new chooser or current-network benefit conclusion. State/action timing/full trajectories can still carry information beyond Y10. Old HOLDs remain unchanged; archived costs are exposed diagnostic data."
+}

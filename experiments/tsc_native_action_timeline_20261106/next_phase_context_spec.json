@@ -1,0 +1,138 @@
+{
+  "protocol": "tsc-downstream-phase-context-development-v1",
+  "status": "PREPARED_NOT_RUN",
+  "purpose": "One fixed test of incremental action-linked downstream executor context on existing native labels.",
+  "parent_snapshot": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e",
+  "parent_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v158_native_prefix_ranking_calibration_20260911",
+  "history_root": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_predecision_history_20261106",
+  "development": {
+    "seeds": [
+      180314,
+      188625,
+      127178,
+      177524,
+      163775,
+      150945,
+      173412,
+      161481,
+      150744,
+      134310
+    ],
+    "action_groups": 100,
+    "candidate_rows": 800,
+    "new_simulator_trajectories": 0,
+    "max_new_fits": 5,
+    "labels": "original 450-second native one-action-then-PP cost; all 100 groups, not only nine timeline cases"
+  },
+  "inputs": {
+    "snapshot": "development_v1/seed_<seed>/full_traces_server_only.pkl, baseline_snapshot.executors only",
+    "network": "same original converted .net.xml files",
+    "time": "before current interval requests; neighboring PP may issue new requests at this same instant",
+    "existing": "all original history80 inputs, including local phase clock and legacy frozen B100 prediction columns"
+  },
+  "mapping": {
+    "candidate_connections": "Deduplicate (incoming lane,outgoing lane) for focal connections enabled by candidate G/g; call this M.",
+    "downstream": "Trace each outgoing lane to first downstream controlled receiving (TLS,lane) on each static path, retaining receiving lane; stop at controlled entrance. Reuse existing max_hops=24 convention.",
+    "weights": "Each focal connection has weight 1/len(M); divide it equally among its unique mapped downstream (TLS,lane) targets. Confirmed true network exits contribute zero.",
+    "downstream_permissions": "For each receiving lane, collect its unique controlled linkIndex values; p and u are fractions whose snapshot current_state characters are G and g.",
+    "clock": "c=1 in yellow/all_red; age=green_elapsed_sec; r=remaining_sec+pending_all_red_sec in yellow, remaining_sec in all_red, zero in green."
+  },
+  "new_action_features": [
+    {
+      "name": "ds_mapped_fraction",
+      "definition": "sum(w) over mapped receiving entries"
+    },
+    {
+      "name": "ds_protected_fraction",
+      "definition": "sum(w*p)"
+    },
+    {
+      "name": "ds_permissive_fraction",
+      "definition": "sum(w*u)"
+    },
+    {
+      "name": "ds_clearance_fraction",
+      "definition": "sum(w*c)"
+    },
+    {
+      "name": "ds_open_green_age_sec",
+      "definition": "sum(w*(p+u)*age)"
+    },
+    {
+      "name": "ds_clearance_remaining_sec",
+      "definition": "sum(w*c*r)"
+    }
+  ],
+  "design": "Append all six fields to existing action parents; existing CausalReferenceResidualRegressor uses candidate minus frozen PP action values. No feature subset search.",
+  "input_gate": {
+    "coverage": "All original groups/candidates must join their own checkpoint snapshot and net. Stop on missing executors, inconsistent state/linkIndex, or unresolved nonterminal paths; no group deletion or substitute data.",
+    "identifiability": "Report nonzero candidate-minus-PP groups per field and demand. If all five phase-conditioned fields are identically zero after PP differencing, stop without fitting; mapped fraction alone is insufficient.",
+    "fold_support": "If any fixed training fold has no nonzero phase-conditioned action contrast, stop and report the support limitation."
+  },
+  "crossfit": {
+    "folds": [
+      [
+        180314,
+        188625
+      ],
+      [
+        127178,
+        177524
+      ],
+      [
+        163775,
+        150945
+      ],
+      [
+        173412,
+        161481
+      ],
+      [
+        150744,
+        134310
+      ]
+    ],
+    "unit": "whole_seed",
+    "fold_count": 5,
+    "threshold": 0.0,
+    "threshold_selection": "fixed_before_native_outcomes"
+  },
+  "model": {
+    "config": {
+      "learning_rate": 0.05,
+      "max_iter": 100,
+      "max_leaf_nodes": 15,
+      "min_samples_leaf": 20,
+      "l2_regularization": 10.0,
+      "uncertainty_quantile": 0.9,
+      "random_state": 20260803
+    },
+    "state_feature_count": 35,
+    "action_feature_count": 68,
+    "fits": "one augmented model per original whole-seed fold; reuse frozen history80 OOF comparator"
+  },
+  "action_selection": {
+    "threshold": 0,
+    "no_stay_override_of_pp_switch": true,
+    "reference": "phase_pressure"
+  },
+  "analysis": {
+    "bootstrap_draws": 10000,
+    "bootstrap_seed": 20261106,
+    "primary_unit": "equal_simulator_seed_then_mean_of_10_groups_with_demands_4_3_3",
+    "comparisons": [
+      "phase_context_minus_history80",
+      "phase_context_minus_phase_pressure"
+    ],
+    "gate": "both paired 95% upper bounds below zero, positive net advantage versus PP, and harmful cost no greater than history80",
+    "report": [
+      "whole-seed paired cost",
+      "per-demand cost",
+      "overrides and harmful overrides",
+      "harmful and beneficial cost sums"
+    ]
+  },
+  "scope": "Exploratory reused development bank. Six-column bundle includes mapped coverage and phase-conditioned values; improvement would not by itself isolate a causal role for neighbor phase or validate closed-loop benefit.",
+  "limits": "Current permission is not a turn probability/service rate; timer remaining is not future green waiting time and does not foresee occupancy clearance extensions.",
+  "closure": "HOLD if input gate or performance gate fails. Do not tune fields, folds, horizons, thresholds, or add simulation after this result. A pass only supports preparing independent validation."
+}

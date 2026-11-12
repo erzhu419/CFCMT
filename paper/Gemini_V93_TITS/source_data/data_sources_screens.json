@@ -1,0 +1,119 @@
+{
+  "identity": {
+    "audit": "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_identity_screen_v1/audit.json",
+    "shards": [
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_identity_screen_v1/_shards/shard_0.json",
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_identity_screen_v1/_shards/shard_1.json",
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_identity_screen_v1/_shards/shard_2.json",
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_identity_screen_v1/_shards/shard_3.json",
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_identity_screen_v1/_shards/shard_4.json",
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_identity_screen_v1/_shards/shard_5.json"
+    ],
+    "input_rollouts": 256,
+    "exported_city_candidate_seed_rows": 128,
+    "candidate_count": 8,
+    "profile_count": 1,
+    "original_audit_delta_vectors_match": true,
+    "output": "source_identity.csv"
+  },
+  "weight": {
+    "audit": "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_weight_curve_v1/audit.json",
+    "shards": [
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_weight_curve_v1/_shards/shard_0.json",
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_weight_curve_v1/_shards/shard_1.json",
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_weight_curve_v1/_shards/shard_2.json",
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_weight_curve_v1/_shards/shard_3.json",
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_weight_curve_v1/_shards/shard_4.json",
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_weight_curve_v1/_shards/shard_5.json"
+    ],
+    "input_rollouts": 160,
+    "exported_city_candidate_seed_rows": 80,
+    "candidate_count": 5,
+    "profile_count": 1,
+    "original_audit_delta_vectors_match": true,
+    "output": "source_weight.csv"
+  },
+  "guard": {
+    "audit": "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_guard_screen_v1/audit.json",
+    "shards": [
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_guard_screen_v1/mean_only/_shards/shard_0.json",
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_guard_screen_v1/raw/_shards/shard_0.json",
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_guard_screen_v1/raw/_shards/shard_1.json",
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_guard_screen_v1/uncertainty_0p25/_shards/shard_0.json",
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_guard_screen_v1/uncertainty_0p5/_shards/shard_0.json",
+      "cf_h2o/results/cluster/tsc_v93_source_city_components_20260831/source_guard_screen_v1/uncertainty_0p5/_shards/shard_1.json"
+    ],
+    "input_rollouts": 256,
+    "exported_city_candidate_seed_rows": 128,
+    "candidate_count": 2,
+    "profile_count": 4,
+    "original_audit_delta_vectors_match": true,
+    "output": "source_guard.csv"
+  },
+  "scope": "V93 target development screens; not held-out confirmation",
+  "seeds": [
+    1349594,
+    3900758,
+    5883745,
+    6180752,
+    6345095,
+    7677617,
+    8729267,
+    9488138
+  ],
+  "seeds_per_city": 8,
+  "city_scenarios": {
+    "los_angeles": [
+      "la_1x4"
+    ],
+    "jinan": [
+      "jinan_3x4_real",
+      "jinan_3x4_real_2000",
+      "jinan_3x4_real_2500"
+    ]
+  },
+  "aggregation": "For each city/candidate/seed, arithmetic mean waiting over all its scenarios (three Jinan demands; one Los Angeles demand). Relative change is formed within this matched city/seed, then averaged over seeds for plotting.",
+  "data_fields": {
+    "source_mass": "Actual source-city prediction mass in the executed candidate; not alpha for the reference/pairwise component blend.",
+    "requested_source_mass": "Requested candidate-grid label; for Los Angeles the selected source is null so its actual source_mass remains zero even for selected_w1p0.",
+    "risk_multiplier": "Guard risk multiplier for this profile; empty means no guard, 0 is the mean-only guard. It is not an epistemic-dispersion coefficient learned from ensembles.",
+    "delta_vs_target_pct": "Relative waiting change against target_only run under the same guard profile, city, and seed.",
+    "delta_vs_raw_same_candidate_pct": "Guard-profile waiting change against the raw unguarded run of that same candidate, city, and seed. Only guard-screen rows vary in this field.",
+    "collision_incidents": "Sum across the city demand scenarios; other continuous metrics average across scenarios.",
+    "guard_profile": "raw disables the learned score-uncertainty guard; the common physical signal executor and sparse coordination remain in use. mean_only is the score guard with zero risk multiplier."
+  },
+  "limitations": [
+    "All three stages are development-only and sequentially selected; they are not independent confirmation.",
+    "The source-weight screen varies Atlanta mass only in Jinan. Los Angeles has no selected source; all its actual source masses are zero.",
+    "The guard screen fixes the selected source weight (Jinan Atlanta mass one; Los Angeles zero) and varies raw/mean-only/risk0.25/risk0.5. It is not a full source-weight by guard-factor experiment.",
+    "No switch-cost removal or per-mechanism ablation exists in these records.",
+    "These are genuine rollout aggregates, not individual-vehicle waiting samples or microscopic time-position trajectories."
+  ],
+  "selected_identity_mass": {
+    "jinan": {
+      "atlanta": 0.75
+    },
+    "los_angeles": {}
+  },
+  "selected_final_mass": {
+    "jinan": {
+      "atlanta": 1.0
+    },
+    "los_angeles": {}
+  },
+  "selected_guard_by_city": {
+    "jinan": {
+      "guard_config": {
+        "margin": 0.0,
+        "max_relative_rule_gap": 1.0,
+        "min_context_trust": 0.0,
+        "risk_multiplier": 0.5
+      },
+      "profile_key": "uncertainty_0p5"
+    },
+    "los_angeles": {
+      "guard_config": null,
+      "profile_key": "raw"
+    }
+  }
+}

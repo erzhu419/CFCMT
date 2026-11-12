@@ -1,0 +1,57 @@
+{
+  "status": "LOCKED_BEFORE_ANY_FRESH_RESPONSE",
+  "parent_census": "../tsc_jinan_fresh_opportunity_20261106/selection.json",
+  "frozen_predictions": "../tsc_hangzhou_matched_response_20261106/next_plan.json",
+  "controls": [
+    "hangzhou_matched",
+    "hangzhou_constant",
+    "paired permutations of Hangzhou labels",
+    "jinan_target_only"
+  ],
+  "cases": 28,
+  "seeds": [
+    33061101,
+    33061102,
+    33061103,
+    33061104
+  ],
+  "points": [
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      1,
+      3
+    ],
+    [
+      1,
+      4
+    ],
+    [
+      1,
+      5
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      2
+    ]
+  ],
+  "budget": {
+    "maximum_native_prefix_replays": 56,
+    "maximum_ten_second_branches": 56,
+    "fits": 0,
+    "policy_evaluations": 0
+  },
+  "execution": "For each locked row, replay the original PP prefix to the precise time twice. Before intervention verify vehicle and pending population, all signal executor states, preaction near counts, eight ordered candidates and the listed nominal one-second right/high-straight/low-straight sequences. Change only the focal signal and keep all other PP requests identical. Stop on safety, unreproducible start or missing event data. Retain observed clearance extensions and ties in the primary comparison; never replace a selected case.",
+  "scoring": "Keep clearance extensions, and score both movement deltas by absolute error, averaging movements within case, the represented seeds within point and then the seven points equally. Report paired per-seed losses, the full permutation distribution and the historical target-only lookup alongside the matched and constant source predictions. All controls are frozen before acquisition. Predictive evidence here concerns local movement counts; policy benefit requires a separate matched-capacity source addition/removal study and evaluation on untouched control seeds.",
+  "interpretation": "Report measured paired losses, component errors and per-seed differences. The permutation reference enumerates label assignments for the fixed lookup table. The primary analysis includes all frozen requested action pairs even if actual clearance shortens the exposure. The target estimand is expected error across these seven selected conditions, not an average over natural traffic frequencies or a control-performance estimand. No confirmatory significance threshold is specified."
+}

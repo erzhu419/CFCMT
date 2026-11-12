@@ -1,0 +1,128 @@
+{
+  "protocol": "tsc-native-direct-transfer-development-v1",
+  "status": "FROZEN_BEFORE_FITS",
+  "frozen_at_utc": "2026-11-06T06:41:42.509095+00:00",
+  "purpose": "One direct native Cologne-to-Jinan source-label comparison; physical cost and common preaction inputs, without restored-label model predictions.",
+  "parent_snapshot": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e",
+  "development": {
+    "seeds": [
+      180314,
+      188625,
+      127178,
+      177524,
+      163775,
+      150945,
+      173412,
+      161481,
+      150744,
+      134310
+    ],
+    "source_groups": 195,
+    "target_groups": 100,
+    "source_rows": 1560,
+    "target_rows": 800,
+    "max_new_fits": 15,
+    "new_simulator_trajectories": 0,
+    "labels": "Native one10saction then440sPhasePressure;450poststep samples; samePPreference andno-stayveto."
+  },
+  "crossfit": {
+    "folds": [
+      [
+        180314,
+        188625
+      ],
+      [
+        127178,
+        177524
+      ],
+      [
+        163775,
+        150945
+      ],
+      [
+        173412,
+        161481
+      ],
+      [
+        150744,
+        134310
+      ]
+    ],
+    "unit": "whole_seed",
+    "fold_count": 5,
+    "threshold": 0.0,
+    "threshold_selection": "fixed_before_native_outcomes"
+  },
+  "features": {
+    "state_feature_names": "PAIRWISE_CAUSAL_STATE_PARENTS",
+    "action_feature_names": "PAIRWISE_CAUSAL_ACTION_PARENTS",
+    "state_feature_count": 23,
+    "action_feature_count": 40,
+    "construction": "Shared physical state plus candidate-minus-PP action fields; no legacy predictor, source identity, context or history columns."
+  },
+  "target": {
+    "source_absolute_field": "interval_cost",
+    "target_absolute_field": "absolute_cost",
+    "formula": "(absolute_cost(a)-absolute_cost(PP))*controlled_lane_count*450",
+    "units": "halted_vehicle_seconds",
+    "source_cost_factor": 3600,
+    "target_cost_factor": 64800,
+    "normalization": "No group-range normalization or clipping; evaluate target outcomes in original per-lane units."
+  },
+  "model": {
+    "sklearn_version": "1.7.2",
+    "estimator": "HistGradientBoostingRegressor",
+    "config": {
+      "learning_rate": 0.05,
+      "max_iter": 100,
+      "max_leaf_nodes": 15,
+      "min_samples_leaf": 20,
+      "l2_regularization": 10.0,
+      "random_state": 20260803,
+      "loss": "squared_error",
+      "early_stopping": false
+    }
+  },
+  "arms": [
+    "target_only",
+    "source_target",
+    "source_placebo"
+  ],
+  "weighting": {
+    "total_weight": 560.0,
+    "source_fraction": 0.5,
+    "target_only": "All560mass on target:equal three demand domains, equal groups within domain, equal seven nonPPactions per group.",
+    "mixed": "Source280mass across195groups;target280mass equal across three demand domains and their groups.",
+    "normalization": "No subsequent unit-mean row normalization. T uses onlytarget rows;S/Puse identical source+targetX andweights.",
+    "leaf_support": "Same hyperparameters and totalmass; source data change binning and leaf composition, which are not claimed identical."
+  },
+  "placebo_seed": 20261106,
+  "placebo": "Permute seven nonPP physical delta labels within each source group once before folds; PP stays zero; no target label permutation.",
+  "prediction": {
+    "target_cost_factor": 64800,
+    "threshold": 0,
+    "no_stay_override_of_pp_switch": true,
+    "score": "Direct raw cost delta regression; PPscore0. Divide prediction by64800 then use unchangedV158 _select_row includingties andno-stayfallback."
+  },
+  "analysis": {
+    "bootstrap_draws": 10000,
+    "bootstrap_seed": 20261106,
+    "primary_unit": "Equal10targetseeds;withinseed10groups withdemands4/3/3",
+    "comparisons": [
+      "source_target_minus_target_only",
+      "source_target_minus_source_placebo",
+      "source_target_minus_phase_pressure"
+    ],
+    "gate": "Allthree paired95percentupperbounds<0 and source_target rawharm_sum<=target_only.",
+    "report": [
+      "allseed/demandmeans",
+      "benefit/harmcountsandsums",
+      "trainingrow/group/domainweight",
+      "physicalcostscaleaudit"
+    ],
+    "multiplicity": "Exploratory conjunctivegate: allcomparisons mustpass, noselectbestarm. Reuseddevelopmentbank is notindependentconfirmation."
+  },
+  "scope": "Cologne1TLS8lanes toJinan12TLS144lanes. Physicalunits remove per-lane dilution but do not equate network propagation. Original100targetgroups are a repeatedlyused model-disagreement challenge set.",
+  "closure": "HOLD on failed input or fixedperformancegate; no objective/weight/feature/threshold/leaf-size tuning. PASS authorizes preparation of frozen new-prefix validation under a separate prospective budget; fullclosedlooponlyafterthatvalidation.",
+  "execution": "One scheduled CPUjob,15fitsmax,0simulations, noautomaticrequeue. Preserve all completedfitrecords and originalbanks; retrieve small summaries only."
+}

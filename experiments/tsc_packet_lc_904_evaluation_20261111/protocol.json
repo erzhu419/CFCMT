@@ -1,0 +1,53 @@
+{
+  "status": "COMPLETE_904_NATURAL_THREE_POINT_EVALUATION",
+  "scope": "Build only the269 missing numerical caches for the frozen340-row904 natural-frequency regression cohort and read three frozen models. No new native simulation, fitting, calibration or resampling.",
+  "population_and_weights": "Exactly56 left,61 right and223 sampled stay rows, unchanged registered identities, pi and raw/objective weights. Denominator10000, raw class totals56/61/9883 and event frequency1.17%. Do not substitute the training denominator30000 or forced historical pair controls.",
+  "methods": {
+    "exact": {
+      "cases": 312,
+      "reused": 70,
+      "new": 242,
+      "new_full_forward_ceiling": 4908,
+      "new_feature_ceiling": 1870,
+      "new_exact_leaf_ceiling": 35280
+    },
+    "mixture256": {
+      "cases": 28,
+      "reused": 1,
+      "new": 27,
+      "new_full_forward_ceiling": 6912,
+      "new_feature_ceiling": 22336,
+      "new_exact_leaf_ceiling": 0
+    }
+  },
+  "proposal": "Retain the original first-fit candidate as qf, with corrected equal q0/qf mixture, interleaved128+128 and denominator0.5q0+0.5qf. Preserve the reused mixed pool's seeds; new mixed seeds are20261210+100000*case_index and20261211+100000*case_index, fixed before numerical readouts. No proposal refresh, extra particles or reuse of q0 as a balanced mixture.",
+  "models": "Exactly the old424 LC point, new1000 LC point and existing training-frequency bias reference from frozen_models_server_only.json. Do not change coefficients, thresholds, priors or the reference's165/166/29669 training counts based on904 labels.",
+  "readouts": [
+    "Require all340 native LC losses and gradients to be supported and finite at each frozen point and both128/256 mixed prefixes, retaining exact cases in both views. Report overall/per-class natural-weight NLL, support, normalization and mixture ESS/weight diagnostics. Do not floor or drop unsupported cases.",
+    "Report natural-weight multiclass Brier score and predicted class totals sum(raw_weight*Pclass), alongside the observed56/9883/61 totals. These are fixed-model calibration diagnostics; do not fit a bias or calibration mapping.",
+    "Report naturally weighted one-direction-versus-stay discrimination with its own population weights and explicit zero-permission cases. Keep previous matched62-pair regression separate, without treating the two sampling designs as identical.",
+    "Compare128/256 loss and probability-readout sensitivity. All three targets may have raw importance weights>2 because none is the q0/qf endpoint; record concentration without clipping."
+  ],
+  "budgets": {
+    "new_full_forward_calls_max": 11820,
+    "new_canonical_feature_evaluations_max": 24206,
+    "new_exact_leaf_visits_max": 35280,
+    "new_native_starts": 0,
+    "new_coefficient_fits": 0,
+    "optimizer_invocations": 0,
+    "new_nuisance_estimations": 0,
+    "new_synthetic_full_forward_calls": 0,
+    "workers_max": 3
+  },
+  "exposure": "Previously exposed904, internal natural-frequency regression only. No independent-confirmation or control-benefit claim.",
+  "storage": "Run on jtl110gpu2; retain caches, coefficients and per-case arrays server-side, retrieve compact summaries only.",
+  "stopping": "Stop after fixed-point readouts. On native support/nonfinite/budget failure, preserve the failed record and consumed work and stop scheduling new cases; no automatic retry, resampling, particle increase, refit or budget extension. Preserve prior results, HOLD, V93, manuscript and Thesis.",
+  "authorized_by": "User: 可以启动后续",
+  "frozen_at_utc": "2026-11-11T07:53:43.377302+00:00",
+  "parent_protocol": "../tsc_packet_lc_904_registration_20261111/next_protocol.json",
+  "started_at_utc": "2026-11-11T07:54:28.860436+00:00",
+  "execution": "execution.json",
+  "server_result": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_lc_904_evaluation/evaluation/result.json",
+  "completed_at_utc": "2026-11-11T08:39:32.616865+00:00",
+  "result": "result.json"
+}

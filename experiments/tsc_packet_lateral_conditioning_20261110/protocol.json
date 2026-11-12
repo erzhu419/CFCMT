@@ -1,0 +1,43 @@
+{
+  "status": "COMPLETE",
+  "scope": "Define candidate-conditioned lateral feasibility and a corresponding local probability before any further fitting, using the exact nine remaining lane-positive exclusions and existing records only.",
+  "basis": "Discrete braking restores all original578 motion proposal deficits and3 entering positives without new hard exclusions, but motion/start theta0 NLL worsen on all four seeds. The original9 lateral positives still have zero local label likelihood; the full theta0 objective remains infinite.",
+  "first_step": "State explicitly which longitudinal motion, focal lateral action and neighbour braking/lateral action are conditioned on or integrated out. Separate current static lane/road legality from future gap constraints; do not treat a neighbour staying at one point forecast as the only possible future.",
+  "fixed_cases": "The same9 original lane-positive references: five rear-neighbour overadvance, two front neighbours changing away, two focal overadvance. Read the already saved current states and new discrete candidate details; do not resample favourable cases.",
+  "mechanism_checks": [
+    "For the five rear cases, determine whether the current-only candidate lane action can condition the neighbour response while preserving body/space constraints; do not insert its observed future brake as an online predictor.",
+    "For the two leaving-front cases, distinguish a missing lawful lateral branch from a longitudinal speed error. Candidate alternatives must be based on current topology and declared intent priors, not chosen using the observed destination.",
+    "For the two focal-overadvance cases, retain the declared residual domain and distinguish a feasible motion/action branch from the zero-residual point mask.",
+    "A feasible branch or union of branches establishes feasibility only. Specify normalized weights and the parameter/gradient dependence before calling it a likelihood or claiming that fitting can resume."
+  ],
+  "controls": "Freeze the discrete longitudinal formula, entity2m geometry, lane/prefix3.2m, priority/reservation rules, original labels/history laws/seeds, residual domain and all archived comparators. No epsilon floor, outcome-selected path, or threshold tuning to remove exclusions.",
+  "deliverable": "A bounded mathematical conditioning/order definition, exact-case feasible/unresolved evidence and a decision about whether a tractable shared objective can be implemented. Do not modify the production forward operator before that definition is concrete.",
+  "after": "If a coherent shared formulation exists, separately define its full frozen-record comparison and fitting budget. Preserve the old iteration-limit HOLD. No automatic optimization, calibration or rollout.",
+  "new_native_starts": 0,
+  "new_fits": 0,
+  "new_nuisance_estimations": 0,
+  "optimizer_calls": 0,
+  "free_rollouts": 0,
+  "calibration_seeds_used": false,
+  "loss_decomposition": "Already completed on existing arrays: old578 motion gains are outweighed by the other39422; start/LC loss increases chiefly occur among actual non-events. This is not an unfinished next-stage task.",
+  "authorized_at_utc": "2026-11-10T06:11:01.242318+00:00",
+  "authorized_by": "User: \u7ee7\u7eed\u4e0b\u4e00\u6b65",
+  "server_host": "jtl110gpu2",
+  "server_root": "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_lateral_conditioning",
+  "finite_witness_design": "Participants=focal plus current directly denying neighbours across all positive-prior intents and both statically lawful sides. For each intent enumerate r_j in {0,-b_j}; fresh resolver for every tuple; every selected actor enumerates all post-longitudinal topology/goal legal sides and stay. Observed label enters only the final readout.",
+  "local_geometry": "Include every same-road actor whose [x,x+P] outer endpoint can violate a participant landing gap; assert all included actors remain interior to that ordinary road. Resolve shared current-state dependencies unmodified.",
+  "execution_check": "Check all included joint landing gaps; separately check forced desired actions in the frozen production packet order using its goal/gap/body rules. Outside lateral actions stay as an intervention.",
+  "evidence_limits": "Residual endpoints are external interventions, not samples from the190-coefficient model or proof of shared-beta realizability. Endpoint geometry and order witnesses do not establish native subsecond trajectories. No probabilities assigned to the residual endpoint atoms.",
+  "conditional_lc_probability": "For every fixed intent and external residual tuple separately, enumerate the whole static-goal lawful LC tuple set and evaluate original sequential dynamic masks. Lane logits are fixed at0; each allowed desired action has factor1/|A_t|, illegal tuples mass0. Verify total LC mass1, report per-class marginal and endpoint-F mass separately. Never average over residual tuples or infer a residual probability law. Background lateral actions are do(stay), nonfocal intents are the fixed current prior draw.",
+  "intent_marginal_completion": {
+    "registered_at_utc": "2026-11-10T06:20:21.694634+00:00",
+    "scope": "Complete the declared current-history latent intent marginal on all9 cases, preserving the held-neighbour-goal result as control.",
+    "design": "For each fixed participant pair, enumerate every positive prior focal and denier goal including incompatible/END. Install both connections, rebuild receiving context, and re-run fresh residual/action branches. Mix only pi_f*pi_n within the same residual slice; no weighting or mixture over residual interventions.",
+    "output": "output_intent_marginal",
+    "review": "Within original authorized scope; no future-goal selection, no new nuisance estimation."
+  },
+  "completed_at_utc": "2026-11-10T06:29:29.261309+00:00",
+  "held_goal_result": "summary.json",
+  "intent_marginal_result": "intent_marginal_summary.json",
+  "scientific_status": "HOLD_GENERAL_SHARED_MOTION_OBJECTIVE"
+}

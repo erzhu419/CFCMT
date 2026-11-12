@@ -1,0 +1,17 @@
+{
+  "status": "EXECUTED_ZERO_FIT",
+  "scope": "One zero-fit shared same-step receiving-motion prototype and paired readout using existing training records.",
+  "reason": "Two fixed native cases exceed the current-body cap while the same receiving vehicle advances and the end gap stays above2.5m; _speed applies the static cap before _move can update occupancy.",
+  "implementation": "Separate physical velocity proposal from shared same-step receiving/body resolution; align conditional training readout and forward motion. Inspect receiving dependency order so resolved motion can release space. Do not replace model predictions with observed next packets.",
+  "controls": "Freeze explicit entity width2.0m, lane widths and receiving prefix3.2m, model family, residual law, right of way and conflict reservation timing. Preserve the unresolved t716 local-zone ordering.",
+  "readout": "Test moving and stopped receivers, body-tail fragments and receiver dependencies. Then reproduce the frozen entity baseline and compare all original40000 yield references and all253 internal probes, including the two exact static-cap cases and the unresolved spatial case; report every new exclusion.",
+  "native_records": "Original four training trajectories only; calibration seeds76116911/76116912 untouched.",
+  "new_native_starts": 0,
+  "new_fits": 0,
+  "new_nuisance_estimations": 0,
+  "free_rollouts": 0,
+  "after": "Assess causal input support and any new constraints before separately considering fitting or calibration budgets; retain all prior HOLD evidence.",
+  "execution": "../tsc_packet_same_step_receiving_20261110/execution.json",
+  "result": "../tsc_packet_same_step_receiving_20261110/result.json",
+  "outcome": "40000 baseline rows reproduced;253 internal ceilings3 to1,2 repaired and0 new; positive permissions unchanged, zero permissions11 added. No fit/native/calibration."
+}

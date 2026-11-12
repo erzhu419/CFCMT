@@ -1,0 +1,26 @@
+{
+  "protocol": "existing-rollout-simulator-incident-aggregation-v1",
+  "sources": [
+    "execution_rollouts.csv",
+    "recompute_execution_summaries.py"
+  ],
+  "total_rollout_count": 1344,
+  "rollouts_per_method": 224,
+  "scenarios_per_method": 4,
+  "seeds_per_scenario": 56,
+  "simulation_horizon_sec": 3600,
+  "aggregation": "Unweighted sums of per-run counts over all four scenarios and 56 seeds; these are not equal-city mean counts.",
+  "units": {
+    "collision_incidents_total": "Sum of within-run distinct simulator collision-incident keys",
+    "collision_events_total": "Raw collision records returned by simulation.getCollisions(), summed over steps and runs; continuing contacts can be counted repeatedly. This is not a colliding-vehicle count.",
+    "rollouts_with_collision_incidents": "Number of runs with at least one collision incident",
+    "starting_teleports_total": "SUMO teleport starts, summed over runs and steps",
+    "ending_teleports_total": "SUMO teleport ends, summed over runs and steps"
+  },
+  "collision_incident_definition": "Within each run, deduplicate by sorted collider/victim vehicle IDs, collision type, and lane; the same key can contribute multiple raw collision records over steps.",
+  "implementation_reference": "cf_h2o/eval/traffic_signal_resco_cfcmt_v3.py:_collision_incident_key and evaluate_policy_v3",
+  "raw_collision_events_status": "Read-only remote aggregation of existing result.json covered all 1,344 runs; every run contained raw event and deduplicated incident counters. No simulation or replay was performed.",
+  "crosscheck": "All six incident and teleport sums exactly match the existing compact confirmation_rollouts.csv; raw event totals are 26/28/36/41/39/36 for CFCMT/anchor/equal/dense/PP/MP.",
+  "scientific_scope": "Descriptive simulator diagnostics; no collision-free or comparative safety claim.",
+  "recompute_command": "python3 recompute_execution_summaries.py --out ."
+}

@@ -1,0 +1,91 @@
+{
+  "status": "LOCKED_BEFORE_LATE_MOTION_DIAGNOSTIC",
+  "date": "2026-11-09",
+  "scope": "Existing-record description only; no model/action/calibration fit, new simulation/data, threshold or horizon selection.",
+  "previous_stage": "tsc_corridor_outcome_decomposition_20261109",
+  "frozen_contexts": [
+    [
+      true,
+      1,
+      "(0.5,0.9]",
+      false
+    ],
+    [
+      true,
+      1,
+      "(0.5,0.9]",
+      true
+    ],
+    [
+      true,
+      2,
+      "(0.5,0.9]",
+      false
+    ],
+    [
+      true,
+      2,
+      "(0.5,0.9]",
+      true
+    ],
+    [
+      true,
+      3,
+      "(0.5,0.9]",
+      false
+    ],
+    [
+      true,
+      4,
+      "(0.5,0.9]",
+      false
+    ],
+    [
+      true,
+      5,
+      "(0.5,0.9]",
+      false
+    ],
+    [
+      true,
+      5,
+      "(0.5,0.9]",
+      true
+    ],
+    [
+      true,
+      7,
+      "(0.5,0.9]",
+      false
+    ]
+  ],
+  "cohort": "Same40 hours and nine frozen contexts; all eligible records in them. Othercity donor8h only as source, own local3x2h anddev6h; pilots/reserved excluded.",
+  "conditioning": "On unlocked rows, preceding sameTLS PP request identifies currentgreen; existing exact nominal reconstruction yields currentphase aggregate halted count, zero versuspositive. Edge currentprotected from that recovered candidate mask. Locked/joint-unidentified separate unknown; no lane queue fabricated.",
+  "populations": "All matched nonspillback moving flights with full10s outcomes. Primary target-dev reference unlocked (actual choice opportunity); secondary reference allobservable. Source/adapt fulloriginal observable population retained, including unknown.",
+  "weights": "Within each frozen context and paired adapt/dev block, fixed empirical dev state weights on identifiable states common to source/local_adapt/dev. Source8h unchanged acrossblocks. Also pooled andperdevseed with pairedlocalblock; all6seeds retained.",
+  "detector_horizon_sec": 10,
+  "late_definition": "Original straight_after10: same release finalstatus straight andobserved end_s>t+10.",
+  "motion_classes": [
+    "stopped_at10",
+    "moving_straight_at10",
+    "moving_other_lane_at10"
+  ],
+  "other_outcome_classes": [
+    "straight_by10",
+    "other_by10",
+    "other_after10",
+    "terminal_by10",
+    "terminal_after10",
+    "censored"
+  ],
+  "future_record": "Use complete raw sameTLS row at exactlyt+10, matched full(edge,vid,entry_s). Never filter future spillback/unmatched or reapplyoriginalriskmask. Trulyobserved late endpoint implies futuret<3600 and a recordeddecision exists.",
+  "stop_inference": "Given same release stillactive beforefuture straight completion, absent fromcomplete futuremoving list means speed<0.1m/s at thatsample by ArrivalSensor logic. Missing future row is anerror, never a stop. No claim ofcontinuousstop or signalcause.",
+  "progress": "Only for current/future on same monitoredstraight lane: remaining_now-remaining_future, dividedby10 gives netadvance average, notinstantaneousspeed or proof ofuninterruptedmovement. Otherlane retained as separate motion class.",
+  "reproduction": "Reaggregate three motion classes tostraight_after10; reproduce allprior7outcomes, raw0..10 categorycounts, CDFs, roster, support andstateweights/block/seed. Integers exact, inheritedfloating summaries tolerate1e-12.",
+  "decomposition": "Threejoint motion probabilities use old full/common/devstandardized denominators and weights; sum to priorlate probability. Gap decomposition sumsthree late differences. All9outcomes sum1. Conditional late fractions are separatelylabelled, never redefineweights.",
+  "progress_aggregation": "Sumprogress peroriginal eligiblesnapshot andcomparable-observation probability standardized under original stateweights, then divide toobtain meanprogress amongcomparable movingstraight records; preserve counts/coverage.",
+  "aggregation": "Source8hours/local3x2h/dev6h with same source/target mapping. Preserve perhour, threeblocks, sixdevseeds, fullunknown/support mass andpooled descriptions. No city/seed/context omission.",
+  "execution": "jtl110gpu2, onehour rawrecords in servermemory atatime; pullcompressed aggregate only. No raw trajectory ormodel downloads.",
+  "interpretation": "Correlated repeated snapshots on reused posthoc contexts. Motion inferredat future10s sample only and used solely fordiagnosis. No future inputs enter predictor/action, no independent confirmation orcounterfactual controlcost.",
+  "prior_development_gate": "DEVELOPMENT_SIGNAL_ONLY unchanged; no newgate or automaticnative branches."
+}

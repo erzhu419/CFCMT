@@ -1,0 +1,41 @@
+{
+  "status": "AUTHORIZED",
+  "reason": "Knownmask clock inconsistency fixed; originalHOLD and all paid records retained.",
+  "prior_native_starts_including_measurement": 13,
+  "prior_fitting_operations": 5,
+  "original_failed_study": "target_packet_training/fit_result.json",
+  "reuse": "The same4 native training trajectories, exact frozen reservoirs/references, actual profiles and4 already estimated target laws. No new nuisance-law estimation or training simulation.",
+  "correction": "For every retained and originally sampled lane-change row, build masks from focal and neighbour positions at the same predicted post-longitudinal clock. Use only current state/known current action/zero-residual geometry. Never observed future positions or an epsilon/label-specific exception.",
+  "validation": "Reconstruct the correctedlane training records with the unchanged reservoir/current-risk rules; no refill, label rescue or dropping unsupported positives. Before fitting check all prior-supported label classes; any remaining zero support stops and retains evidence. The known-row replay alone is not full-data admission.",
+  "new_budget": {
+    "training_native_starts": 0,
+    "nuisance_law_estimations": 0,
+    "joint_optimization_attempts_maximum": 1,
+    "calibration_native_starts_maximum": 2,
+    "calibration_seconds_per_seed": 1800,
+    "model_free_scenarios_if_admitted": 32,
+    "model_free_seconds_maximum": 14400,
+    "conditional_diagnostic_steps_maximum": 360,
+    "source_fits": 0,
+    "source_native_starts": 0
+  },
+  "cohorts": {
+    "training_seeds": [
+      76116901,
+      76116902,
+      76116903,
+      76116904
+    ],
+    "calibration_seeds": [
+      76116911,
+      76116912
+    ]
+  },
+  "cumulative_native_starts_if_all_run": 15,
+  "cumulative_fitting_operations_if_attempted": 6,
+  "unchanged": "38features/190coefficients, zero initialization, fixedsingleL-BFGS-B/L2,4window/8scenario roles and all technical tolerances; no calibration retuning. Pilot remains excluded.",
+  "execution": "New output/model/receipts for the corrected candidate; never overwrite originalfailed arrays/model attempts. Construct features in up to4 independent seed workers if useful without changing data/order/settings.",
+  "after_failure": "Stop current corrected candidate with no automatic fit retry, replacement calibration seed or new source study.",
+  "after_pass": "Only a separately budgeted source-increment T/S/P action-cost proposal; no claim of control or transfer benefit from technical admission.",
+  "authorized_by": "User: 继续下一步, 2026-11-10"
+}

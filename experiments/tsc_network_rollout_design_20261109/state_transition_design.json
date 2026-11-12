@@ -1,0 +1,98 @@
+{
+  "design": "network-packet-PP-rollout-v1",
+  "status": "DESIGN_READY_FOR_MEASUREMENT_IMPLEMENTATION_NOT_MODEL_VALIDATION",
+  "objective": "Test a recursively updated network model under the original signal executor and PP feedback; source information can later serve as a local-dynamics prior, while target data calibrate target conditions.",
+  "time": {
+    "inner_step_seconds": 1,
+    "PP_decision_interval_seconds": 10,
+    "single_intervention_horizon_seconds": 450
+  },
+  "state": {
+    "S_s": "Tuple(P_s,E_s,B_s,Z_s): model state just before possible control requests at integer second s.",
+    "P_s": "One mass-one packet per active vehicle: lane, exact front position, speed, acceleration/lateral state, parameter profile, causal body trail and persistent latent intended movement. Internal-lane packets remain explicit.",
+    "E_s": "All-TLS complete signal strings, current/target green identities, mode, green age, remaining and pending-allred clocks; static timings and clearance sets remain attached.",
+    "B_s": "Boundary due/pending/inserted inventory and causal arrival/turning beliefs. Unobserved entry allocation is uncertain state, not zero demand.",
+    "Z_s": "Last-step lane N/H/nativeO/speed registers used by the unchanged policy and physical cost.",
+    "G": "Static lane/link geometry and directed conflict/receiving graph, including ordered internal paths.",
+    "claim": "A closed state for a declared approximate model. Driver memory, intent and road sensing remain approximations, not an exact SUMO Markov-state claim."
+  },
+  "one_second_transition": [
+    {
+      "order": 1,
+      "equation": "Ebar_s = Request(E_s,A_s)",
+      "meaning": "At a decision epoch, apply all requests once with the original feasible-state/min-green/clearance rules. At other seconds A_s is empty."
+    },
+    {
+      "order": 2,
+      "equation": "U_s = Signal(Ebar_s)",
+      "meaning": "Complete per-link applied signals for the following one-second movement interval."
+    },
+    {
+      "order": 3,
+      "equation": "(P_next,B_next,trace_s) = F_theta(G,P_s,B_s,U_s,W_s)",
+      "meaning": "Local physical transition kernel moves conserved packets, handles legal lane/link transfers and receiving supply, and processes due demand through pending queues. W_s contains model-generated exogenous outcomes, not measured future events."
+    },
+    {
+      "order": 4,
+      "equation": "Z_next = Aggregate(P_s,P_next,trace_s)",
+      "meaning": "Reconstruct front-assigned lane vehicle and halted counts, native occupancy using body portions and matching speed registers from predicted evolution."
+    },
+    {
+      "order": 5,
+      "equation": "E_next = Advance(Ebar_s,1,Z_next)",
+      "meaning": "Use the same executor update order as the native producer: after movement, poll predicted clearance-lane vehicle counts and advance clocks."
+    },
+    {
+      "order": 6,
+      "equation": "S_next = (P_next,E_next,B_next,Z_next)",
+      "meaning": "After ten inner steps, calculate the next PP request from this predicted state. There is no true-state reset."
+    }
+  ],
+  "policy": {
+    "lane_score": "q_l = H_l +0.35*N_l +0.025*O_l, with native fraction O on the fixed runtime.",
+    "PP": "Maximize sum(q_l) over the original deduplicated incoming lanes with any G/g-permitted link, constrained by the executor. Preserve original canonical tie order.",
+    "dynamics_signal_semantics": "A packet transition distinguishes exact connections, G/g priority, foes, yields and receiving supply; this does not replace the original PP scoring rule.",
+    "cost_counts": "H_l counts packets with speed<0.1m/s using the lane getter membership convention; body overlap affects occupancy, not duplicate packet mass.",
+    "clearance_counts": "Match the original lane vehicle-number getter on the specified clearance lanes; do not redefine clearance as any body overlap if the native getter would not count it."
+  },
+  "model_components": {
+    "shared_local_dynamics": "A graph/local-parent transition kernel for longitudinal motion, stop/start, lane changes, junction passage and receiving constraints. Source and target use physical units and identical parent semantics.",
+    "deterministic_structure": "Mass accounting, static connection legality, packet identity, actuator state machine, policy and cost integration are explicit operators.",
+    "target_only_beliefs": "Boundary arrival process, fleet distribution for unseen entrants and turning beliefs are estimated from causal target observations. S/T/P later share these beliefs and the target data.",
+    "source_prior": "Source may regularize transferable local motion/passage parameters. It does not supply a source450 cost head or a future target traffic schedule.",
+    "fitting_family": "Statistical kernel family, complexity, source-placebo construction and training budget require a later protocol after measurement admission; none is fitted in this design step.",
+    "scaling": "Use declared physical-unit normalizations in any later model. No automatic promotion of tiny empirical feature RMS into large decision weights; numerical scaling must be frozen and reviewed with the model protocol."
+  },
+  "single_intervention_planning": {
+    "Q_PP": "For each legal focal request a, average C450 across model-generated future scenarios: C450=sum over seconds1..450 of controlled-lane halted packets divided by(450*controlled_lane_count). Other TLS use PP at the initial epoch, and every TLS uses its own predicted-state PP thereafter.",
+    "comparison": "Within each scenario use the same initial observed state and exogenous demand/latent-intent draws across all candidates. Retain blocked external packets rather than changing due demand with the action.",
+    "scenarios": "Scenario number and the causal boundary/intent model must be frozen with the later planning protocol. No actual future departure schedule, actual future PP request or future packet state is supplied.",
+    "first_action": "Compare candidate-minus-predicted-PP cost; score ties prefer the actual initial PP request then canonical order. No post-hoc threshold search is proposed.",
+    "learned_scalar_cost_head": false
+  },
+  "policy_scope_limit": {
+    "current": "Only the first focal request followed by450-second own-state PP continuation is specified. Closed-loop here means predicted traffic interacting with predicted PP/executor feedback.",
+    "not_established": "A learned controller selecting new model actions every10seconds is a different policy; no benefit or policy-consistent label claim transfers automatically.",
+    "future_full_hour": "Before a new one-hour panel, specify control scope, decision cadence and continuation. Nonoverlapping450-second options preserve each option continuation;10-second receding model control needs its own policy-improvement hypothesis and independent evaluation. Neither is selected in this design."
+  },
+  "existing_assets": {
+    "reuse": "Frozen repaired Jinan network, original423dc producer, SUMO1.22, SafePhaseExecutor, native-prefix semantics, static lane/link and conflict readers, population ledgers and prior sparse measurements.",
+    "cannot_reuse_as_new_training": "Old20 target states, the closed reader recipe and the proposed eight-branch measurement pilot are not new independent training/evaluation evidence.",
+    "new_implementation_before_measurement": "Passive prefix/body-trail recorder; dense all-network per-second packet/lane/flow logging; native PP/executor replay and sensor/cost ledger admission. No learned kernel or planner is required to run that measurement pilot."
+  },
+  "next_stage": "Eight-start measurement-only proposal, specified in measurement_protocol_proposed.json. It has not run.",
+  "references": [
+    {
+      "url": "https://arxiv.org/abs/2011.03506",
+      "use": "Motivates testing model usefulness for value/planning; does not establish this proposed architecture."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/eclipse-sumo/sumo/v1_22_0/src/libsumo/Lane.cpp",
+      "use": "Native1.22 lane getters and occupancy forwarding."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/eclipse-sumo/sumo/v1_22_0/src/microsim/MSLane.cpp",
+      "use": "Native occupancy is occupied vehicle-body length divided by lane length, with partial bodies."
+    }
+  ]
+}

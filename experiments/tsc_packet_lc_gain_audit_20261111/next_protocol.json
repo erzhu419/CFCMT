@@ -1,0 +1,25 @@
+{
+  "status": "EXECUTED",
+  "scope": "Register a natural-frequency regression cohort on the existing904 trajectory, using archived current states only. Sampling, inclusion weights, cache inventory and symbolic costs; no new numerical model readout, cache construction or fit.",
+  "population": "The original10000 LC reservoir rows on seed76116904:56 left,61 right,9883 stay. Retain all117 positives. Sampling units remain(seed,time,packet) rows; no vehicle exclusions or one-row-per-vehicle rule.",
+  "negative_selection": "Sample exactly223 stay rows. Freeze four disjoint00/10/01/11 bins by current-state proximity to the original331 training positives from901-903, using the same original stratum, exact lane/direction,2m/s speed and15m lane-end-distance tolerances. Do not use904 positive states or model errors to construct bins. Undefined static adjacent strata remain non-matches and are not dropped.",
+  "allocation_and_randomness": "Use the previous fixed waterfill rule and bin order00,10,01,11: capped equal floor allocation over nonempty bins, then repeated fixed-order remainders. Within reference-sorted bins, SRS without replacement with SeedSequence[20261111,76116904,bin_index]. No alternate samples, seeds or sample-count changes after seeing coverage or cost.",
+  "weights": "For selected stay in binh use pi=nh/Nh, raw_weight=Nh/nh and objective_weight=raw_weight/10000. Positive raw_weight1 and objective_weight1/10000. Exactly340 selected rows, total raw weight10000 and original117/10000 event frequency; do not reuse the training denominator30000.",
+  "frozen_models": "Keep the old424 LC point, new1000 LC point and the existing training-class-frequency bias reference fixed. Do not recalibrate the reference bias using904 class counts, choose a point using904, or optimize any coefficients.",
+  "reuse_and_cost": "Freeze sampling before cache lookup. Reuse compatible existing904 exact or balanced original-anchor mixed caches only for selected row identities; existing paired controls are not forced into the sample. Prefer compatible paid exact laws, then compatible mixed laws; for missing rows register exact if the physical ceiling<=256, otherwise fixed-anchor mixture256. Keep the complete current stochastic set at max10. Report all symbolic F/feature/leaf bounds and any obstruction without resampling or building caches.",
+  "exposure": "904 was not used for the latest76-variable LC update but was already exposed through priors and historical development and earlier pair regression. This is internal natural-frequency regression, not independent confirmation.",
+  "budgets": {
+    "new_full_forward_calls": 0,
+    "new_canonical_feature_evaluations": 0,
+    "new_native_starts": 0,
+    "new_coefficient_fits": 0,
+    "optimizer_invocations": 0,
+    "new_numerical_likelihood_readouts": 0,
+    "new_particle_pools": 0
+  },
+  "storage": "Census and registration on jtl110gpu2; keep row identities and current states server-side, retrieve compact summaries only.",
+  "stopping": "Stop after the340-row frozen registration, weight and cost report. No new physical/numerical likelihood evaluation, fitting, calibration or automatic budget extension. Preserve old data, HOLD records, V93, manuscript and Thesis.",
+  "completed_at_utc": "2026-11-11T07:16:35.955134+00:00",
+  "executed_protocol": "../tsc_packet_lc_904_registration_20261111/protocol.json",
+  "result": "../tsc_packet_lc_904_registration_20261111/result.json"
+}

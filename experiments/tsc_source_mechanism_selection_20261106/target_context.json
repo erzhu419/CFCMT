@@ -1,0 +1,152 @@
+{
+  "protocol": "tsc-joint-response-development-v2",
+  "collection": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_joint_response_trial_20261106/collection_v2",
+  "target_network": "/home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_v53r49_external_network_repair_20260810/conversion_v9_task/full_networks_v9/jinan_3x4_real/jinan_3x4_real.net.xml",
+  "groups": 20,
+  "seeds": 10,
+  "tls": 12,
+  "group_movements": 240,
+  "context_by_turn": {
+    "l": {
+      "total_group_movements": 80,
+      "g_group_movements": 0,
+      "supplied_g_group_movements": 0,
+      "supplied_g_and_priority_G_group_movements": 0,
+      "supplied_g_groups": 0,
+      "supplied_g_seeds": 0,
+      "supplied_g_and_priority_G_groups": 0,
+      "supplied_g_and_priority_G_seeds": 0,
+      "supplied_g_dedicated_group_movements": 0,
+      "supplied_g_own_near_minmax": null,
+      "supplied_g_foe_servable_near_minmax": null,
+      "supplied_g_priority_near_minmax": null,
+      "supplied_g_inlet_length_m_minmax": null,
+      "supplied_g_inlet_speed_mps_minmax": null,
+      "supplied_g_current_min_green_s_minmax": null,
+      "simultaneous_supplied_priority_turns": []
+    },
+    "r": {
+      "total_group_movements": 80,
+      "g_group_movements": 80,
+      "supplied_g_group_movements": 34,
+      "supplied_g_and_priority_G_group_movements": 15,
+      "supplied_g_groups": 18,
+      "supplied_g_seeds": 10,
+      "supplied_g_and_priority_G_groups": 12,
+      "supplied_g_and_priority_G_seeds": 7,
+      "supplied_g_dedicated_group_movements": 34,
+      "supplied_g_own_near_minmax": [
+        1,
+        5
+      ],
+      "supplied_g_foe_servable_near_minmax": [
+        0,
+        11
+      ],
+      "supplied_g_priority_near_minmax": [
+        0,
+        11
+      ],
+      "supplied_g_inlet_length_m_minmax": [
+        400.0,
+        800.0
+      ],
+      "supplied_g_inlet_speed_mps_minmax": [
+        11.11,
+        11.11
+      ],
+      "supplied_g_current_min_green_s_minmax": [
+        30.0,
+        30.0
+      ],
+      "simultaneous_supplied_priority_turns": [
+        "s"
+      ]
+    },
+    "s": {
+      "total_group_movements": 80,
+      "g_group_movements": 0,
+      "supplied_g_group_movements": 0,
+      "supplied_g_and_priority_G_group_movements": 0,
+      "supplied_g_groups": 0,
+      "supplied_g_seeds": 0,
+      "supplied_g_and_priority_G_groups": 0,
+      "supplied_g_and_priority_G_seeds": 0,
+      "supplied_g_dedicated_group_movements": 0,
+      "supplied_g_own_near_minmax": null,
+      "supplied_g_foe_servable_near_minmax": null,
+      "supplied_g_priority_near_minmax": null,
+      "supplied_g_inlet_length_m_minmax": null,
+      "supplied_g_inlet_speed_mps_minmax": null,
+      "supplied_g_current_min_green_s_minmax": null,
+      "simultaneous_supplied_priority_turns": []
+    }
+  },
+  "supplied_turn_pairs": [
+    {
+      "yielding_turn": "r",
+      "priority_turn": "s",
+      "group_movements": 15,
+      "groups": 12,
+      "seeds": 7,
+      "both_dedicated": true,
+      "same_second_own_g_both_opponent_G_vs_no_G": {
+        "group_yielding_movements": 15,
+        "groups": 12,
+        "seeds": 7,
+        "example": {
+          "case": "jinan_seed29061101_t600",
+          "own": "intersection_1_1|road_2_1_2|road_1_1_1",
+          "opponent": "intersection_1_1|road_1_0_1|road_1_1_1",
+          "nominal_offset_sec": 6,
+          "candidate_with_G": [
+            1,
+            "G"
+          ],
+          "candidate_without_G": [
+            0,
+            "r"
+          ]
+        }
+      },
+      "example": {
+        "case": "jinan_seed29061101_t600",
+        "tls": "intersection_1_1",
+        "movement": "intersection_1_1|road_2_1_2|road_1_1_1",
+        "own_near": 1,
+        "priority_movement": "intersection_1_1|road_1_0_1|road_1_1_1",
+        "priority_turn": "s",
+        "priority_dedicated": true,
+        "priority_lane_near": 3,
+        "total_priority_near": 3,
+        "nominal_state": "gggGGGrrrgggrrrrrrgggGGGrrrgggrrrrrr"
+      }
+    }
+  ],
+  "supplied_physical_pair_relations": [
+    {
+      "yielding_turn": "r",
+      "priority_turn": "s",
+      "outgoing": "same_edge_different_lane",
+      "seeds": 7,
+      "groups": 12,
+      "group_yielding_movements": 15,
+      "group_link_pairs": 90
+    },
+    {
+      "yielding_turn": "r",
+      "priority_turn": "s",
+      "outgoing": "same_lane",
+      "seeds": 7,
+      "groups": 12,
+      "group_yielding_movements": 15,
+      "group_link_pairs": 45
+    }
+  ],
+  "any_supplied_g_and_priority_G_groups": 12,
+  "any_supplied_g_and_priority_G_seeds": 7,
+  "any_supplied_g_and_priority_G_tls": 8,
+  "scope": "Counts deduplicate candidate actions/stable seconds per group and movement. Near supply counts distinct incoming-lane vehicles within 10s at lane speed limit at t0. G/g here refer to nominal candidate signals during the next 10s. Direction is the native external connection dir. Directed response is the saved graph same-TLS junction-request relation [yielding link, priority link]. Static possible conflicts and observed lane supply do not identify realized encounters, routes or discharge. Pair subsets can overlap.",
+  "new_simulations": 0,
+  "new_fits": 0
+}

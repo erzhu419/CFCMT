@@ -1,0 +1,127 @@
+% Original conceptual figure specifications; included for layout provenance.
+
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}[font=\sffamily\scriptsize, >=Stealth, scale=0.92, every node/.style={transform shape}]
+    % Timeline axis
+    \draw[thick, ->, color=black!80] (0,0) -- (8.8,0) node[right, font=\sffamily\bfseries\scriptsize] {Control Clock $t$};
+    
+    % Active Phase Block
+    \fill[fill=cyan!10, draw=cyan!60!black, rounded corners=2pt, thick] (0.4, 0.35) rectangle (3.6, 1.35);
+    \node[font=\sffamily\bfseries\scriptsize, color=cyan!50!black] at (2.0, 1.1) {Active Phase $\phi_{i,t}$};
+    \fill[fill=orange!15, draw=orange!70!black, rounded corners=1pt] (0.55, 0.45) rectangle (3.45, 0.88);
+    \node at (2.0, 0.66) {Elapsed Green $\tau_{i,t} \ge \tau_{\min}$};
+    
+    % Clearance Overhead Block (if switched)
+    \fill[fill=red!10, draw=red!70!black, dashed, rounded corners=2pt] (3.65, 0.35) rectangle (5.45, 1.35);
+    \node[align=center, color=red!60!black, font=\sffamily\bfseries\tiny] at (4.55, 1.08) {If Switch ($a \ne \phi_{i,t}$)};
+    \node[align=center] at (4.55, 0.65) {Clearance $\tau_{\text{yel}}$\\Lost Cost $\hat{c}_{i,t}(a)$};
+    
+    % Candidate Phase Discharge Block
+    \fill[fill=teal!10, draw=teal!70!black, rounded corners=2pt, thick] (5.5, 0.35) rectangle (8.55, 1.35);
+    \node[font=\sffamily\bfseries\scriptsize, color=teal!55!black] at (7.02, 1.1) {Candidate Phase $a \in \mathcal{A}_{\text{safe}}$};
+    \fill[fill=teal!20, draw=teal!80!black, rounded corners=1pt] (5.65, 0.45) rectangle (8.4, 0.88);
+    \node at (7.02, 0.66) {Discharge $\hat{d}_{m,t}$ \& Inflow $\hat{v}_{m,t+1}$};
+    
+    % Tick marks
+    \draw[thick] (0.4, 0.1) -- (0.4, -0.15) node[below] {$t - \tau_{i,t}$};
+    \draw[thick, color=red!75!black] (3.6, 0.35) -- (3.6, -0.15) node[below, font=\bfseries] {$t$ (Decision)};
+    \draw[thick] (5.48, 0.1) -- (5.48, -0.15) node[below] {$t + \tau_{\text{yel}}$};
+    \draw[thick, color=blue!75!black] (8.5, 0.35) -- (8.5, -0.15) node[below, font=\bfseries] {$t + \Delta t$ (Eval)};
+    
+    % Brace for counterfactual evaluation horizon
+    \draw[decorate, decoration={brace, amplitude=5pt, mirror}, thick, color=black!75] (3.6, -0.65) -- (8.5, -0.65)
+        node[midway, below=5pt, align=center] {Counterfactual Mechanism Rollout $\Delta \widehat{W}(s_{i,t}, a; \Theta_k)$ across $\mathcal{M}_i$};
+        
+    % Shielding arrow
+    \draw[->, thick, dashed, color=purple!80!black] (3.6, 1.38) to[out=25, in=155] node[midway, above, fill=white, inner sep=1pt] {Right-of-Way Shield $\Pi_{\text{safe}}: \mathcal{A}_{\text{safe}}(s_{i,t})$} (8.45, 1.38);
+\end{tikzpicture}
+\caption{Timeline of movement-level phase transition, clearance overhead $\tau_{\text{yel}}$, and counterfactual mechanism evaluation across control interval $[t, t+\Delta t]$.}
+\label{fig:mechanism_timeline}
+\end{figure}
+
+\begin{figure*}[!t]
+\centering
+\begin{tikzpicture}[font=\sffamily\scriptsize, >=Stealth, scale=0.94, every node/.style={transform shape}]
+    % Three Morandi Background Panels (Matching gemini_v1.md exact RGB palette)
+    \fill[fill={rgb,255:red,232;green,241;blue,245}, draw=cyan!50!black, dashed, rounded corners=4pt, thick] (0, 0) rectangle (5.6, 5.2);
+    \node[font=\sffamily\bfseries\footnotesize, color=cyan!45!black, anchor=north west] at (0.15, 5.05) {I. Multi-City Source Bank \& Shielding};
+
+    \fill[fill={rgb,255:red,253;green,242;blue,233}, draw=orange!60!black, dashed, rounded corners=4pt, thick] (5.9, 0) rectangle (11.7, 5.2);
+    \node[font=\sffamily\bfseries\footnotesize, color=orange!55!black, anchor=north west] at (6.05, 5.05) {II. Causal Mechanism Decomposition};
+
+    \fill[fill={rgb,255:red,232;green,248;blue,245}, draw=teal!60!black, dashed, rounded corners=4pt, thick] (12.0, 0) rectangle (18.0, 5.2);
+    \node[font=\sffamily\bfseries\footnotesize, color=teal!55!black, anchor=north west] at (12.15, 5.05) {III. Epistemic Gate \& Action Arbitration};
+
+    % --- Panel I Nodes ---
+    \node[draw=cyan!70!black, fill=white, rounded corners=3pt, thick, minimum width=5.0cm, minimum height=1.35cm, align=center] (srcbank) at (2.8, 3.85) {
+        \textbf{Multi-City Source Domain Bank ($K=10$)}\\
+        German Urban + Synthetic Grids + Salt Lake\\
+        Bootstrap Mechanism Ensembles $\{\mathcal{M}_k\}_{k=1}^K$
+    };
+
+    \node[draw=orange!80!black, fill=yellow!10, rounded corners=2pt, thick, minimum width=4.6cm, minimum height=0.8cm, align=center] (shield) at (2.8, 2.35) {
+        \textbf{Right-of-Way Phase Shielding ($\Pi_{\text{safe}}$)}\\
+        Enforce $(\tau_{\min}, \tau_{\max}, \tau_{\text{yel}}) \rightarrow \mathcal{A}_{\text{safe}}(s_{i,t})$
+    };
+
+    \node[draw=cyan!70!black, fill=white, rounded corners=3pt, thick, minimum width=5.0cm, minimum height=1.35cm, align=center] (target) at (2.8, 0.85) {
+        \textbf{Unseen Target Road Network ($\mathcal{D}_{\text{tgt}}$)}\\
+        Los Angeles \& Jinan Full-Scale Corridors\\
+        Incidence Matrix $B_i$ + Local State $s_{i,t}$
+    };
+
+    \draw[->, thick, color=cyan!60!black] (target.north) -- node[right, font=\tiny] {Observe $s_{i,t}, \tau_{i,t}$} (shield.south);
+
+    % --- Panel II Nodes ---
+    \node[draw=orange!70!black, fill=white, rounded corners=3pt, thick, minimum width=5.1cm, minimum height=1.1cm, align=center] (inflow) at (8.8, 4.0) {
+        \textbf{1) Inflow \& 2) Service Discharge}\\
+        $\hat{v}_{m,t+1} = f_{\text{arr}}(v_{m,t}, q_{m,t};\ \theta_{\text{arr}})$\\
+        $\hat{d}_{m,t} = u_{m,t}(1-\mathbb{I}_{\text{sw}}\kappa_{\text{lost}})f_{\text{srv}}(q_{m,t}, d_{\text{down}})$
+    };
+
+    \node[draw=orange!70!black, fill=white, rounded corners=3pt, thick, minimum width=5.1cm, minimum height=1.25cm, align=center] (queue) at (8.8, 2.45) {
+        \textbf{3) Queue Waiting \& 4) Switch Cost}\\
+        $\hat{w}_{m,t+1} = f_{\text{wait}}(w_{m,t}, q_{m,t}, \hat{v}_{m,t+1}, \hat{d}_{m,t})$\\
+        $\hat{c}_{i,t}(a) = \mathbb{I}(a \ne \phi_{i,t})\cdot f_{\text{sw}}(q_{\phi_{i,t}}, \tau_{\text{yel}})$
+    };
+
+    \node[draw=orange!70!black, fill=white, rounded corners=3pt, thick, minimum width=5.1cm, minimum height=1.1cm, align=center] (backbone) at (8.8, 0.85) {
+        \textbf{Nominal Target Backbone ($\alpha = 0$)}\\
+        Local Counterfactual Advantage $\widehat{\Delta}_{\text{tgt}}(s_{i,t}, a)$
+    };
+
+    \draw[->, thick] (srcbank.east) -- (inflow.west);
+    \draw[->, thick] (shield.east) -- (queue.west);
+    \draw[->, thick] (target.east) -- (backbone.west);
+    \draw[->, thick, dashed, color=orange!75!black] (inflow.south) -- (queue.north);
+
+    % --- Panel III Nodes ---
+    \node[draw=teal!70!black, fill=white, rounded corners=3pt, thick, minimum width=5.3cm, minimum height=1.2cm, align=center] (gate) at (15.0, 4.0) {
+        \textbf{Epistemic Compatibility Gate ($\beta \ge 0$)}\\
+        Source Mean $\mu_k(s_{i,t},a)$ \& Dispersion $\sigma_k(s_{i,t},a)$\\
+        Gated Score $\widetilde{\Delta}_{\text{src}}^{(k)} = \mu_k(s_{i,t},a) - \beta\sigma_k(s_{i,t},a)$
+    };
+
+    \node[draw=teal!70!black, fill=white, rounded corners=3pt, thick, minimum width=5.3cm, minimum height=1.35cm, align=center] (blend) at (15.0, 2.35) {
+        \textbf{Structural Blending Operator ($\alpha \in [0,1]$)}\\
+        $\widehat{\mathcal{J}}_{\text{CFCMT}}(s_{i,t},a) = (1-\alpha)\widehat{\Delta}_{\text{tgt}}(s_{i,t},a)$\\
+        $\qquad\qquad\qquad + \alpha \sum_{k \in \mathcal{S}^\star} w_k(s_{i,t})\widetilde{\Delta}_{\text{src}}^{(k)}(s_{i,t},a)$
+    };
+
+    \node[draw=teal!70!black, fill=white, rounded corners=3pt, thick, minimum width=5.3cm, minimum height=1.15cm, align=center] (act) at (15.0, 0.75) {
+        \textbf{Zero-Shot Shielded Action Execution}\\
+        $a_{i,t}^\star = \arg\max_{a \in \mathcal{A}_{\text{safe}}(s_{i,t})} \widehat{\mathcal{J}}_{\text{CFCMT}}(s_{i,t}, a;\ \alpha, \beta)$\\
+        Graceful Fallback to $\widehat{\Delta}_{\text{tgt}}$ as $\sigma_k \to \infty$
+    };
+
+    \draw[->, thick] (inflow.east) -- (gate.west);
+    \draw[->, thick] (queue.east) to[out=20, in=200] (gate.west);
+    \draw[->, thick, color=red!75!black] (gate.south) -- node[right, font=\tiny\bfseries] {Pessimistic Score $\widetilde{\Delta}_{\text{src}}^{(k)}$} (blend.north);
+    \draw[->, thick] (backbone.east) to[out=15, in=195] node[pos=0.45, above, sloped, font=\tiny] {Anchor $(1-\alpha)\widehat{\Delta}_{\text{tgt}}$} (blend.west);
+    \draw[->, thick, color=teal!75!black] (blend.south) -- node[right, font=\tiny] {Rank $\forall a \in \mathcal{A}_{\text{safe}}$} (act.north);
+    \draw[->, thick, color=blue!70!black] (act.south) -- ++(0,-0.32) -| node[pos=0.25, above, font=\tiny] {Execute Phase $a_{i,t}^\star$ in Target SUMO Corridor} (target.south);
+\end{tikzpicture}
+\caption{Architecture of the proposed CFCMT framework. Left: Multi-city source mechanism bank and right-of-way phase shielding in the unseen target network. Middle: Topology-invariant movement-level causal mechanism decomposition and nominal target backbone. Right: Epistemic compatibility gating ($\beta$), structural backbone blending ($\alpha$), and zero-shot shielded action arbitration.}
+\label{fig:framework_overview}
+\end{figure*}

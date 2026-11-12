@@ -1,0 +1,56 @@
+{
+  "status": "OFFLINE_DEVELOPMENT_DIAGNOSTIC",
+  "created_date": "2026-11-09",
+  "original_study": "tsc_corridor_arrival_transfer_20261107",
+  "scope": "Existing donor/adapt/dev PP records only; no new simulation, action branch, tuning or confirmation.",
+  "identity": [
+    "edge",
+    "vid",
+    "entry_s"
+  ],
+  "outcome": "First detector passage 30m before stop line; current snapshots and competing outcomes retained.",
+  "primary": "Reproduce original common-risk-set 10s analytic arrival-count MAE, then decompose per-flight false positives/negatives into timing, lane changes and competing outcomes.",
+  "timing_residual": "end_s-t-remaining_m/speed_limit_mps, descriptive only among observed straight detector arrivals; +-1s tolerance for 1s observations.",
+  "fixed_conditions": {
+    "current_lane": [
+      "straight",
+      "other"
+    ],
+    "analytic_eta_s": [
+      "<=5",
+      "(5,10]",
+      "(10,20]",
+      ">20"
+    ],
+    "entry_queue": [
+      false,
+      true
+    ],
+    "normalized_elapsed_delay": [
+      "<=0",
+      "(0,0.25]",
+      ">0.25"
+    ],
+    "past_10s_speed_ratio": [
+      "missing",
+      "<=0.5",
+      "(0.5,0.9]",
+      "(0.9,1.1]",
+      ">1.1"
+    ],
+    "nominal_PP_protected_seconds": [
+      "0",
+      "1-9",
+      "10"
+    ]
+  },
+  "elapsed_delay": "(age_s+analytic_eta_s+tail_s-freeflow_s)/freeflow_s",
+  "past_speed": "(remaining_m_at_t_minus_10-remaining_m_at_t)/10/limit; absent frame is missing, not a stop; no future snapshots.",
+  "denominators": [
+    "all TLS decisions",
+    "observable full-window risk set",
+    "original common-scored dev set"
+  ],
+  "replication": "Per-seed summaries and equal-seed city means; donor/adapt descriptive replication; each vehicle sensitivity uses current straight snapshot closest to ETA=10s, never future status to select.",
+  "unchanged_gate": "Original HOLD_DEVELOPMENT stays in force. Shared descriptive bias alone does not establish learned transfer or control gain."
+}

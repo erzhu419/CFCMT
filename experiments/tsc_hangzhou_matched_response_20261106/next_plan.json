@@ -1,0 +1,135 @@
+{
+  "status": "PROPOSED_FROZEN_INPUTS_NO_NEW_EXECUTION",
+  "question": "Does preserving the Hangzhou supply-to-response correspondence improve forward prediction on fresh Jinan seeds within the seven shared conditions?",
+  "next_step": "Preaction-only opportunity census on four fresh Jinan PP seeds. Keep all response outcomes sealed until the roster is fixed.",
+  "seeds": [
+    33061101,
+    33061102,
+    33061103,
+    33061104
+  ],
+  "source_models": {
+    "output_fields": [
+      "delta_right",
+      "delta_straight"
+    ],
+    "point_fields": [
+      "right_near",
+      "straight_near"
+    ],
+    "points": [
+      {
+        "point": [
+          1,
+          1
+        ],
+        "hangzhou_matched": [
+          -0.5,
+          1
+        ],
+        "jinan_target_only": [
+          0,
+          1
+        ]
+      },
+      {
+        "point": [
+          1,
+          2
+        ],
+        "hangzhou_matched": [
+          -1,
+          2
+        ],
+        "jinan_target_only": [
+          0,
+          1
+        ]
+      },
+      {
+        "point": [
+          1,
+          3
+        ],
+        "hangzhou_matched": [
+          -0.5,
+          2
+        ],
+        "jinan_target_only": [
+          -1,
+          1
+        ]
+      },
+      {
+        "point": [
+          1,
+          4
+        ],
+        "hangzhou_matched": [
+          -0.5,
+          2
+        ],
+        "jinan_target_only": [
+          0,
+          0
+        ]
+      },
+      {
+        "point": [
+          1,
+          5
+        ],
+        "hangzhou_matched": [
+          -1,
+          2
+        ],
+        "jinan_target_only": [
+          0,
+          1
+        ]
+      },
+      {
+        "point": [
+          2,
+          3
+        ],
+        "hangzhou_matched": [
+          -1.5,
+          2
+        ],
+        "jinan_target_only": [
+          -1,
+          1
+        ]
+      },
+      {
+        "point": [
+          3,
+          2
+        ],
+        "hangzhou_matched": [
+          -2,
+          2
+        ],
+        "jinan_target_only": [
+          -2,
+          2
+        ]
+      }
+    ],
+    "hangzhou_constant": [
+      -1,
+      1.8571428571428572
+    ],
+    "placement_control": "All 5040 joint right/straight permutations of the seven Hangzhou point labels."
+  },
+  "network": "Same admitted Jinan v9 and original demand as ../tsc_joint_response_trial_20261106/protocol_v2.json",
+  "census": "One hour per seed, all 12 signals at every 10s decision. Use the same dedicated yielding-right/priority-straight merge, projected identical right traces and high4/low0 rule. No intervention in the census. Stop on safety, replay or measurement failure.",
+  "census_budget": {
+    "pp_hours": 4,
+    "alternative_branches": 0,
+    "fits": 0
+  },
+  "selection": "Within each seed process the seven points in ascending order, keep the earliest eligible new timestamp and distinct both-supplied visit, breaking ties by signal and movement ids. Report missing points. If each point is represented by at least two seeds, freeze available cases, at most 28 pairs, for a separate response readout. Otherwise stop and report coverage.",
+  "later_readout": "Keep clearance extensions, and score both movement deltas by absolute error, averaging movements within case, the represented seeds within point and then the seven points equally. Report paired per-seed losses, the full permutation distribution and the historical target-only lookup alongside the matched and constant source predictions. All controls are frozen before acquisition. Predictive evidence here concerns local movement counts; policy benefit requires a separate matched-capacity source addition/removal study and evaluation on untouched control seeds."
+}

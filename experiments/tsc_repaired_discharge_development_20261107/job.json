@@ -1,0 +1,20 @@
+[
+  {
+    "signature": "CFCMT/repaired-discharge-development-20261107/roster-then-48",
+    "description": "Repaired networks only. Four Jinan development PP hours; conditional balanced roster then 48 high-arm measurements, freeze six predictions. No test seeds.",
+    "cmd": "env CFCMT_SOURCE_ROOT=/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e /home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e/scripts/cluster/run_cfcmt_sumo122.sh /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_repaired_discharge_development_20261107/scripts/run_dev_census.py --plan /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_repaired_discharge_development_20261107/scripts/next_plan.json --old-registry /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_jinan_fresh_opportunity_20261106/registry/movement_pairs.json --source-census /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_hangzhou_source_repair_20261107/census/result.json --output /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_repaired_discharge_development_20261107/census && if /home/zhengliang01/scheduleurm_work/conda_envs/freqduet-cpu-py310/bin/python3.10 -c 'import sys,json;d=json.load(open(sys.argv[1]));print(d['\"'\"'status'\"'\"'],flush=True);sys.exit(0 if d['\"'\"'status'\"'\"']=='\"'\"'PASS_DEV_ROSTER'\"'\"' else 1)' /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_repaired_discharge_development_20261107/census/result.json; then env CFCMT_SOURCE_ROOT=/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e /home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e/scripts/cluster/run_cfcmt_sumo122.sh /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_repaired_discharge_development_20261107/scripts/run_dev_arms.py --plan /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_repaired_discharge_development_20261107/scripts/next_plan.json --roster /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_repaired_discharge_development_20261107/census/roster.json --output /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_repaired_discharge_development_20261107/arms && env CFCMT_SOURCE_ROOT=/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e /home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e/scripts/cluster/run_cfcmt_sumo122.sh /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_repaired_discharge_development_20261107/scripts/freeze_forecasts.py --plan /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_repaired_discharge_development_20261107/scripts/next_plan.json --roster /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_repaired_discharge_development_20261107/census/roster.json --measurement /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_repaired_discharge_development_20261107/arms/result.json --output /home/zhengliang01/scheduleurm_work/CFCMT_RESULTS/tsc_repaired_discharge_development_20261107/forecasts.json; else echo HOLD_BEFORE_BRANCHES; fi",
+    "cwd": "/home/zhengliang01/scheduleurm_work/CFCMT_SNAPSHOTS/423dc81960505f69f08e",
+    "cpu": 1,
+    "ram_mb": 4096,
+    "vram": 0,
+    "priority": "normal",
+    "allowed_nodes": [
+      "node006",
+      "node005"
+    ],
+    "project": "CFCMT",
+    "env_spec": "none",
+    "skip_launch_staging": true,
+    "no_auto_requeue": true
+  }
+]

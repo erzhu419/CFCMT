@@ -1,0 +1,48 @@
+concurrent.futures.process._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/python/lib/python3.10/concurrent/futures/process.py", line 246, in _process_worker
+    r = call_item.fn(*call_item.args, **call_item.kwargs)
+  File "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/python/lib/python3.10/concurrent/futures/process.py", line 205, in _process_chunk
+    return [fn(*args) for args in chunk]
+  File "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/python/lib/python3.10/concurrent/futures/process.py", line 205, in <listcomp>
+    return [fn(*args) for args in chunk]
+  File "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_mean_alignment/experiments/tsc_packet_mean_alignment_20261110/audit.py", line 180, in _seed
+    candidates = [candidate_features(kernel, pid, intent) for intent in priors]
+  File "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_mean_alignment/experiments/tsc_packet_mean_alignment_20261110/audit.py", line 180, in <listcomp>
+    candidates = [candidate_features(kernel, pid, intent) for intent in priors]
+  File "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_mean_alignment/experiments/tsc_packet_mean_alignment_20261110/conditional_features.py", line 183, in candidate_features
+    mask, lane_summary = _lane_mask(kernel, packet, intent, result, resolver)
+  File "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_mean_alignment/experiments/tsc_packet_mean_alignment_20261110/conditional_features.py", line 136, in _lane_mask
+    resolver.resolve(key)
+  File "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_same_step_receiving/experiments/tsc_packet_same_step_receiving_20261110/motion.py", line 239, in resolve
+    self.resolve(other)
+  File "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_same_step_receiving/experiments/tsc_packet_same_step_receiving_20261110/motion.py", line 231, in resolve
+    spatial = self.spatial(key, proposal)
+  File "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_same_step_receiving/experiments/tsc_packet_same_step_receiving_20261110/motion.py", line 188, in spatial
+    return conflict_limit(self.kernel, packet, connection, compatible, raw, current,
+  File "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_same_step_receiving/experiments/tsc_packet_same_step_receiving_20261110/conflict.py", line 50, in conflict_limit
+    other_front = _progress(kernel, foe, other)
+  File "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_spatial_conflict/experiments/tsc_packet_spatial_conflict_20261110/conflict.py", line 19, in _progress
+    return kernel.topology.path_progress(connection, packet['lane_id'], packet['position_m'])
+  File "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_clock_corrected/experiments/tsc_target_packet_kernel_20261109/topology.py", line 114, in path_progress
+    return self._offsets[connection['key']][lane]+float(position_m)
+KeyError: 'road_1_1_0_2'
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/erzhu419/scheduleurm_work/CFCMT_corridor_residual_20261109/target_packet_mean_alignment/experiments/tsc_packet_mean_alignment_20261110/audit.py", line 283, in run
+    results = list(pool.map(_seed, tasks))
+  File "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/python/lib/python3.10/concurrent/futures/process.py", line 575, in _chain_from_iterable_of_lists
+    for element in iterable:
+  File "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/python/lib/python3.10/concurrent/futures/_base.py", line 621, in result_iterator
+    yield _result_or_cancel(fs.pop())
+  File "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/python/lib/python3.10/concurrent/futures/_base.py", line 319, in _result_or_cancel
+    return fut.result(timeout)
+  File "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/python/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+    return self.__get_result()
+  File "/home/erzhu419/scheduleurm_work/CFCMT_V93_exact_reference_20261031/python/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+KeyError: 'road_1_1_0_2'

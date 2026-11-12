@@ -1,0 +1,236 @@
+{
+  "scope": "All configured network and additional tlLogic definitions in four Bologna configs and the two distinct MoST networks. MoST most.out/most.traci share the scenario network and no additional tlLogic. Most tools duarouter shares the test network. Each TLS/program is independent. Candidate selection in the current control code uses TraCI getAllProgramLogics()[0]; runtime order is unmeasured. Static co-service requires actual junction forbids/foe and an identical outgoing edge. Stable switch requires a second stable candidate with same physical right g and same straight not G. No traffic/outcomes inspected.",
+  "results": [
+    {
+      "config": "sumo-scenarios/bologna/acosta/run.sumocfg",
+      "network": "sumo-scenarios/bologna/acosta/acosta_buslanes.net.xml",
+      "programs_examined": 14,
+      "programs_by_origin": {
+        "acosta_buslanes.net.xml": {
+          "0": 7
+        },
+        "acosta_tls.add.xml": {
+          "utopia": 7
+        }
+      },
+      "tls_programs_with_external_g_right": 1,
+      "unmapped_right_g_or_straight_connections": 0,
+      "matched_tls_programs": [
+        {
+          "tls": "220",
+          "program": "utopia",
+          "origin": "acosta_tls.add.xml",
+          "stable_actions": 5,
+          "g_right_movements": 1,
+          "unmapped_right_g_or_straight_connections": 0,
+          "same_exit_g_right_to_G_straight_pairs": 1,
+          "both_dedicated_pairs": 0,
+          "same_exit_pairs_with_stable_priority_switch": 0,
+          "both_dedicated_with_stable_priority_switch": 0,
+          "witnesses": []
+        }
+      ]
+    },
+    {
+      "config": "sumo-scenarios/bologna/acosta_persontrips/run.sumocfg",
+      "network": "sumo-scenarios/bologna/acosta_persontrips/acosta_peds.net.xml",
+      "programs_examined": 18,
+      "programs_by_origin": {
+        "acosta_peds.net.xml": {
+          "0": 7,
+          "utopia": 7
+        },
+        "acosta_tls2.add.xml": {
+          "utopia-mod": 4
+        }
+      },
+      "tls_programs_with_external_g_right": 16,
+      "unmapped_right_g_or_straight_connections": 0,
+      "matched_tls_programs": [
+        {
+          "tls": "220",
+          "program": "utopia",
+          "origin": "acosta_peds.net.xml",
+          "stable_actions": 10,
+          "g_right_movements": 4,
+          "unmapped_right_g_or_straight_connections": 0,
+          "same_exit_g_right_to_G_straight_pairs": 2,
+          "both_dedicated_pairs": 1,
+          "same_exit_pairs_with_stable_priority_switch": 0,
+          "both_dedicated_with_stable_priority_switch": 0,
+          "witnesses": [
+            {
+              "own": "220|74|72[1]",
+              "priority": "220|72[0]|72[1]",
+              "outgoing": "same_lane",
+              "links": [
+                11,
+                12
+              ],
+              "on": [
+                0,
+                1
+              ],
+              "off": [],
+              "all_own_links_g_on": [
+                0,
+                1
+              ],
+              "all_own_links_g_off": []
+            }
+          ]
+        },
+        {
+          "tls": "220",
+          "program": "utopia-mod",
+          "origin": "acosta_tls2.add.xml",
+          "stable_actions": 8,
+          "g_right_movements": 4,
+          "unmapped_right_g_or_straight_connections": 0,
+          "same_exit_g_right_to_G_straight_pairs": 1,
+          "both_dedicated_pairs": 0,
+          "same_exit_pairs_with_stable_priority_switch": 0,
+          "both_dedicated_with_stable_priority_switch": 0,
+          "witnesses": []
+        }
+      ]
+    },
+    {
+      "config": "sumo-scenarios/bologna/joined/run.sumocfg",
+      "network": "sumo-scenarios/bologna/joined/joined_buslanes.net.xml",
+      "programs_examined": 26,
+      "programs_by_origin": {
+        "joined_buslanes.net.xml": {
+          "0": 13
+        },
+        "joined_tls.add.xml": {
+          "utopia": 13
+        }
+      },
+      "tls_programs_with_external_g_right": 3,
+      "unmapped_right_g_or_straight_connections": 0,
+      "matched_tls_programs": [
+        {
+          "tls": "218",
+          "program": "utopia",
+          "origin": "joined_tls.add.xml",
+          "stable_actions": 4,
+          "g_right_movements": 1,
+          "unmapped_right_g_or_straight_connections": 0,
+          "same_exit_g_right_to_G_straight_pairs": 1,
+          "both_dedicated_pairs": 1,
+          "same_exit_pairs_with_stable_priority_switch": 0,
+          "both_dedicated_with_stable_priority_switch": 0,
+          "witnesses": [
+            {
+              "own": "218|b20+19b|b2[1][1][1]b",
+              "priority": "218|b2[1][1][1]|b2[1][1][1]b",
+              "outgoing": "same_lane",
+              "links": [
+                16,
+                17
+              ],
+              "on": [
+                3
+              ],
+              "off": [],
+              "all_own_links_g_on": [
+                3
+              ],
+              "all_own_links_g_off": []
+            }
+          ]
+        },
+        {
+          "tls": "220",
+          "program": "utopia",
+          "origin": "joined_tls.add.xml",
+          "stable_actions": 5,
+          "g_right_movements": 1,
+          "unmapped_right_g_or_straight_connections": 0,
+          "same_exit_g_right_to_G_straight_pairs": 1,
+          "both_dedicated_pairs": 0,
+          "same_exit_pairs_with_stable_priority_switch": 0,
+          "both_dedicated_with_stable_priority_switch": 0,
+          "witnesses": []
+        }
+      ]
+    },
+    {
+      "config": "sumo-scenarios/bologna/pasubio/run.sumocfg",
+      "network": "sumo-scenarios/bologna/pasubio/pasubio_buslanes.net.xml",
+      "programs_examined": 16,
+      "programs_by_origin": {
+        "pasubio_buslanes.net.xml": {
+          "0": 8
+        },
+        "pasubio_tls.add.xml": {
+          "utopia": 8
+        }
+      },
+      "tls_programs_with_external_g_right": 2,
+      "unmapped_right_g_or_straight_connections": 0,
+      "matched_tls_programs": [
+        {
+          "tls": "218",
+          "program": "utopia",
+          "origin": "pasubio_tls.add.xml",
+          "stable_actions": 4,
+          "g_right_movements": 1,
+          "unmapped_right_g_or_straight_connections": 0,
+          "same_exit_g_right_to_G_straight_pairs": 1,
+          "both_dedicated_pairs": 1,
+          "same_exit_pairs_with_stable_priority_switch": 0,
+          "both_dedicated_with_stable_priority_switch": 0,
+          "witnesses": [
+            {
+              "own": "218|20+19b|2[1][1][1]b",
+              "priority": "218|2[1][1][1]|2[1][1][1]b",
+              "outgoing": "same_lane",
+              "links": [
+                16,
+                17
+              ],
+              "on": [
+                3
+              ],
+              "off": [],
+              "all_own_links_g_on": [
+                3
+              ],
+              "all_own_links_g_off": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "config": "MoSTScenario/scenario/most.sumocfg",
+      "network": "MoSTScenario/scenario/in/most.net.xml",
+      "programs_examined": 12,
+      "programs_by_origin": {
+        "most.net.xml": {
+          "0": 12
+        }
+      },
+      "tls_programs_with_external_g_right": 11,
+      "unmapped_right_g_or_straight_connections": 0,
+      "matched_tls_programs": []
+    },
+    {
+      "config": "MoSTScenario/tools/most.test.sumocfg",
+      "network": "MoSTScenario/tools/out/most.net.xml",
+      "programs_examined": 12,
+      "programs_by_origin": {
+        "most.net.xml": {
+          "0": 12
+        }
+      },
+      "tls_programs_with_external_g_right": 11,
+      "unmapped_right_g_or_straight_connections": 0,
+      "matched_tls_programs": []
+    }
+  ],
+  "new_simulations": 0,
+  "new_fits": 0
+}
