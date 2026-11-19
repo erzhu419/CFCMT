@@ -1,0 +1,117 @@
+{
+  "state_restores": 0,
+  "pre_branch_fingerprint_mismatches": 0,
+  "saltlake_adapt_groups": 40,
+  "fit_audit": {
+    "available_source_pools": [
+      "all_sources",
+      "real_cities",
+      "corridor_sources",
+      "multi_phase_grids",
+      "grid_sources"
+    ],
+    "zero_shot_default_pool": "real_cities",
+    "saltlake": {
+      "base_conservation_gp_regret": {
+        "group_count": 40,
+        "mean_normalized_regret": 0.16720377565279768,
+        "mean_physical_regret": 0.08456566121022405,
+        "top1_accuracy": 0.475
+      },
+      "zero_shot_consensus_regret_on_adapt": {
+        "group_count": 40,
+        "mean_normalized_regret": 0.2323413663651433,
+        "mean_physical_regret": 0.12094802192072027,
+        "top1_accuracy": 0.375
+      },
+      "zero_shot_pool_all_regret_on_adapt": {
+        "group_count": 40,
+        "mean_normalized_regret": 0.24874497365090545,
+        "mean_physical_regret": 0.13841688452441792,
+        "top1_accuracy": 0.375
+      },
+      "per_pool_zero_shot_regrets": {
+        "all_sources": {
+          "group_count": 40,
+          "mean_normalized_regret": 0.24874497365090545,
+          "mean_physical_regret": 0.13841688452441792,
+          "top1_accuracy": 0.375
+        },
+        "real_cities": {
+          "group_count": 40,
+          "mean_normalized_regret": 0.2323413663651433,
+          "mean_physical_regret": 0.12094802192072027,
+          "top1_accuracy": 0.375
+        },
+        "corridor_sources": {
+          "group_count": 40,
+          "mean_normalized_regret": 0.21860127830878318,
+          "mean_physical_regret": 0.11221479418228028,
+          "top1_accuracy": 0.375
+        },
+        "multi_phase_grids": {
+          "group_count": 40,
+          "mean_normalized_regret": 0.23705572074590425,
+          "mean_physical_regret": 0.12930703133423643,
+          "top1_accuracy": 0.35
+        },
+        "grid_sources": {
+          "group_count": 40,
+          "mean_normalized_regret": 0.301811499271302,
+          "mean_physical_regret": 0.16773473255985438,
+          "top1_accuracy": 0.35
+        }
+      },
+      "budgets": {
+        "b6": {
+          "target_group_count": 6,
+          "selected_source_pool": "multi_phase_grids",
+          "cfcmt_omega": 0.5,
+          "fold_to_full_target_scale": 1.0,
+          "oof_target_only": {
+            "group_count": 6,
+            "mean_normalized_regret": 0.38049788030320936,
+            "mean_physical_regret": 0.1791936068360784,
+            "smooth_boltzmann_regret": 0.45811270913354557,
+            "top1_accuracy": 0.0
+          },
+          "oof_cfcmt": {
+            "group_count": 6,
+            "mean_normalized_regret": 0.345388805857527,
+            "mean_physical_regret": 0.15374445055896618,
+            "smooth_boltzmann_regret": 0.40225576007675096,
+            "top1_accuracy": 0.16666666666666666
+          }
+        },
+        "b36": {
+          "target_group_count": 36,
+          "selected_source_pool": "multi_phase_grids",
+          "cfcmt_omega": 0.18,
+          "fold_to_full_target_scale": 0.9441857247120556,
+          "oof_target_only": {
+            "group_count": 36,
+            "mean_normalized_regret": 0.17980567217108126,
+            "mean_physical_regret": 0.09425055599474454,
+            "smooth_boltzmann_regret": 0.18478286621731815,
+            "top1_accuracy": 0.5277777777777778
+          },
+          "oof_cfcmt": {
+            "group_count": 36,
+            "mean_normalized_regret": 0.1593601735110983,
+            "mean_physical_regret": 0.07974787960463003,
+            "smooth_boltzmann_regret": 0.18914519240579422,
+            "top1_accuracy": 0.5555555555555556
+          },
+          "pool_all_omega": 0.18,
+          "oof_pool_all_b36": {
+            "group_count": 36,
+            "mean_normalized_regret": 0.1701258516124261,
+            "mean_physical_regret": 0.08631272757305616,
+            "smooth_boltzmann_regret": 0.20004790162646754,
+            "top1_accuracy": 0.5277777777777778
+          }
+        }
+      }
+    }
+  }
+}
