@@ -13,6 +13,7 @@ os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
 os.environ.setdefault("MKL_NUM_THREADS", "1")
 
 import argparse
+from collections import Counter
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import hashlib
 import json
@@ -543,17 +544,61 @@ def _dict_to_rec(d: Mapping[str, Any]) -> ResidualGroupRecord:
     )
 
 
+def _read_label_archive(
+    path: Path,
+) -> tuple[list[ResidualGroupRecord], dict[str, list[ResidualGroupRecord]], dict[str, Any]]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    source = [_dict_to_rec(group) for group in payload["source_groups"]]
+    target = {
+        family: [_dict_to_rec(group) for group in groups]
+        for family, groups in payload["target_groups"].items()
+    }
+    return source, target, dict(payload["collection_audit"])
+
+
+def read_paper_label_archive(
+    path: Path,
+) -> tuple[list[ResidualGroupRecord], dict[str, list[ResidualGroupRecord]], dict[str, Any]]:
+    """Load the manuscript's Phase 1 labels augmented with the Gudang source groups."""
+    source, target, audit = _read_label_archive(path)
+    expected_source = {
+        ("hangzhou", "hangzhou_4x4_repaired"): 48,
+        ("hangzhou_hetero", "hangzhou_4x4_hetero_repaired"): 76,
+        ("atlanta", "atlanta_1x5"): 48,
+        ("cologne", "cologne1"): 47,
+        ("cologne", "cologne3"): 48,
+        ("ingolstadt", "ingolstadt7"): 48,
+        ("resco_grid_art", "grid4x4"): 48,
+        ("resco_grid_art", "arterial4x4"): 48,
+    }
+    expected_target = {
+        family: {
+            (scenario, seed): 20 if family == "la" else 8
+            for scenario in scenarios
+            for seed in ADAPT_SEEDS
+        }
+        for family, scenarios in TARGET_FAMILIES.items()
+    }
+    if (
+        Counter((group.domain, group.scenario) for group in source) != expected_source
+        or {group.seed for group in source} != set(SOURCE_SEEDS)
+        or {
+            family: Counter((group.scenario, group.seed) for group in groups)
+            for family, groups in target.items()
+        } != expected_target
+        or audit.get("state_restores") != 0
+        or audit.get("pre_branch_fingerprint_mismatches") != 0
+    ):
+        raise ValueError(f"{path} does not match the paper's 411-source native-prefix label archive")
+    audit["source_branch_count"] = sum(len(group.candidate_states) for group in source)
+    return source, target, audit
+
+
 def collect_phase2_dataset(
     scenarios: Mapping[str, Path], out_json: Path, workers: int
 ) -> tuple[list[ResidualGroupRecord], dict[str, list[ResidualGroupRecord]], dict[str, Any]]:
     if out_json.is_file():
-        payload = json.loads(out_json.read_text(encoding="utf-8"))
-        src = [_dict_to_rec(x) for x in payload["source_groups"]]
-        tgt = {
-            k: [_dict_to_rec(x) for x in v]
-            for k, v in payload["target_groups"].items()
-        }
-        audit = dict(payload["collection_audit"])
+        src, tgt, audit = _read_label_archive(out_json)
         if not any(g.domain == "hangzhou_hetero" for g in src):
             print(
                 "[Phase 2 Augment] Collecting native-prefix branches for hangzhou_4x4_hetero_repaired (state_restores=0)...",
@@ -628,6 +673,7 @@ def collect_phase2_dataset(
                     )
                 )
             audit["source_group_count"] = len(src)
+            audit["source_branch_count"] = sum(len(group.candidate_states) for group in src)
             audit["state_restores"] = 0
             audit["pre_branch_fingerprint_mismatches"] = 0
             out_json.write_text(
@@ -1407,27 +1453,38 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--stage",
-        choices=("collect_and_fit", "dev_check", "eval_fresh"),
+        choices=("collect_and_fit", "fit_paper_archive", "dev_check", "eval_fresh"),
         required=True,
     )
     parser.add_argument("--work-dir", type=Path, required=True)
-    parser.add_argument("--staged-scenarios-dir", type=Path, required=True)
-    parser.add_argument("--source-scenarios-dir", type=Path, required=True)
+    parser.add_argument("--staged-scenarios-dir", type=Path)
+    parser.add_argument("--source-scenarios-dir", type=Path)
+    parser.add_argument("--archive-labels", type=Path, help="Label JSON for fit_paper_archive")
     parser.add_argument("--workers", type=int, default=12)
     args = parser.parse_args()
 
+    if args.stage == "fit_paper_archive":
+        if args.archive_labels is None:
+            parser.error("--archive-labels is required for fit_paper_archive")
+        src_groups, tgt_groups, col_audit = read_paper_label_archive(args.archive_labels)
+    else:
+        if args.archive_labels is not None:
+            parser.error("--archive-labels is only used by fit_paper_archive")
+        if args.staged_scenarios_dir is None or args.source_scenarios_dir is None:
+            parser.error("--staged-scenarios-dir and --source-scenarios-dir are required")
+        scenarios = resolve_phase2_scenarios(
+            args.staged_scenarios_dir, args.source_scenarios_dir
+        )
+
     args.work_dir.mkdir(parents=True, exist_ok=True)
-    scenarios = resolve_phase2_scenarios(
-        args.staged_scenarios_dir, args.source_scenarios_dir
-    )
-    dataset_json = args.work_dir / "phase2_counterfactual_dataset.json"
     models_pkl = args.work_dir / "phase2_frozen_models.pkl"
     fit_audit_json = args.work_dir / "phase2_offline_fit_audit.json"
 
     if args.stage == "collect_and_fit":
         src_groups, tgt_groups, col_audit = collect_phase2_dataset(
-            scenarios, dataset_json, workers=args.workers
+            scenarios, args.work_dir / "phase2_counterfactual_dataset.json", workers=args.workers
         )
+    if args.stage in {"collect_and_fit", "fit_paper_archive"}:
         frozen_models, fit_audit = fit_phase2_residual_suite(
             src_groups, tgt_groups
         )
@@ -1447,7 +1504,7 @@ def main() -> None:
         return
 
     if not models_pkl.is_file():
-        raise FileNotFoundError(f"Missing {models_pkl}; run collect_and_fit first")
+        raise FileNotFoundError(f"Missing {models_pkl}; run fit_paper_archive or collect_and_fit first")
 
     seeds = DEV_EVAL_SEEDS if args.stage == "dev_check" else FRESH_PHASE2_SEEDS
     policies = (

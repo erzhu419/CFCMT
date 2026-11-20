@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 import numpy as np
+import pytest
 
 from experiments.tsc_partial_cv_pilot_20261118.mplight_cv_baseline import (
     MPLightCvQNetwork,
@@ -41,6 +44,7 @@ def test_phase_competition_and_td_convergence() -> None:
                     action_idx=act_i,
                     reward=rew,
                     z_next=zc,
+                    next_allowed=(),
                     done=True,
                 )
             )
@@ -56,6 +60,111 @@ def test_phase_competition_and_td_convergence() -> None:
     am_test[2, 0] = -1.0
     scores = net.score_group(sv_test, am_test)
     assert int(np.argmin(scores)) == 1
+
+
+def test_double_dqn_bootstrap_uses_successor_allowed_actions(monkeypatch) -> None:
+    net = MPLightCvQNetwork(gamma=0.9)
+    for parameter in net.params.values():
+        parameter.fill(0.0)
+    monkeypatch.setattr(
+        net,
+        "predict_q",
+        lambda z_mat, *, use_target: np.array(
+            [20.0, 2.0, 3.0] if use_target else [5.0, 2.0, 1.0]
+        ),
+    )
+    transition = ReplayTransition(
+        z_cur=np.zeros((1, 78)),
+        action_idx=0,
+        reward=0.0,
+        z_next=np.zeros((3, 78)),
+        next_allowed=(1, 2),
+        done=False,
+    )
+
+    # Action 0 is disallowed and action 2 only leads according to the target net.
+    loss = net.train_minibatch([transition])
+
+    assert loss == pytest.approx(0.5 * (0.9 * 2.0) ** 2)
+
+
+def test_rollout_records_singleton_ticks_and_terminal_reward(monkeypatch) -> None:
+    from cf_h2o import sumo_runtime
+    from cf_h2o.eval import traffic_signal_resco_phase_benchmark as phase_benchmark
+    from cf_h2o.traffic_signal import safe_phase_controller
+    from experiments.tsc_partial_cv_pilot_20261118 import phase3_tits_suite as suite
+
+    class SimulationClock:
+        time_sec = 0
+
+        def getTime(self):
+            return self.time_sec
+
+        def step(self):
+            self.time_sec += 1
+
+    clock = SimulationClock()
+    requests = []
+    simulator = SimpleNamespace(simulation=clock, close=lambda: None)
+    executor = SimpleNamespace(
+        current_green_state="Gr",
+        request=requests.append,
+        advance=lambda dt: None,
+    )
+    info = SimpleNamespace(incoming_lanes=("in",))
+    lane = SimpleNamespace(shockwave_queue_est=0.0, conservation_queue_est=0.0)
+
+    def observe_step(simulator, dt_sec):
+        lane.shockwave_queue_est = clock.time_sec / 10
+
+    def make_features(**kwargs):
+        feasible = ("rG",) if clock.time_sec in (60, 70) else ("Gr", "rG")
+        state = np.zeros(18)
+        state[0] = clock.time_sec / 10
+        return feasible, state, np.zeros((len(feasible), 30))
+
+    def allowed_actions(*, feasible, **kwargs):
+        return (1,) if clock.time_sec == 80 else tuple(range(len(feasible)))
+
+    monkeypatch.setattr(sumo_runtime, "load_libsumo", lambda: simulator)
+    monkeypatch.setattr(phase_benchmark, "_start_sumo", lambda *args, **kwargs: None)
+    monkeypatch.setattr(phase_benchmark, "_tls_phase_infos", lambda api: {"tls": info})
+    monkeypatch.setattr(
+        safe_phase_controller, "build_safe_phase_executors", lambda api, infos: {"tls": executor}
+    )
+    monkeypatch.setattr(suite, "build_1hop_tls_neighbors", lambda infos: ({"tls": ()}, {"tls": ()}, {}))
+    monkeypatch.setattr(
+        suite,
+        "PartialCvObserver",
+        lambda **kwargs: SimpleNamespace(
+            observe_step=observe_step, observations={"in": lane}
+        ),
+    )
+    monkeypatch.setattr(suite, "extract_decision_group_features", make_features)
+    monkeypatch.setattr(suite, "feasible_indices_under_max_red", allowed_actions)
+
+    transitions = suite.collect_rollout_transitions_worker(
+        {
+            "sumocfg": "unused.sumocfg",
+            "seed": 7,
+            "epsilon": 0.0,
+            "rng_seed": 8,
+            "net": MPLightCvQNetwork(),
+        }
+    )
+
+    assert len(transitions) == 355
+    assert [tr.z_cur[0, 0] for tr in transitions[:4]] == [5.0, 6.0, 7.0, 8.0]
+    assert [tr.reward for tr in transitions[:4]] == pytest.approx([-1.2, -1.4, -1.6, -1.8])
+    assert [tr.action_idx for tr in transitions[1:4]] == [0, 0, 1]
+    assert transitions[2].z_next.shape == (2, 78)
+    assert transitions[2].next_allowed == (1,)
+    assert sum(tr.done for tr in transitions) == 1
+    assert transitions[-1].done
+    assert transitions[-1].reward == -10.0
+    assert transitions[-1].next_allowed == ()
+    assert len(requests) == 360
+    assert clock.time_sec == 3600
 
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
 """Sensor-matched FRAP/MPLight-style decentralized Double-DQN baseline under partial-CV sensing.
 
 Architectural & non-leakage parity invariants:
-1. Observations and rewards read STRICTLY from `PartialCvObserver` (`p_cv = 0.10`) and
-   `SafePhaseExecutor` — unequipped vehicles are never queried during training or evaluation.
+1. Q-network inputs and rewards use the partial-CV observer (`p_cv = 0.10`).
+   The shared executor checks junction occupancy for clearance.
 2. Uses a parameter-shared phase-competition Q-network over 78-dim candidate representations
    `z_i = [x_g (18), phi_i (30), phi_i - mean_{j != i}(phi_j) (30)]`, matching CFCMT's
    feature interface and applying the identical NEMA `feasible_indices_under_max_red` shield.
@@ -39,6 +39,7 @@ class ReplayTransition:
     action_idx: int
     reward: float
     z_next: np.ndarray  # (K', 78)
+    next_allowed: tuple[int, ...]
     done: bool
 
 
@@ -127,11 +128,11 @@ class MPLightCvQNetwork:
         x_sel = np.vstack([tr.z_cur[tr.action_idx] for tr in batch])
         targets = np.zeros(n_b, dtype=np.float64)
         for idx, tr in enumerate(batch):
-            if tr.done or tr.z_next.shape[0] == 0:
+            if tr.done:
                 targets[idx] = tr.reward
             else:
                 q_online_next = self.predict_q(tr.z_next, use_target=False)
-                best_next = int(np.argmax(q_online_next))
+                best_next = max(tr.next_allowed, key=lambda action: float(q_online_next[action]))
                 q_targ_next = self.predict_q(tr.z_next, use_target=True)
                 targets[idx] = tr.reward + self.gamma * float(q_targ_next[best_next])
 

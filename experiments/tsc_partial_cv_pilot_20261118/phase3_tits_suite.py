@@ -58,10 +58,9 @@ from experiments.tsc_partial_cv_pilot_20261118.phase2_residual_transfer import (
     FRESH_PHASE2_SEEDS,
     LEARNED_POLICIES,
     SOURCE_SEEDS,
-    _dict_to_rec,
-    _rec_to_dict,
     eval_phase2_closed_loop_worker,
     fit_phase2_residual_suite,
+    read_paper_label_archive,
     resolve_phase2_scenarios,
     select_maxred_pressure_phase,
     summarize_phase2_rows,
@@ -70,6 +69,7 @@ from experiments.tsc_partial_cv_pilot_20261118.phase2_residual_transfer import (
 PENETRATION_RATES = (0.05, 0.10, 0.20, 0.50, 1.00)
 FRESH_SALTLAKE_SEEDS = tuple(range(930101, 930111))
 RL_POLICIES = ("mplight_cv_ep2", "mplight_cv_ep16", "transfer_mplight_cv_ep2")
+SOURCE_ONLY_RL_POLICY = "transfer_mplight_cv_b0"
 
 
 def eval_custom_policy_worker(task: dict[str, Any]) -> dict[str, Any]:
@@ -96,7 +96,7 @@ def eval_custom_policy_worker(task: dict[str, Any]) -> dict[str, Any]:
     models_pkl = Path(task["models_pkl"])
 
     learned_ctrl: Any = None
-    if policy in LEARNED_POLICIES or policy in RL_POLICIES:
+    if policy in LEARNED_POLICIES or policy in RL_POLICIES or policy == SOURCE_ONLY_RL_POLICY:
         with models_pkl.open("rb") as fh:
             all_models = pickle.load(fh)
         learned_ctrl = all_models[family][policy]
@@ -290,7 +290,7 @@ def eval_custom_policy_worker(task: dict[str, Any]) -> dict[str, Any]:
 
 
 def collect_rollout_transitions_worker(task: dict[str, Any]) -> list[ReplayTransition]:
-    """Run one 1-hour episode under epsilon-greedy MPLight-CV (`p_cv = 0.10`, zero leakage)."""
+    """Collect ten-second transitions from one fixed-hour MPLight-CV episode."""
     from cf_h2o.sumo_runtime import load_libsumo
     from cf_h2o.eval.traffic_signal_resco_phase_benchmark import (
         _start_sumo,
@@ -321,23 +321,35 @@ def collect_rollout_transitions_worker(task: dict[str, Any]) -> list[ReplayTrans
         end_time = begin_time + 3600.0
         prev_decision: dict[str, tuple[np.ndarray, int]] = {}
 
-        while float(sumo_api.simulation.getTime()) < end_time:
+        while True:
             now_t = float(sumo_api.simulation.getTime())
+            done = now_t >= end_time
             obs_map = observer.observations
-            cur_decision: dict[str, tuple[np.ndarray, int]] = {}
 
             for tls_id in sorted(infos):
                 info = infos[tls_id]
                 ex = executors[tls_id]
-                feasible, s_vec, a_mat = extract_decision_group_features(
-                    info=info,
-                    executor=ex,
-                    observer=observer,
-                    infos_all=infos,
-                    up_neighbors=up_nb[tls_id],
-                    down_neighbors=down_nb[tls_id],
-                )
-                z_cur = build_phase_competition_inputs(s_vec, a_mat)
+                if done:
+                    feasible = ()
+                    z_cur = np.empty((0, net.in_dim))
+                    allowed = ()
+                else:
+                    feasible, s_vec, a_mat = extract_decision_group_features(
+                        info=info,
+                        executor=ex,
+                        observer=observer,
+                        infos_all=infos,
+                        up_neighbors=up_nb[tls_id],
+                        down_neighbors=down_nb[tls_id],
+                    )
+                    z_cur = build_phase_competition_inputs(s_vec, a_mat)
+                    allowed = feasible_indices_under_max_red(
+                        info=info,
+                        feasible=feasible,
+                        observer=observer,
+                        max_red_sec=None,
+                        current_green_state=str(ex.current_green_state),
+                    )
 
                 # Observe partial-CV queue reward for previous action at this TLS
                 if tls_id in prev_decision and now_t >= begin_time + 60.0:
@@ -354,29 +366,26 @@ def collect_rollout_transitions_worker(task: dict[str, Any]) -> list[ReplayTrans
                             action_idx=act_prev,
                             reward=rew,
                             z_next=z_cur,
-                            done=False,
+                            next_allowed=allowed,
+                            done=done,
                         )
                     )
 
+                if done:
+                    continue
                 if len(feasible) == 1:
                     chosen_idx = 0
+                elif rng.random() < epsilon:
+                    chosen_idx = int(rng.choice(allowed))
                 else:
-                    allowed = feasible_indices_under_max_red(
-                        info=info,
-                        feasible=feasible,
-                        observer=observer,
-                        max_red_sec=None,
-                        current_green_state=str(ex.current_green_state),
-                    )
-                    if rng.random() < epsilon:
-                        chosen_idx = int(rng.choice(allowed))
-                    else:
-                        q_vals = net.predict_q(z_cur, use_target=False)
-                        chosen_idx = max(allowed, key=lambda idx: float(q_vals[idx]))
-                    cur_decision[tls_id] = (z_cur, chosen_idx)
+                    q_vals = net.predict_q(z_cur, use_target=False)
+                    chosen_idx = max(allowed, key=lambda idx: float(q_vals[idx]))
+                # A singleton is the executor's continuation action for this interval.
+                prev_decision[tls_id] = (z_cur, chosen_idx)
                 ex.request(feasible[chosen_idx])
 
-            prev_decision.update(cur_decision)
+            if done:
+                break
             steps = min(
                 CONTROL_INTERVAL_SEC, max(int(math.ceil(end_time - now_t)), 0)
             )
@@ -583,9 +592,7 @@ def run_third_city_saltlake(
     sl_models_pkl = work_dir / "phase3_saltlake_models.pkl"
     sl_audit_json = work_dir / "phase3_saltlake_fit_audit.json"
 
-    p2_ds = json.loads(phase2_dataset_json.read_text(encoding="utf-8"))
-    src_groups = [_dict_to_rec(x) for x in p2_ds["source_groups"]]
-    assert not any("saltlake" in g.domain or "saltlake" in g.scenario for g in src_groups)
+    src_groups, _, _ = read_paper_label_archive(phase2_dataset_json)
 
     scan_tasks = [
         {
@@ -749,6 +756,7 @@ def run_rl_baselines(
     scenarios: Mapping[str, Path],
     ext_targets_dir: Path,
     workers: int,
+    source_only: bool = False,
 ) -> None:
     src_cfgs = [
         scenarios["hangzhou_4x4_repaired"],
@@ -800,9 +808,14 @@ def run_rl_baselines(
         ),
     }
 
+    policies = (SOURCE_ONLY_RL_POLICY,) if source_only else RL_POLICIES
     rl_models: dict[str, dict[str, Any]] = {}
     rl_audit: dict[str, Any] = {"source_pretrain": pre_audit, "families": {}}
     for fam_i, (fam, (train_cfgs, _, _)) in enumerate(family_cfgs.items()):
+        if source_only:
+            rl_models[fam] = {SOURCE_ONLY_RL_POLICY: pretrained_net}
+            rl_audit["families"][fam] = {SOURCE_ONLY_RL_POLICY: {"episodes": 0}}
+            continue
         print(f"[Phase 3C RL] Training MPLight-CV arms for {fam}...", flush=True)
         ep2_net, a_ep2 = train_mplight_agent(
             sumocfgs=train_cfgs,
@@ -839,7 +852,7 @@ def run_rl_baselines(
             "transfer_mplight_cv_ep2": a_tr,
         }
 
-    rl_pkl = work_dir / "phase3_rl_models.pkl"
+    rl_pkl = work_dir / ("phase3_rl_source_only_models.pkl" if source_only else "phase3_rl_models.pkl")
     with rl_pkl.open("wb") as fh:
         pickle.dump(rl_models, fh)
 
@@ -847,7 +860,7 @@ def run_rl_baselines(
     for fam, (_, eval_seeds, scen_map) in family_cfgs.items():
         for scen, cfg in scen_map.items():
             for seed in eval_seeds:
-                for pol in RL_POLICIES:
+                for pol in policies:
                     eval_tasks.append(
                         {
                             "family": fam,
@@ -882,7 +895,7 @@ def run_rl_baselines(
     rl_summary: dict[str, Any] = {}
     for fam in family_cfgs:
         rl_summary[fam] = {}
-        for pol in RL_POLICIES:
+        for pol in policies:
             sub = [r for r in rows if r["family"] == fam and r["policy"] == pol]
             rl_summary[fam][pol] = {
                 "mean_waiting_sec": float(np.mean([x["mean_waiting_sec"] for x in sub])),
@@ -896,7 +909,9 @@ def run_rl_baselines(
                 ),
             }
 
-    out_path = work_dir / "phase3_rl_baselines_result.json"
+    out_path = work_dir / (
+        "phase3_rl_source_only_result.json" if source_only else "phase3_rl_baselines_result.json"
+    )
     out_path.write_text(
         json.dumps(
             {
@@ -915,16 +930,19 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--stage",
-        choices=("all", "penetration", "saltlake", "rl"),
+        choices=("all", "penetration", "saltlake", "rl", "rl_source_only"),
         default="all",
     )
     parser.add_argument("--work-dir", type=Path, required=True)
     parser.add_argument("--phase2-dir", type=Path, required=True)
+    parser.add_argument("--archive-labels", type=Path, help="Label JSON for the Salt Lake source pool")
     parser.add_argument("--staged-scenarios-dir", type=Path, required=True)
     parser.add_argument("--source-scenarios-dir", type=Path, required=True)
     parser.add_argument("--ext-targets-dir", type=Path, required=True)
     parser.add_argument("--workers", type=int, default=12)
     args = parser.parse_args()
+    if args.archive_labels is not None and args.stage not in {"all", "saltlake"}:
+        parser.error("--archive-labels is only used by all or saltlake")
 
     args.work_dir.mkdir(parents=True, exist_ok=True)
     scenarios = resolve_phase2_scenarios(
@@ -935,15 +953,16 @@ def main() -> None:
         run_third_city_saltlake(
             work_dir=args.work_dir,
             ext_targets_dir=args.ext_targets_dir,
-            phase2_dataset_json=args.phase2_dir / "phase2_counterfactual_dataset.json",
+            phase2_dataset_json=args.archive_labels or args.phase2_dir / "phase2_counterfactual_dataset.json",
             workers=args.workers,
         )
-    if args.stage in {"all", "rl"}:
+    if args.stage in {"all", "rl", "rl_source_only"}:
         run_rl_baselines(
             work_dir=args.work_dir,
             scenarios=scenarios,
             ext_targets_dir=args.ext_targets_dir,
             workers=args.workers,
+            source_only=args.stage == "rl_source_only",
         )
     if args.stage in {"all", "penetration"}:
         run_penetration_curve(

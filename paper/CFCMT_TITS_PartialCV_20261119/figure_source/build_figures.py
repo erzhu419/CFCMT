@@ -9,7 +9,10 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
+from matplotlib.ticker import ScalarFormatter
 import numpy as np
+
+from paired_comparisons import EXP_DIR, RL_RESULT_FILE, summarize
 
 plt.rcParams.update(
     {
@@ -104,13 +107,13 @@ def draw_fig1_framework(out_dir: Path) -> None:
         4.0,
         22.5,
         28.5,
-        "(a) Strict Non-Leaking CV Sensor",
+        "(a) CV Inputs for Phase Scoring",
         [
-            "Persistent CV hash: p_cv = 10%",
-            "Unequipped HDVs strictly hidden",
+            r"Trip-persistent CV sample ($p_{\mathrm{CV}}=10\%$)",
+            "Phase scoring uses CV observations",
             "1-Hz causal lane state:",
-            " • Red shockwave tail d_max / L_jam",
-            " • Arrival-conservation queue q_cons",
+            r" • Red shockwave tail $d_{\max}/L_{\mathrm{jam}}$",
+            r" • Arrival-conservation queue $\hat{q}_{\mathrm{cons}}$",
             " • Hidden quadratic red wait integral",
             " • 1-hop upstream/downstream coupling",
         ],
@@ -128,8 +131,8 @@ def draw_fig1_framework(out_dir: Path) -> None:
         "(b) Native-Prefix Source Library",
         [
             "6 multi-city domains (411 groups)",
-            "Zero state_restores (exact replay)",
-            "1-hop light-cone 60-s delay contrast",
+            "Fresh run for each branch, no state restore",
+            "60-s local cost contrast",
         ],
         "#F0F9F4",
         "#1E7E5A",
@@ -143,8 +146,8 @@ def draw_fig1_framework(out_dir: Path) -> None:
         "Few-Shot Target Rollouts",
         [
             "B in {0, 6, 36} on seeds (5057, 6067)",
-            "Bit-exact pre-branch verification",
-            "Normalized contrast z_g(a) = c_g/sigma_g",
+            "Matching pre-branch summaries",
+            "Group-centered, span-normalized costs",
         ],
         "#FFF8EB",
         "#C87D0A",
@@ -160,12 +163,12 @@ def draw_fig1_framework(out_dir: Path) -> None:
         "(c) Calibrated Pairwise Transfer",
         [
             "78-D endpoint-antisymmetric input:",
-            " [x_g, phi_i - phi_j, 0.5(phi_i + phi_j)]",
-            "Exact Borda cost recovery P_g(a)",
+            r"$[x_g,\phi_i-\phi_j,\frac{1}{2}(\phi_i+\phi_j)]$",
+            "Borda aggregation of pairwise costs",
             "Group-aware leaf capacity cap",
-            "2-fold OOF source-pool & omega* gate",
-            "Fold-to-full RMS parity factor tau_cal:",
-            " (1 - omega*) tau_cal T_g + omega* S_g",
+            r"Structural pool, two-fold choice of $\omega^\star$",
+            r"Fold-to-full RMS shrinkage $\tau_{\mathrm{cal}}$",
+            r"$(1-\omega^\star)\tau_{\mathrm{cal}}\widehat{T}_g+\omega^\star\widehat{S}_g$",
         ],
         "#F4F3FB",
         "#5A4FCF",
@@ -178,15 +181,14 @@ def draw_fig1_framework(out_dir: Path) -> None:
         4.0,
         20.4,
         28.5,
-        "(d) Shielded Online Control",
+        "(d) Online Phase Selection",
         [
-            "Frozen predictor (0 rollouts)",
-            "Two-clause NEMA Max-Red:",
-            " 1) Confirmed waiting CV cap",
-            " 2) Flow-confirmed drought cap",
-            "Dead-pocket false-trigger immune",
-            "Shared yellow/all-red executor",
-            "Delta t = 10 s closed-loop step",
+            "Frozen scores, no online rollouts",
+            "Demand-confirmed max-red priority",
+            " 1) CV present on lane",
+            " 2) Arrival flow and estimated queue",
+            "Shared clearance checks all vehicles",
+            "10-s phase decision interval",
         ],
         "#FDF2F2",
         "#B83232",
@@ -202,7 +204,7 @@ def draw_fig1_framework(out_dir: Path) -> None:
     ax.text(
         50.0,
         1.2,
-        "Strict 4-way seed partition: Source (2027, 3037)  |  Target Adaptation (5057, 6067)  |  Dev Check (7077, 8087)  |  Single-Shot Virgin Test (920101–920110 / 930101–930110)",
+        "Source seeds (2027, 3037)  |  Adaptation (5057, 6067)  |  Development (7077, 8087)  |  Held-out test (920101–920110 / 930101–930110)",
         ha="center",
         va="center",
         fontsize=7.3,
@@ -213,18 +215,20 @@ def draw_fig1_framework(out_dir: Path) -> None:
 
 
 def draw_fig2_distributions(exp_dir: Path, out_dir: Path) -> None:
-    """Fig. 2: 3-city virgin-seed closed-loop waiting time & vehicle-hours comparison."""
+    """Fig. 2: Held-out waiting-time distributions in three cities."""
     p2 = json.loads((exp_dir / "phase2_eval_fresh_result.json").read_text())["rows"]
     sl = json.loads((exp_dir / "phase3_saltlake_eval_fresh_result.json").read_text())["rows"]
-    rl = json.loads((exp_dir / "phase3_rl_baselines_result.json").read_text())["rows"]
+    rl = json.loads((exp_dir / RL_RESULT_FILE).read_text())["rows"]
+    rl.extend(json.loads((exp_dir / "phase3_rl_source_only_result.json").read_text())["rows"])
 
     spec = [
         ("cfcmt_b6", "CFCMT (B=6)", C_CFCMT),
         ("zero_shot_cfcmt_b0", "Zero-Shot CFCMT", C_ZS),
+        ("transfer_mplight_cv_b0", "Trans-MPLight-CV\n(source only)", "#853D0C"),
         ("cfcmt_b36", "CFCMT (B=36)", "#1D4ED8"),
         ("maxred_conservation_gp_10", "MaxRed-Cons-GP", C_MAXRED),
         ("conservation_gp_10", "Cons-GP", C_CONS),
-        ("transfer_mplight_cv_ep2", "Trans-MPLight-CV", C_RL),
+        ("transfer_mplight_cv_ep2", "Trans-MPLight-CV (ep2)", C_RL),
         ("mplight_cv_ep16", "MPLight-CV (ep16)", "#F97316"),
         ("target_only_b6", "Target-Only (B=6)", C_TO),
         ("source_placebo_b6", "Source-Placebo (B=6)", C_PLAC),
@@ -237,7 +241,7 @@ def draw_fig2_distributions(exp_dir: Path, out_dir: Path) -> None:
         ("saltlake", "Salt Lake City (2 Corridors)", sl, sorted({int(r["seed"]) for r in sl})),
     ]
 
-    fig, axes = plt.subplots(1, 3, figsize=(7.4, 2.85), sharey=True)
+    fig, axes = plt.subplots(1, 3, figsize=(7.4, 3.20), sharey=True)
     for ax_i, (ax, (fam, title, base_rows, seeds)) in enumerate(zip(axes, families)):
         y_pos = np.arange(len(spec))[::-1]
         means = []
@@ -272,76 +276,38 @@ def draw_fig2_distributions(exp_dir: Path, out_dir: Path) -> None:
         if ax_i == 0:
             ax.set_yticks(y_pos)
             ax.set_yticklabels([x[1] for x in spec])
-            ax.set_xlim(0, min(max(means) * 1.18, 1450))
 
     fig.tight_layout(w_pad=1.35)
     save_both(fig, out_dir, "fig2_benchmark_distributions")
 
 
 def draw_fig3_ablation(exp_dir: Path, out_dir: Path) -> None:
-    """Fig. 3: (a) 2-Fold OOF convex blending U-curves; (b) 3-City paired vehicle-hour & waiting gains."""
-    from experiments.tsc_partial_cv_pilot_20261118.phase2_residual_transfer import (
-        ADAPT_SEEDS,
-        _dict_to_rec,
-        _eval_precomputed_scores,
-        _to_action_group,
-        fit_phase2_residual_suite,
-        subset_residual_budget,
-    )
-    from experiments.tsc_partial_cv_pilot_20261118.cfcmt_cv_model import EndpointAntisymmetricActionRanker
+    """Fig. 3: Archived adaptation choices and held-out vehicle-hour comparisons."""
+    p2 = json.loads((exp_dir / "phase2_offline_fit_audit.json").read_text())["fit_audit"]
+    sl = json.loads((exp_dir / "phase3_saltlake_fit_audit.json").read_text())["fit_audit"]
+    budgets = [
+        (f"{city}, B={budget}", audit["budgets"][f"b{budget}"])
+        for city, audit in [("LA", p2["la"]), ("Jinan", p2["jinan"]), ("Salt Lake", sl["saltlake"])]
+        for budget in (6, 36)
+    ]
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.16, 2.75))
+    pos = np.arange(len(budgets))[::-1]
+    target = [b["oof_target_only"]["mean_normalized_regret"] for _, b in budgets]
+    transfer = [b["oof_cfcmt"]["mean_normalized_regret"] for _, b in budgets]
+    ax1.hlines(pos, transfer, target, color="#B5BDC3", linewidth=1)
+    ax1.scatter(target, pos, label="Target-only", color=C_TO, marker="s", s=25)
+    ax1.scatter(transfer, pos, label="CFCMT", color=C_CFCMT, s=17)
+    for y, (_, budget) in zip(pos, budgets):
+        ax1.text(0.422, y, f"ω*={budget['cfcmt_omega']:.2f}", va="center", fontsize=7.1)
+    ax1.set_yticks(pos, [name for name, _ in budgets])
+    ax1.set_xlim(0.025, 0.513)
+    ax1.set_xticks([0.05, 0.15, 0.25, 0.35])
+    ax1.set_ylim(-0.65, len(budgets) + 0.2)
+    ax1.set_xlabel("Out-of-fold normalized regret ↓")
+    ax1.set_title("(a) Source Weight Selection")
+    ax1.grid(axis="x", linestyle="--", alpha=0.35)
+    ax1.legend(loc="upper left", ncol=2, frameon=False)
 
-    ds = json.loads((exp_dir / "phase2_augmented_dataset.json").read_text())
-    src = [_dict_to_rec(x) for x in ds["source_groups"]]
-    tgt = {k: [_dict_to_rec(x) for x in v] for k, v in ds["target_groups"].items()}
-    models, _ = fit_phase2_residual_suite(src, tgt)
-
-    omegas = np.linspace(0.0, 1.0, 21)
-    curves = {}
-    for fam, pool_key in (("la", "zero_shot_cfcmt_b0"), ("jinan", "cfcmt_b36")):
-        sub = subset_residual_budget(tgt[fam], 18)
-        act = [_to_action_group(g) for g in sub]
-        s0, s1 = ADAPT_SEEDS
-        a0 = [g for g in act if g.seed == s0]
-        a1 = [g for g in act if g.seed == s1]
-        f0 = EndpointAntisymmetricActionRanker(l2_regularization=15.0, random_state=42).fit(a0)
-        f1 = EndpointAntisymmetricActionRanker(l2_regularization=15.0, random_state=42).fit(a1)
-        val = a1 + a0
-        t_oof = [f0.score_group(g.state_vec, g.action_mat) for g in a1] + [f1.score_group(g.state_vec, g.action_mat) for g in a0]
-        srk = models[fam][pool_key].source_ranker
-        p_sc = [srk.score_group(g.state_vec, g.action_mat) for g in val]
-        curves[fam] = [
-            _eval_precomputed_scores(val, [(1.0 - om) * ts + om * ps for ts, ps in zip(t_oof, p_sc)])["mean_normalized_regret"]
-            for om in omegas
-        ]
-
-    p2 = json.loads((exp_dir / "phase2_eval_fresh_result.json").read_text())["rows"]
-    sl = json.loads((exp_dir / "phase3_saltlake_eval_fresh_result.json").read_text())["rows"]
-    rl = json.loads((exp_dir / "phase3_rl_baselines_result.json").read_text())["rows"]
-    p2_seeds = sorted({int(r["seed"]) for r in p2})
-    sl_seeds = sorted({int(r["seed"]) for r in sl})
-
-    def comp3_vehh(pol: str) -> np.ndarray:
-        s_la = rl if (pol.startswith("mplight") or pol.startswith("transfer_")) else p2
-        s_jn = rl if (pol.startswith("mplight") or pol.startswith("transfer_")) else p2
-        s_sl = rl if (pol.startswith("mplight") or pol.startswith("transfer_")) else sl
-        v_la = np.array([np.mean([r["system_vehicle_hours"] for r in s_la if r["family"] == "la" and r["policy"] == pol and int(r["seed"]) == s]) for s in p2_seeds])
-        v_jn = np.array([np.mean([r["system_vehicle_hours"] for r in s_jn if r["family"] == "jinan" and r["policy"] == pol and int(r["seed"]) == s]) for s in p2_seeds])
-        v_sl = np.array([np.mean([r["system_vehicle_hours"] for r in s_sl if r["family"] == "saltlake" and r["policy"] == pol and int(r["seed"]) == s]) for s in sl_seeds])
-        return (v_la + v_jn + v_sl) / 3.0
-
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.16, 2.55))
-
-    ax1.plot(omegas, curves["la"], "-o", markersize=3.2, color=C_CFCMT, linewidth=1.5, label="Los Angeles (real_cities, ω*=0.75)")
-    ax1.plot(omegas, curves["jinan"], "-s", markersize=3.2, color=C_CONS, linewidth=1.5, label="Jinan (multi_phase_grids, ω*=0.25)")
-    ax1.axvline(0.75, color=C_CFCMT, linestyle=":", alpha=0.75)
-    ax1.axvline(0.25, color=C_CONS, linestyle=":", alpha=0.75)
-    ax1.set_xlabel("Source Prior Weight ω")
-    ax1.set_ylabel("2-Fold OOF Normalized Regret ↓")
-    ax1.set_title("(a) Convex Source–Target Regret Curves (B=36)")
-    ax1.grid(True, linestyle="--", alpha=0.35)
-    ax1.legend(loc="upper left", frameon=True, facecolor="white", framealpha=0.85)
-
-    cf_v = comp3_vehh("cfcmt_b6")
     comps = [
         ("conservation_gp_10", "vs Cons-GP", C_CONS),
         ("maxred_conservation_gp_10", "vs MaxRed-Cons-GP", C_MAXRED),
@@ -352,9 +318,11 @@ def draw_fig3_ablation(exp_dir: Path, out_dir: Path) -> None:
         ("fixed_program", "vs Fixed-Time", C_FIXED),
     ]
     y_idx = np.arange(len(comps))[::-1]
-    diffs = [cf_v - comp3_vehh(c[0]) for c in comps]
-    means = [float(np.mean(d)) for d in diffs]
-    cis = [1.96 * float(np.std(d, ddof=1)) / np.sqrt(len(d)) for d in diffs]
+    results = summarize(exp_dir)
+    comparisons = [results[policy]["system_vehicle_hours"] for policy, _, _ in comps]
+    means = np.array([result["mean"] for result in comparisons])
+    low, high = np.array([result["interval"] for result in comparisons]).T
+    cis = [means - low, high - means]
     cols = [c[2] for c in comps]
 
     ax2.axvline(0.0, color="#222222", linestyle="--", linewidth=1.0)
@@ -362,8 +330,9 @@ def draw_fig3_ablation(exp_dir: Path, out_dir: Path) -> None:
     ax2.scatter(means, y_idx, color=cols, s=20, zorder=4)
     ax2.set_yticks(y_idx)
     ax2.set_yticklabels([c[1] for c in comps])
-    ax2.set_xlabel("3-City Paired Δ System Vehicle-Hours (CFCMT B=6 − Base) ↓")
-    ax2.set_title("(b) Paired Vehicle-Hour Reductions (N=10 Virgin Seeds)")
+    ax2.set_xlabel("CFCMT (B=6) − baseline (veh-h) ↓")
+    ax2.set_title("(b) Three-City Differences and 95% CIs")
+    ax2.set_xlim(right=20)
     ax2.grid(axis="x", linestyle="--", alpha=0.35)
 
     fig.tight_layout(w_pad=1.4)
@@ -378,9 +347,9 @@ def draw_fig4_penetration(exp_dir: Path, out_dir: Path) -> None:
     x_labels = [f"{int(round(r * 100))}%" for r in rates]
 
     pol_specs = [
-        ("cfcmt_b6", "CFCMT (B=6, trained @ 10%)", C_CFCMT, "-o"),
-        ("zero_shot_cfcmt_b0", "Zero-Shot CFCMT (trained @ 10%)", C_ZS, "--^"),
-        ("cfcmt_b36", "CFCMT (B=36, trained @ 10%)", "#1D4ED8", "-.s"),
+        ("cfcmt_b6", "CFCMT (B=6)", C_CFCMT, "-o"),
+        ("zero_shot_cfcmt_b0", "CFCMT (B=0)", C_ZS, "--^"),
+        ("cfcmt_b36", "CFCMT (B=36)", "#1D4ED8", "-.s"),
         ("maxred_conservation_gp_10", "MaxRed-Cons-GP", C_MAXRED, "-D"),
         ("conservation_gp_10", "Cons-GP", C_CONS, "--v"),
         ("observed_mp_10", "Observed-MP (raw CV)", C_OBS, ":x"),
@@ -396,31 +365,34 @@ def draw_fig4_penetration(exp_dir: Path, out_dir: Path) -> None:
     ):
         smap = pen["curve_summary"][scen]
         for pol, label, col, style in pol_specs:
+            if scen == "la_1x4" and pol == "zero_shot_cfcmt_b0":
+                continue
+            if scen == "la_1x4" and pol == "cfcmt_b6":
+                label = "CFCMT (B=0 and B=6)"
             ys = [smap[f"{r:.2f}"][pol]["mean_waiting_sec"] for r in rates]
             ax.plot(x_idx, ys, style, color=col, linewidth=1.5, markersize=4.5, label=label)
         if use_log:
             ax.set_yscale("log")
+            ax.set_yticks([200, 500, 1000, 2000])
+            ax.yaxis.set_major_formatter(ScalarFormatter())
         ax.set_xticks(x_idx)
         ax.set_xticklabels(x_labels)
-        ax.set_xlabel("Connected-Vehicle Penetration Rate p_CV")
+        ax.set_xlabel(r"Connected-vehicle penetration $p_{\mathrm{CV}}$")
         ax.set_ylabel("Mean Waiting Time (s) ↓")
         ax.set_title(title)
         ax.grid(True, which="both", linestyle="--", alpha=0.32)
-        if scen == "la_1x4":
-            ax.legend(loc="upper right", fontsize=6.9, frameon=True, facecolor="white", framealpha=0.88)
+        ax.legend(loc="upper right", fontsize=6.9, frameon=True, facecolor="white", framealpha=0.88)
 
     fig.tight_layout(w_pad=1.3)
     save_both(fig, out_dir, "fig4_penetration_curve")
 
 
 def main() -> None:
-    repo = Path("/home/erzhu419/mine_code/CFCMT")
-    exp_dir = repo / "experiments/tsc_partial_cv_pilot_20261118"
-    out_dir = repo / "paper/CFCMT_TITS_PartialCV_20261119/figures"
+    out_dir = Path(__file__).resolve().parents[1] / "figures"
     draw_fig1_framework(out_dir)
-    draw_fig2_distributions(exp_dir, out_dir)
-    draw_fig3_ablation(exp_dir, out_dir)
-    draw_fig4_penetration(exp_dir, out_dir)
+    draw_fig2_distributions(EXP_DIR, out_dir)
+    draw_fig3_ablation(EXP_DIR, out_dir)
+    draw_fig4_penetration(EXP_DIR, out_dir)
     print("ALL_FOUR_TITS_FIGURES_GENERATED", out_dir)
 
 
