@@ -1,10 +1,11 @@
-from dataclasses import dataclass
+from types import SimpleNamespace
 
 import pytest
 
 from cf_h2o.traffic_signal.safe_phase_controller import (
     PhaseTiming,
     SafePhaseExecutor,
+    build_safe_phase_executors,
     _junction_clearance_lane_ids,
 )
 
@@ -125,6 +126,46 @@ def test_same_phase_request_does_not_reset_minimum_green_clock():
     assert executor.green_elapsed_sec == pytest.approx(1.0)
     assert not api.trafficlight.writes
     assert executor.audit.same_phase_requests == 1
+
+
+@pytest.mark.parametrize("occupied", [False, True])
+def test_all_red_takeover_runs_native_clearance_before_entering_green(occupied):
+    api = _Sumo()
+    phases = [
+        SimpleNamespace(state=state, duration=duration)
+        for state, duration in (("rrrr", 5), ("rrGG", 30), ("GGrr", 20))
+    ]
+    api.trafficlight.getAllProgramLogics = lambda _: [SimpleNamespace(phases=phases)]
+    api.trafficlight.getRedYellowGreenState = lambda _: "rrrr"
+    api.trafficlight.getSpentDuration = lambda _: 0
+    api.trafficlight.getPhase = lambda _: 0
+    api.trafficlight.getNextSwitch = lambda _: 5
+    api.simulation = SimpleNamespace(getTime=lambda: 0)
+    info = SimpleNamespace(
+        candidates=(phases[2], phases[1]),
+        controlled_links=((("in", "out", ":J0_0"),),),
+    )
+    executor = build_safe_phase_executors(api, {"J0": info})["J0"]
+    api.lane.vehicles[":J0_0"] = int(occupied)
+
+    assert executor.mode == "all_red"
+    assert executor.feasible_states_now() == ("rrGG",)
+    assert not executor.request("rrGG")
+    executor.advance(4)
+    assert api.trafficlight.writes == [("J0", "rrrr")]
+
+    executor.advance(1)
+    if occupied:
+        assert api.trafficlight.writes == [("J0", "rrrr")]
+        assert executor.audit.occupancy_clearance_extensions == 1
+        api.lane.vehicles[":J0_0"] = 0
+        executor.advance(1)
+
+    assert api.trafficlight.writes == [("J0", "rrrr"), ("J0", "rrGG")]
+    assert executor.mode == "green"
+    assert executor.green_elapsed_sec == 0
+    assert not executor.request("rrGG")
+    assert not executor.request("GGrr")  # The minimum-green clock starts at green.
 
 
 def test_projected_clearance_is_zero_for_stay_and_explicit_for_switch():

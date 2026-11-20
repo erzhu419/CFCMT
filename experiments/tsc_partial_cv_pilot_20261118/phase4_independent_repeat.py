@@ -60,16 +60,17 @@ def scenario_paths(staged: Path, external: Path) -> dict[str, Path]:
 
 
 def collect_labels(
-    paths: dict[str, Path], repeat: int, seeds: tuple[int, int], workers: int
+    paths: dict[str, Path], repeat: int, seeds: tuple[int, int], workers: int,
+    families: tuple[str, ...] = tuple(FAMILIES),
 ) -> dict:
     scan_tasks = [
         {
             "scenario": scenario, "sumocfg": str(paths[scenario]), "seed": seed,
             "domain": f"target_{city}", "max_groups": SCAN_QUOTA[city],
         }
-        for city, scenarios in FAMILIES.items()
+        for city in families
         for seed in seeds
-        for scenario in scenarios
+        for scenario in FAMILIES[city]
     ]
     candidates = {}
     with ProcessPoolExecutor(max_workers=workers) as pool:
@@ -77,10 +78,10 @@ def collect_labels(
             candidates[task["scenario"], task["seed"]] = rows
 
     specs = {}
-    for city, scenarios in FAMILIES.items():
+    for city in families:
         for seed in seeds:
             rows = sorted(
-                (row for scenario in scenarios for row in candidates[scenario, seed]),
+                (row for scenario in FAMILIES[city] for row in candidates[scenario, seed]),
                 key=lambda r: (r["elapsed_sec"], r["scenario"], r["tls_id"]),
             )
             if len(rows) < 18:
@@ -105,8 +106,8 @@ def collect_labels(
             if i % 100 == 0 or i == len(pending):
                 print(f"Repeat {repeat}: completed {i}/{len(pending)} branches", flush=True)
 
-    groups = {city: [] for city in FAMILIES}
-    costs = {city: {} for city in FAMILIES}
+    groups = {city: [] for city in families}
+    costs = {city: {} for city in families}
     for name, spec in specs.items():
         rows = sorted(branches[name], key=lambda r: r["branch_idx"])
         if (
@@ -181,11 +182,11 @@ def stored_pressure_regrets(groups: dict) -> dict:
     return output
 
 
-def summarize(rows: list[dict], audits: dict) -> dict:
+def summarize(rows: list[dict], audits: dict, families: tuple[str, ...] = tuple(FAMILIES)) -> dict:
     by_repeat = {}
     for repeat in range(1, len(ADAPTATION_PAIRS) + 1):
         cities = {}
-        for city, scenarios in FAMILIES.items():
+        for city in families:
             family_rows = [r for r in rows if r["family"] == city and r["adaptation_repeat"] in (0, repeat)]
             city_out = {}
             for budget in ("b6", "b36"):
@@ -221,6 +222,31 @@ def summarize(rows: list[dict], audits: dict) -> dict:
     return by_repeat
 
 
+def merge_repeat_results(original: dict, corrected: dict) -> dict:
+    """Replace the recomputed city cells and preserve the earlier city rows."""
+    def row_key(row):
+        return (row["adaptation_repeat"], row["family"], row["scenario"], row["policy"], row["seed"])
+
+    if original["protocol"] != corrected["protocol"]:
+        raise ValueError("Independent-repeat protocols do not match")
+    rows = corrected["rows"]
+    recomputed = {row["family"] for row in rows}
+    original_keys = {row_key(row) for row in original["rows"] if row["family"] in recomputed}
+    if {row_key(row) for row in rows} != original_keys or len(rows) != len(original_keys):
+        raise ValueError("Corrected rows do not cover the original evaluation cells")
+    combined = {**original, "rows": sorted(
+        [row for row in original["rows"] if row["family"] not in recomputed] + rows, key=row_key,
+    )}
+    for field in ("adaptation_costs", "reference_action_regrets", "fit_audit"):
+        combined[field] = {
+            repeat: {**before, **{city: corrected[field][repeat][city] for city in recomputed}}
+            for repeat, before in original[field].items()
+        }
+    combined["summary"] = summarize(combined["rows"], combined["fit_audit"])
+    combined["recomputed_families"] = sorted(recomputed)
+    return combined
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--work-dir", type=Path, required=True)
@@ -228,9 +254,12 @@ def main() -> None:
     parser.add_argument("--staged-scenarios-dir", type=Path, required=True)
     parser.add_argument("--ext-targets-dir", type=Path, required=True)
     parser.add_argument("--workers", type=int, default=18)
+    parser.add_argument("--families", nargs="+", choices=tuple(FAMILIES), default=tuple(FAMILIES))
+    parser.add_argument("--reuse-results", type=Path, help="Original panel rows for the unselected cities")
     args = parser.parse_args()
 
     args.work_dir.mkdir(parents=True, exist_ok=True)
+    families = tuple(dict.fromkeys(args.families))
     paths = scenario_paths(args.staged_scenarios_dir, args.ext_targets_dir)
     source_groups, _, _ = read_paper_label_archive(args.archive_labels)
     audits = {}
@@ -240,12 +269,12 @@ def main() -> None:
     for repeat, seeds in enumerate(ADAPTATION_PAIRS, 1):
         labels_path = args.work_dir / f"adaptation_labels_{repeat}.json"
         if not labels_path.exists():
-            bundle = collect_labels(paths, repeat, seeds, args.workers)
+            bundle = collect_labels(paths, repeat, seeds, args.workers, families)
             labels_path.write_text(json.dumps(bundle), encoding="utf-8")
         else:
             bundle = json.loads(labels_path.read_text())
-        if tuple(bundle["seeds"]) != seeds:
-            raise RuntimeError(f"Incorrect adaptation seeds in {labels_path}")
+        if tuple(bundle["seeds"]) != seeds or set(bundle["groups"]) != set(families):
+            raise RuntimeError(f"Incorrect adaptation seeds or cities in {labels_path}")
         ledgers[str(repeat)] = bundle["ledger"]
         groups = {city: [_dict_to_rec(g) for g in rows] for city, rows in bundle["groups"].items()}
         pressure_regrets[str(repeat)] = stored_pressure_regrets(groups)
@@ -263,8 +292,8 @@ def main() -> None:
             "seed": seed, "policy": policy, "models_pkl": str(model_paths[repeat or 1]),
             "adaptation_repeat": repeat,
         }
-        for city, scenarios in FAMILIES.items()
-        for scenario in scenarios
+        for city in families
+        for scenario in FAMILIES[city]
         for seed in TEST_SEEDS
         for repeat in range(len(ADAPTATION_PAIRS) + 1)
         for policy in (POLICIES if repeat else ("conservation_gp_10",))
@@ -272,20 +301,22 @@ def main() -> None:
     rows = evaluate_tasks(all_tasks, args.workers)
     result = {
         "protocol": {
-            "adaptation_pairs": ADAPTATION_PAIRS,
-            "held_out_seeds": TEST_SEEDS,
+            "adaptation_pairs": [list(pair) for pair in ADAPTATION_PAIRS],
+            "held_out_seeds": list(TEST_SEEDS),
             "source_label_count": len(source_groups),
             "nested_budgets": [6, 36],
-            "omega_grid": OMEGA_GRID,
+            "omega_grid": list(OMEGA_GRID),
             "completion_threshold_for_severe_runs": SEVERE_COMPLETION,
             "evaluation_duration_seconds": 3600,
         },
         "adaptation_costs": ledgers,
         "reference_action_regrets": pressure_regrets,
         "fit_audit": audits,
-        "summary": summarize(rows, audits),
+        "summary": summarize(rows, audits, families),
         "rows": rows,
     }
+    if args.reuse_results is not None:
+        result = merge_repeat_results(json.loads(args.reuse_results.read_text()), result)
     result_path = args.work_dir / "phase4_independent_repeat_result.json"
     result_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
     print(f"Wrote {result_path}", flush=True)

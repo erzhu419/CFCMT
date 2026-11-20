@@ -43,6 +43,7 @@ from experiments.tsc_partial_cv_pilot_20261118.mplight_cv_baseline import (
 )
 from experiments.tsc_partial_cv_pilot_20261118.phase0_sensor_gap import _oracle_gp_phase
 from experiments.tsc_partial_cv_pilot_20261118.phase1_transfer_pilot import (
+    HORIZON_SEC,
     evaluate_single_branch_worker,
     lightcone_step_cost,
     scan_decision_candidates_worker,
@@ -59,11 +60,13 @@ from experiments.tsc_partial_cv_pilot_20261118.phase2_residual_transfer import (
     FRESH_PHASE2_SEEDS,
     LEARNED_POLICIES,
     SOURCE_SEEDS,
+    _rec_to_dict,
     eval_phase2_closed_loop_worker,
     fit_phase2_residual_suite,
     read_paper_label_archive,
     resolve_phase2_scenarios,
     select_maxred_pressure_phase,
+    subset_residual_budget,
     summarize_phase2_rows,
 )
 
@@ -701,12 +704,46 @@ def run_third_city_saltlake(
 
     src_groups, _, _ = read_paper_label_archive(phase2_dataset_json)
     sl_groups = collect_saltlake_adaptation_groups(sl_scens, workers)
+    if len(sl_groups) != 10 * len(sl_scens) * len(ADAPT_SEEDS):
+        raise RuntimeError("Salt Lake City collection did not fill the original label quota")
+    labels_path = work_dir / "phase3_saltlake_labels.json"
+    labels_path.write_text(
+        json.dumps([_rec_to_dict(group) for group in sl_groups]),
+        encoding="utf-8",
+    )
+    print(f"SAVED_PHASE3_SALTLAKE_LABELS {labels_path}", flush=True)
+
+    def receipt_row(group: ResidualGroupRecord) -> dict[str, Any]:
+        return {
+            "group_id": group.group_id,
+            "scenario": group.scenario,
+            "seed": group.seed,
+            "prefix_sec": int(group.time_sec),
+            "action_count": len(group.candidate_states),
+        }
+
+    (work_dir / "saltlake_original_label_receipt.json").write_text(
+        json.dumps(
+            {
+                "native_scan_runs": len(sl_scens) * len(ADAPT_SEEDS),
+                "scan_seconds_per_run": 3430,
+                "branch_horizon_seconds": HORIZON_SEC,
+                "groups": [receipt_row(group) for group in sl_groups],
+                "selected_b6": [
+                    receipt_row(group) for group in subset_residual_budget(sl_groups, 3)
+                ],
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
 
     frozen_models, fit_audit = fit_phase2_residual_suite(
         src_groups, {"saltlake": sl_groups}
     )
     with sl_models_pkl.open("wb") as fh:
         pickle.dump(frozen_models, fh)
+    print(f"SAVED_PHASE3_SALTLAKE_MODELS {sl_models_pkl}", flush=True)
     sl_audit_json.write_text(
         json.dumps(
             {
@@ -795,30 +832,33 @@ def run_rl_baselines(
     ext_targets_dir: Path,
     workers: int,
     source_only: bool = False,
+    target_family: str | None = None,
+    source_models_pkl: Path | None = None,
 ) -> None:
-    src_cfgs = [
-        scenarios["hangzhou_4x4_repaired"],
-        scenarios["hangzhou_4x4_hetero_repaired"],
-        scenarios["atlanta_1x5"],
-        scenarios["cologne3"],
-        scenarios["ingolstadt7"],
-    ]
-    print("[Phase 3C RL] Pretraining source MPLight-CV across 5 source scenarios...", flush=True)
-    pretrained_net, pre_audit = train_mplight_agent(
-        sumocfgs=src_cfgs,
-        seeds=SOURCE_SEEDS,
-        n_episodes=10,
-        init_net=None,
-        rng_seed=20260301,
-        workers=workers,
-    )
+    if source_models_pkl is None:
+        src_cfgs = [
+            scenarios["hangzhou_4x4_repaired"],
+            scenarios["hangzhou_4x4_hetero_repaired"],
+            scenarios["atlanta_1x5"],
+            scenarios["cologne3"],
+            scenarios["ingolstadt7"],
+        ]
+        print("[Phase 3C RL] Pretraining source MPLight-CV across 5 source scenarios...", flush=True)
+        pretrained_net, pre_audit = train_mplight_agent(
+            sumocfgs=src_cfgs,
+            seeds=SOURCE_SEEDS,
+            n_episodes=10,
+            init_net=None,
+            rng_seed=20260301,
+            workers=workers,
+        )
+    else:
+        with source_models_pkl.open("rb") as fh:
+            source_models = pickle.load(fh)
+        pretrained_net = next(iter(source_models.values()))[SOURCE_ONLY_RL_POLICY]
+        pre_audit = {"reused_frozen_source_weights": True}
 
-    sl_scens = {
-        "saltlake_400s_peak": ext_targets_dir
-        / "saltlake_400s_200w_q1_weekday_peak/saltlake_400s_200w_q1_weekday_peak.sumocfg",
-        "saltlake_state_peak": ext_targets_dir
-        / "saltlake_state_university_q1_weekday_peak/saltlake_state_university_q1_weekday_peak.sumocfg",
-    }
+    sl_scens = saltlake_scenario_configs(ext_targets_dir)
 
     family_cfgs: dict[str, tuple[list[Path], tuple[int, ...], dict[str, Path]]] = {
         "la": (
@@ -850,6 +890,8 @@ def run_rl_baselines(
     rl_models: dict[str, dict[str, Any]] = {}
     rl_audit: dict[str, Any] = {"source_pretrain": pre_audit, "families": {}}
     for fam_i, (fam, (train_cfgs, _, _)) in enumerate(family_cfgs.items()):
+        if target_family is not None and fam != target_family:
+            continue
         if source_only:
             rl_models[fam] = {SOURCE_ONLY_RL_POLICY: pretrained_net}
             rl_audit["families"][fam] = {SOURCE_ONLY_RL_POLICY: {"episodes": 0}}
@@ -895,7 +937,8 @@ def run_rl_baselines(
         pickle.dump(rl_models, fh)
 
     eval_tasks: list[dict[str, Any]] = []
-    for fam, (_, eval_seeds, scen_map) in family_cfgs.items():
+    for fam in rl_models:
+        _, eval_seeds, scen_map = family_cfgs[fam]
         for scen, cfg in scen_map.items():
             for seed in eval_seeds:
                 for pol in policies:
@@ -931,7 +974,7 @@ def run_rl_baselines(
 
     rows.sort(key=lambda d: (d["family"], d["scenario"], d["seed"], d["policy"]))
     rl_summary: dict[str, Any] = {}
-    for fam in family_cfgs:
+    for fam in rl_models:
         rl_summary[fam] = {}
         for pol in policies:
             sub = [r for r in rows if r["family"] == fam and r["policy"] == pol]
@@ -978,9 +1021,15 @@ def main() -> None:
     parser.add_argument("--source-scenarios-dir", type=Path, required=True)
     parser.add_argument("--ext-targets-dir", type=Path, required=True)
     parser.add_argument("--workers", type=int, default=12)
+    parser.add_argument("--rl-family", choices=("la", "jinan", "saltlake"))
+    parser.add_argument("--rl-source-models", type=Path)
     args = parser.parse_args()
     if args.archive_labels is not None and args.stage not in {"all", "saltlake"}:
         parser.error("--archive-labels is only used by all or saltlake")
+    if (args.rl_family is not None or args.rl_source_models is not None) and args.stage not in {
+        "rl", "rl_source_only",
+    }:
+        parser.error("--rl-family and --rl-source-models require an RL-only stage")
 
     args.work_dir.mkdir(parents=True, exist_ok=True)
     scenarios = resolve_phase2_scenarios(
@@ -1001,6 +1050,8 @@ def main() -> None:
             ext_targets_dir=args.ext_targets_dir,
             workers=args.workers,
             source_only=args.stage == "rl_source_only",
+            target_family=args.rl_family,
+            source_models_pkl=args.rl_source_models,
         )
     if args.stage in {"all", "penetration"}:
         run_penetration_curve(

@@ -65,6 +65,7 @@ class SafePhaseExecutor:
         timings: Sequence[PhaseTiming],
         initial_state: str,
         initial_green_elapsed_sec: float = 0.0,
+        initial_all_red: tuple[str, float] | None = None,
         clearance_lane_ids: Sequence[str] = (),
         clearance_poll_sec: float = 1.0,
     ) -> None:
@@ -92,6 +93,15 @@ class SafePhaseExecutor:
         self.green_elapsed_sec = max(float(initial_green_elapsed_sec), 0.0)
         self.remaining_sec = 0.0
         self._pending_all_red_sec = 0.0
+        if _is_all_red(initial_state):
+            self.mode = "all_red"
+            self.green_elapsed_sec = 0.0
+            if initial_all_red is None:
+                self.remaining_sec = self.timings[self.current_green_state].all_red_sec
+            else:
+                next_green_state, remaining_sec = initial_all_red
+                self.current_green_state = self.target_green_state = next_green_state
+                self.remaining_sec = max(remaining_sec, 0.0)
 
     @property
     def is_switching(self) -> bool:
@@ -342,12 +352,27 @@ def build_safe_phase_executors(
             initial_elapsed = float(sumo_api.trafficlight.getSpentDuration(tls_id))
         except Exception:
             initial_elapsed = float(default_min_green_sec)
+        initial_all_red = None
+        if _is_all_red(initial_state):
+            phase_index = sumo_api.trafficlight.getPhase(tls_id)
+            following_phases = phases[phase_index + 1:] + phases[:phase_index]
+            feasible_states = {timing.state for timing in timings}
+            next_green_state = next(
+                str(phase.state) for phase in following_phases
+                if str(phase.state) in feasible_states
+            )
+            initial_all_red = (
+                next_green_state,
+                float(sumo_api.trafficlight.getNextSwitch(tls_id))
+                - float(sumo_api.simulation.getTime()),
+            )
         executor = SafePhaseExecutor(
             sumo_api=sumo_api,
             tls_id=str(tls_id),
             timings=timings,
             initial_state=initial_state,
             initial_green_elapsed_sec=initial_elapsed,
+            initial_all_red=initial_all_red,
             clearance_lane_ids=clearance_lane_ids,
         )
         executor.take_control()

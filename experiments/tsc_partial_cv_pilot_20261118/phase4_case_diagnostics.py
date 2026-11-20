@@ -40,10 +40,13 @@ from experiments.tsc_partial_cv_pilot_20261118.phase2_residual_model import (
 from experiments.tsc_partial_cv_pilot_20261118.phase2_residual_transfer import (
     CONTROL_INTERVAL_SEC,
     P_CV,
+    eval_phase2_closed_loop_worker,
 )
+from experiments.tsc_partial_cv_pilot_20261118.phase4_independent_repeat import TEST_SEEDS
 
 CASE_SPIKES = (920104, 920105)
 SALT_LAKE_SPIKE = 930108
+SALT_LAKE_STARTUP_ENTRY = "C3B3"
 VISITED_SEEDS = (940101, 940102)
 VISITED_TIMES = (600, 1200)
 SEARCH_WINDOW_SEC = 60
@@ -261,7 +264,7 @@ def paired_spike_seeds(archived):
 
 
 def compact_case_traces(cases, archived):
-    """Keep the plotted network metrics and service requests for the highest-backlog entry."""
+    """Keep network metrics and signal service at the selected entry."""
     by_id = {(r["scenario"], r["seed"], r["policy"]): r for r in cases}
     profiles = []
     for scenario, seed, policy in by_id:
@@ -270,10 +273,13 @@ def compact_case_traces(cases, archived):
         ref = "conservation_gp_10" if scenario == "la_1x4" else "zero_shot_cfcmt_b0"
         base = by_id[scenario, seed, ref]
         controls = base["samples"][:-1]
-        edge = max(
-            sorted(controls[0]["pending_by_edge"]),
-            key=lambda candidate: sum(row["pending_by_edge"][candidate] for row in controls),
-        )
+        if scenario == "saltlake_400s_peak":
+            edge = SALT_LAKE_STARTUP_ENTRY
+        else:
+            edge = max(
+                sorted(controls[0]["pending_by_edge"]),
+                key=lambda candidate: sum(row["pending_by_edge"][candidate] for row in controls),
+            )
         tls = next(tls for tls, edges in base["inflow_links"].items() if edge in edges)
         cfg = Path(base["sumocfg"])
         net = cfg.parent / ElementTree.parse(cfg).find("input/net-file").attrib["value"]
@@ -391,12 +397,13 @@ def reduce_diagnostics(scans, branches):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--experiment-root", type=Path, required=True)
+    parser.add_argument("--saltlake-dir", type=Path, help="Corrected Salt Lake models and evaluation rows")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--workers", type=int, default=4)
     args = parser.parse_args()
     root = args.experiment_root
     la_jinan = root / "phase2_frozen_prereg"
-    slc = root / "phase3_tits"
+    slc = args.saltlake_dir or root / "phase3_tits"
     staged = root / "phase0/staged_scenarios"
     slc_name = "saltlake_400s_200w_q1_weekday_peak"
     inputs = {
@@ -442,6 +449,11 @@ def main():
             json.dumps(compact_case_traces(cases, archived)) + "\n", encoding="utf-8",
         )
         print(f"Verified {len(cases)} archived case replays. Scanning {len(scan_tasks)} policy prefixes.", flush=True)
+        frozen_la_tasks = [make_task("la", seed, "cfcmt_b6") for seed in TEST_SEEDS]
+        frozen_la_rows = list(pool.map(eval_phase2_closed_loop_worker, frozen_la_tasks))
+        (args.output / "la_frozen_repeat_result.json").write_text(
+            json.dumps({"seeds": list(TEST_SEEDS), "rows": frozen_la_rows}, indent=2) + "\n", encoding="utf-8",
+        )
         scans = list(pool.map(scan_policy_states, scan_tasks))
         branch_tasks = [
             {**state, "candidate": i, "continuation": continuation}

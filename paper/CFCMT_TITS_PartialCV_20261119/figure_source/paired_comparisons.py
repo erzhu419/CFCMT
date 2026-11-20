@@ -2,6 +2,7 @@
 
 from collections import defaultdict
 from itertools import product
+import argparse
 import json
 from pathlib import Path
 
@@ -41,6 +42,26 @@ def holm(p_values):
     return adjusted
 
 
+def _resampling(panels):
+    signs = [np.array(list(product((-1, 1), repeat=len(p)))) for p in panels]
+    rng = np.random.default_rng(20261119)
+    bootstrap = [rng.integers(len(p), size=(10_000, len(p))) for p in panels]
+    return bootstrap, signs
+
+
+def _paired_statistics(first, second, bootstrap, sign_matrices):
+    means = first.mean(axis=0) + second.mean(axis=0)
+    draws = first[bootstrap[0]].mean(axis=1) + second[bootstrap[1]].mean(axis=1)
+    intervals = np.quantile(draws, [0.025, 0.975], axis=0).T
+
+    # Exhaustively flip the paired differences independently across the two panels.
+    first_flips, second_flips = sign_matrices[0] @ first, sign_matrices[1] @ second
+    totals = np.abs(first_flips[:, None] + second_flips[None, :])
+    observed = np.abs(first.sum(axis=0) + second.sum(axis=0))
+    raw_p = np.mean(totals >= observed - 1e-8, axis=(0, 1))
+    return means, intervals, raw_p
+
+
 def summarize(exp_dir=EXP_DIR):
     """Compare B=6 with each control, retaining the two original seed panels."""
     p2 = json.loads((exp_dir / "phase2_eval_fresh_result.json").read_text())
@@ -65,21 +86,11 @@ def summarize(exp_dir=EXP_DIR):
         return la_jinan / 3, saltlake / 3
 
     candidate = by_panel("cfcmt_b6")
-    sign_matrices = [np.array(list(product((-1, 1), repeat=len(p)))) for p in candidate]
-    rng = np.random.default_rng(20261119)
-    bootstrap = [rng.integers(len(p), size=(10_000, len(p))) for p in candidate]
+    resampling = _resampling(candidate)
     results = {}
     for policy in COMPARATORS:
         first, second = (c - b for c, b in zip(candidate, by_panel(policy)))
-        means = first.mean(axis=0) + second.mean(axis=0)
-        draws = first[bootstrap[0]].mean(axis=1) + second[bootstrap[1]].mean(axis=1)
-        intervals = np.quantile(draws, [0.025, 0.975], axis=0).T
-
-        # Exhaustively flip the paired differences independently across the two panels.
-        first_flips, second_flips = sign_matrices[0] @ first, sign_matrices[1] @ second
-        totals = np.abs(first_flips[:, None] + second_flips[None, :])
-        observed = np.abs(first.sum(axis=0) + second.sum(axis=0))
-        raw_p = np.mean(totals >= observed - 1e-8, axis=(0, 1))
+        means, intervals, raw_p = _paired_statistics(first, second, *resampling)
         results[policy] = {
             metric: {"mean": mean, "interval": interval, "raw_p": p}
             for metric, mean, interval, p in zip(METRICS, means, intervals, raw_p)
@@ -91,6 +102,70 @@ def summarize(exp_dir=EXP_DIR):
     return results
 
 
+def summarize_source_only(exp_dir=EXP_DIR):
+    """Pair the two zero-shot policies on common scenarios and seeds."""
+    p2 = json.loads((exp_dir / "phase2_eval_fresh_result.json").read_text())
+    sl = json.loads((exp_dir / "phase3_saltlake_eval_fresh_result.json").read_text())
+    rl = json.loads((exp_dir / "phase3_rl_source_only_result.json").read_text())
+    trained_rl = json.loads((exp_dir / RL_RESULT_FILE).read_text())
+    pretrain = rl["training_audit"]["source_pretrain"]
+    if pretrain != trained_rl["training_audit"]["source_pretrain"]:
+        raise ValueError("The source-only and adapted RL arms use different source pretraining.")
+
+    metrics = (*METRICS, "completion_ratio")
+
+    def index(rows):
+        cells = {
+            (r["family"], r["scenario"], r["seed"]): [r[m] for m in metrics]
+            for r in rows
+        }
+        if len(cells) != len(rows):
+            raise ValueError("Duplicate source-only comparison cell.")
+        return cells
+
+    candidate = index([r for r in p2["rows"] + sl["rows"] if r["policy"] == "zero_shot_cfcmt_b0"])
+    reference = index(rl["rows"])
+    if candidate.keys() != reference.keys():
+        raise ValueError("The zero-shot policies have different scenario/seed cells.")
+
+    paired = defaultdict(list)
+    for key, values in candidate.items():
+        city, _, seed = key
+        paired[city, seed].append([values, reference[key]])
+
+    cities = {}
+    differences = {}
+    for city, seeds in (("la", p2["seeds"]), ("jinan", p2["seeds"]), ("saltlake", sl["seeds"])):
+        candidate_by_seed, rl_by_seed = np.array(
+            [np.mean(paired[city, seed], axis=0) for seed in seeds]
+        ).transpose(1, 0, 2)
+        diff = candidate_by_seed - rl_by_seed
+        differences[city] = diff
+        cities[city] = {
+            "cfcmt_b0": candidate_by_seed.mean(axis=0).tolist(),
+            "source_only_rl": rl_by_seed.mean(axis=0).tolist(),
+            "cfcmt_minus_rl": diff.mean(axis=0).tolist(),
+            "cfcmt_better_seeds": np.sum(diff * [-1, -1, 1] > 0.0, axis=0).tolist(),
+        }
+
+    blocks = ((differences["la"] + differences["jinan"]) / 3, differences["saltlake"] / 3)
+    means, intervals, raw_p = _paired_statistics(*blocks, *_resampling(blocks))
+    return {
+        "metrics_in_order": list(metrics),
+        "source_pretrain_matches_repaired_rl": pretrain,
+        "pair_count": len(candidate),
+        "cities": cities,
+        "equal_city": {
+            "cfcmt_b0": np.mean([r["cfcmt_b0"] for r in cities.values()], axis=0).tolist(),
+            "source_only_rl": np.mean([r["source_only_rl"] for r in cities.values()], axis=0).tolist(),
+            "cfcmt_minus_rl": means.tolist(),
+            "intervals": intervals.tolist(),
+            "time_outcome_raw_p": raw_p[:2].tolist(),
+            "time_outcome_holm_p": holm(raw_p[:2]).tolist(),
+        },
+    }
+
+
 def latex_p(value):
     if value >= 0.001:
         return f"{value:.4f}"
@@ -99,6 +174,13 @@ def latex_p(value):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--source-only", action="store_true")
+    args = parser.parse_args()
+    if args.source_only:
+        print(json.dumps(summarize_source_only(), indent=2))
+        raise SystemExit(0)
+
     for policy, result in summarize().items():
         cells = [COMPARATORS[policy]]
         for metric in METRICS:

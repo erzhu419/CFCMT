@@ -55,6 +55,10 @@ def draw_case_figure():
         axes[2, j].set_yticks((0, 50, 100))
         axes[2, j].set_xticks((0, 20, 40, 60))
         axes[2, j].set_xlabel("Time (min)")
+        if all(max(series["entry_pending"]) == 0 for series in profile["policies"].values()):
+            axes[0, j].set_ylim(-0.1, 1)
+            axes[0, j].set_yticks((0, 1))
+            axes[0, j].text(0.5, 0.65, "No pending vehicles", transform=axes[0, j].transAxes, ha="center")
         for ax in axes[:, j]:
             ax.set_xlim(0, 60)
             ax.grid(axis="y", color="0.87", linewidth=0.5)

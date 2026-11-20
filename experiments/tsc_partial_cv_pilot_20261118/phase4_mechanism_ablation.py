@@ -149,29 +149,25 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--archive-root", type=Path, required=True)
     parser.add_argument("--saltlake-labels", type=Path)
+    parser.add_argument("--saltlake-run-dir", type=Path, help="Salt Lake fit and matching evaluator output")
     parser.add_argument("--work-dir", type=Path, required=True)
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--arm", action="append", choices=ABLATIONS)
+    parser.add_argument("--family", action="append", choices=(*TARGET_FAMILIES, "saltlake"))
     args = parser.parse_args()
     selected_arms = tuple(dict.fromkeys(args.arm or ABLATIONS))
 
     base = args.archive_root
     phase2 = base / "phase2_frozen_prereg"
-    phase3 = base / "phase3_tits"
+    phase3 = args.saltlake_run_dir or base / "phase3_tits"
     work_dir = args.work_dir
     work_dir.mkdir(parents=True, exist_ok=True)
     source_residual, target, _ = read_paper_label_archive(
         phase2 / "phase2_counterfactual_dataset.json"
     )
-    label_path = args.saltlake_labels or work_dir / "saltlake_original_labels.json"
-    target["saltlake"] = read_or_reconstruct_saltlake_labels(
-        label_path, base, source_residual, args.workers
-    )
     source = [_to_action_group(g) for g in source_residual]
     with (phase2 / "phase2_frozen_models.pkl").open("rb") as fh:
         frozen = pickle.load(fh)
-    with (phase3 / "phase3_saltlake_models.pkl").open("rb") as fh:
-        frozen.update(pickle.load(fh))
 
     configs = resolve_phase2_scenarios(base / "phase0/staged_scenarios", base / "source_scenarios")
     configs.update(saltlake_scenario_configs(base / "ext_targets"))
@@ -179,20 +175,39 @@ def main() -> None:
         **TARGET_FAMILIES,
         "saltlake": ("saltlake_400s_peak", "saltlake_state_peak"),
     }
+    if args.family:
+        targets = {city: scenarios for city, scenarios in targets.items() if city in args.family}
+    archive_paths = []
+    if any(city != "saltlake" for city in targets):
+        archive_paths.append(phase2 / "phase2_eval_fresh_result.json")
+    if "saltlake" in targets:
+        label_path = args.saltlake_labels or (
+            phase3 / "phase3_saltlake_labels.json"
+            if args.saltlake_run_dir else work_dir / "saltlake_original_labels.json"
+        )
+        if args.saltlake_run_dir and not label_path.is_file():
+            raise FileNotFoundError(f"Salt Lake label file missing for the selected run: {label_path}")
+        target["saltlake"] = read_or_reconstruct_saltlake_labels(
+            label_path, base, source_residual, args.workers
+        )
+        with (phase3 / "phase3_saltlake_models.pkl").open("rb") as fh:
+            frozen.update(pickle.load(fh))
+        archive_paths.append(phase3 / "phase3_saltlake_eval_fresh_result.json")
     archived = [
         row
-        for path in (
-            phase2 / "phase2_eval_fresh_result.json",
-            phase3 / "phase3_saltlake_eval_fresh_result.json",
-        )
+        for path in archive_paths
         for row in json.loads(path.read_text())["rows"]
-        if row["policy"] in REFERENCES
+        if row["family"] in targets and row["policy"] in REFERENCES
     ]
     reference = {
         (row["family"], row["scenario"], row["seed"], row["policy"]): row for row in archived
     }
-    if len(reference) != 60 * len(REFERENCES):
-        raise ValueError("The archive does not contain the complete 60-cell reference panel")
+    panel_cells = sum(
+        len(scenarios) * len(FRESH_SALTLAKE_SEEDS if city == "saltlake" else FRESH_PHASE2_SEEDS)
+        for city, scenarios in targets.items()
+    )
+    if len(reference) != panel_cells * len(REFERENCES):
+        raise ValueError("The archive does not contain the complete reference panel")
 
     models = {}
     audit = {}
@@ -297,7 +312,7 @@ def main() -> None:
                 print(f"Ablation evaluation {completed}/{len(futures)}", flush=True)
     rows.sort(key=lambda row: (row["family"], row["scenario"], row["seed"], row["policy"]))
     evaluated = {(r["scenario"], r["seed"], r["policy"]) for r in rows}
-    if len(evaluated) != 60 * (len(REFERENCES) + len(selected_arms)):
+    if len(evaluated) != panel_cells * (len(REFERENCES) + len(selected_arms)):
         raise RuntimeError("The ablation panel is incomplete")
     (work_dir / "phase4_mechanism_ablation_result.json").write_text(
         json.dumps(

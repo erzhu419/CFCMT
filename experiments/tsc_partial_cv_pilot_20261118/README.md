@@ -1,5 +1,7 @@
 # Partial-CV manuscript experiment records
 
+The current records use the corrected Salt Lake City all-red startup. The shared executor preserves the native clearance duration and enters the native next green when internal lanes are clear. The Salt Lake City target labels, fitted controllers, and affected evaluation rows were rebuilt on the original seeds. The source bank and Los Angeles/Jinan evaluation rows were retained after the [startup parity check](round2_startup_parity.json).
+
 The Los Angeles and Jinan manuscript runs use `phase2_augmented_dataset.json`. It contains the Phase 1 bank of 335 source groups and 88 target groups, plus 76 source groups collected on the repaired Hangzhou network with Gudang demand. The target groups are split as 20 per adaptation seed for Los Angeles and 8 per scenario and adaptation seed for Jinan. The fit selects 3 or 18 groups per seed before cross-fitting. Salt Lake City contributes 40 separate adaptation groups and is absent from the source bank.
 
 The [reproduction instructions](REPRODUCTION.md) link to the bundle with the augmented label archive, trained models, and exact simulator inputs. Run this command from the repository root with the experiment's Python environment and a new output directory. In the bundle, the augmented archive is stored as `inputs/phase2_frozen_prereg/phase2_counterfactual_dataset.json`.
@@ -17,9 +19,9 @@ For Salt Lake City, pass the same archive to `phase3_tits_suite` with `--stage s
 
 ## Corrected Double-DQN comparison
 
-Run Phase 3 with `--stage rl` in a separate work directory. Each replay transition now uses its own 10-second step, including forced continuation, and the Double-DQN target selects only next actions allowed by the maximum-red filter. The final reward at 3,600 seconds has no bootstrap term. The rerun used the original 70 training episodes and the same 180 evaluation cells on `jtl110gpu2`. The manuscript reads `phase3_rl_baselines_repaired_result.json`. The original `phase3_rl_baselines_result.json` records the earlier implementation. Both files contain evaluation summaries, and the trained weights remain on the server.
+Run Phase 3 with `--stage rl` in a separate work directory. Each replay transition uses its own 10-second step, including forced continuation. The Double-DQN target selects only allowed next actions, and the final reward at 3,600 seconds has no bootstrap term. For round two, the three Salt Lake City target fits were retrained with the corrected executor and the original training seeds. The manuscript reads `phase3_rl_baselines_repaired_result.json`, which combines the corrected 60 Salt Lake City evaluations with the 120 retained evaluations. The original `phase3_rl_baselines_result.json` records the earlier implementation.
 
-For the source-only comparison, run Phase 3 with `--stage rl_source_only`. The original experiment retained the target-adapted weights. This stage repeats the 10 original source episodes and evaluates one frozen source model in all 60 target scenario-and-seed cells at 10% CV penetration. The source training audit matches the repaired RL run. The new weights remain on the server.
+For the source-only comparison, run Phase 3 with `--stage rl_source_only`. The ten original source training episodes produce one frozen model. Round two uses those same weights with the corrected executor on the 20 Salt Lake City evaluation cells. The full source-only panel has 60 cells at 10% CV penetration.
 
 `phase3_rl_source_only_result.json` contains the evaluation rows. `phase3_rl_source_only_comparison.json` pairs them with the archived CFCMT B=0 rows. The comparison averages scenarios within city and seed, then weights the three cities equally. Inference uses the ten shared Los Angeles–Jinan seed blocks and ten independent Salt Lake City seed blocks. The intervals use 10,000 bootstrap draws. The exact sign-flip tests for waiting time and vehicle-hours use Holm adjustment across those two outcomes.
 
