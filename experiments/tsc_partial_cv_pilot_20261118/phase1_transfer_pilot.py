@@ -267,6 +267,26 @@ def scan_decision_candidates_worker(task: dict[str, Any]) -> list[dict[str, Any]
     return selected[:max_groups]
 
 
+def lightcone_step_cost(
+    sumo_api: Any,
+    cone_lanes: Sequence[str],
+    incoming_edges: Sequence[str],
+    speed_limits: Mapping[str, float],
+) -> float:
+    """Unnormalized halted, pending, and moving-delay cost for one instant."""
+    halted = 0.0
+    slow_loss = 0.0
+    for lane in cone_lanes:
+        stopped = float(sumo_api.lane.getLastStepHaltingNumber(lane))
+        moving = max(0.0, float(sumo_api.lane.getLastStepVehicleNumber(lane)) - stopped)
+        halted += stopped
+        if moving > 0.0:
+            speed = float(sumo_api.lane.getLastStepMeanSpeed(lane))
+            slow_loss += moving * max(0.0, 1.0 - speed / speed_limits[lane])
+    pending = sum(float(len(sumo_api.edge.getPendingVehicles(edge))) for edge in incoming_edges)
+    return halted + pending + 0.25 * slow_loss
+
+
 def evaluate_single_branch_worker(task: dict[str, Any]) -> dict[str, Any]:
     """Replay native prefix (`state_restores = 0`) and integrate 1-hop light-cone cost."""
     from cf_h2o.sumo_runtime import load_libsumo
@@ -383,22 +403,7 @@ def evaluate_single_branch_worker(task: dict[str, Any]) -> dict[str, Any]:
                     ex.advance(dt)
                 observer.observe_step(sumo_api, dt_sec=dt)
 
-                # Ground-truth 1-hop causal light-cone waiting + pending + slow-platoon delay
-                halted_cone = 0.0
-                slow_loss_cone = 0.0
-                for l in cone_lanes:
-                    h = float(sumo_api.lane.getLastStepHaltingNumber(l))
-                    v = float(sumo_api.lane.getLastStepVehicleNumber(l))
-                    halted_cone += h
-                    moving = max(0.0, v - h)
-                    if moving > 0.0:
-                        spd = float(sumo_api.lane.getLastStepMeanSpeed(l))
-                        slow_loss_cone += moving * max(0.0, 1.0 - spd / cone_vmax[l])
-                pending_focal = sum(
-                    float(len(sumo_api.edge.getPendingVehicles(e)))
-                    for e in focal_in_edges
-                )
-                accum_cost += halted_cone + pending_focal + 0.25 * slow_loss_cone
+                accum_cost += lightcone_step_cost(sumo_api, cone_lanes, focal_in_edges, cone_vmax)
                 steps_counted += 1
 
         norm_denom = float(max(steps_counted, 1) * max(len(focal_in_lanes), 1))

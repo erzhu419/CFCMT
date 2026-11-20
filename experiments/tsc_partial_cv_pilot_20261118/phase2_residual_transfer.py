@@ -930,6 +930,10 @@ def _eval_precomputed_scores(
 def fit_phase2_residual_suite(
     source_groups: Sequence[ResidualGroupRecord],
     target_groups_by_family: Mapping[str, Sequence[ResidualGroupRecord]],
+    *,
+    adaptation_seeds: tuple[int, int] = ADAPT_SEEDS,
+    omega_grid: Sequence[float] = OMEGA_POS_GRID,
+    nested_budgets: bool = False,
 ) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
     """Fit group-capacity-regularized structural multi-city pools + 2-fold seed OOF selection."""
     src_act = [_to_action_group(g) for g in source_groups]
@@ -987,14 +991,16 @@ def fit_phase2_residual_suite(
             "budgets": {},
         }
 
+        b36_groups = subset_residual_budget(full_res_groups, budget_per_seed=18)
+        b6_options = b36_groups if nested_budgets else full_res_groups
         budgets_res = {
-            "b6": subset_residual_budget(full_res_groups, budget_per_seed=3),
-            "b36": subset_residual_budget(full_res_groups, budget_per_seed=18),
+            "b6": subset_residual_budget(b6_options, budget_per_seed=3),
+            "b36": b36_groups,
         }
 
         for b_tag, t_res_sub in budgets_res.items():
             t_act_sub = [_to_action_group(g) for g in t_res_sub]
-            s0, s1 = ADAPT_SEEDS
+            s0, s1 = adaptation_seeds
             a_s0 = [g for g in t_act_sub if g.seed == s0]
             a_s1 = [g for g in t_act_sub if g.seed == s1]
 
@@ -1033,7 +1039,7 @@ def fit_phase2_residual_suite(
                 p_scores = [
                     s_ranker.score_group(g.state_vec, g.action_mat) for g in val_groups
                 ]
-                for omega in OMEGA_POS_GRID:
+                for omega in omega_grid:
                     comb = [
                         (1.0 - omega) * ts + omega * ps
                         for ts, ps in zip(t_oof_scores, p_scores)
@@ -1103,7 +1109,7 @@ def fit_phase2_residual_suite(
                 best_pa_om = 0.50
                 best_pa_key = (float("inf"), float("inf"))
                 best_pa_oof: dict[str, float] = {}
-                for omega in OMEGA_POS_GRID:
+                for omega in omega_grid:
                     m = _eval_precomputed_scores(
                         val_groups,
                         [

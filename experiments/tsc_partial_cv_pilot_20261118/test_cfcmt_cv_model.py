@@ -9,6 +9,7 @@ from experiments.tsc_partial_cv_pilot_20261118.cfcmt_cv_model import (
     STATE_FEATURE_NAMES,
     ActionGroupRecord,
     BlendedActionRanker,
+    CapacityMatchedActionCostRegressor,
     EndpointAntisymmetricActionRanker,
     evaluate_offline_regret,
     permute_source_groups_placebo,
@@ -76,6 +77,34 @@ def test_exact_antisymmetry_and_nonlinear_endpoint_learning() -> None:
     )
     blend_metrics = evaluate_offline_regret(blend, test_g)
     assert blend_metrics["mean_normalized_regret"] < 0.12, blend_metrics
+
+
+def test_action_cost_regressor_can_split_on_original_la_fold_size() -> None:
+    groups = []
+    for idx, action_count in enumerate((4, 2, 4)):
+        actions = np.arange(action_count, dtype=np.float64)
+        features = np.zeros((action_count, len(ACTION_FEATURE_NAMES)))
+        features[:, 0] = actions
+        groups.append(
+            ActionGroupRecord(
+                group_id=f"g_{idx}",
+                domain="target_la",
+                scenario="la_1x4",
+                seed=5057,
+                tls_id="J0",
+                time_sec=float(180 + idx * 120),
+                candidate_states=tuple(f"p{i}" for i in range(action_count)),
+                reference_index=0,
+                state_vec=np.zeros(len(STATE_FEATURE_NAMES)),
+                action_mat=features,
+                branch_costs=actions,
+            )
+        )
+    pair = EndpointAntisymmetricActionRanker(max_iter=10).fit(groups).model_
+    direct = CapacityMatchedActionCostRegressor(max_iter=10).fit(groups)
+    assert direct.model_.max_leaf_nodes == pair.max_leaf_nodes == 4
+    assert direct.model_.min_samples_leaf == 2
+    assert np.ptp(direct.score_group(groups[0].state_vec, groups[0].action_mat)) > 1e-5
 
 
 if __name__ == "__main__":

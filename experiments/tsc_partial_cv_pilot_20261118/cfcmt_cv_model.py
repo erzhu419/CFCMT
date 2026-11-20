@@ -426,12 +426,16 @@ class EndpointAntisymmetricActionRanker:
         self.random_state = int(random_state)
         self.model_: HistGradientBoostingRegressor | None = None
 
-    def fit(
+    def _pair_row(
+        self, state: np.ndarray, difference: np.ndarray, midpoint: np.ndarray
+    ) -> np.ndarray:
+        return np.concatenate([state, difference, midpoint])
+
+    def _weighted_groups(
         self,
         groups: Sequence[ActionGroupRecord],
-        *,
         domain_weights: Mapping[str, float] | None = None,
-    ) -> "EndpointAntisymmetricActionRanker":
+    ) -> list[tuple[ActionGroupRecord, np.ndarray, float, int, float]]:
         if not groups:
             raise ValueError("Cannot fit EndpointAntisymmetricActionRanker on empty groups")
 
@@ -442,10 +446,7 @@ class EndpointAntisymmetricActionRanker:
         if not domain_counts:
             raise ValueError("No multi-action groups provided for fitting")
 
-        x_rows: list[np.ndarray] = []
-        y_rows: list[float] = []
-        w_rows: list[float] = []
-
+        prepared = []
         for g in groups:
             k_actions = len(g.candidate_states)
             if k_actions < 2:
@@ -457,8 +458,23 @@ class EndpointAntisymmetricActionRanker:
                 if domain_weights is not None and g.domain in domain_weights
                 else 1.0 / len(domain_counts)
             )
-            n_unordered = k_actions * (k_actions - 1) // 2
             importance = float(np.clip(span / self.scale_floor, 0.25, 4.0))
+            prepared.append((g, z, dom_mass, dom_total, importance))
+        return prepared
+
+    def fit(
+        self,
+        groups: Sequence[ActionGroupRecord],
+        *,
+        domain_weights: Mapping[str, float] | None = None,
+    ) -> "EndpointAntisymmetricActionRanker":
+        x_rows: list[np.ndarray] = []
+        y_rows: list[float] = []
+        w_rows: list[float] = []
+        prepared = self._weighted_groups(groups, domain_weights)
+        for g, z, dom_mass, dom_total, importance in prepared:
+            k_actions = len(g.candidate_states)
+            n_unordered = k_actions * (k_actions - 1) // 2
             pair_w = (dom_mass / max(dom_total * n_unordered, 1)) * importance
 
             for i in range(k_actions):
@@ -468,24 +484,37 @@ class EndpointAntisymmetricActionRanker:
                     diff = phi_i - phi_j
                     mid = 0.5 * (phi_i + phi_j)
                     target = float(z[i] - z[j])
-                    x_rows.append(np.concatenate([g.state_vec, diff, mid]))
+                    x_rows.append(self._pair_row(g.state_vec, diff, mid))
                     y_rows.append(target)
                     w_rows.append(pair_w)
 
-                    x_rows.append(np.concatenate([g.state_vec, -diff, mid]))
+                    x_rows.append(self._pair_row(g.state_vec, -diff, mid))
                     y_rows.append(-target)
                     w_rows.append(pair_w)
 
+        self.model_ = self._fit_rows(x_rows, y_rows, w_rows, len(prepared))
+        return self
+
+    def _fit_rows(
+        self,
+        x_rows: Sequence[np.ndarray],
+        y_rows: Sequence[float],
+        w_rows: Sequence[float],
+        n_groups: int,
+        *,
+        reference_rows: int | None = None,
+    ) -> HistGradientBoostingRegressor:
         x_arr = np.vstack(x_rows)
         y_arr = np.asarray(y_rows, dtype=np.float64)
         w_arr = np.asarray(w_rows, dtype=np.float64)
-        w_arr = w_arr / max(float(np.mean(w_arr)), 1e-12)
-
-        n_groups = sum(domain_counts.values())
         n_rows = int(x_arr.shape[0])
-        eff_min_leaf = max(6, min(self.min_samples_leaf, max(n_rows // 6, 6)))
+        tree_budget_rows = n_rows if reference_rows is None else reference_rows
+        row_ratio = n_rows / tree_budget_rows
+        w_arr = w_arr / max(float(np.mean(w_arr)), 1e-12) / row_ratio
+        reference_min_leaf = max(6, min(self.min_samples_leaf, tree_budget_rows // 6))
+        eff_min_leaf = max(1, int(reference_min_leaf * row_ratio))
         group_leaf_cap = 4 if n_groups <= 12 else self.max_leaf_nodes
-        eff_max_leaves = max(2, min(group_leaf_cap, max(n_rows // eff_min_leaf, 2)))
+        eff_max_leaves = max(2, min(group_leaf_cap, tree_budget_rows // reference_min_leaf))
 
         reg = HistGradientBoostingRegressor(
             loss="squared_error",
@@ -498,8 +527,7 @@ class EndpointAntisymmetricActionRanker:
             random_state=self.random_state,
         )
         reg.fit(x_arr, y_arr, sample_weight=w_arr)
-        self.model_ = reg
-        return self
+        return reg
 
     def score_group(self, state_vec: np.ndarray, action_mat: np.ndarray) -> np.ndarray:
         """Return antisymmetric Borda cost scores (lower = better phase)."""
@@ -518,8 +546,8 @@ class EndpointAntisymmetricActionRanker:
                 phi_j = action_mat[j]
                 diff = phi_i - phi_j
                 mid = 0.5 * (phi_i + phi_j)
-                fwd_rows.append(np.concatenate([state_vec, diff, mid]))
-                rev_rows.append(np.concatenate([state_vec, -diff, mid]))
+                fwd_rows.append(self._pair_row(state_vec, diff, mid))
+                rev_rows.append(self._pair_row(state_vec, -diff, mid))
                 pairs.append((i, j))
 
         batch = np.vstack(fwd_rows + rev_rows)
@@ -534,6 +562,65 @@ class EndpointAntisymmetricActionRanker:
         scores /= float(k_actions - 1)
         tie_ref = action_mat[:, 0] - float(np.mean(action_mat[:, 0]))
         return scores - 1e-7 * tie_ref
+
+
+class DifferenceOnlyActionRanker(EndpointAntisymmetricActionRanker):
+    """Keep the pairwise loss and Borda aggregation using only the endpoint difference."""
+
+    def _pair_row(
+        self, state: np.ndarray, difference: np.ndarray, midpoint: np.ndarray
+    ) -> np.ndarray:
+        return np.concatenate([state, difference])
+
+
+class DirectActionCostRegressor(EndpointAntisymmetricActionRanker):
+    """Regress the normalized cost of each action directly on its state and phase features."""
+
+    match_pair_capacity = False
+
+    def fit(
+        self,
+        groups: Sequence[ActionGroupRecord],
+        *,
+        domain_weights: Mapping[str, float] | None = None,
+    ) -> "DirectActionCostRegressor":
+        x_rows: list[np.ndarray] = []
+        y_rows: list[float] = []
+        w_rows: list[float] = []
+        prepared = self._weighted_groups(groups, domain_weights)
+        for g, z, dom_mass, dom_total, importance in prepared:
+            action_weight = dom_mass / (dom_total * len(z)) * importance
+            for action, cost in zip(g.action_mat, z):
+                x_rows.append(np.concatenate([g.state_vec, action]))
+                y_rows.append(float(cost))
+                w_rows.append(action_weight)
+        reference_rows = (
+            sum(len(z) * (len(z) - 1) for _, z, _, _, _ in prepared)
+            if self.match_pair_capacity
+            else None
+        )
+        self.model_ = self._fit_rows(
+            x_rows, y_rows, w_rows, len(prepared), reference_rows=reference_rows
+        )
+        return self
+
+    def score_group(self, state_vec: np.ndarray, action_mat: np.ndarray) -> np.ndarray:
+        if self.model_ is None:
+            raise RuntimeError("Regressor is not fitted")
+        k_actions = action_mat.shape[0]
+        if k_actions <= 1:
+            return np.zeros(k_actions, dtype=np.float64)
+        rows = np.column_stack((np.broadcast_to(state_vec, (k_actions, len(state_vec))), action_mat))
+        predicted = self.model_.predict(rows)
+        # Match the score units of ideal Borda aggregation over the same costs.
+        scores = (predicted - float(np.mean(predicted))) * k_actions / (k_actions - 1)
+        return scores - 1e-7 * (action_mat[:, 0] - float(np.mean(action_mat[:, 0])))
+
+
+class CapacityMatchedActionCostRegressor(DirectActionCostRegressor):
+    """Match the pairwise leaf cap, relative leaf support, and weight mass."""
+
+    match_pair_capacity = True
 
 
 class BlendedActionRanker:

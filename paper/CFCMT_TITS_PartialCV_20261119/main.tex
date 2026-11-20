@@ -23,14 +23,14 @@
 \hyphenation{net-work net-works coun-ter-fac-tual pen-e-tra-tion ob-serv-abil-i-ty}
 
 \hypersetup{
-  pdftitle={CFCMT: Cross-City Traffic Signal Control Under Sparse Connected-Vehicle Observability via Calibrated Counterfactual Action-Cost Transfer},
+  pdftitle={CFCMT: Cross-City Transfer of Counterfactual Signal Phase Costs Under Sparse Connected-Vehicle Observation},
   pdfauthor={Yifan Zhang, Liang Zheng, Qifan Zhang, and Haoming Li},
   pdfsubject={IEEE Transactions on Intelligent Transportation Systems}
 }
 
 \begin{document}
 
-\title{CFCMT: Cross-City Traffic Signal Control Under Sparse Connected-Vehicle Observability via Calibrated Counterfactual Action-Cost Transfer}
+\title{CFCMT: Cross-City Transfer of Counterfactual Signal Phase Costs Under Sparse Connected-Vehicle Observation}
 
 \author{Yifan~Zhang, Liang~Zheng, Qifan~Zhang, and Haoming~Li%
 \thanks{Yifan Zhang (e-mail: erzhu419@gmail.com; 204201048@csu.edu.cn) and Liang Zheng (corresponding author; e-mail: zhengliang@csu.edu.cn) are with the School of Traffic and Transportation Engineering, Central South University, Changsha, Hunan, China.}%
@@ -43,7 +43,7 @@
 \maketitle
 
 \begin{abstract}
-Sparse connected-vehicle (CV) observations can leave entire approach queues unobserved, degrading traffic signal control based on raw probe counts. This paper proposes Causal-Factored Cross-City Model Transfer (\method), a predeployment framework that combines partial-CV queue reconstruction, matched simulator branches for labeling short-horizon action costs, and calibrated pairwise ranking. The source library contains 411 action groups across six domains. Two-fold validation on target labels selects the mixture of source and target rankers. Online phase scoring uses CV observations, while the shared clearance executor also uses junction occupancy. In 1,200 one-hour microscopic simulations on held-out seeds in Los Angeles, Jinan, and Salt Lake City at 10\% CV penetration, the six-group target configuration has the best three-city equal-weight mean waiting time (154.43~s), system vehicle-hours (491.2~veh-h), and completion rate (86.1\%) among 19 non-oracle controllers. It reduces system vehicle-hours by 161.7 relative to the same-budget target-only model and by 253.5 relative to the blend with permuted source labels (both Holm-adjusted $p<0.001$). The mean improvement over conservation-based generalized pressure is 36.9~veh-h (Holm-adjusted $p=0.277$). In the zero-shot comparison, \method\ averages 98.0 fewer system vehicle-hours than the source-only reinforcement learning baseline, a difference that does not reach statistical significance (Holm-adjusted $p=0.063$). The baseline has lower waiting time and vehicle-hours in Jinan.
+Sparse connected-vehicle (CV) observations can leave entire approach queues unobserved. Causal-Factored Cross-City Model Transfer (\method) combines source and target phase rankers learned from matched simulator branches. Phase scoring uses CV observations, and clearance also uses internal junction occupancy. At 10\% penetration, the original six-group configuration has the best three-city mean waiting time (154.43~s), system vehicle-hours (491.2~veh-h), and completion rate (86.1\%) among 19 non-oracle controllers in 1,200 held-out simulations. It saves 161.7~veh-h relative to the same-budget target ranker and 253.5~veh-h relative to the source-label permutation (both Holm-adjusted $p<0.001$). The advantage over conservation-based generalized pressure (Cons-GP) falls short of statistical significance. In Salt Lake City, switching source pools accounts for most of the measured gain over the default zero-shot model. Removing deployment scaling slightly improves the original mean. Across three independent six-group adaptations, \method\ lowers waiting relative to Cons-GP in one fit each in Los Angeles and Jinan, and in none in Salt Lake City. With zero target groups, \method\ has lower three-city means than source-only reinforcement learning, with neither time outcome significant after correction. The reinforcement learning baseline leads in Jinan.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -70,13 +70,16 @@ The contributions are as follows.
 \label{sec:related}
 
 \subsection{Queue Estimation and Signal Control With Connected Vehicles}
-Liu \emph{et~al.} \cite{liu2009realtime} used detector and signal-phase events to estimate queue length from shockwave propagation. Tiaprasert \emph{et~al.} \cite{tiaprasert2015queue} used CV observations to estimate queues under pretimed and actuated control. Feng \emph{et~al.} \cite{feng2015realtime} coupled shockwave-estimated unequipped arrivals with bi-level phase allocation, and Zhao \emph{et~al.} \cite{zhao2022maximum} developed maximum-likelihood penetration and queue distribution estimators from probe trajectories. More recently, deep reinforcement learning (DRL) controllers have used partial vehicle detections for signal control \cite{zhang2021partial,mo2022cvlight}. CVLight, for example, uses full simulator observations in its training critic and partial CV observations in its deployed actor \cite{mo2022cvlight}. Here we use simulator information to label the relative costs of feasible actions from matched states and fit a ranker that scores these actions from partial observations.
+Liu \emph{et~al.} \cite{liu2009realtime} used detector and signal-phase events to estimate queue length from shockwave propagation. Tiaprasert \emph{et~al.} \cite{tiaprasert2015queue} used CV observations to estimate queues under pretimed and actuated control. Feng \emph{et~al.} \cite{feng2015realtime} coupled shockwave-estimated unequipped arrivals with bi-level phase allocation, and Zhao \emph{et~al.} \cite{zhao2022maximum} developed maximum-likelihood penetration and queue distribution estimators from probe trajectories. More recently, deep reinforcement learning (DRL) controllers have used partial vehicle detections for signal control \cite{zhang2021partial,mo2022cvlight}. CVLight, for example, uses information from equipped and unequipped vehicles in its training critic and CV observations in its deployed actor \cite{mo2022cvlight}. Here we use simulator information to label the relative costs of feasible actions from matched states and fit a ranker that scores these actions from partial observations.
 
 \subsection{Pressure-Based and Phase-Competition DRL Controllers}
-Varaiya \cite{varaiya2013maxpressure} established queue stability of canonical MP under its full-observation model. In DRL, PressLight \cite{wei2019presslight} uses pressure as a learning signal, FRAP \cite{zheng2019frap} learns to compare competing phases, and MaxPressure Light (MPLight) \cite{chen2020thousandlights} scales phase-competition learning to city-wide grids. CoLight \cite{wei2019colight} uses graph attention to incorporate neighboring intersections. Our analytical hierarchy applies pressure rules at increasing levels of queue reconstruction. We also include a phase-competition-inspired Double Deep Q-Network (Double-DQN) with the same CV observer as a learned baseline.
+Varaiya \cite{varaiya2013maxpressure} established queue stability of canonical MP under its full-observation model. In DRL, PressLight \cite{wei2019presslight} uses pressure as a learning signal, FRAP \cite{zheng2019frap} learns to compare competing phases, and MaxPressure Light (MPLight) \cite{chen2020thousandlights} scales phase-competition learning to city-wide grids. CoLight \cite{wei2019colight} uses graph attention to incorporate neighboring intersections. Our analytical hierarchy applies pressure rules at increasing levels of queue reconstruction. We also include a phase-competition-inspired Double Deep Q-Network (Double-DQN) \cite{vanhasselt2015double} with the same CV observer as a learned baseline.
 
 \subsection{Cross-City Transfer and Causal Representation Learning}
 Transferable signal control frameworks aim to amortize simulation experience across cities. MetaLight \cite{zang2020metalight} applied value-based gradient meta-learning, the General Scenario-Agnostic (GESA) framework \cite{jiang2024gesa} standardized state--action interfaces across heterogeneous intersections, X-Light \cite{jiang2024xlight} trained transformer-on-transformer meta-policies across multi-city trajectories, and CrossLight \cite{sun2024crosslight} combined offline source pretraining with online target fine-tuning. Causal representation learning studies how mechanisms can be shared across domains \cite{bengio2019meta,scholkopf2021causal,feng2022factored}. Our matched simulator branches measure how a phase request changes a short-horizon cost within one state. The evaluation tests whether the resulting contrasts are useful across cities with different demand and signal geometry.
+
+\subsection{Supervised Learning from Rollouts}
+Rollout-based policy iteration estimates action values from a continuation policy and uses them to supervise a policy learner \cite{lagoudakis2003rollout,dimitrakakis2008rollout}. Here the continuation serves as a common reference when labeling the local effects of phase changes. The term \emph{causal-factored} refers to this simulator intervention and the restriction of its cost to a one-hop neighborhood. Cross-city transfer relies on the partial-CV queue and phase features retaining their relationship to local action costs under different demands and layouts. We test that relationship through transfer and ranker contrasts.
 
 \begin{figure*}[!t]
 \centering
@@ -171,7 +174,7 @@ For each phase $a$, $\mathcal{G}(a)$ denotes incoming lanes with a green movemen
 Alongside the waiting proxy in \eqref{eq:quad_wait}, the features capture served flow and lane shares, CV counts, wait and speed, estimated queues and spillback, service capacity within the next 10~s after the projected clearance interval, competing red demand, downstream occupancy and queue estimates, switching, and continuation green age.
 
 \subsection{Endpoint-Preserving Antisymmetric Pairwise Ranker}
-The counterfactual learning arms use the same ranker class. A pairwise feature difference alone omits the absolute traffic level at both endpoints, which is relevant when a queue approaches link capacity. For each unordered pair $(a_i,a_j)$ with $i<j$, the 78-dimensional pairwise vector is
+The original counterfactual learning arms use the same ranker class. A pairwise feature difference alone omits the absolute traffic level at both endpoints, which is relevant when a queue approaches link capacity. For each unordered pair $(a_i,a_j)$ with $i<j$, the 78-dimensional pairwise vector is
 \begin{equation}
   u_{gij}=\bigl[x_g,\;\phi_g(a_i)-\phi_g(a_j),\;\tfrac{1}{2}(\phi_g(a_i)+\phi_g(a_j))\bigr].
   \label{eq:pair_vec}
@@ -213,7 +216,7 @@ The deployed cost score is
      +\omega^\star\widehat S_g(a).
   \label{eq:calibrated_blend}
 \end{equation}
-Source-Placebo uses the same target head, pool, weight, and scaling with permuted source labels. Pool-All uses the same target scale and selects its weight with the full source bank, using the same regret and tie criterion in \eqref{eq:boltzmann}.
+Source-Placebo replaces source labels with one within-group permutation and holds the target head, pool, weight, and scaling fixed. It tests label information at the selected mixture. The original benchmark uses the positive weight grid. The mechanism and repeated-adaptation panels also evaluate a grid that includes $\omega=0$, so the validation criterion can select the target ranker alone. Pool-All uses the same target scale and selects its weight with the full source bank, using the same regret and tie criterion in \eqref{eq:boltzmann}.
 
 \subsection{Two-Clause Demand-Confirmed Maximum-Red Filter}
 To prioritize lane service when red times are long, the filter checks incoming lanes with a green movement in some but not all feasible phases. If there are no such lanes, it checks all controlled incoming lanes. Let $\mathcal{L}_{\mathrm{check}}(g)$ be this set and $\bar g_g$ its mean number of green lanes per feasible phase. The phase-multiplexing ratio is $M_g=|\mathcal{L}_{\mathrm{check}}(g)|/\max(1,\bar g_g)$. Write $\hat q_{\max,\ell}=\max(\hat q_{\mathrm{sw},\ell},\hat q_{\mathrm{cons},\ell})$. A checked lane is overdue if it satisfies either clause below:
@@ -256,13 +259,15 @@ If $\RMS(\widehat T^{\mathrm{full}})\ge\max(\RMS(\widehat T^{\mathrm{OOF}}),10^{
 Suppose a checked lane has no CV presence or observed CV arrivals from initialization. At any decision epoch with $M_g\ge2.8$, the prior $\hat\lambda_{\ell,300}(0)=0.04$~veh/s cannot, by itself, cause either clause to trigger for that lane.
 \end{proposition}
 
+Propositions~\ref{prop:expressivity} and \ref{prop:regret} describe action ranking under the specified local rollout cost. The regret bound covers one decision before the maximum-red filter. We use closed-loop runs to measure the one-hour network outcome and replay selected visited states to compare rankings under different continuations and horizons.
+
 \section{Experimental Evaluation}
 \label{sec:experiments}
 
 \subsection{Benchmark Scenarios, Seed Partition, and Baselines}
 Experiments use SUMO 1.22.0 via \texttt{libsumo}, with networks drawn from the Reinforcement Learning Benchmarks for Traffic Signal Control (RESCO), LibSignal, and CityFlow \cite{ault2021reinforcement,mei2022libsignal,zhang2019cityflow} (Table~\ref{tab:setup}). The Jinan and Hangzhou networks use repaired right-of-way links. Each Salt Lake City corridor has two signalized intersections with eight candidate green states per intersection.
 
-Source labels use seeds $(2027,3037)$. The 411 groups come from Hangzhou (48 groups), a Gudang peak-demand profile on the repaired Hangzhou network (76), Atlanta (48), Cologne (95), Ingolstadt (48), and synthetic grids and arterials (96). Target labels use seeds $(5057,6067)$, with $B=6$ or $36$ groups per city, split evenly across the two seeds. The two Salt Lake City corridors are absent from the source bank. Development checks use separate seeds $(7077,8087)$. The main evaluation uses held-out seeds \texttt{920101--920110} in Los Angeles and Jinan and \texttt{930101--930110} in Salt Lake City, with no model refitting on these seeds. The 1,200 main-panel runs cover all 20 controllers across six scenarios and ten seeds per scenario. A separate 160-run sensor probe and 640 additional penetration-sensitivity runs bring the reported total to 2,000 unique one-hour evaluations. The 10\% sensitivity points reuse the corresponding main-panel runs. The project repository documents how to refit from the archived augmented labels and includes the held-out results and figure-generation scripts.
+Source labels use seeds $(2027,3037)$. The 411 groups come from Hangzhou (48 groups), a Gudang peak-demand profile on the repaired Hangzhou network (76), Atlanta (48), Cologne (95), Ingolstadt (48), and synthetic grids and arterials (96). Target labels use seeds $(5057,6067)$, with $B=6$ or $36$ groups per city, split evenly across the two seeds. The two Salt Lake City corridors are absent from the source bank. Development checks use separate seeds $(7077,8087)$. The main evaluation uses held-out seeds \texttt{920101--920110} in Los Angeles and Jinan and \texttt{930101--930110} in Salt Lake City, with no model refitting on these seeds. The 1,200 main-panel runs cover all 20 controllers across six scenarios and ten seeds per scenario. With the 160-run sensor probe and 640 additional penetration-sensitivity runs, the original benchmark contains 2,000 unique one-hour evaluations. We report the revision experiments in separate panels. The 10\% sensitivity points reuse the corresponding main-panel runs. The project repository documents how to refit from the archived augmented labels and includes the held-out results and figure-generation scripts.
 
 \begin{table}[!t]
 \centering
@@ -293,10 +298,10 @@ The adaptive controllers share the same physical clearance executor. Fixed-Time 
     \item \textit{Phase-competition Double-DQN controllers:} \textbf{MPLight-CV (ep2)} and \textbf{MPLight-CV (ep16)} train on 2 and 16 one-hour target episodes. The transfer variants pretrain on 10 one-hour episodes across five source scenarios. \textbf{Trans-MPLight-CV (ep2)} then fine-tunes on two target episodes per city. \textbf{Trans-MPLight-CV (source only)} evaluates a single frozen source model in all three target cities. These implementations use the same CV observer and maximum-red filter for action selection. Each 10-s step contributes its own replay transition, including forced continuation during clearance or minimum green. In the Double-DQN update, the online network selects among permitted next-phase requests and the target network evaluates the selected action. The final reward at 3,600~s has no bootstrap term.
     \item \textit{Counterfactual rankers:} \textbf{Zero-Shot \method\ ($B=0$)} uses 315 labeled action groups from six real-city source scenarios. \textbf{Target-Only ($B=6,36$)} uses the same fitted target ranker as \method\ with no source contribution. \textbf{Source-Placebo ($B=6,36$)} replaces source labels with one fixed within-group permutation and retains the selected mixture and calibration. \textbf{Pool-All ($B=36$)} uses the full source pool. The proposed controller uses the structurally routed source pool at \textbf{$B=6,36$}.
 \end{enumerate}
-Here $B$ counts labeled decision groups used to fit or select a model. Each group has several simulated candidate branches, each replaying its prefix. For example, the selected $B=36$ labels alone require about 56 and 191 simulated hours in Los Angeles and Jinan, respectively, before candidate scanning. The episode counts and $B$ quantify different kinds of data collection.
+Here $B$ counts labeled decision groups. Each candidate in a group requires a separate simulated prefix and branch. The original Double-DQN reward uses queues estimated from CV observations. The action labels use simulator truth, including pending and slow-moving vehicles. We compare training costs and a truth-reward baseline in Section~\ref{sec:training_cost}.
 
 \subsection{Metrics and Multiplicity-Controlled Statistical Inference}
-Mean waiting time includes waiting accumulated by all inserted vehicles through the end of the run, including vehicles still in the network. It excludes demand still pending insertion. System vehicle-hours integrate active and pending vehicles over the fixed window from 60 to 3,600~s. We also report the fraction of demand completed by the end of the run and deduplicated collisions.
+Mean waiting time includes waiting accumulated by all inserted vehicles through the end of the run, including vehicles still in the network. It excludes demand still pending insertion. System vehicle-hours integrate active and pending vehicles over the fixed window from 60 to 3,600~s. We also report the fraction of demand completed by the end of the run and deduplicated collisions. Automatic congestion teleports are disabled. Collision counts describe incidents during evaluation. The original six-group model records four across the panel, compared with zero for Cons-GP.
 
 Controller differences are paired by scenario and seed. We average scenarios within each city and give the three cities equal weight. For inference we retain the ten common Los Angeles--Jinan seed blocks and the ten independent Salt Lake City seed blocks. We enumerate all $2^{20}$ block sign flips under the null of sign symmetry and apply Holm correction across the 12 baseline comparisons separately for each metric of the $B=6$ panel. For the zero-shot comparison, the Holm correction covers its two time outcomes, waiting time and system vehicle-hours. Pointwise 95\% intervals use 10,000 bootstrap draws, resampling matched blocks within each seed set. The intervals summarize uncertainty in the effect estimates. We use the adjusted tests to assess significance.
 
@@ -357,9 +362,9 @@ Raw partial-CV pressure rules have higher mean waiting than the reconstructed-qu
 
 At 10\% CV penetration, \method\ ($B=6$) has the best three-city mean of the 19 non-oracle controllers for waiting time (154.43~s), system vehicle-hours (491.2~veh-h), and completion (86.1\%) in Table~\ref{tab:main_results}.
 
-\textit{Comparison with conservation rules.} Compared with Cons-GP and MaxRed-Cons-GP, \method\ ($B=6$) reduces mean system vehicle-hours by 36.9 and 33.0, respectively (both Holm-adjusted $p=0.277$). The waiting-time comparisons also do not reach significance (both Holm-adjusted $p=0.410$). In Los Angeles, the gain is concentrated in two seeds where Cons-GP exceeds 1,100~s mean waiting. The controller reduces waiting in 8 of 10 seeds in Los Angeles and in all 10 in Jinan. In Salt Lake City, Cons-GP has lower waiting and vehicle-hours in all 10 seeds at $B=6$. At $B=36$, the learned controller and Cons-GP are close in Salt Lake City (87.2 and 87.8~veh-h).
+\textit{Comparison with conservation rules.} Compared with Cons-GP and MaxRed-Cons-GP, \method\ ($B=6$) reduces mean system vehicle-hours by 36.9 and 33.0, respectively (both Holm-adjusted $p=0.277$). The waiting-time comparisons also do not reach significance (both Holm-adjusted $p=0.410$). In Los Angeles, seeds \texttt{920104} and \texttt{920105} account for 95\% of the net waiting-time reduction against Cons-GP, saving 804 and 1,089~s. The paired median improvement is 43.91~s. Completion is below 50\% in one of ten runs with \method\ and two with Cons-GP. The controller reduces waiting in 8 of 10 seeds in Los Angeles and in all 10 in Jinan. In Salt Lake City, Cons-GP has lower waiting and vehicle-hours in all 10 seeds at $B=6$. At $B=36$, the learned controller and Cons-GP are close in Salt Lake City (87.2 and 87.8~veh-h). In a post hoc check restricted to Jinan and Salt Lake City, $B=6$ adds 1.91~s and 5.51~veh-h relative to Cons-GP. Weighting the six scenarios equally gives 462.67~veh-h at $B=6$ and 456.77~veh-h at $B=36$. The main comparison weights cities equally.
 
-\textit{Contribution of source labels.} Relative to the same-budget target-only and source-placebo controls, $B=6$ reduces mean vehicle-hours by 161.7 and 253.5, respectively (both Holm-adjusted $p<0.001$). Los Angeles selects $\omega^\star=1$ and thus executes the same source-only ranker as $B=0$. In Jinan, $B=6$ reduces waiting by only 0.45~s relative to Target-Only, with improvements in 7 of 10 seeds. In Salt Lake City, the source--target blend reduces waiting by 12.22~s relative to Target-Only, with improvements in all 10 seeds. Figure~\ref{fig:ablation_mechanisms}(a) shows the adaptation-set scores and selected weights. The placebo comparison measures the effect of disrupting the source action labels at the selected mixture weights.
+\textit{Contribution of source labels.} Relative to the same-budget target-only and source-placebo controls, $B=6$ reduces mean vehicle-hours by 161.7 and 253.5, respectively (both Holm-adjusted $p<0.001$). Los Angeles selects $\omega^\star=1$ and thus executes the same source-only ranker as $B=0$. In Jinan, $B=6$ reduces waiting by only 0.45~s relative to Target-Only, with improvements in 7 of 10 seeds. In Salt Lake City, the source--target blend reduces waiting by 12.22~s relative to Target-Only, with improvements in all 10 seeds. Figure~\ref{fig:ablation_mechanisms}(a) shows the adaptation-set scores and selected weights. The placebo comparison measures the effect of disrupting the source action labels at the selected mixture weights. Los Angeles accounts for 98\% of the net three-city waiting-time improvement over Target-Only. In Salt Lake City, compared with the default $B=0$ model, $B=6$ improves the mean by 62.16~s and the median paired difference is $+6.97$~s ($B=6$ minus $B=0$). Its waiting time is lower on one of ten seeds. The number of corridor runs with completion below 50\% falls from one to zero out of twenty.
 
 \textit{Comparison with Double-DQN.} MPLight-CV (ep16) has the lowest three-city mean waiting time and vehicle-hours among the Double-DQN baselines. Compared with it, \method\ ($B=6$) reduces waiting by 51.0~s and system vehicle-hours by 44.2 (Holm-adjusted $p=0.045$ and $0.048$, respectively). In Salt Lake City, Trans-MPLight-CV (ep2) has lower mean waiting than \method\ ($B=6$), at 28.77 versus 39.43~s. These comparisons quantify variability across evaluation seeds for the fitted policies at the stated episode budgets.
 
@@ -445,17 +450,126 @@ Jinan Grid & Observed-MP & 212.3 & 164.0 & 132.9 & 105.2 & \textbf{96.9}\\
 \label{fig:penetration_curve}
 \end{figure*}
 
+\subsection{Mechanism Ablations at Six Target Groups}
+The original $B=6$ source weights for Los Angeles, Jinan, and Salt Lake City are 1.00, 0.08, and 0.50. Their target scale factors are 0.805, 0.792, and 1.000. The target component has zero weight in Los Angeles, and scaling leaves the Salt Lake City scores unchanged. In Jinan the original blend and target-only ranker tie at 0.19234 normalized out-of-fold regret. Their smooth regrets are 0.25776 and 0.24761, respectively, so the expanded weight grid selects the target-only ranker there.
+
+The ablations hold the six original target groups, observation model, executor, maximum-red filter, and evaluation cells fixed. The default zero-shot model uses the 315-group real-city pool. The original $B=6$ models in Jinan and Salt Lake City use 124 groups from the two Hangzhou demand profiles. To isolate the roles of pool and adaptation, we compare source-only deployment of the routed pool, blends that can reject source data with either the routed or full source pool, and removal of the deployment scale factor at the original weights. We also compare a pairwise model with the endpoint midpoint removed and a model that regresses the normalized cost of each action from its state and action features. The pointwise model matches the effective leaf cap and adjusts minimum leaf support and total training weight for its smaller row count. Its centered predictions are mapped to Borda units before blending.
+
+\begin{table}[!t]
+\centering
+\caption{Mechanism Ablations on the Original Evaluation Panel}
+\label{tab:mechanism_ablation}
+\footnotesize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+ & \multicolumn{4}{c}{Waiting time (s)} & Three-city\\
+\cmidrule(lr){2-5}
+Variant & Los Angeles & Jinan & Salt Lake & Three-city & Veh-h\\
+\midrule
+Original $B=6$ & 293.68 & 130.17 & 39.43 & 154.43 & 491.22\\
+Routed source only & 293.68 & 160.18 & 41.72 & 165.19 & 504.91\\
+Routed, zero eligible & 293.68 & 130.62 & 39.43 & 154.58 & 491.62\\
+Full source, zero eligible & 432.00 & 158.13 & 43.27 & 211.13 & 538.56\\
+No deployment scaling & 293.68 & 129.24 & 39.43 & 154.12 & 490.93\\
+Pairwise difference only & 394.11 & 126.48 & 39.00 & 186.53 & 507.53\\
+Capacity-matched pointwise & 534.61 & 151.61 & 95.18 & 260.47 & 637.65\\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Table~\ref{tab:mechanism_ablation} shows that the routed model with zero eligible has lower mean waiting than the full-source blend in all three cities. In Salt Lake City, changing to the routed pool without using target costs reduces waiting from 101.59 to 41.72~s. The selected $B=6$ mixture lowers it further to 39.43~s. The full-source blend has lower waiting than the routed blend on seven of ten Salt Lake City seeds, with a higher mean. In Jinan the zero-eligible selector chooses the local ranker and adds only 0.45~s relative to the original blend. The scaling ablation affects only Jinan, where removal of scaling lowers mean waiting by 0.93~s. The main contribution in this split comes from the pool and its source scores. Deployment scaling provides no measured gain here.
+
+Removing the midpoint raises pooled waiting, mainly in Los Angeles. The difference-only ranker has lower waiting in Jinan and Salt Lake City. Capacity-matched pointwise regression has higher pooled waiting and vehicle-hours than the endpoint ranker under the same selection protocol. These contrasts distinguish the effects of the label representation, pool, and scale on this fixed split.
+
+\subsection{Congestion Cases and Visited-State Diagnostics}
+We replayed two Los Angeles tail cases (\texttt{920104} and \texttt{920105}) and one ordinary seed (\texttt{920108}, the lower median of the remaining Cons-GP runs by waiting time). All replayed terminal metrics matched the archived runs. In the tail cases, $B=6$ increased completed trips from 521 to 1,454 and from 392 to 1,536, respectively. We identify the first 30 consecutive samples with more than 50 additional pending vehicles under Cons-GP. These intervals begin at 1,560 and 1,170~s in the two tail cases and 2,260~s in the ordinary case. In the five minutes before each tail interval, both policies requested service to the busiest reference entry at every decision, while sampled greens served it in zero of thirty epochs under Cons-GP and thirty under $B=6$. Both served the entry in all thirty epochs in the ordinary case. Across the full tail replays, the signal at this entry was sampled all-red at 242 and 279 of 360 decisions under Cons-GP, and at none under $B=6$. In the Salt Lake City 400~S outlier (\texttt{930108}), the peak network pending count fell from 3,291 at $B=0$ to 141 at $B=6$, and completion rose from 14.68\% to 93.04\%. Figure~\ref{fig:case_diagnostics} shows how entry backlog and realized service diverged.
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{fig5_case_diagnostics.pdf}
+\caption{Pending vehicles at the reference run's highest-backlog entry and cumulative network completions in two Los Angeles tail cases, one ordinary seed, and the Salt Lake City 400~S outlier. The bottom row shows the trailing five-minute share of 10-s epochs with sampled green service to that entry. Dashed lines show requested service where it differs from sampled service.}
+\label{fig:case_diagnostics}
+\end{figure*}
+
+We also recorded 12 states visited by the frozen $B=6$ controller on seeds \texttt{940101--940102} in one scenario per city. We take the first eligible decision in each of two windows (600--660 and 1,200--1,260~s), breaking simultaneous ties by intersection identifier. We replayed each candidate from its native prefix with either Cons-GP or $B=6$ as the continuation, and measured the cost after 60 and 120~s. Relative to the Cons-GP 60-s top action, agreement was $8/12$ under Cons-GP at 120~s, $11/12$ under $B=6$ at 60~s, and $5/12$ under $B=6$ at 120~s. The normalized regret of the deployed action was 0.139, 0.259, 0.116, and 0.264 for the four settings ordered by continuation and horizon. The maximum-red filter changed four of 1,868 preferred choices along the scan trajectories. It changed none of the twelve diagnostic choices.
+
+The $B=6$ out-of-fold regret against the same-budget target ranker decreased from 0.273 to 0.049 in Los Angeles and from 0.381 to 0.345 in Salt Lake City, alongside lower closed-loop waiting in both cities. In Jinan both adaptation regrets were 0.192 and the closed-loop waiting differed by only 0.45~s. This correspondence is relative to the target ranker. In Salt Lake City, Cons-GP still has lower waiting than the chosen blend.
+
+\subsection{Training Cost and Truth-Reward Baseline}
+\label{sec:training_cost}
+Table~\ref{tab:acquisition_cost} accounts for native simulation time by summing candidate scans, separate prefixes for each requested action, and the ensuing 60-s branches. The three target rows give the cost of scanning and replaying the selected six groups. The final column gives the cost of the full label banks collected in the original study. The shared source bank contains 411 groups and 2,516 action branches. The 1,908 count in the legacy receipt applies to the bank before the Gudang augmentation.
+
+\begin{table}[!t]
+\centering
+\caption{Simulated Time for Counterfactual Label Acquisition (Hours)}
+\label{tab:acquisition_cost}
+\footnotesize
+\setlength{\tabcolsep}{3.3pt}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Bank & Scan & Prefix & Branch & Selected & Full bank\\
+\midrule
+Los Angeles & 1.91 & 9.93 & 0.33 & 12.17 & 65.44\\
+Jinan & 5.72 & 29.07 & 0.80 & 35.58 & 265.45\\
+Salt Lake City & 3.81 & 21.87 & 0.80 & 26.48 & 150.21\\
+Shared source & 15.24 & 1,264.57 & 41.93 & 1,321.74 & 1,321.74\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For a target-information comparison, we train Double-DQN from scratch with a reward computed from simulator truth at each 10-s transition endpoint. The reward uses the halted, pending, and slow-moving terms of \eqref{eq:lightcone_cost}, normalized by the focal incoming lane count and subject to the same reward rescaling and clipping as the CV-queue baseline. The network inputs and deployed executor are the same as in MPLight-CV. Each city uses three training seeds for network initialization and exploration, while SUMO uses the original adaptation seeds. We match simulator time to the selected six-group cost in Table~\ref{tab:acquisition_cost} by shortening the last training episode. The source library cost is separate.
+
+On the original held-out seeds, truth-reward Double-DQN averages 1,271.9, 601.6, and 99.0~veh-h across initializations in Los Angeles, Jinan, and Salt Lake City. The corresponding $B=6$ values are 766.7, 595.5, and 111.4~veh-h. The three-city means are 657.5 and 491.2~veh-h, respectively. Each RL fit in Los Angeles completes less than half the demand on nine of ten seeds, versus one of ten for $B=6$. In Salt Lake City, all three RL fits have lower mean vehicle-hours than $B=6$. These results compare allocation of the same target simulator budget under different training objectives and source-data access.
+
+\subsection{Repeating Target Adaptation}
+In the original panel, four of each city's six target groups also appear at $B=36$. We repeat adaptation with three disjoint seed pairs (\texttt{771201--771202}, \texttt{771203--771204}, and \texttt{771205--771206}) and the same source bank. Each seed contributes 18 groups to $B=36$. The first, lower-middle, and last selected groups form $B=6$, so the smaller budget is nested. The new labels required 36 scans and 2,104 matched branches. We refit the target-only ranker and the blend that may select $\omega=0$ on each split. We evaluate all fits on seeds \texttt{971201--971204} in each of the six scenarios. This yields 312 one-hour runs, with Cons-GP evaluated once per scenario and seed. We pair each run with its comparator and summarize the spread across the three adaptation draws.
+
+\begin{table*}[!t]
+\centering
+\caption{Paired Performance Ranges Over Three Independent Target Adaptation Draws}
+\label{tab:adaptation_repeats}
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lccrrrrc@{}}
+\toprule
+ & & & \multicolumn{2}{c}{Versus Target-Only} & \multicolumn{2}{c}{Versus Cons-GP} & \\
+\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+City & $B$ & Source weights & Waiting (s) & Vehicle-hours & Waiting (s) & Vehicle-hours & Severe runs\\
+\midrule
+Los Angeles & 6 & $(0.08, 0.50, 0.08)$ & $[-278.86, 13.80]$ & $[-80.96, -8.61]$ & $[-82.22, 1074.88]$ & $[-67.24, 521.89]$ & $(4, 1, 4)$ \\
+ & 36 & $(0.08, 0.50, 0.25)$ & $[-462.69, -162.92]$ & $[-273.74, -105.56]$ & $[-160.88, 331.38]$ & $[-30.87, 164.83]$ & $(1, 4, 0)$ \\
+Jinan & 6 & $(0.08, 1.00, 1.00)$ & $[-1.16, 21.41]$ & $[-2.08, 28.85]$ & $[-17.30, 17.29]$ & $[-21.31, 24.92]$ & $(0, 0, 0)$ \\
+ & 36 & $(0.00, 0.90, 0.75)$ & $[0.00, 25.54]$ & $[0.00, 33.74]$ & $[-20.11, 12.03]$ & $[-25.78, 17.97]$ & $(0, 0, 0)$ \\
+Salt Lake City & 6 & $(1.00, 0.00, 0.00)$ & $[0.00, 7.03]$ & $[0.00, 15.37]$ & $[18.26, 200.49]$ & $[32.42, 399.78]$ & $(0, 0, 0)$ \\
+ & 36 & $(0.08, 0.08, 0.25)$ & $[-7.53, 7.23]$ & $[-9.35, 10.31]$ & $[7.59, 24.51]$ & $[10.24, 28.03]$ & $(0, 0, 0)$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Table~\ref{tab:adaptation_repeats} gives the minimum and maximum city-mean paired differences (\method\ minus comparator) over the three draws. Negative values favor \method. The ordered tuples give the selected source weight and severe-congestion count for each draw, with completion below 50\% defining severity. There are 4, 12, and 8 runs per fit in Los Angeles, Jinan, and Salt Lake City, respectively. Cons-GP has one severe run in Los Angeles and zero in the other cities.
+
+Source labels reduce Los Angeles vehicle-hours relative to Target-Only on all three draws at both budgets. The $B=6$ blend reduces both time metrics relative to Cons-GP on only one of the three draws. On the other two it completes less than half the demand on all four test seeds. In Jinan, one $B=6$ fit beats Cons-GP on both time metrics, and the $B=36$ fit that selects zero source weight does so as well. The other fits have higher mean waiting and vehicle-hours. Salt Lake City selects zero source weight in two $B=6$ draws, and Cons-GP has lower means in all six fits. Averaging cities and draws equally, $B=6$ saves 7.71~veh-h relative to Target-Only and adds 168.08~veh-h relative to Cons-GP. With $B=36$, the corresponding differences are a saving of 55.96 and an increase of 22.84~veh-h.
+
+On the adaptation groups, the selected $B=6$ blend has lower, tied, or higher out-of-fold normalized regret than the stored unfiltered Cons-GP action in four, two, and three of the nine city--draw combinations, respectively. As a retrospective check, we use the completed runs to evaluate selection of the blend only when it has strictly lower local regret. At $B=6$ this choice adds 13.14~s of waiting and 37.35~veh-h relative to always running Cons-GP, averaging cities and draws equally. At $B=36$ it selects the blend in all nine combinations. Lower local regret was therefore insufficient to identify when the blend would improve closed-loop performance.
+
+We also evaluate the truth-reward Double-DQN fits from Section~\ref{sec:training_cost} on these same test seeds. Across the three RL training seeds, the city means range from 1,241.7 to 1,333.7~veh-h in Los Angeles, 594.9 to 612.1 in Jinan, and 95.0 to 105.4 in Salt Lake City. All three Los Angeles RL fits have four severe runs, and the other cities have none. The RL repetitions vary the training initialization and exploration while using the original adaptation traffic seeds. The \method\ repetitions vary the adaptation traffic seeds.
+
+\subsection{Reproduction Materials}
+The accompanying bundle includes the augmented label bank, Salt Lake City adaptation labels, frozen original controllers, and versioned networks and demand files. Its instructions identify the simulator and learning-library versions and provide commands to refit and evaluate the original controllers. From a clean extraction we reproduced the three fit audits, checked 1,024 frozen and refitted score vectors for exact agreement, and started all six evaluation scenarios in SUMO~1.22.0. The experiment records include the full held-out summaries and the seed-level comparisons.
+
 \section{Discussion}
 \label{sec:discussion}
 
-The value of source data depends on the target city and label budget. With six target groups, the source ranker performs well enough on Los Angeles adaptation states to receive the full weight. Salt Lake City also benefits from source labels relative to target-only learning under this budget, although its analytical rule remains stronger. In Jinan and Salt Lake City, Target-Only ($B=36$) has lower mean waiting than \method\ ($B=36$) by 3.40 and 1.39~s, respectively. In Los Angeles, the $B=36$ blend still has a 73.60~s lower mean than Target-Only ($B=36$). These observations describe the evaluated scenarios. They do not identify phase count as the cause or establish a label budget at which local learning saturates.
+The value of source data depends on the city and the adaptation sample. In the original six-group fit for Los Angeles, the selector gives the source model full weight. In the independent repetitions, adding source labels lowers vehicle-hours relative to locally fitted models while the margin over Cons-GP varies with the selected fit. The original Salt Lake City blend improves on Target-Only, and this gain varies across the new splits. Cons-GP has lower mean waiting and vehicle-hours than the blend in every Salt Lake City repeat. In Jinan, the original blend is close to Target-Only, and two six-group repeats select pure source models with higher mean waiting than Target-Only. A selector intended to keep Cons-GP when it is stronger requires evidence beyond regret on the sampled adaptation states.
 
-Adaptation requires a target microscopic simulator for branching from the same state under alternative phase requests. The zero-shot policies can score actions without target labels. They use different source scenarios and forms of supervision, and their relative performance varies by city. Field use also requires an estimate of CV penetration and a way to check internal junction occupancy for clearance. The sensitivity runs supply the true penetration rate to the observer. They do not test estimation errors or variable penetration within a run.
+Adaptation requires a target microscopic simulator for branching from the same state under alternative phase requests. The zero-shot policies can score actions without target labels. They use different source scenarios and forms of supervision, and their relative performance varies by city. Field use also requires an estimate of CV penetration and a way to check internal junction occupancy for clearance. The sensitivity runs supply a known penetration rate and assign equipment with a vehicle-identifier hash. Real fleets may concentrate connected vehicles by lane, time, or vehicle class. This changes which queues the observer sees and may affect both the queue estimates and phase rankings.
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-This paper presented \method\ for learning traffic signal phase rankings from counterfactual costs under sparse CV observations. At 10\% penetration, the $B=6$ configuration has the best three-city mean waiting time, system vehicle-hours, and completion rate among the tested non-oracle controllers. It improves on the same-budget target-only and source-placebo controls. The mean vehicle-hour advantage over the conservation-based pressure rules does not reach statistical significance after correction. With zero target labels, \method\ has lower three-city mean waiting time and vehicle-hours than source-only Trans-MPLight-CV, with neither difference significant after correction. In Jinan, source-only Trans-MPLight-CV leads on both outcomes.
+In the original three-city panel at 10\% CV penetration, the six-group \method\ model has the best mean waiting time, system vehicle-hours, and completion rate among the tested non-oracle controllers. Its advantage is statistically significant over the same-budget target-only and source-placebo controls, and falls short of significance against the conservation-based pressure rules. The ablations attribute most of the Salt Lake City improvement over default zero-shot transfer to source-pool choice. They show no benefit from deployment scaling on the original split. Independent adaptation draws retain a vehicle-hour benefit from source labels over target-only learning in Los Angeles, while the blend averages more vehicle-hours than Cons-GP across cities and draws. These results support transferring counterfactual phase costs to improve some small-sample local rankers. They also show how the usefulness of that transfer depends on the target traffic and the selected adaptation data.
 
 \appendices
 \section{Proofs of Theoretical Properties}
@@ -521,6 +635,9 @@ C.~Chen \emph{et~al.}, ``Toward a thousand lights: Decentralized deep reinforcem
 \bibitem{wei2019colight}
 H.~Wei \emph{et~al.}, ``{CoLight}: Learning network-level cooperation for traffic signal control,'' arXiv:1905.05717, 2019.
 
+\bibitem{vanhasselt2015double}
+H.~van Hasselt, A.~Guez, and D.~Silver, ``Deep reinforcement learning with double Q-learning,'' arXiv:1509.06461, 2015.
+
 \bibitem{zang2020metalight}
 X.~Zang, H.~Yao, G.~Zheng, N.~Xu, K.~Xu, and Z.~Li, ``{MetaLight}: Value-based meta-reinforcement learning for traffic signal control,'' in \emph{Proc. AAAI Conf. Artif. Intell.}, vol.~34, no.~1, 2020, pp. 1153--1160.
 
@@ -541,6 +658,12 @@ B.~Sch{\"o}lkopf \emph{et~al.}, ``Towards causal representation learning,'' arXi
 
 \bibitem{feng2022factored}
 F.~Feng, B.~Huang, K.~Zhang, and S.~Magliacane, ``Factored adaptation for non-stationary reinforcement learning,'' arXiv:2203.16582, 2022.
+
+\bibitem{lagoudakis2003rollout}
+M.~G. Lagoudakis and R.~Parr, ``Approximate policy iteration using large-margin classifiers,'' in \emph{Proc. Int. Joint Conf. Artif. Intell.}, 2003, pp.~1432--1433.
+
+\bibitem{dimitrakakis2008rollout}
+C.~Dimitrakakis and M.~G. Lagoudakis, ``Rollout sampling approximate policy iteration,'' arXiv:0805.2027, 2008.
 
 \bibitem{lopez2018microscopic}
 P.~Alvarez Lopez \emph{et~al.}, ``Microscopic traffic simulation using {SUMO},'' in \emph{Proc. 21st Int. Conf. Intell. Transp. Syst. (ITSC)}, 2018, pp. 2575--2582.

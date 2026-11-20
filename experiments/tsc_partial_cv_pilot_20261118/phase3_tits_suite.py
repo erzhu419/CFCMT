@@ -44,6 +44,7 @@ from experiments.tsc_partial_cv_pilot_20261118.mplight_cv_baseline import (
 from experiments.tsc_partial_cv_pilot_20261118.phase0_sensor_gap import _oracle_gp_phase
 from experiments.tsc_partial_cv_pilot_20261118.phase1_transfer_pilot import (
     evaluate_single_branch_worker,
+    lightcone_step_cost,
     scan_decision_candidates_worker,
 )
 from experiments.tsc_partial_cv_pilot_20261118.phase2_residual_model import (
@@ -70,6 +71,7 @@ PENETRATION_RATES = (0.05, 0.10, 0.20, 0.50, 1.00)
 FRESH_SALTLAKE_SEEDS = tuple(range(930101, 930111))
 RL_POLICIES = ("mplight_cv_ep2", "mplight_cv_ep16", "transfer_mplight_cv_ep2")
 SOURCE_ONLY_RL_POLICY = "transfer_mplight_cv_b0"
+TRUTH_REWARD_RL_POLICY = "mplight_cv_truth_reward"
 
 
 def eval_custom_policy_worker(task: dict[str, Any]) -> dict[str, Any]:
@@ -96,7 +98,9 @@ def eval_custom_policy_worker(task: dict[str, Any]) -> dict[str, Any]:
     models_pkl = Path(task["models_pkl"])
 
     learned_ctrl: Any = None
-    if policy in LEARNED_POLICIES or policy in RL_POLICIES or policy == SOURCE_ONLY_RL_POLICY:
+    if policy in LEARNED_POLICIES or policy in RL_POLICIES or policy in (
+        SOURCE_ONLY_RL_POLICY, TRUTH_REWARD_RL_POLICY,
+    ):
         with models_pkl.open("rb") as fh:
             all_models = pickle.load(fh)
         learned_ctrl = all_models[family][policy]
@@ -290,7 +294,7 @@ def eval_custom_policy_worker(task: dict[str, Any]) -> dict[str, Any]:
 
 
 def collect_rollout_transitions_worker(task: dict[str, Any]) -> list[ReplayTransition]:
-    """Collect ten-second transitions from one fixed-hour MPLight-CV episode."""
+    """Collect ten-second transitions from one MPLight-CV episode."""
     from cf_h2o.sumo_runtime import load_libsumo
     from cf_h2o.eval.traffic_signal_resco_phase_benchmark import (
         _start_sumo,
@@ -302,6 +306,8 @@ def collect_rollout_transitions_worker(task: dict[str, Any]) -> list[ReplayTrans
     seed = int(task["seed"])
     epsilon = float(task["epsilon"])
     rng_seed = int(task["rng_seed"])
+    duration_sec = int(task.get("duration_sec", 3600))
+    ground_truth_reward = bool(task.get("ground_truth_reward", False))
     net: MPLightCvQNetwork = task["net"]
     rng = np.random.default_rng(rng_seed)
 
@@ -311,14 +317,23 @@ def collect_rollout_transitions_worker(task: dict[str, Any]) -> list[ReplayTrans
     try:
         infos = _tls_phase_infos(sumo_api)
         executors = build_safe_phase_executors(sumo_api, infos)
-        up_nb, down_nb, _ = build_1hop_tls_neighbors(infos)
+        up_nb, down_nb, cones = build_1hop_tls_neighbors(infos)
+        if ground_truth_reward:
+            incoming_edges = {
+                key: tuple(sorted({lane.rsplit("_", 1)[0] for lane in info.incoming_lanes}))
+                for key, info in infos.items()
+            }
+            speed_limits = {
+                lane: max(float(sumo_api.lane.getMaxSpeed(lane)), 1.0)
+                for lane in sorted({lane for cone in cones.values() for lane in cone})
+            }
         observer = PartialCvObserver(
             sumo_api=sumo_api, infos=infos, seed=seed, p_cv=0.10
         )
         observer.observe_step(sumo_api, dt_sec=1.0)
 
         begin_time = float(sumo_api.simulation.getTime())
-        end_time = begin_time + 3600.0
+        end_time = begin_time + duration_sec
         prev_decision: dict[str, tuple[np.ndarray, int]] = {}
 
         while True:
@@ -351,14 +366,18 @@ def collect_rollout_transitions_worker(task: dict[str, Any]) -> list[ReplayTrans
                         current_green_state=str(ex.current_green_state),
                     )
 
-                # Observe partial-CV queue reward for previous action at this TLS
                 if tls_id in prev_decision and now_t >= begin_time + 60.0:
                     in_lanes = info.incoming_lanes
-                    est_q = sum(
-                        max(obs_map[l].shockwave_queue_est, obs_map[l].conservation_queue_est)
-                        for l in in_lanes
-                    ) / max(len(in_lanes), 1)
-                    rew = -float(np.clip(est_q / 5.0, 0.0, 10.0))
+                    if ground_truth_reward:
+                        instant_cost = lightcone_step_cost(
+                            sumo_api, cones[tls_id], incoming_edges[tls_id], speed_limits
+                        )
+                    else:
+                        instant_cost = sum(
+                            max(obs_map[l].shockwave_queue_est, obs_map[l].conservation_queue_est)
+                            for l in in_lanes
+                        )
+                    rew = -float(np.clip(instant_cost / max(len(in_lanes), 1) / 5.0, 0.0, 10.0))
                     z_prev, act_prev = prev_decision[tls_id]
                     transitions.append(
                         ReplayTransition(
@@ -413,6 +432,8 @@ def train_mplight_agent(
     init_net: MPLightCvQNetwork | None,
     rng_seed: int,
     workers: int,
+    episode_durations_sec: Sequence[int] | None = None,
+    ground_truth_reward: bool = False,
 ) -> tuple[MPLightCvQNetwork, dict[str, Any]]:
     """Train MPLightCvQNetwork across episodes using experience replay + Double-DQN updates."""
     rng = np.random.default_rng(rng_seed)
@@ -420,6 +441,9 @@ def train_mplight_agent(
     replay: list[ReplayTransition] = []
     max_replay = 25000
     losses: list[float] = []
+    durations = (3600,) * n_episodes if episode_durations_sec is None else tuple(episode_durations_sec)
+    if len(durations) != n_episodes or any(duration <= 0 for duration in durations):
+        raise ValueError("Training requires a positive duration for each episode.")
 
     schedule = [
         (sumocfgs[ep % len(sumocfgs)], seeds[(ep // len(sumocfgs)) % len(seeds)], ep)
@@ -441,6 +465,8 @@ def train_mplight_agent(
                     "epsilon": eps,
                     "rng_seed": int(rng_seed + 1009 * (ep_i + 1)),
                     "net": net.clone(),
+                    "duration_sec": durations[ep_i],
+                    "ground_truth_reward": ground_truth_reward,
                 }
             )
         with ProcessPoolExecutor(max_workers=min(workers, len(tasks))) as pool:
@@ -572,27 +598,22 @@ def run_penetration_curve(
     print(f"SAVED_PHASE3_PENETRATION {out_path}", flush=True)
 
 
-def run_third_city_saltlake(
-    *,
-    work_dir: Path,
-    ext_targets_dir: Path,
-    phase2_dataset_json: Path,
-    workers: int,
-) -> Path:
-    sl_scens = {
+def saltlake_scenario_configs(ext_targets_dir: Path) -> dict[str, Path]:
+    return {
         "saltlake_400s_peak": ext_targets_dir
         / "saltlake_400s_200w_q1_weekday_peak/saltlake_400s_200w_q1_weekday_peak.sumocfg",
         "saltlake_state_peak": ext_targets_dir
         / "saltlake_state_university_q1_weekday_peak/saltlake_state_university_q1_weekday_peak.sumocfg",
     }
+
+
+def collect_saltlake_adaptation_groups(
+    sl_scens: Mapping[str, Path], workers: int
+) -> list[ResidualGroupRecord]:
+    """Reconstruct the Salt Lake City adaptation labels with native-prefix replay."""
     for k, p in sl_scens.items():
         if not p.is_file():
             raise FileNotFoundError(f"Missing Salt Lake City sumocfg {k}: {p}")
-
-    sl_models_pkl = work_dir / "phase3_saltlake_models.pkl"
-    sl_audit_json = work_dir / "phase3_saltlake_fit_audit.json"
-
-    src_groups, _, _ = read_paper_label_archive(phase2_dataset_json)
 
     scan_tasks = [
         {
@@ -663,6 +684,23 @@ def run_third_city_saltlake(
                 branch_costs=np.asarray([float(x["branch_cost"]) for x in items], dtype=np.float64),
             )
         )
+
+    return sl_groups
+
+
+def run_third_city_saltlake(
+    *,
+    work_dir: Path,
+    ext_targets_dir: Path,
+    phase2_dataset_json: Path,
+    workers: int,
+) -> Path:
+    sl_scens = saltlake_scenario_configs(ext_targets_dir)
+    sl_models_pkl = work_dir / "phase3_saltlake_models.pkl"
+    sl_audit_json = work_dir / "phase3_saltlake_fit_audit.json"
+
+    src_groups, _, _ = read_paper_label_archive(phase2_dataset_json)
+    sl_groups = collect_saltlake_adaptation_groups(sl_scens, workers)
 
     frozen_models, fit_audit = fit_phase2_residual_suite(
         src_groups, {"saltlake": sl_groups}
